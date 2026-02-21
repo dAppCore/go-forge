@@ -30,11 +30,9 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	f.Repos = newRepoService(c)
 	f.Issues = newIssueService(c)
 	f.Pulls = newPullService(c)
-	// Other services initialised in their respective tasks.
-	// Stub them here so tests compile:
-	f.Orgs = &OrgService{}
-	f.Users = &UserService{}
-	f.Teams = &TeamService{}
+	f.Orgs = newOrgService(c)
+	f.Users = newUserService(c)
+	f.Teams = newTeamService(c)
 	f.Admin = &AdminService{}
 	f.Branches = &BranchService{}
 	f.Releases = &ReleaseService{}

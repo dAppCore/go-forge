@@ -1,0 +1,72 @@
+package forge
+
+import (
+	"context"
+	"fmt"
+
+	"forge.lthn.ai/core/go-forge/types"
+)
+
+// UserService handles user operations.
+type UserService struct {
+	Resource[types.User, struct{}, struct{}]
+}
+
+func newUserService(c *Client) *UserService {
+	return &UserService{
+		Resource: *NewResource[types.User, struct{}, struct{}](
+			c, "/api/v1/users/{username}",
+		),
+	}
+}
+
+// GetCurrent returns the authenticated user.
+func (s *UserService) GetCurrent(ctx context.Context) (*types.User, error) {
+	var out types.User
+	if err := s.client.Get(ctx, "/api/v1/user", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListFollowers returns all followers of a user.
+func (s *UserService) ListFollowers(ctx context.Context, username string) ([]types.User, error) {
+	path := fmt.Sprintf("/api/v1/users/%s/followers", username)
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// ListFollowing returns all users that a user is following.
+func (s *UserService) ListFollowing(ctx context.Context, username string) ([]types.User, error) {
+	path := fmt.Sprintf("/api/v1/users/%s/following", username)
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// Follow follows a user as the authenticated user.
+func (s *UserService) Follow(ctx context.Context, username string) error {
+	path := fmt.Sprintf("/api/v1/user/following/%s", username)
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// Unfollow unfollows a user as the authenticated user.
+func (s *UserService) Unfollow(ctx context.Context, username string) error {
+	path := fmt.Sprintf("/api/v1/user/following/%s", username)
+	return s.client.Delete(ctx, path)
+}
+
+// ListStarred returns all repositories starred by a user.
+func (s *UserService) ListStarred(ctx context.Context, username string) ([]types.Repository, error) {
+	path := fmt.Sprintf("/api/v1/users/%s/starred", username)
+	return ListAll[types.Repository](ctx, s.client, path, nil)
+}
+
+// Star stars a repository as the authenticated user.
+func (s *UserService) Star(ctx context.Context, owner, repo string) error {
+	path := fmt.Sprintf("/api/v1/user/starred/%s/%s", owner, repo)
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// Unstar unstars a repository as the authenticated user.
+func (s *UserService) Unstar(ctx context.Context, owner, repo string) error {
+	path := fmt.Sprintf("/api/v1/user/starred/%s/%s", owner, repo)
+	return s.client.Delete(ctx, path)
+}
