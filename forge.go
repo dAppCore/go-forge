@@ -38,9 +38,9 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	f.Releases = newReleaseService(c)
 	f.Labels = newLabelService(c)
 	f.Webhooks = newWebhookService(c)
-	f.Notifications = &NotificationService{}
-	f.Packages = &PackageService{}
-	f.Actions = &ActionsService{}
+	f.Notifications = newNotificationService(c)
+	f.Packages = newPackageService(c)
+	f.Actions = newActionsService(c)
 	f.Contents = newContentService(c)
 	f.Wiki = &WikiService{}
 	f.Misc = &MiscService{}
