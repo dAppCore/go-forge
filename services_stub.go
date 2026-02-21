@@ -2,8 +2,6 @@ package forge
 
 // Stub service types — replaced as each service is implemented.
 
-type IssueService struct{}
-type PullService struct{}
 type OrgService struct{}
 type UserService struct{}
 type TeamService struct{}

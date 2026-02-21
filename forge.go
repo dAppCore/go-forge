@@ -28,10 +28,10 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	c := NewClient(url, token, opts...)
 	f := &Forge{client: c}
 	f.Repos = newRepoService(c)
+	f.Issues = newIssueService(c)
+	f.Pulls = newPullService(c)
 	// Other services initialised in their respective tasks.
 	// Stub them here so tests compile:
-	f.Issues = &IssueService{}
-	f.Pulls = &PullService{}
 	f.Orgs = &OrgService{}
 	f.Users = &UserService{}
 	f.Teams = &TeamService{}

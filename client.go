@@ -100,6 +100,11 @@ func (c *Client) Delete(ctx context.Context, path string) error {
 	return c.do(ctx, http.MethodDelete, path, nil, nil)
 }
 
+// DeleteWithBody performs a DELETE request with a JSON body.
+func (c *Client) DeleteWithBody(ctx context.Context, path string, body any) error {
+	return c.do(ctx, http.MethodDelete, path, body, nil)
+}
+
 func (c *Client) do(ctx context.Context, method, path string, body, out any) error {
 	url := c.baseURL + path
 
