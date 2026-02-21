@@ -105,6 +105,39 @@ func (c *Client) DeleteWithBody(ctx context.Context, path string, body any) erro
 	return c.do(ctx, http.MethodDelete, path, body, nil)
 }
 
+// GetRaw performs a GET request and returns the raw response body as bytes
+// instead of JSON-decoding. Useful for endpoints that return raw file content.
+func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
+	url := c.baseURL + path
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("forge: create request: %w", err)
+	}
+
+	req.Header.Set("Authorization", "token "+c.token)
+	if c.userAgent != "" {
+		req.Header.Set("User-Agent", c.userAgent)
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("forge: request GET %s: %w", path, err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return nil, c.parseError(resp, path)
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("forge: read response body: %w", err)
+	}
+
+	return data, nil
+}
+
 func (c *Client) do(ctx context.Context, method, path string, body, out any) error {
 	url := c.baseURL + path
 

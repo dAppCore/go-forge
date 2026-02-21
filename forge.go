@@ -36,12 +36,12 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	f.Admin = newAdminService(c)
 	f.Branches = newBranchService(c)
 	f.Releases = newReleaseService(c)
-	f.Labels = &LabelService{}
-	f.Webhooks = &WebhookService{}
+	f.Labels = newLabelService(c)
+	f.Webhooks = newWebhookService(c)
 	f.Notifications = &NotificationService{}
 	f.Packages = &PackageService{}
 	f.Actions = &ActionsService{}
-	f.Contents = &ContentService{}
+	f.Contents = newContentService(c)
 	f.Wiki = &WikiService{}
 	f.Misc = &MiscService{}
 	return f

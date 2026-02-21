@@ -1,0 +1,227 @@
+package forge
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"forge.lthn.ai/core/go-forge/types"
+)
+
+func TestContentService_Good_GetFile(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents/README.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.ContentsResponse{
+			Name:     "README.md",
+			Path:     "README.md",
+			Type:     "file",
+			Encoding: "base64",
+			Content:  "IyBnby1mb3JnZQ==",
+			SHA:      "abc123",
+			Size:     12,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	file, err := f.Contents.GetFile(context.Background(), "core", "go-forge", "README.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if file.Name != "README.md" {
+		t.Errorf("got name=%q, want %q", file.Name, "README.md")
+	}
+	if file.Type != "file" {
+		t.Errorf("got type=%q, want %q", file.Type, "file")
+	}
+	if file.SHA != "abc123" {
+		t.Errorf("got sha=%q, want %q", file.SHA, "abc123")
+	}
+	if file.Content != "IyBnby1mb3JnZQ==" {
+		t.Errorf("got content=%q, want %q", file.Content, "IyBnby1mb3JnZQ==")
+	}
+}
+
+func TestContentService_Good_CreateFile(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents/docs/new.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateFileOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.ContentBase64 != "bmV3IGZpbGU=" {
+			t.Errorf("got content=%q, want %q", opts.ContentBase64, "bmV3IGZpbGU=")
+		}
+		json.NewEncoder(w).Encode(types.FileResponse{
+			Content: &types.ContentsResponse{
+				Name: "new.md",
+				Path: "docs/new.md",
+				Type: "file",
+				SHA:  "def456",
+			},
+			Commit: &types.FileCommitResponse{
+				SHA:     "commit789",
+				Message: "create docs/new.md",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	resp, err := f.Contents.CreateFile(context.Background(), "core", "go-forge", "docs/new.md", &types.CreateFileOptions{
+		ContentBase64: "bmV3IGZpbGU=",
+		Message:       "create docs/new.md",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Content.Name != "new.md" {
+		t.Errorf("got name=%q, want %q", resp.Content.Name, "new.md")
+	}
+	if resp.Content.SHA != "def456" {
+		t.Errorf("got sha=%q, want %q", resp.Content.SHA, "def456")
+	}
+	if resp.Commit.Message != "create docs/new.md" {
+		t.Errorf("got commit message=%q, want %q", resp.Commit.Message, "create docs/new.md")
+	}
+}
+
+func TestContentService_Good_UpdateFile(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents/README.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.UpdateFileOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.SHA != "abc123" {
+			t.Errorf("got sha=%q, want %q", opts.SHA, "abc123")
+		}
+		json.NewEncoder(w).Encode(types.FileResponse{
+			Content: &types.ContentsResponse{
+				Name: "README.md",
+				Path: "README.md",
+				Type: "file",
+				SHA:  "updated456",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	resp, err := f.Contents.UpdateFile(context.Background(), "core", "go-forge", "README.md", &types.UpdateFileOptions{
+		ContentBase64: "dXBkYXRlZA==",
+		SHA:           "abc123",
+		Message:       "update README",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Content.SHA != "updated456" {
+		t.Errorf("got sha=%q, want %q", resp.Content.SHA, "updated456")
+	}
+}
+
+func TestContentService_Good_DeleteFile(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents/old.txt" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.DeleteFileOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.SHA != "sha123" {
+			t.Errorf("got sha=%q, want %q", opts.SHA, "sha123")
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(types.FileDeleteResponse{})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	err := f.Contents.DeleteFile(context.Background(), "core", "go-forge", "old.txt", &types.DeleteFileOptions{
+		SHA:     "sha123",
+		Message: "remove old file",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestContentService_Good_GetRawFile(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/raw/README.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte("# go-forge\n\nA Go client for Forgejo."))
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	data, err := f.Contents.GetRawFile(context.Background(), "core", "go-forge", "README.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "# go-forge\n\nA Go client for Forgejo."
+	if string(data) != want {
+		t.Errorf("got %q, want %q", string(data), want)
+	}
+}
+
+func TestContentService_Bad_NotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{"message": "file not found"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	_, err := f.Contents.GetFile(context.Background(), "core", "go-forge", "nonexistent.md")
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if !IsNotFound(err) {
+		t.Errorf("expected not-found error, got %v", err)
+	}
+}
+
+func TestContentService_Bad_GetRawNotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{"message": "file not found"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	_, err := f.Contents.GetRawFile(context.Background(), "core", "go-forge", "nonexistent.md")
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+	if !IsNotFound(err) {
+		t.Errorf("expected not-found error, got %v", err)
+	}
+}
