@@ -21,6 +21,7 @@ type Forge struct {
 	Contents      *ContentService
 	Wiki          *WikiService
 	Misc          *MiscService
+	Commits       *CommitService
 }
 
 // NewForge creates a new Forge client.
@@ -42,8 +43,9 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	f.Packages = newPackageService(c)
 	f.Actions = newActionsService(c)
 	f.Contents = newContentService(c)
-	f.Wiki = &WikiService{}
-	f.Misc = &MiscService{}
+	f.Wiki = newWikiService(c)
+	f.Misc = newMiscService(c)
+	f.Commits = newCommitService(c)
 	return f
 }
 
