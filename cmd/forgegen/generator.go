@@ -1,0 +1,278 @@
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+	"text/template"
+)
+
+// typeGrouping maps type name prefixes to output file names.
+var typeGrouping = map[string]string{
+	"Repository":        "repo",
+	"Repo":              "repo",
+	"Issue":             "issue",
+	"PullRequest":       "pr",
+	"Pull":              "pr",
+	"User":              "user",
+	"Organization":      "org",
+	"Org":               "org",
+	"Team":              "team",
+	"Label":             "label",
+	"Milestone":         "milestone",
+	"Release":           "release",
+	"Tag":               "tag",
+	"Branch":            "branch",
+	"Hook":              "hook",
+	"Deploy":            "key",
+	"PublicKey":         "key",
+	"GPGKey":            "key",
+	"Key":               "key",
+	"Notification":      "notification",
+	"Package":           "package",
+	"Action":            "action",
+	"Commit":            "commit",
+	"Git":               "git",
+	"Contents":          "content",
+	"File":              "content",
+	"Wiki":              "wiki",
+	"Comment":           "comment",
+	"Review":            "review",
+	"Reaction":          "reaction",
+	"Topic":             "topic",
+	"Status":            "status",
+	"Combined":          "status",
+	"Cron":              "admin",
+	"Quota":             "quota",
+	"OAuth2":            "oauth",
+	"AccessToken":       "oauth",
+	"API":               "error",
+	"Forbidden":         "error",
+	"NotFound":          "error",
+	"NodeInfo":          "federation",
+	"Activity":          "activity",
+	"Feed":              "activity",
+	"StopWatch":         "time_tracking",
+	"TrackedTime":       "time_tracking",
+	"Blocked":           "user",
+	"Email":             "user",
+	"Settings":          "settings",
+	"GeneralAPI":        "settings",
+	"GeneralAttachment": "settings",
+	"GeneralRepo":       "settings",
+	"GeneralUI":         "settings",
+	"Markdown":          "misc",
+	"Markup":            "misc",
+	"License":           "misc",
+	"Gitignore":         "misc",
+	"Annotated":         "git",
+	"Note":              "git",
+	"ChangedFile":       "git",
+	"ExternalTracker":   "repo",
+	"ExternalWiki":      "repo",
+	"InternalTracker":   "repo",
+	"Permission":        "common",
+	"RepoTransfer":      "repo",
+	"PayloadCommit":     "hook",
+	"Dispatch":          "action",
+	"Secret":            "action",
+	"Variable":          "action",
+	"Push":              "repo",
+	"Mirror":            "repo",
+	"Attachment":        "common",
+	"EditDeadline":      "issue",
+	"IssueDeadline":     "issue",
+	"IssueLabels":       "issue",
+	"IssueMeta":         "issue",
+	"IssueTemplate":     "issue",
+	"StateType":         "common",
+	"TimeStamp":         "common",
+	"Rename":            "admin",
+	"Unadopted":         "admin",
+}
+
+// classifyType determines which output file a type belongs to.
+// It checks for a direct match first, then tries prefix matching,
+// then strips Create/Edit/Delete/Update prefixes and Option suffix
+// to find the base type's grouping.
+func classifyType(name string) string {
+	// Direct match.
+	if group, ok := typeGrouping[name]; ok {
+		return group
+	}
+
+	// Prefix match — longest prefix wins.
+	bestKey := ""
+	bestGroup := ""
+	for key, group := range typeGrouping {
+		if strings.HasPrefix(name, key) && len(key) > len(bestKey) {
+			bestKey = key
+			bestGroup = group
+		}
+	}
+	if bestGroup != "" {
+		return bestGroup
+	}
+
+	// Strip CRUD prefixes and Option suffix, then retry.
+	base := name
+	for _, prefix := range []string{"Create", "Edit", "Delete", "Update", "Add", "Submit", "Replace", "Set", "Transfer"} {
+		base = strings.TrimPrefix(base, prefix)
+	}
+	base = strings.TrimSuffix(base, "Option")
+	base = strings.TrimSuffix(base, "Options")
+
+	if base != name && base != "" {
+		if group, ok := typeGrouping[base]; ok {
+			return group
+		}
+		// Prefix match on the stripped base.
+		bestKey = ""
+		bestGroup = ""
+		for key, group := range typeGrouping {
+			if strings.HasPrefix(base, key) && len(key) > len(bestKey) {
+				bestKey = key
+				bestGroup = group
+			}
+		}
+		if bestGroup != "" {
+			return bestGroup
+		}
+	}
+
+	return "misc"
+}
+
+// sanitiseLine collapses a multi-line string into a single line,
+// replacing newlines and consecutive whitespace with a single space.
+func sanitiseLine(s string) string {
+	s = strings.ReplaceAll(s, "\r\n", " ")
+	s = strings.ReplaceAll(s, "\n", " ")
+	s = strings.ReplaceAll(s, "\r", " ")
+	// Collapse multiple spaces.
+	for strings.Contains(s, "  ") {
+		s = strings.ReplaceAll(s, "  ", " ")
+	}
+	return strings.TrimSpace(s)
+}
+
+// enumConstName generates a Go constant name for an enum value.
+func enumConstName(typeName, value string) string {
+	return typeName + pascalCase(value)
+}
+
+// templateFuncs provides helper functions for the file template.
+var templateFuncs = template.FuncMap{
+	"sanitise":      sanitiseLine,
+	"enumConstName": enumConstName,
+}
+
+// fileHeader is the template for generating a single Go source file.
+var fileHeader = template.Must(template.New("file").Funcs(templateFuncs).Parse(`// Code generated by forgegen from swagger.v1.json — DO NOT EDIT.
+
+package types
+{{if .NeedTime}}
+import "time"
+{{end}}
+{{range .Types}}{{$t := .}}
+{{- if .Description}}
+// {{.Name}} — {{sanitise .Description}}
+{{- end}}
+{{- if .IsEnum}}
+type {{.Name}} string
+
+const (
+{{- range .EnumValues}}
+	{{enumConstName $t.Name .}} {{$t.Name}} = "{{.}}"
+{{- end}}
+)
+{{- else if (eq (len .Fields) 0)}}
+// {{.Name}} has no fields in the swagger spec.
+type {{.Name}} struct{}
+{{- else}}
+type {{.Name}} struct {
+{{- range .Fields}}
+	{{.GoName}} {{.GoType}} ` + "`" + `json:"{{.JSONName}}{{if not .Required}},omitempty{{end}}"` + "`" + `{{if .Comment}} // {{sanitise .Comment}}{{end}}
+{{- end}}
+}
+{{- end}}
+{{end}}
+`))
+
+// templateData is the data passed to the file template.
+type templateData struct {
+	NeedTime bool
+	Types    []*GoType
+}
+
+// Generate writes Go source files for the extracted types, grouped by logical domain.
+func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
+	if err := os.MkdirAll(outDir, 0o755); err != nil {
+		return fmt.Errorf("create output directory: %w", err)
+	}
+
+	// Group types by output file.
+	groups := make(map[string][]*GoType)
+	for _, gt := range types {
+		file := classifyType(gt.Name)
+		groups[file] = append(groups[file], gt)
+	}
+
+	// Sort types within each group for deterministic output.
+	for file := range groups {
+		sort.Slice(groups[file], func(i, j int) bool {
+			return groups[file][i].Name < groups[file][j].Name
+		})
+	}
+
+	// Write each group to its own file.
+	fileNames := make([]string, 0, len(groups))
+	for file := range groups {
+		fileNames = append(fileNames, file)
+	}
+	sort.Strings(fileNames)
+
+	for _, file := range fileNames {
+		outPath := filepath.Join(outDir, file+".go")
+		if err := writeFile(outPath, groups[file]); err != nil {
+			return fmt.Errorf("write %s: %w", outPath, err)
+		}
+	}
+
+	return nil
+}
+
+// writeFile renders and writes a single Go source file for the given types.
+func writeFile(path string, types []*GoType) error {
+	needTime := false
+	for _, gt := range types {
+		for _, f := range gt.Fields {
+			if strings.Contains(f.GoType, "time.Time") {
+				needTime = true
+				break
+			}
+		}
+		if needTime {
+			break
+		}
+	}
+
+	data := templateData{
+		NeedTime: needTime,
+		Types:    types,
+	}
+
+	var buf bytes.Buffer
+	if err := fileHeader.Execute(&buf, data); err != nil {
+		return fmt.Errorf("execute template: %w", err)
+	}
+
+	if err := os.WriteFile(path, buf.Bytes(), 0o644); err != nil {
+		return fmt.Errorf("write file: %w", err)
+	}
+
+	return nil
+}
