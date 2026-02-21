@@ -96,7 +96,7 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 			return nil, err
 		}
 		all = append(all, result.Items...)
-		if !result.HasMore {
+		if len(result.Items) == 0 || len(all) >= result.TotalCount {
 			break
 		}
 		page++
