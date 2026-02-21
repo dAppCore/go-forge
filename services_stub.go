@@ -2,7 +2,6 @@ package forge
 
 // Stub service types — replaced as each service is implemented.
 
-type AdminService struct{}
 type BranchService struct{}
 type ReleaseService struct{}
 type LabelService struct{}

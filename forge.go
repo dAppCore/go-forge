@@ -33,7 +33,7 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	f.Orgs = newOrgService(c)
 	f.Users = newUserService(c)
 	f.Teams = newTeamService(c)
-	f.Admin = &AdminService{}
+	f.Admin = newAdminService(c)
 	f.Branches = &BranchService{}
 	f.Releases = &ReleaseService{}
 	f.Labels = &LabelService{}

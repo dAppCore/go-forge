@@ -1,0 +1,84 @@
+package forge
+
+import (
+	"context"
+	"fmt"
+
+	"forge.lthn.ai/core/go-forge/types"
+)
+
+// AdminService handles site administration operations.
+// Unlike other services, AdminService does not embed Resource[T,C,U]
+// because admin endpoints are heterogeneous.
+type AdminService struct {
+	client *Client
+}
+
+func newAdminService(c *Client) *AdminService {
+	return &AdminService{client: c}
+}
+
+// ListUsers returns all users (admin only).
+func (s *AdminService) ListUsers(ctx context.Context) ([]types.User, error) {
+	return ListAll[types.User](ctx, s.client, "/api/v1/admin/users", nil)
+}
+
+// CreateUser creates a new user (admin only).
+func (s *AdminService) CreateUser(ctx context.Context, opts *types.CreateUserOption) (*types.User, error) {
+	var out types.User
+	if err := s.client.Post(ctx, "/api/v1/admin/users", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditUser edits an existing user (admin only).
+func (s *AdminService) EditUser(ctx context.Context, username string, opts map[string]any) error {
+	path := fmt.Sprintf("/api/v1/admin/users/%s", username)
+	return s.client.Patch(ctx, path, opts, nil)
+}
+
+// DeleteUser deletes a user (admin only).
+func (s *AdminService) DeleteUser(ctx context.Context, username string) error {
+	path := fmt.Sprintf("/api/v1/admin/users/%s", username)
+	return s.client.Delete(ctx, path)
+}
+
+// RenameUser renames a user (admin only).
+func (s *AdminService) RenameUser(ctx context.Context, username, newName string) error {
+	path := fmt.Sprintf("/api/v1/admin/users/%s/rename", username)
+	return s.client.Post(ctx, path, &types.RenameUserOption{NewName: newName}, nil)
+}
+
+// ListOrgs returns all organisations (admin only).
+func (s *AdminService) ListOrgs(ctx context.Context) ([]types.Organization, error) {
+	return ListAll[types.Organization](ctx, s.client, "/api/v1/admin/orgs", nil)
+}
+
+// RunCron runs a cron task by name (admin only).
+func (s *AdminService) RunCron(ctx context.Context, task string) error {
+	path := fmt.Sprintf("/api/v1/admin/cron/%s", task)
+	return s.client.Post(ctx, path, nil, nil)
+}
+
+// ListCron returns all cron tasks (admin only).
+func (s *AdminService) ListCron(ctx context.Context) ([]types.Cron, error) {
+	return ListAll[types.Cron](ctx, s.client, "/api/v1/admin/cron", nil)
+}
+
+// AdoptRepo adopts an unadopted repository (admin only).
+func (s *AdminService) AdoptRepo(ctx context.Context, owner, repo string) error {
+	path := fmt.Sprintf("/api/v1/admin/unadopted/%s/%s", owner, repo)
+	return s.client.Post(ctx, path, nil, nil)
+}
+
+// GenerateRunnerToken generates an actions runner registration token.
+func (s *AdminService) GenerateRunnerToken(ctx context.Context) (string, error) {
+	var out struct {
+		Token string `json:"token"`
+	}
+	if err := s.client.Get(ctx, "/api/v1/admin/runners/registration-token", &out); err != nil {
+		return "", err
+	}
+	return out.Token, nil
+}
