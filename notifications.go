@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -22,10 +23,21 @@ func (s *NotificationService) List(ctx context.Context) ([]types.NotificationThr
 	return ListAll[types.NotificationThread](ctx, s.client, "/api/v1/notifications", nil)
 }
 
+// Iter returns an iterator over all notifications for the authenticated user.
+func (s *NotificationService) Iter(ctx context.Context) iter.Seq2[types.NotificationThread, error] {
+	return ListIter[types.NotificationThread](ctx, s.client, "/api/v1/notifications", nil)
+}
+
 // ListRepo returns all notifications for a specific repository.
 func (s *NotificationService) ListRepo(ctx context.Context, owner, repo string) ([]types.NotificationThread, error) {
 	path := fmt.Sprintf("/api/v1/repos/%s/%s/notifications", owner, repo)
 	return ListAll[types.NotificationThread](ctx, s.client, path, nil)
+}
+
+// IterRepo returns an iterator over all notifications for a specific repository.
+func (s *NotificationService) IterRepo(ctx context.Context, owner, repo string) iter.Seq2[types.NotificationThread, error] {
+	path := fmt.Sprintf("/api/v1/repos/%s/%s/notifications", owner, repo)
+	return ListIter[types.NotificationThread](ctx, s.client, path, nil)
 }
 
 // MarkRead marks all notifications as read.

@@ -65,6 +65,36 @@ func TestPagination_Good_EmptyResult(t *testing.T) {
 	}
 }
 
+func TestPagination_Good_Iter(t *testing.T) {
+	page := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		page++
+		w.Header().Set("X-Total-Count", "100")
+		items := make([]map[string]int, 50)
+		for i := range items {
+			items[i] = map[string]int{"id": (page-1)*50 + i + 1}
+		}
+		json.NewEncoder(w).Encode(items)
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	count := 0
+	for item, err := range ListIter[map[string]int](context.Background(), c, "/api/v1/repos", nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if item["id"] != count {
+			t.Errorf("got id %d, want %d", item["id"], count)
+		}
+	}
+
+	if count != 100 {
+		t.Errorf("got %d items, want 100", count)
+	}
+}
+
 func TestListPage_Good_QueryParams(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		p := r.URL.Query().Get("page")

@@ -103,9 +103,9 @@ func TestWikiService_Good_CreatePage(t *testing.T) {
 
 	f := NewForge(srv.URL, "tok")
 	page, err := f.Wiki.CreatePage(context.Background(), "core", "go-forge", &types.CreateWikiPageOptions{
-		Title:        "Install",
+		Title:         "Install",
 		ContentBase64: "IyBJbnN0YWxs",
-		Message:      "create install page",
+		Message:       "create install page",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -141,7 +141,7 @@ func TestWikiService_Good_EditPage(t *testing.T) {
 	f := NewForge(srv.URL, "tok")
 	page, err := f.Wiki.EditPage(context.Background(), "core", "go-forge", "Home", &types.CreateWikiPageOptions{
 		ContentBase64: "dXBkYXRlZA==",
-		Message:      "update home page",
+		Message:       "update home page",
 	})
 	if err != nil {
 		t.Fatal(err)

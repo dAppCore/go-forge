@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -40,6 +41,12 @@ func (s *ReleaseService) DeleteByTag(ctx context.Context, owner, repo, tag strin
 func (s *ReleaseService) ListAssets(ctx context.Context, owner, repo string, releaseID int64) ([]types.Attachment, error) {
 	path := fmt.Sprintf("/api/v1/repos/%s/%s/releases/%d/assets", owner, repo, releaseID)
 	return ListAll[types.Attachment](ctx, s.client, path, nil)
+}
+
+// IterAssets returns an iterator over all assets for a release.
+func (s *ReleaseService) IterAssets(ctx context.Context, owner, repo string, releaseID int64) iter.Seq2[types.Attachment, error] {
+	path := fmt.Sprintf("/api/v1/repos/%s/%s/releases/%d/assets", owner, repo, releaseID)
+	return ListIter[types.Attachment](ctx, s.client, path, nil)
 }
 
 // GetAsset returns a single asset for a release.

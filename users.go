@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -35,10 +36,22 @@ func (s *UserService) ListFollowers(ctx context.Context, username string) ([]typ
 	return ListAll[types.User](ctx, s.client, path, nil)
 }
 
+// IterFollowers returns an iterator over all followers of a user.
+func (s *UserService) IterFollowers(ctx context.Context, username string) iter.Seq2[types.User, error] {
+	path := fmt.Sprintf("/api/v1/users/%s/followers", username)
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
 // ListFollowing returns all users that a user is following.
 func (s *UserService) ListFollowing(ctx context.Context, username string) ([]types.User, error) {
 	path := fmt.Sprintf("/api/v1/users/%s/following", username)
 	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterFollowing returns an iterator over all users that a user is following.
+func (s *UserService) IterFollowing(ctx context.Context, username string) iter.Seq2[types.User, error] {
+	path := fmt.Sprintf("/api/v1/users/%s/following", username)
+	return ListIter[types.User](ctx, s.client, path, nil)
 }
 
 // Follow follows a user as the authenticated user.
@@ -57,6 +70,12 @@ func (s *UserService) Unfollow(ctx context.Context, username string) error {
 func (s *UserService) ListStarred(ctx context.Context, username string) ([]types.Repository, error) {
 	path := fmt.Sprintf("/api/v1/users/%s/starred", username)
 	return ListAll[types.Repository](ctx, s.client, path, nil)
+}
+
+// IterStarred returns an iterator over all repositories starred by a user.
+func (s *UserService) IterStarred(ctx context.Context, username string) iter.Seq2[types.Repository, error] {
+	path := fmt.Sprintf("/api/v1/users/%s/starred", username)
+	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
 // Star stars a repository as the authenticated user.

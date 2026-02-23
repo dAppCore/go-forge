@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -82,6 +83,12 @@ func (s *IssueService) RemoveLabel(ctx context.Context, owner, repo string, inde
 func (s *IssueService) ListComments(ctx context.Context, owner, repo string, index int64) ([]types.Comment, error) {
 	path := fmt.Sprintf("/api/v1/repos/%s/%s/issues/%d/comments", owner, repo, index)
 	return ListAll[types.Comment](ctx, s.client, path, nil)
+}
+
+// IterComments returns an iterator over all comments on an issue.
+func (s *IssueService) IterComments(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.Comment, error] {
+	path := fmt.Sprintf("/api/v1/repos/%s/%s/issues/%d/comments", owner, repo, index)
+	return ListIter[types.Comment](ctx, s.client, path, nil)
 }
 
 // CreateComment creates a comment on an issue.

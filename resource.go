@@ -1,6 +1,9 @@
 package forge
 
-import "context"
+import (
+	"context"
+	"iter"
+)
 
 // Resource provides generic CRUD operations for a Forgejo API resource.
 // T is the resource type, C is the create options type, U is the update options type.
@@ -23,6 +26,11 @@ func (r *Resource[T, C, U]) List(ctx context.Context, params Params, opts ListOp
 // ListAll returns all resources across all pages.
 func (r *Resource[T, C, U]) ListAll(ctx context.Context, params Params) ([]T, error) {
 	return ListAll[T](ctx, r.client, ResolvePath(r.path, params), nil)
+}
+
+// Iter returns an iterator over all resources across all pages.
+func (r *Resource[T, C, U]) Iter(ctx context.Context, params Params) iter.Seq2[T, error] {
+	return ListIter[T](ctx, r.client, ResolvePath(r.path, params), nil)
 }
 
 // Get returns a single resource by appending id to the path.

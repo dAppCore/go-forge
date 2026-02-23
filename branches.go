@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -24,6 +25,12 @@ func newBranchService(c *Client) *BranchService {
 func (s *BranchService) ListBranchProtections(ctx context.Context, owner, repo string) ([]types.BranchProtection, error) {
 	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
 	return ListAll[types.BranchProtection](ctx, s.client, path, nil)
+}
+
+// IterBranchProtections returns an iterator over all branch protections for a repository.
+func (s *BranchService) IterBranchProtections(ctx context.Context, owner, repo string) iter.Seq2[types.BranchProtection, error] {
+	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
+	return ListIter[types.BranchProtection](ctx, s.client, path, nil)
 }
 
 // GetBranchProtection returns a single branch protection by name.

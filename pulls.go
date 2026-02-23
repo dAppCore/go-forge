@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -37,6 +38,12 @@ func (s *PullService) Update(ctx context.Context, owner, repo string, index int6
 func (s *PullService) ListReviews(ctx context.Context, owner, repo string, index int64) ([]types.PullReview, error) {
 	path := fmt.Sprintf("/api/v1/repos/%s/%s/pulls/%d/reviews", owner, repo, index)
 	return ListAll[types.PullReview](ctx, s.client, path, nil)
+}
+
+// IterReviews returns an iterator over all reviews on a pull request.
+func (s *PullService) IterReviews(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.PullReview, error] {
+	path := fmt.Sprintf("/api/v1/repos/%s/%s/pulls/%d/reviews", owner, repo, index)
+	return ListIter[types.PullReview](ctx, s.client, path, nil)
 }
 
 // SubmitReview creates a new review on a pull request.

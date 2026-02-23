@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"sort"
+	"slices"
 	"strings"
 )
 
@@ -91,7 +91,7 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 			for _, v := range def.Enum {
 				gt.EnumValues = append(gt.EnumValues, fmt.Sprintf("%v", v))
 			}
-			sort.Strings(gt.EnumValues)
+			slices.Sort(gt.EnumValues)
 			result[name] = gt
 			continue
 		}
@@ -113,8 +113,8 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 			}
 			gt.Fields = append(gt.Fields, gf)
 		}
-		sort.Slice(gt.Fields, func(i, j int) bool {
-			return gt.Fields[i].GoName < gt.Fields[j].GoName
+		slices.SortFunc(gt.Fields, func(a, b GoField) int {
+			return strings.Compare(a.GoName, b.GoName)
 		})
 		result[name] = gt
 	}
@@ -138,8 +138,8 @@ func DetectCRUDPairs(spec *Spec) []CRUDPair {
 		}
 		pairs = append(pairs, pair)
 	}
-	sort.Slice(pairs, func(i, j int) bool {
-		return pairs[i].Base < pairs[j].Base
+	slices.SortFunc(pairs, func(a, b CRUDPair) int {
+		return strings.Compare(a.Base, b.Base)
 	})
 	return pairs
 }
@@ -193,19 +193,19 @@ func resolveGoType(prop SchemaProperty) string {
 // pascalCase converts a snake_case or kebab-case string to PascalCase,
 // with common acronyms kept uppercase.
 func pascalCase(s string) string {
-	parts := strings.FieldsFunc(s, func(r rune) bool {
+	var parts []string
+	for p := range strings.FieldsFuncSeq(s, func(r rune) bool {
 		return r == '_' || r == '-'
-	})
-	for i, p := range parts {
+	}) {
 		if len(p) == 0 {
 			continue
 		}
 		upper := strings.ToUpper(p)
 		switch upper {
 		case "ID", "URL", "HTML", "SSH", "HTTP", "HTTPS", "API", "URI", "GPG", "IP", "CSS", "JS":
-			parts[i] = upper
+			parts = append(parts, upper)
 		default:
-			parts[i] = strings.ToUpper(p[:1]) + p[1:]
+			parts = append(parts, strings.ToUpper(p[:1])+p[1:])
 		}
 	}
 	return strings.Join(parts, "")

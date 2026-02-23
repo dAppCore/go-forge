@@ -3,9 +3,10 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 	"text/template"
 )
@@ -149,14 +150,7 @@ func classifyType(name string) string {
 // sanitiseLine collapses a multi-line string into a single line,
 // replacing newlines and consecutive whitespace with a single space.
 func sanitiseLine(s string) string {
-	s = strings.ReplaceAll(s, "\r\n", " ")
-	s = strings.ReplaceAll(s, "\n", " ")
-	s = strings.ReplaceAll(s, "\r", " ")
-	// Collapse multiple spaces.
-	for strings.Contains(s, "  ") {
-		s = strings.ReplaceAll(s, "  ", " ")
-	}
-	return strings.TrimSpace(s)
+	return strings.Join(strings.Fields(s), " ")
 }
 
 // enumConstName generates a Go constant name for an enum value.
@@ -223,17 +217,14 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 
 	// Sort types within each group for deterministic output.
 	for file := range groups {
-		sort.Slice(groups[file], func(i, j int) bool {
-			return groups[file][i].Name < groups[file][j].Name
+		slices.SortFunc(groups[file], func(a, b *GoType) int {
+			return strings.Compare(a.Name, b.Name)
 		})
 	}
 
 	// Write each group to its own file.
-	fileNames := make([]string, 0, len(groups))
-	for file := range groups {
-		fileNames = append(fileNames, file)
-	}
-	sort.Strings(fileNames)
+	fileNames := slices.Collect(maps.Keys(groups))
+	slices.Sort(fileNames)
 
 	for _, file := range fileNames {
 		outPath := filepath.Join(outDir, file+".go")
@@ -247,18 +238,11 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 
 // writeFile renders and writes a single Go source file for the given types.
 func writeFile(path string, types []*GoType) error {
-	needTime := false
-	for _, gt := range types {
-		for _, f := range gt.Fields {
-			if strings.Contains(f.GoType, "time.Time") {
-				needTime = true
-				break
-			}
-		}
-		if needTime {
-			break
-		}
-	}
+	needTime := slices.ContainsFunc(types, func(gt *GoType) bool {
+		return slices.ContainsFunc(gt.Fields, func(f GoField) bool {
+			return strings.Contains(f.GoType, "time.Time")
+		})
+	})
 
 	data := templateData{
 		NeedTime: needTime,

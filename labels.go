@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -21,6 +22,12 @@ func newLabelService(c *Client) *LabelService {
 func (s *LabelService) ListRepoLabels(ctx context.Context, owner, repo string) ([]types.Label, error) {
 	path := fmt.Sprintf("/api/v1/repos/%s/%s/labels", owner, repo)
 	return ListAll[types.Label](ctx, s.client, path, nil)
+}
+
+// IterRepoLabels returns an iterator over all labels for a repository.
+func (s *LabelService) IterRepoLabels(ctx context.Context, owner, repo string) iter.Seq2[types.Label, error] {
+	path := fmt.Sprintf("/api/v1/repos/%s/%s/labels", owner, repo)
+	return ListIter[types.Label](ctx, s.client, path, nil)
 }
 
 // GetRepoLabel returns a single label by ID.
@@ -63,6 +70,12 @@ func (s *LabelService) DeleteRepoLabel(ctx context.Context, owner, repo string, 
 func (s *LabelService) ListOrgLabels(ctx context.Context, org string) ([]types.Label, error) {
 	path := fmt.Sprintf("/api/v1/orgs/%s/labels", org)
 	return ListAll[types.Label](ctx, s.client, path, nil)
+}
+
+// IterOrgLabels returns an iterator over all labels for an organisation.
+func (s *LabelService) IterOrgLabels(ctx context.Context, org string) iter.Seq2[types.Label, error] {
+	path := fmt.Sprintf("/api/v1/orgs/%s/labels", org)
+	return ListIter[types.Label](ctx, s.client, path, nil)
 }
 
 // CreateOrgLabel creates a new label in an organisation.

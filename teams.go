@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -26,6 +27,12 @@ func (s *TeamService) ListMembers(ctx context.Context, teamID int64) ([]types.Us
 	return ListAll[types.User](ctx, s.client, path, nil)
 }
 
+// IterMembers returns an iterator over all members of a team.
+func (s *TeamService) IterMembers(ctx context.Context, teamID int64) iter.Seq2[types.User, error] {
+	path := fmt.Sprintf("/api/v1/teams/%d/members", teamID)
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
 // AddMember adds a user to a team.
 func (s *TeamService) AddMember(ctx context.Context, teamID int64, username string) error {
 	path := fmt.Sprintf("/api/v1/teams/%d/members/%s", teamID, username)
@@ -44,6 +51,12 @@ func (s *TeamService) ListRepos(ctx context.Context, teamID int64) ([]types.Repo
 	return ListAll[types.Repository](ctx, s.client, path, nil)
 }
 
+// IterRepos returns an iterator over all repositories managed by a team.
+func (s *TeamService) IterRepos(ctx context.Context, teamID int64) iter.Seq2[types.Repository, error] {
+	path := fmt.Sprintf("/api/v1/teams/%d/repos", teamID)
+	return ListIter[types.Repository](ctx, s.client, path, nil)
+}
+
 // AddRepo adds a repository to a team.
 func (s *TeamService) AddRepo(ctx context.Context, teamID int64, org, repo string) error {
 	path := fmt.Sprintf("/api/v1/teams/%d/repos/%s/%s", teamID, org, repo)
@@ -60,4 +73,10 @@ func (s *TeamService) RemoveRepo(ctx context.Context, teamID int64, org, repo st
 func (s *TeamService) ListOrgTeams(ctx context.Context, org string) ([]types.Team, error) {
 	path := fmt.Sprintf("/api/v1/orgs/%s/teams", org)
 	return ListAll[types.Team](ctx, s.client, path, nil)
+}
+
+// IterOrgTeams returns an iterator over all teams in an organisation.
+func (s *TeamService) IterOrgTeams(ctx context.Context, org string) iter.Seq2[types.Team, error] {
+	path := fmt.Sprintf("/api/v1/orgs/%s/teams", org)
+	return ListIter[types.Team](ctx, s.client, path, nil)
 }

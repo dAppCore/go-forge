@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -21,6 +22,11 @@ func newAdminService(c *Client) *AdminService {
 // ListUsers returns all users (admin only).
 func (s *AdminService) ListUsers(ctx context.Context) ([]types.User, error) {
 	return ListAll[types.User](ctx, s.client, "/api/v1/admin/users", nil)
+}
+
+// IterUsers returns an iterator over all users (admin only).
+func (s *AdminService) IterUsers(ctx context.Context) iter.Seq2[types.User, error] {
+	return ListIter[types.User](ctx, s.client, "/api/v1/admin/users", nil)
 }
 
 // CreateUser creates a new user (admin only).
@@ -55,6 +61,11 @@ func (s *AdminService) ListOrgs(ctx context.Context) ([]types.Organization, erro
 	return ListAll[types.Organization](ctx, s.client, "/api/v1/admin/orgs", nil)
 }
 
+// IterOrgs returns an iterator over all organisations (admin only).
+func (s *AdminService) IterOrgs(ctx context.Context) iter.Seq2[types.Organization, error] {
+	return ListIter[types.Organization](ctx, s.client, "/api/v1/admin/orgs", nil)
+}
+
 // RunCron runs a cron task by name (admin only).
 func (s *AdminService) RunCron(ctx context.Context, task string) error {
 	path := fmt.Sprintf("/api/v1/admin/cron/%s", task)
@@ -64,6 +75,11 @@ func (s *AdminService) RunCron(ctx context.Context, task string) error {
 // ListCron returns all cron tasks (admin only).
 func (s *AdminService) ListCron(ctx context.Context) ([]types.Cron, error) {
 	return ListAll[types.Cron](ctx, s.client, "/api/v1/admin/cron", nil)
+}
+
+// IterCron returns an iterator over all cron tasks (admin only).
+func (s *AdminService) IterCron(ctx context.Context) iter.Seq2[types.Cron, error] {
+	return ListIter[types.Cron](ctx, s.client, "/api/v1/admin/cron", nil)
 }
 
 // AdoptRepo adopts an unadopted repository (admin only).

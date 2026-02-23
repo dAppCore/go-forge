@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"iter"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -103,4 +104,29 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 	}
 
 	return all, nil
+}
+
+// ListIter returns an iterator over all resources across all pages.
+func ListIter[T any](ctx context.Context, c *Client, path string, query map[string]string) iter.Seq2[T, error] {
+	return func(yield func(T, error) bool) {
+		page := 1
+		count := 0
+		for {
+			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: 50})
+			if err != nil {
+				yield(*new(T), err)
+				return
+			}
+			for _, item := range result.Items {
+				if !yield(item, nil) {
+					return
+				}
+				count++
+			}
+			if len(result.Items) == 0 || count >= result.TotalCount {
+				break
+			}
+			page++
+		}
+	}
 }

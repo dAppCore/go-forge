@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
 )
@@ -26,6 +27,12 @@ func (s *OrgService) ListMembers(ctx context.Context, org string) ([]types.User,
 	return ListAll[types.User](ctx, s.client, path, nil)
 }
 
+// IterMembers returns an iterator over all members of an organisation.
+func (s *OrgService) IterMembers(ctx context.Context, org string) iter.Seq2[types.User, error] {
+	path := fmt.Sprintf("/api/v1/orgs/%s/members", org)
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
 // AddMember adds a user to an organisation.
 func (s *OrgService) AddMember(ctx context.Context, org, username string) error {
 	path := fmt.Sprintf("/api/v1/orgs/%s/members/%s", org, username)
@@ -44,7 +51,18 @@ func (s *OrgService) ListUserOrgs(ctx context.Context, username string) ([]types
 	return ListAll[types.Organization](ctx, s.client, path, nil)
 }
 
+// IterUserOrgs returns an iterator over all organisations for a user.
+func (s *OrgService) IterUserOrgs(ctx context.Context, username string) iter.Seq2[types.Organization, error] {
+	path := fmt.Sprintf("/api/v1/users/%s/orgs", username)
+	return ListIter[types.Organization](ctx, s.client, path, nil)
+}
+
 // ListMyOrgs returns all organisations for the authenticated user.
 func (s *OrgService) ListMyOrgs(ctx context.Context) ([]types.Organization, error) {
 	return ListAll[types.Organization](ctx, s.client, "/api/v1/user/orgs", nil)
+}
+
+// IterMyOrgs returns an iterator over all organisations for the authenticated user.
+func (s *OrgService) IterMyOrgs(ctx context.Context) iter.Seq2[types.Organization, error] {
+	return ListIter[types.Organization](ctx, s.client, "/api/v1/user/orgs", nil)
 }

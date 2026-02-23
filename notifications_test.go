@@ -161,4 +161,3 @@ func TestNotificationService_Bad_NotFound(t *testing.T) {
 		t.Errorf("expected not-found error, got %v", err)
 	}
 }
-
