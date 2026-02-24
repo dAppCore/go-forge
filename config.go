@@ -1,7 +1,7 @@
 package forge
 
 import (
-	"fmt"
+	"errors"
 	"os"
 )
 
@@ -41,7 +41,7 @@ func NewForgeFromConfig(flagURL, flagToken string, opts ...Option) (*Forge, erro
 		return nil, err
 	}
 	if token == "" {
-		return nil, fmt.Errorf("forge: no API token configured (set FORGE_TOKEN or pass --token)")
+		return nil, errors.New("forge: no API token configured (set FORGE_TOKEN or pass --token)")
 	}
 	return NewForge(url, token, opts...), nil
 }
