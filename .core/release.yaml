@@ -1,0 +1,20 @@
+version: 1
+
+project:
+  name: go-forge
+  repository: core/go-forge
+
+publishers: []
+
+changelog:
+  include:
+    - feat
+    - fix
+    - perf
+    - refactor
+  exclude:
+    - chore
+    - docs
+    - style
+    - test
+    - ci
