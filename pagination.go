@@ -2,7 +2,6 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"iter"
 	"net/http"
@@ -37,9 +36,9 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 		opts.Limit = 50
 	}
 
-	u, err := url.Parse(c.baseURL + path)
+	u, err := url.Parse(path)
 	if err != nil {
-		return nil, fmt.Errorf("forge: parse url: %w", err)
+		return nil, fmt.Errorf("forge: parse path: %w", err)
 	}
 
 	q := u.Query()
@@ -50,30 +49,10 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 	}
 	u.RawQuery = q.Encode()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
-	if err != nil {
-		return nil, fmt.Errorf("forge: create request: %w", err)
-	}
-
-	req.Header.Set("Authorization", "token "+c.token)
-	req.Header.Set("Accept", "application/json")
-	if c.userAgent != "" {
-		req.Header.Set("User-Agent", c.userAgent)
-	}
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("forge: request GET %s: %w", path, err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 400 {
-		return nil, c.parseError(resp, path)
-	}
-
 	var items []T
-	if err := json.NewDecoder(resp.Body).Decode(&items); err != nil {
-		return nil, fmt.Errorf("forge: decode response: %w", err)
+	resp, err := c.doJSON(ctx, http.MethodGet, u.String(), nil, &items)
+	if err != nil {
+		return nil, err
 	}
 
 	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
@@ -82,7 +61,10 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 		Items:      items,
 		TotalCount: totalCount,
 		Page:       opts.Page,
-		HasMore:    len(items) >= opts.Limit && opts.Page*opts.Limit < totalCount,
+		// If totalCount is provided, use it to determine if there are more items.
+		// Otherwise, assume there are more if we got a full page.
+		HasMore: (totalCount > 0 && (opts.Page-1)*opts.Limit+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= opts.Limit),
 	}, nil
 }
 
@@ -97,7 +79,7 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 			return nil, err
 		}
 		all = append(all, result.Items...)
-		if len(result.Items) == 0 || len(all) >= result.TotalCount {
+		if !result.HasMore {
 			break
 		}
 		page++
@@ -110,7 +92,6 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 func ListIter[T any](ctx context.Context, c *Client, path string, query map[string]string) iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
 		page := 1
-		count := 0
 		for {
 			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: 50})
 			if err != nil {
@@ -121,9 +102,8 @@ func ListIter[T any](ctx context.Context, c *Client, path string, query map[stri
 				if !yield(item, nil) {
 					return
 				}
-				count++
 			}
-			if len(result.Items) == 0 || count >= result.TotalCount {
+			if !result.HasMore {
 				break
 			}
 			page++

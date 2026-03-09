@@ -2,7 +2,6 @@ package forge
 
 import (
 	"context"
-	"fmt"
 	"iter"
 
 	"forge.lthn.ai/core/go-forge/types"
@@ -40,19 +39,19 @@ func (s *AdminService) CreateUser(ctx context.Context, opts *types.CreateUserOpt
 
 // EditUser edits an existing user (admin only).
 func (s *AdminService) EditUser(ctx context.Context, username string, opts map[string]any) error {
-	path := fmt.Sprintf("/api/v1/admin/users/%s", username)
+	path := ResolvePath("/api/v1/admin/users/{username}", Params{"username": username})
 	return s.client.Patch(ctx, path, opts, nil)
 }
 
 // DeleteUser deletes a user (admin only).
 func (s *AdminService) DeleteUser(ctx context.Context, username string) error {
-	path := fmt.Sprintf("/api/v1/admin/users/%s", username)
+	path := ResolvePath("/api/v1/admin/users/{username}", Params{"username": username})
 	return s.client.Delete(ctx, path)
 }
 
 // RenameUser renames a user (admin only).
 func (s *AdminService) RenameUser(ctx context.Context, username, newName string) error {
-	path := fmt.Sprintf("/api/v1/admin/users/%s/rename", username)
+	path := ResolvePath("/api/v1/admin/users/{username}/rename", Params{"username": username})
 	return s.client.Post(ctx, path, &types.RenameUserOption{NewName: newName}, nil)
 }
 
@@ -68,7 +67,7 @@ func (s *AdminService) IterOrgs(ctx context.Context) iter.Seq2[types.Organizatio
 
 // RunCron runs a cron task by name (admin only).
 func (s *AdminService) RunCron(ctx context.Context, task string) error {
-	path := fmt.Sprintf("/api/v1/admin/cron/%s", task)
+	path := ResolvePath("/api/v1/admin/cron/{task}", Params{"task": task})
 	return s.client.Post(ctx, path, nil, nil)
 }
 
@@ -84,7 +83,7 @@ func (s *AdminService) IterCron(ctx context.Context) iter.Seq2[types.Cron, error
 
 // AdoptRepo adopts an unadopted repository (admin only).
 func (s *AdminService) AdoptRepo(ctx context.Context, owner, repo string) error {
-	path := fmt.Sprintf("/api/v1/admin/unadopted/%s/%s", owner, repo)
+	path := ResolvePath("/api/v1/admin/unadopted/{owner}/{repo}", Params{"owner": owner, "repo": repo})
 	return s.client.Post(ctx, path, nil, nil)
 }
 

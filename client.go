@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -53,21 +54,38 @@ func WithUserAgent(ua string) Option {
 	return func(c *Client) { c.userAgent = ua }
 }
 
+// RateLimit represents the rate limit information from the Forgejo API.
+type RateLimit struct {
+	Limit     int
+	Remaining int
+	Reset     int64
+}
+
 // Client is a low-level HTTP client for the Forgejo API.
 type Client struct {
 	baseURL    string
 	token      string
 	httpClient *http.Client
 	userAgent  string
+	rateLimit  RateLimit
+}
+
+// RateLimit returns the last known rate limit information.
+func (c *Client) RateLimit() RateLimit {
+	return c.rateLimit
 }
 
 // NewClient creates a new Forgejo API client.
 func NewClient(url, token string, opts ...Option) *Client {
 	c := &Client{
-		baseURL:    strings.TrimRight(url, "/"),
-		token:      token,
-		httpClient: http.DefaultClient,
-		userAgent:  "go-forge/0.1",
+		baseURL: strings.TrimRight(url, "/"),
+		token:   token,
+		httpClient: &http.Client{
+			CheckRedirect: func(req *http.Request, via []*http.Request) error {
+				return http.ErrUseLastResponse
+			},
+		},
+		userAgent: "go-forge/0.1",
 	}
 	for _, opt := range opts {
 		opt(c)
@@ -77,32 +95,38 @@ func NewClient(url, token string, opts ...Option) *Client {
 
 // Get performs a GET request.
 func (c *Client) Get(ctx context.Context, path string, out any) error {
-	return c.do(ctx, http.MethodGet, path, nil, out)
+	_, err := c.doJSON(ctx, http.MethodGet, path, nil, out)
+	return err
 }
 
 // Post performs a POST request.
 func (c *Client) Post(ctx context.Context, path string, body, out any) error {
-	return c.do(ctx, http.MethodPost, path, body, out)
+	_, err := c.doJSON(ctx, http.MethodPost, path, body, out)
+	return err
 }
 
 // Patch performs a PATCH request.
 func (c *Client) Patch(ctx context.Context, path string, body, out any) error {
-	return c.do(ctx, http.MethodPatch, path, body, out)
+	_, err := c.doJSON(ctx, http.MethodPatch, path, body, out)
+	return err
 }
 
 // Put performs a PUT request.
 func (c *Client) Put(ctx context.Context, path string, body, out any) error {
-	return c.do(ctx, http.MethodPut, path, body, out)
+	_, err := c.doJSON(ctx, http.MethodPut, path, body, out)
+	return err
 }
 
 // Delete performs a DELETE request.
 func (c *Client) Delete(ctx context.Context, path string) error {
-	return c.do(ctx, http.MethodDelete, path, nil, nil)
+	_, err := c.doJSON(ctx, http.MethodDelete, path, nil, nil)
+	return err
 }
 
 // DeleteWithBody performs a DELETE request with a JSON body.
 func (c *Client) DeleteWithBody(ctx context.Context, path string, body any) error {
-	return c.do(ctx, http.MethodDelete, path, body, nil)
+	_, err := c.doJSON(ctx, http.MethodDelete, path, body, nil)
+	return err
 }
 
 // PostRaw performs a POST request with a JSON body and returns the raw
@@ -183,20 +207,25 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 }
 
 func (c *Client) do(ctx context.Context, method, path string, body, out any) error {
+	_, err := c.doJSON(ctx, method, path, body, out)
+	return err
+}
+
+func (c *Client) doJSON(ctx context.Context, method, path string, body, out any) (*http.Response, error) {
 	url := c.baseURL + path
 
 	var bodyReader io.Reader
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
-			return fmt.Errorf("forge: marshal body: %w", err)
+			return nil, fmt.Errorf("forge: marshal body: %w", err)
 		}
 		bodyReader = bytes.NewReader(data)
 	}
 
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
 	if err != nil {
-		return fmt.Errorf("forge: create request: %w", err)
+		return nil, fmt.Errorf("forge: create request: %w", err)
 	}
 
 	req.Header.Set("Authorization", "token "+c.token)
@@ -210,31 +239,57 @@ func (c *Client) do(ctx context.Context, method, path string, body, out any) err
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("forge: request %s %s: %w", method, path, err)
+		return nil, fmt.Errorf("forge: request %s %s: %w", method, path, err)
 	}
 	defer resp.Body.Close()
 
+	c.updateRateLimit(resp)
+
 	if resp.StatusCode >= 400 {
-		return c.parseError(resp, path)
+		return nil, c.parseError(resp, path)
 	}
 
 	if out != nil && resp.StatusCode != http.StatusNoContent {
 		if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
-			return fmt.Errorf("forge: decode response: %w", err)
+			return nil, fmt.Errorf("forge: decode response: %w", err)
 		}
 	}
 
-	return nil
+	return resp, nil
 }
 
 func (c *Client) parseError(resp *http.Response, path string) error {
 	var errBody struct {
 		Message string `json:"message"`
 	}
-	_ = json.NewDecoder(resp.Body).Decode(&errBody)
+
+	// Read a bit of the body to see if we can get a message
+	data, _ := io.ReadAll(io.LimitReader(resp.Body, 1024))
+	_ = json.Unmarshal(data, &errBody)
+
+	msg := errBody.Message
+	if msg == "" && len(data) > 0 {
+		msg = string(data)
+	}
+	if msg == "" {
+		msg = http.StatusText(resp.StatusCode)
+	}
+
 	return &APIError{
 		StatusCode: resp.StatusCode,
-		Message:    errBody.Message,
+		Message:    msg,
 		URL:        path,
+	}
+}
+
+func (c *Client) updateRateLimit(resp *http.Response) {
+	if limit := resp.Header.Get("X-RateLimit-Limit"); limit != "" {
+		c.rateLimit.Limit, _ = strconv.Atoi(limit)
+	}
+	if remaining := resp.Header.Get("X-RateLimit-Remaining"); remaining != "" {
+		c.rateLimit.Remaining, _ = strconv.Atoi(remaining)
+	}
+	if reset := resp.Header.Get("X-RateLimit-Reset"); reset != "" {
+		c.rateLimit.Reset, _ = strconv.ParseInt(reset, 10, 64)
 	}
 }
