@@ -1,10 +1,12 @@
-# CLAUDE.md — go-forge
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Overview
 
-Full-coverage Go client for the Forgejo API (450 endpoints). Uses a generic `Resource[T,C,U]` pattern for CRUD operations and types generated from `swagger.v1.json`.
+Full-coverage Go client for the Forgejo API (~450 endpoints). Uses a generic `Resource[T,C,U]` pattern for CRUD operations and types generated from `swagger.v1.json`.
 
-**Module:** `forge.lthn.ai/core/go-forge`
+**Module:** `forge.lthn.ai/core/go-forge` (Go 1.26, zero dependencies)
 
 ## Build & Test
 
@@ -15,40 +17,50 @@ go generate ./types/...                # Regenerate types from swagger spec
 go run ./cmd/forgegen/ -spec testdata/swagger.v1.json -out types/  # Manual codegen
 ```
 
+No linter or formatter is configured beyond standard `go vet`.
+
 ## Architecture
 
-- `client.go` — HTTP client with auth, context.Context, error handling
-- `pagination.go` — Generic paginated requests (ListPage, ListAll)
-- `params.go` — Path variable resolution ({owner}/{repo} → values)
-- `resource.go` — Generic Resource[T, C, U] for CRUD (covers 91% of endpoints)
-- `forge.go` — Top-level Forge client aggregating all services
-- `config.go` — Config resolution: flags → env (FORGE_URL, FORGE_TOKEN) → defaults
-- `types/` — Generated Go types from swagger.v1.json (229 types)
-- `cmd/forgegen/` — Code generator: swagger.v1.json → types/*.go
+The library is a flat package (`package forge`) with a layered design:
 
-## Services
+1. **`client.go`** — Low-level HTTP client (`Client`). All requests go through `doJSON()`. Handles auth (token header), JSON marshalling, rate-limit tracking, and error parsing into `*APIError`. Also provides `GetRaw`/`PostRaw` for non-JSON responses.
 
-18 service structs, each embedding Resource[T,C,U] for CRUD + hand-written action methods:
+2. **`resource.go`** — Generic `Resource[T, C, U]` struct (T=response type, C=create options, U=update options). Provides List, ListAll, Iter, Get, Create, Update, Delete. Covers ~91% of endpoints.
 
-repos, issues, pulls, orgs, users, teams, admin, branches, releases, labels, webhooks, notifications, packages, actions, contents, wiki, commits, misc
+3. **`pagination.go`** — Generic `ListPage[T]`, `ListAll[T]`, `ListIter[T]` functions. Uses `X-Total-Count` header for pagination. `ListIter` returns `iter.Seq2[T, error]` for Go 1.26 range-over-func.
 
-## Test Naming
+4. **`params.go`** — `Params` map type and `ResolvePath()` for substituting `{placeholders}` in API paths.
 
-Tests use `_Good`, `_Bad`, `_Ugly` suffix pattern:
-- `_Good`: Happy path
-- `_Bad`: Expected errors
-- `_Ugly`: Edge cases/panics
+5. **`config.go`** — Config resolution: flags > env (`FORGE_URL`, `FORGE_TOKEN`) > defaults (`http://localhost:3000`).
+
+6. **`forge.go`** — Top-level `Forge` struct aggregating all 18 service fields. Created via `NewForge(url, token)` or `NewForgeFromConfig(flagURL, flagToken)`.
+
+7. **Service files** (`repos.go`, `issues.go`, etc.) — Each service struct embeds `Resource[T,C,U]` for standard CRUD, then adds hand-written action methods (e.g. `Fork`, `Pin`, `MirrorSync`). 18 services total: repos, issues, pulls, orgs, users, teams, admin, branches, releases, labels, webhooks, notifications, packages, actions, contents, wiki, commits, misc.
+
+8. **`types/`** — Generated Go types from `swagger.v1.json` (229 types). The `//go:generate` directive lives in `types/generate.go`. **Do not hand-edit generated type files** — modify `cmd/forgegen/` instead.
+
+9. **`cmd/forgegen/`** — Code generator: parses swagger spec (`parser.go`), extracts types and CRUD pairs, generates Go files (`generator.go`).
+
+## Test Patterns
+
+- Tests use `httptest.NewServer` with inline handlers — no mocks or external services
+- Test naming uses `_Good`, `_Bad`, `_Ugly` suffixes (happy path, expected errors, edge cases/panics)
+- Service-level tests live in `*_test.go` files alongside each service
 
 ## Coding Standards
 
 - All methods accept `context.Context` as first parameter
-- Errors wrapped as `*APIError` with StatusCode, Message, URL
+- Errors wrapped as `*APIError` with StatusCode, Message, URL; use `IsNotFound()`, `IsForbidden()`, `IsConflict()` helpers
 - UK English in comments (organisation, colour, etc.)
 - `Co-Authored-By: Virgil <virgil@lethean.io>` in commits
+- `Client` uses functional options pattern (`WithHTTPClient`, `WithUserAgent`)
 
-## Implementation Plan
+## Adding a New Service
 
-See `/Users/snider/Code/host-uk/core/docs/plans/2026-02-21-go-forge-plan.md` for the full 20-task plan.
+1. Create `newservice.go` with a struct embedding `Resource[T, C, U]`
+2. Add action methods that call `s.client.Get/Post/Patch/Put/Delete` directly
+3. Wire it into `Forge` struct in `forge.go` and `NewForge()`
+4. Add tests in `newservice_test.go`
 
 ## Forge Remote
 
