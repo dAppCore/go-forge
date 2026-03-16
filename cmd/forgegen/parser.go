@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"slices"
 	"strings"
+
+	coreio "forge.lthn.ai/core/go-io"
+	coreerr "forge.lthn.ai/core/go-log"
 )
 
 // Spec represents a Swagger 2.0 specification document.
@@ -70,13 +72,13 @@ type CRUDPair struct {
 
 // LoadSpec reads and parses a Swagger 2.0 JSON file from the given path.
 func LoadSpec(path string) (*Spec, error) {
-	data, err := os.ReadFile(path)
+	content, err := coreio.Local.Read(path)
 	if err != nil {
-		return nil, fmt.Errorf("read spec: %w", err)
+		return nil, coreerr.E("LoadSpec", "read spec", err)
 	}
 	var spec Spec
-	if err := json.Unmarshal(data, &spec); err != nil {
-		return nil, fmt.Errorf("parse spec: %w", err)
+	if err := json.Unmarshal([]byte(content), &spec); err != nil {
+		return nil, coreerr.E("LoadSpec", "parse spec", err)
 	}
 	return &spec, nil
 }

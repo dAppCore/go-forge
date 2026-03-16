@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	coreerr "forge.lthn.ai/core/go-log"
 )
 
 // APIError represents an error response from the Forgejo API.
@@ -139,14 +141,14 @@ func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, er
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
-			return nil, fmt.Errorf("forge: marshal body: %w", err)
+			return nil, coreerr.E("Client.PostRaw", "forge: marshal body", err)
 		}
 		bodyReader = bytes.NewReader(data)
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bodyReader)
 	if err != nil {
-		return nil, fmt.Errorf("forge: create request: %w", err)
+		return nil, coreerr.E("Client.PostRaw", "forge: create request", err)
 	}
 
 	req.Header.Set("Authorization", "token "+c.token)
@@ -157,7 +159,7 @@ func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, er
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("forge: request POST %s: %w", path, err)
+		return nil, coreerr.E("Client.PostRaw", "forge: request POST "+path, err)
 	}
 	defer resp.Body.Close()
 
@@ -167,7 +169,7 @@ func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, er
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("forge: read response body: %w", err)
+		return nil, coreerr.E("Client.PostRaw", "forge: read response body", err)
 	}
 
 	return data, nil
@@ -180,7 +182,7 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("forge: create request: %w", err)
+		return nil, coreerr.E("Client.GetRaw", "forge: create request", err)
 	}
 
 	req.Header.Set("Authorization", "token "+c.token)
@@ -190,7 +192,7 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("forge: request GET %s: %w", path, err)
+		return nil, coreerr.E("Client.GetRaw", "forge: request GET "+path, err)
 	}
 	defer resp.Body.Close()
 
@@ -200,7 +202,7 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("forge: read response body: %w", err)
+		return nil, coreerr.E("Client.GetRaw", "forge: read response body", err)
 	}
 
 	return data, nil
@@ -218,14 +220,14 @@ func (c *Client) doJSON(ctx context.Context, method, path string, body, out any)
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
-			return nil, fmt.Errorf("forge: marshal body: %w", err)
+			return nil, coreerr.E("Client.doJSON", "forge: marshal body", err)
 		}
 		bodyReader = bytes.NewReader(data)
 	}
 
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
 	if err != nil {
-		return nil, fmt.Errorf("forge: create request: %w", err)
+		return nil, coreerr.E("Client.doJSON", "forge: create request", err)
 	}
 
 	req.Header.Set("Authorization", "token "+c.token)
@@ -239,7 +241,7 @@ func (c *Client) doJSON(ctx context.Context, method, path string, body, out any)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("forge: request %s %s: %w", method, path, err)
+		return nil, coreerr.E("Client.doJSON", "forge: request "+method+" "+path, err)
 	}
 	defer resp.Body.Close()
 
@@ -251,7 +253,7 @@ func (c *Client) doJSON(ctx context.Context, method, path string, body, out any)
 
 	if out != nil && resp.StatusCode != http.StatusNoContent {
 		if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
-			return nil, fmt.Errorf("forge: decode response: %w", err)
+			return nil, coreerr.E("Client.doJSON", "forge: decode response", err)
 		}
 	}
 

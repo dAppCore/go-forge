@@ -2,11 +2,12 @@ package forge
 
 import (
 	"context"
-	"fmt"
 	"iter"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	coreerr "forge.lthn.ai/core/go-log"
 )
 
 // ListOptions controls pagination.
@@ -38,7 +39,7 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 
 	u, err := url.Parse(path)
 	if err != nil {
-		return nil, fmt.Errorf("forge: parse path: %w", err)
+		return nil, coreerr.E("ListPage", "forge: parse path", err)
 	}
 
 	q := u.Query()

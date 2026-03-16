@@ -1,8 +1,9 @@
 package forge
 
 import (
-	"errors"
 	"os"
+
+	coreerr "forge.lthn.ai/core/go-log"
 )
 
 const (
@@ -41,7 +42,7 @@ func NewForgeFromConfig(flagURL, flagToken string, opts ...Option) (*Forge, erro
 		return nil, err
 	}
 	if token == "" {
-		return nil, errors.New("forge: no API token configured (set FORGE_TOKEN or pass --token)")
+		return nil, coreerr.E("NewForgeFromConfig", "forge: no API token configured (set FORGE_TOKEN or pass --token)", nil)
 	}
 	return NewForge(url, token, opts...), nil
 }

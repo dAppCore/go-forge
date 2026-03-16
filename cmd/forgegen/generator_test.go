@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	coreio "forge.lthn.ai/core/go-io"
 )
 
 func TestGenerate_Good_CreatesFiles(t *testing.T) {
@@ -48,20 +50,18 @@ func TestGenerate_Good_ValidGoSyntax(t *testing.T) {
 	}
 
 	entries, _ := os.ReadDir(outDir)
-	var data []byte
+	var content string
 	for _, e := range entries {
 		if strings.HasSuffix(e.Name(), ".go") {
-			data, err = os.ReadFile(filepath.Join(outDir, e.Name()))
+			content, err = coreio.Local.Read(filepath.Join(outDir, e.Name()))
 			if err == nil {
 				break
 			}
 		}
 	}
-	if err != nil || data == nil {
+	if err != nil || content == "" {
 		t.Fatal("could not read any generated file")
 	}
-
-	content := string(data)
 	if !strings.Contains(content, "package types") {
 		t.Error("missing package declaration")
 	}
@@ -87,9 +87,9 @@ func TestGenerate_Good_RepositoryType(t *testing.T) {
 	var content string
 	entries, _ := os.ReadDir(outDir)
 	for _, e := range entries {
-		data, _ := os.ReadFile(filepath.Join(outDir, e.Name()))
-		if strings.Contains(string(data), "type Repository struct") {
-			content = string(data)
+		data, _ := coreio.Local.Read(filepath.Join(outDir, e.Name()))
+		if strings.Contains(data, "type Repository struct") {
+			content = data
 			break
 		}
 	}
@@ -129,8 +129,7 @@ func TestGenerate_Good_TimeImport(t *testing.T) {
 
 	entries, _ := os.ReadDir(outDir)
 	for _, e := range entries {
-		data, _ := os.ReadFile(filepath.Join(outDir, e.Name()))
-		content := string(data)
+		content, _ := coreio.Local.Read(filepath.Join(outDir, e.Name()))
 		if strings.Contains(content, "time.Time") && !strings.Contains(content, "\"time\"") {
 			t.Errorf("file %s uses time.Time but doesn't import time", e.Name())
 		}

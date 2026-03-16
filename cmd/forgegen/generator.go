@@ -2,13 +2,14 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"maps"
-	"os"
 	"path/filepath"
 	"slices"
 	"strings"
 	"text/template"
+
+	coreio "forge.lthn.ai/core/go-io"
+	coreerr "forge.lthn.ai/core/go-log"
 )
 
 // typeGrouping maps type name prefixes to output file names.
@@ -204,8 +205,8 @@ type templateData struct {
 
 // Generate writes Go source files for the extracted types, grouped by logical domain.
 func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
-	if err := os.MkdirAll(outDir, 0o755); err != nil {
-		return fmt.Errorf("create output directory: %w", err)
+	if err := coreio.Local.EnsureDir(outDir); err != nil {
+		return coreerr.E("Generate", "create output directory", err)
 	}
 
 	// Group types by output file.
@@ -229,7 +230,7 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	for _, file := range fileNames {
 		outPath := filepath.Join(outDir, file+".go")
 		if err := writeFile(outPath, groups[file]); err != nil {
-			return fmt.Errorf("write %s: %w", outPath, err)
+			return coreerr.E("Generate", "write "+outPath, err)
 		}
 	}
 
@@ -251,11 +252,11 @@ func writeFile(path string, types []*GoType) error {
 
 	var buf bytes.Buffer
 	if err := fileHeader.Execute(&buf, data); err != nil {
-		return fmt.Errorf("execute template: %w", err)
+		return coreerr.E("writeFile", "execute template", err)
 	}
 
-	if err := os.WriteFile(path, buf.Bytes(), 0o644); err != nil {
-		return fmt.Errorf("write file: %w", err)
+	if err := coreio.Local.Write(path, buf.String()); err != nil {
+		return coreerr.E("writeFile", "write file", err)
 	}
 
 	return nil
