@@ -1,7 +1,7 @@
-forge.lthn.ai/core/go-io v0.1.2 h1:q8hj2jtOFqAgHlBr5wsUAOXtaFkxy9gqGrQT/il0WYA=
-forge.lthn.ai/core/go-io v0.1.2/go.mod h1:PbNKW1Q25ywSOoQXeGdQHbV5aiIrTXvHIQ5uhplA//g=
-forge.lthn.ai/core/go-log v0.0.3 h1:Ip//c94QzvSCeFWI7WVDLBRxd1CmqLgs/UZ5iIAqnBc=
-forge.lthn.ai/core/go-log v0.0.3/go.mod h1:r14MXKOD3LF/sI8XUJQhRk/SZHBE7jAFVuCfgkXoZPw=
+forge.lthn.ai/core/go-io v0.1.3 h1:2DeH60V2kRqYGjCEvdze2FvqiryscgkQm9zOgqes20o=
+forge.lthn.ai/core/go-io v0.1.3/go.mod h1:PbNKW1Q25ywSOoQXeGdQHbV5aiIrTXvHIQ5uhplA//g=
+forge.lthn.ai/core/go-log v0.0.4 h1:KTuCEPgFmuM8KJfnyQ8vPOU1Jg654W74h8IJvfQMfv0=
+forge.lthn.ai/core/go-log v0.0.4/go.mod h1:r14MXKOD3LF/sI8XUJQhRk/SZHBE7jAFVuCfgkXoZPw=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U=
