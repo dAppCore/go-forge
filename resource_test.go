@@ -153,3 +153,81 @@ func TestResource_Good_ListAll(t *testing.T) {
 		t.Errorf("got %d items, want 3", len(items))
 	}
 }
+
+func TestResource_Good_Iter(t *testing.T) {
+	page := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		page++
+		w.Header().Set("X-Total-Count", "3")
+		if page == 1 {
+			json.NewEncoder(w).Encode([]testItem{{1, "a"}, {2, "b"}})
+		} else {
+			json.NewEncoder(w).Encode([]testItem{{3, "c"}})
+		}
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	res := NewResource[testItem, testCreate, testUpdate](c, "/api/v1/repos")
+
+	var collected []testItem
+	for item, err := range res.Iter(context.Background(), nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		collected = append(collected, item)
+	}
+	if len(collected) != 3 {
+		t.Errorf("got %d items, want 3", len(collected))
+	}
+	if collected[2].Name != "c" {
+		t.Errorf("got last item name=%q, want \"c\"", collected[2].Name)
+	}
+}
+
+func TestResource_Bad_IterError(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"message": "server error"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	res := NewResource[testItem, testCreate, testUpdate](c, "/api/v1/repos")
+
+	var gotErr error
+	for _, err := range res.Iter(context.Background(), nil) {
+		if err != nil {
+			gotErr = err
+			break
+		}
+	}
+	if gotErr == nil {
+		t.Fatal("expected error from Iter on server error")
+	}
+}
+
+func TestResource_Good_IterBreakEarly(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Total-Count", "100")
+		json.NewEncoder(w).Encode([]testItem{{1, "a"}, {2, "b"}, {3, "c"}})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	res := NewResource[testItem, testCreate, testUpdate](c, "/api/v1/repos")
+
+	count := 0
+	for _, err := range res.Iter(context.Background(), nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if count == 1 {
+			break
+		}
+	}
+	if count != 1 {
+		t.Errorf("expected to break after 1 item, got %d", count)
+	}
+}
