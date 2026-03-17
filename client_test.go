@@ -136,3 +136,96 @@ func TestClient_Good_Options(t *testing.T) {
 		t.Errorf("got user agent=%q", c.userAgent)
 	}
 }
+
+func TestClient_Good_WithHTTPClient(t *testing.T) {
+	custom := &http.Client{}
+	c := NewClient("https://forge.lthn.ai", "tok", WithHTTPClient(custom))
+	if c.httpClient != custom {
+		t.Error("expected custom HTTP client to be set")
+	}
+}
+
+func TestAPIError_Good_Error(t *testing.T) {
+	e := &APIError{StatusCode: 404, Message: "not found", URL: "/api/v1/repos/x/y"}
+	got := e.Error()
+	want := "forge: /api/v1/repos/x/y 404: not found"
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestIsConflict_Good(t *testing.T) {
+	err := &APIError{StatusCode: http.StatusConflict, Message: "conflict", URL: "/test"}
+	if !IsConflict(err) {
+		t.Error("expected IsConflict to return true for 409")
+	}
+}
+
+func TestIsConflict_Bad_NotConflict(t *testing.T) {
+	err := &APIError{StatusCode: http.StatusNotFound, Message: "not found", URL: "/test"}
+	if IsConflict(err) {
+		t.Error("expected IsConflict to return false for 404")
+	}
+}
+
+func TestIsForbidden_Bad_NotForbidden(t *testing.T) {
+	err := &APIError{StatusCode: http.StatusNotFound, Message: "not found", URL: "/test"}
+	if IsForbidden(err) {
+		t.Error("expected IsForbidden to return false for 404")
+	}
+}
+
+func TestClient_Good_RateLimit(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-RateLimit-Limit", "100")
+		w.Header().Set("X-RateLimit-Remaining", "99")
+		w.Header().Set("X-RateLimit-Reset", "1700000000")
+		json.NewEncoder(w).Encode(map[string]string{"login": "test"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	var out map[string]string
+	if err := c.Get(context.Background(), "/api/v1/user", &out); err != nil {
+		t.Fatal(err)
+	}
+
+	rl := c.RateLimit()
+	if rl.Limit != 100 {
+		t.Errorf("got limit=%d, want 100", rl.Limit)
+	}
+	if rl.Remaining != 99 {
+		t.Errorf("got remaining=%d, want 99", rl.Remaining)
+	}
+	if rl.Reset != 1700000000 {
+		t.Errorf("got reset=%d, want 1700000000", rl.Reset)
+	}
+}
+
+func TestClient_Bad_Forbidden(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusForbidden)
+		json.NewEncoder(w).Encode(map[string]string{"message": "forbidden"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	err := c.Get(context.Background(), "/api/v1/admin", nil)
+	if !IsForbidden(err) {
+		t.Fatalf("expected forbidden, got %v", err)
+	}
+}
+
+func TestClient_Bad_Conflict(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusConflict)
+		json.NewEncoder(w).Encode(map[string]string{"message": "already exists"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	err := c.Post(context.Background(), "/api/v1/repos", map[string]string{"name": "dup"}, nil)
+	if !IsConflict(err) {
+		t.Fatalf("expected conflict, got %v", err)
+	}
+}

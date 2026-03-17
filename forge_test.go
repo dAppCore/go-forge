@@ -20,6 +20,17 @@ func TestForge_Good_NewForge(t *testing.T) {
 	}
 }
 
+func TestForge_Good_Client(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "tok")
+	c := f.Client()
+	if c == nil {
+		t.Fatal("Client() returned nil")
+	}
+	if c.baseURL != "https://forge.lthn.ai" {
+		t.Errorf("got baseURL=%q", c.baseURL)
+	}
+}
+
 func TestRepoService_Good_List(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Total-Count", "1")
