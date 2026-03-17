@@ -72,3 +72,14 @@ func TestRepoService_Good_Fork(t *testing.T) {
 		t.Error("expected fork=true")
 	}
 }
+
+func TestForge_Good_Client(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "tok")
+	c := f.Client()
+	if c == nil {
+		t.Fatal("Client() returned nil")
+	}
+	if c.baseURL != "https://forge.lthn.ai" {
+		t.Errorf("got baseURL=%q", c.baseURL)
+	}
+}

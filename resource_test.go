@@ -153,3 +153,50 @@ func TestResource_Good_ListAll(t *testing.T) {
 		t.Errorf("got %d items, want 3", len(items))
 	}
 }
+
+func TestResource_Good_Iter(t *testing.T) {
+	page := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		page++
+		w.Header().Set("X-Total-Count", "3")
+		if page == 1 {
+			json.NewEncoder(w).Encode([]testItem{{1, "a"}, {2, "b"}})
+		} else {
+			json.NewEncoder(w).Encode([]testItem{{3, "c"}})
+		}
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	res := NewResource[testItem, testCreate, testUpdate](c, "/api/v1/repos")
+
+	var items []testItem
+	for item, err := range res.Iter(context.Background(), nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		items = append(items, item)
+	}
+	if len(items) != 3 {
+		t.Errorf("got %d items, want 3", len(items))
+	}
+}
+
+func TestResource_Bad_IterError(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"message": "fail"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	res := NewResource[testItem, testCreate, testUpdate](c, "/api/v1/repos")
+
+	for _, err := range res.Iter(context.Background(), nil) {
+		if err == nil {
+			t.Fatal("expected error from iterator")
+		}
+		return // got expected error
+	}
+	t.Fatal("iterator yielded nothing")
+}
