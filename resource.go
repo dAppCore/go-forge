@@ -3,34 +3,46 @@ package forge
 import (
 	"context"
 	"iter"
+	"strings"
 )
 
 // Resource provides generic CRUD operations for a Forgejo API resource.
 // T is the resource type, C is the create options type, U is the update options type.
 type Resource[T any, C any, U any] struct {
-	client *Client
-	path   string
+	client     *Client
+	path       string // item path: /api/v1/repos/{owner}/{repo}/issues/{index}
+	collection string // collection path: /api/v1/repos/{owner}/{repo}/issues
 }
 
 // NewResource creates a new Resource for the given path pattern.
-// The path may contain {placeholders} that are resolved via Params.
+// The path should be the item path (e.g., /repos/{owner}/{repo}/issues/{index}).
+// The collection path is derived by stripping the last /{placeholder} segment.
 func NewResource[T any, C any, U any](c *Client, path string) *Resource[T, C, U] {
-	return &Resource[T, C, U]{client: c, path: path}
+	collection := path
+	// Strip last segment if it's a pure placeholder like /{index}
+	// Don't strip if mixed like /repos or /{org}/repos
+	if i := strings.LastIndex(path, "/"); i >= 0 {
+		lastSeg := path[i+1:]
+		if strings.HasPrefix(lastSeg, "{") && strings.HasSuffix(lastSeg, "}") {
+			collection = path[:i]
+		}
+	}
+	return &Resource[T, C, U]{client: c, path: path, collection: collection}
 }
 
 // List returns a single page of resources.
 func (r *Resource[T, C, U]) List(ctx context.Context, params Params, opts ListOptions) (*PagedResult[T], error) {
-	return ListPage[T](ctx, r.client, ResolvePath(r.path, params), nil, opts)
+	return ListPage[T](ctx, r.client, ResolvePath(r.collection, params), nil, opts)
 }
 
 // ListAll returns all resources across all pages.
 func (r *Resource[T, C, U]) ListAll(ctx context.Context, params Params) ([]T, error) {
-	return ListAll[T](ctx, r.client, ResolvePath(r.path, params), nil)
+	return ListAll[T](ctx, r.client, ResolvePath(r.collection, params), nil)
 }
 
 // Iter returns an iterator over all resources across all pages.
 func (r *Resource[T, C, U]) Iter(ctx context.Context, params Params) iter.Seq2[T, error] {
-	return ListIter[T](ctx, r.client, ResolvePath(r.path, params), nil)
+	return ListIter[T](ctx, r.client, ResolvePath(r.collection, params), nil)
 }
 
 // Get returns a single resource by appending id to the path.
