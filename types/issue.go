@@ -71,7 +71,7 @@ type Issue struct {
 	PullRequest *PullRequestMeta `json:"pull_request,omitempty"`
 	Ref string `json:"ref,omitempty"`
 	Repository *RepositoryMeta `json:"repository,omitempty"`
-	State *StateType `json:"state,omitempty"`
+	State StateType `json:"state,omitempty"`
 	Title string `json:"title,omitempty"`
 	URL string `json:"url,omitempty"`
 	Updated time.Time `json:"updated_at,omitempty"`

@@ -30,11 +30,9 @@ type Permission struct {
 	Push bool `json:"push,omitempty"`
 }
 
-// StateType — StateType issue state type
-// StateType has no fields in the swagger spec.
-type StateType struct{}
+// StateType is the state of an issue or PR: "open", "closed".
+type StateType string
 
-// TimeStamp — TimeStamp defines a timestamp
-// TimeStamp has no fields in the swagger spec.
-type TimeStamp struct{}
+// TimeStamp is a Forgejo timestamp string.
+type TimeStamp string
 
