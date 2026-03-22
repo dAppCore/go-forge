@@ -87,7 +87,7 @@ type PullRequest struct {
 	RequestedReviewers []*User `json:"requested_reviewers,omitempty"`
 	RequestedReviewersTeams []*Team `json:"requested_reviewers_teams,omitempty"`
 	ReviewComments int64 `json:"review_comments,omitempty"` // number of review comments made on the diff of a PR review (not including comments on commits or issues in a PR)
-	State *StateType `json:"state,omitempty"`
+	State StateType `json:"state,omitempty"`
 	Title string `json:"title,omitempty"`
 	URL string `json:"url,omitempty"`
 	Updated time.Time `json:"updated_at,omitempty"`
