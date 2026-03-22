@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
-	coreerr "forge.lthn.ai/core/go-log"
+	coreerr "dappco.re/go/core/log"
 )
 
 // ListOptions controls pagination.

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"iter"
 
-	"forge.lthn.ai/core/go-forge/types"
+	"dappco.re/go/core/forge/types"
 )
 
 // WebhookService handles webhook (hook) operations within a repository.

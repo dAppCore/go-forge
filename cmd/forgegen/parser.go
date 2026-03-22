@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	coreio "forge.lthn.ai/core/go-io"
-	coreerr "forge.lthn.ai/core/go-log"
+	coreio "dappco.re/go/core/io"
+	coreerr "dappco.re/go/core/log"
 )
 
 // Spec represents a Swagger 2.0 specification document.
