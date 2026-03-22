@@ -3,19 +3,50 @@ package forge
 import (
 	"context"
 	"fmt"
+	"iter"
 
 	"dappco.re/go/core/forge/types"
 )
 
 // CommitService handles commit-related operations such as commit statuses
 // and git notes.
-// No Resource embedding — heterogeneous endpoints across status and note paths.
+// No Resource embedding — collection and item commit paths differ, and the
+// remaining endpoints are heterogeneous across status and note paths.
 type CommitService struct {
 	client *Client
 }
 
+const (
+	commitCollectionPath = "/api/v1/repos/{owner}/{repo}/commits"
+	commitItemPath       = "/api/v1/repos/{owner}/{repo}/git/commits/{sha}"
+)
+
 func newCommitService(c *Client) *CommitService {
 	return &CommitService{client: c}
+}
+
+// List returns a single page of commits for a repository.
+func (s *CommitService) List(ctx context.Context, params Params, opts ListOptions) (*PagedResult[types.Commit], error) {
+	return ListPage[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), nil, opts)
+}
+
+// ListAll returns all commits for a repository.
+func (s *CommitService) ListAll(ctx context.Context, params Params) ([]types.Commit, error) {
+	return ListAll[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), nil)
+}
+
+// Iter returns an iterator over all commits for a repository.
+func (s *CommitService) Iter(ctx context.Context, params Params) iter.Seq2[types.Commit, error] {
+	return ListIter[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), nil)
+}
+
+// Get returns a single commit by SHA or ref.
+func (s *CommitService) Get(ctx context.Context, params Params) (*types.Commit, error) {
+	var out types.Commit
+	if err := s.client.Get(ctx, ResolvePath(commitItemPath, params), &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 // GetCombinedStatus returns the combined status for a given ref (branch, tag, or SHA).

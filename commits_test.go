@@ -10,6 +10,91 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
+func TestCommitService_Good_List(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if r.URL.Query().Get("page") != "1" {
+			t.Errorf("got page=%q, want %q", r.URL.Query().Get("page"), "1")
+		}
+		if r.URL.Query().Get("limit") != "50" {
+			t.Errorf("got limit=%q, want %q", r.URL.Query().Get("limit"), "50")
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.Commit{
+			{
+				SHA: "abc123",
+				Commit: &types.RepoCommit{
+					Message: "first commit",
+				},
+			},
+			{
+				SHA: "def456",
+				Commit: &types.RepoCommit{
+					Message: "second commit",
+				},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Commits.List(context.Background(), Params{"owner": "core", "repo": "go-forge"}, DefaultList)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Items) != 2 {
+		t.Fatalf("got %d items, want 2", len(result.Items))
+	}
+	if result.Items[0].SHA != "abc123" {
+		t.Errorf("got sha=%q, want %q", result.Items[0].SHA, "abc123")
+	}
+	if result.Items[1].Commit == nil {
+		t.Fatal("expected commit payload, got nil")
+	}
+	if result.Items[1].Commit.Message != "second commit" {
+		t.Errorf("got message=%q, want %q", result.Items[1].Commit.Message, "second commit")
+	}
+}
+
+func TestCommitService_Good_Get(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/commits/abc123" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.Commit{
+			SHA:     "abc123",
+			HTMLURL: "https://forge.example/core/go-forge/commit/abc123",
+			Commit: &types.RepoCommit{
+				Message: "initial import",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	commit, err := f.Commits.Get(context.Background(), Params{"owner": "core", "repo": "go-forge", "sha": "abc123"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if commit.SHA != "abc123" {
+		t.Errorf("got sha=%q, want %q", commit.SHA, "abc123")
+	}
+	if commit.Commit == nil {
+		t.Fatal("expected commit payload, got nil")
+	}
+	if commit.Commit.Message != "initial import" {
+		t.Errorf("got message=%q, want %q", commit.Commit.Message, "initial import")
+	}
+}
+
 func TestCommitService_Good_ListStatuses(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
