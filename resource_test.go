@@ -70,6 +70,11 @@ func TestResource_Good_Create(t *testing.T) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
 		}
+		if r.URL.Path != "/api/v1/orgs/core/repos" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
 		var body testCreate
 		json.NewDecoder(r.Body).Decode(&body)
 		w.WriteHeader(http.StatusCreated)

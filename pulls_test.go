@@ -15,6 +15,11 @@ func TestPullService_Good_List(t *testing.T) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
 		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
 		w.Header().Set("X-Total-Count", "2")
 		json.NewEncoder(w).Encode([]types.PullRequest{
 			{ID: 1, Title: "add feature"},
@@ -63,6 +68,11 @@ func TestPullService_Good_Create(t *testing.T) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
 		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
 		var body types.CreatePullRequestOption
 		json.NewDecoder(r.Body).Decode(&body)
 		w.WriteHeader(http.StatusCreated)
@@ -105,5 +115,18 @@ func TestPullService_Good_Merge(t *testing.T) {
 	err := f.Pulls.Merge(context.Background(), "core", "go-forge", 7, "merge")
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestPullService_Bad_Merge(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusConflict)
+		json.NewEncoder(w).Encode(map[string]string{"message": "already merged"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Pulls.Merge(context.Background(), "core", "go-forge", 7, "merge"); !IsConflict(err) {
+		t.Fatalf("expected conflict, got %v", err)
 	}
 }
