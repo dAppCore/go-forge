@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Full-coverage Go client for the Forgejo API (~450 endpoints). Uses a generic `Resource[T,C,U]` pattern for CRUD operations and types generated from `swagger.v1.json`.
 
-**Module:** `forge.lthn.ai/core/go-forge` (Go 1.26, depends on `go-io` and `go-log`)
+**Module:** `dappco.re/go/core/forge` (Go 1.26, depends on `go-io` and `go-log`)
 
 ## Build & Test
 
@@ -51,8 +51,8 @@ The library is a flat package (`package forge`) with a layered design:
 
 - All methods accept `context.Context` as first parameter
 - Errors wrapped as `*APIError` with StatusCode, Message, URL; use `IsNotFound()`, `IsForbidden()`, `IsConflict()` helpers
-- Internal errors use `coreerr.E()` from `go-log` (imported as `coreerr "forge.lthn.ai/core/go-log"`), never `fmt.Errorf` or `errors.New`
-- File I/O uses `go-io` (imported as `coreio "forge.lthn.ai/core/go-io"`), never `os.ReadFile`/`os.WriteFile`/`os.MkdirAll`
+- Internal errors use `coreerr.E()` from `go-log` (imported as `coreerr "dappco.re/go/core/log"`), never `fmt.Errorf` or `errors.New`
+- File I/O uses `go-io` (imported as `coreio "dappco.re/go/core/io"`), never `os.ReadFile`/`os.WriteFile`/`os.MkdirAll`
 - UK English in comments (organisation, colour, etc.)
 - `Co-Authored-By: Virgil <virgil@lethean.io>` in commits
 - `Client` uses functional options pattern (`WithHTTPClient`, `WithUserAgent`)

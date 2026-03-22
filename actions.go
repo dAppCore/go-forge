@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"iter"
 
-	"forge.lthn.ai/core/go-forge/types"
+	"dappco.re/go/core/forge/types"
 )
 
 // ActionsService handles CI/CD actions operations across repositories and

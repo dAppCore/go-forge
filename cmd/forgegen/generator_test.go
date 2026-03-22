@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	coreio "forge.lthn.ai/core/go-io"
+	coreio "dappco.re/go/core/io"
 )
 
 func TestGenerate_Good_CreatesFiles(t *testing.T) {

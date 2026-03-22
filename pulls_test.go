@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"forge.lthn.ai/core/go-forge/types"
+	"dappco.re/go/core/forge/types"
 )
 
 func TestPullService_Good_List(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"forge.lthn.ai/core/go-forge/types"
+	"dappco.re/go/core/forge/types"
 )
 
 // CommitService handles commit-related operations such as commit statuses
