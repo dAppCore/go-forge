@@ -57,7 +57,7 @@ func (r *Resource[T, C, U]) Get(ctx context.Context, params Params) (*T, error) 
 // Create creates a new resource.
 func (r *Resource[T, C, U]) Create(ctx context.Context, params Params, body *C) (*T, error) {
 	var out T
-	if err := r.client.Post(ctx, ResolvePath(r.path, params), body, &out); err != nil {
+	if err := r.client.Post(ctx, ResolvePath(r.collection, params), body, &out); err != nil {
 		return nil, err
 	}
 	return &out, nil
