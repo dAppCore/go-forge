@@ -5,9 +5,9 @@ description: Full-coverage Go client for the Forgejo API with generics-based CRU
 
 # go-forge
 
-`forge.lthn.ai/core/go-forge` is a Go client library for the [Forgejo](https://forgejo.org) REST API. It provides typed access to 18 API domains (repositories, issues, pull requests, organisations, and more) through a single top-level `Forge` client. Types are generated directly from Forgejo's `swagger.v1.json` specification, keeping the library in lockstep with the server.
+`dappco.re/go/core/forge` is a Go client library for the [Forgejo](https://forgejo.org) REST API. It provides typed access to 18 API domains (repositories, issues, pull requests, organisations, and more) through a single top-level `Forge` client. Types are generated directly from Forgejo's `swagger.v1.json` specification, keeping the library in lockstep with the server.
 
-**Module path:** `forge.lthn.ai/core/go-forge`
+**Module path:** `dappco.re/go/core/forge`
 **Go version:** 1.26+
 **Licence:** EUPL-1.2
 
@@ -22,7 +22,7 @@ import (
     "fmt"
     "log"
 
-    "forge.lthn.ai/core/go-forge"
+    "dappco.re/go/core/forge"
 )
 
 func main() {
@@ -145,7 +145,7 @@ Services that embed `Resource[T, C, U]` inherit `List`, `ListAll`, `Iter`, `Get`
 This module has **zero external dependencies**. It relies solely on the Go standard library (`net/http`, `encoding/json`, `context`, `iter`, etc.) and requires Go 1.26 or later.
 
 ```
-module forge.lthn.ai/core/go-forge
+module dappco.re/go/core/forge
 
 go 1.26.0
 ```

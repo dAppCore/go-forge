@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	coreerr "forge.lthn.ai/core/go-log"
+	coreerr "dappco.re/go/core/log"
 )
 
 // APIError represents an error response from the Forgejo API.

@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"forge.lthn.ai/core/go-forge/types"
+	"dappco.re/go/core/forge/types"
 )
 
 func TestActionsService_Good_ListRepoSecrets(t *testing.T) {

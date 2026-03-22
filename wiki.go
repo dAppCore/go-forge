@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"forge.lthn.ai/core/go-forge/types"
+	"dappco.re/go/core/forge/types"
 )
 
 // WikiService handles wiki page operations for a repository.

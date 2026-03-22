@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"forge.lthn.ai/core/go-forge/types"
+	"dappco.re/go/core/forge/types"
 )
 
 // AdminService handles site administration operations.
