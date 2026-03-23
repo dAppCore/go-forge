@@ -8,7 +8,7 @@ import "time"
 // CreateIssueCommentOption — CreateIssueCommentOption options for creating a comment on an issue
 type CreateIssueCommentOption struct {
 	Body string `json:"body"`
-	Updated time.Time `json:"updated_at,omitempty"`
+	Updated *time.Time `json:"updated_at,omitempty"`
 }
 
 // CreateIssueOption — CreateIssueOption options to create one issue
