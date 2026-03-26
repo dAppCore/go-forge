@@ -8,6 +8,11 @@ import (
 )
 
 // RepoService handles repository operations.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Repos.ListOrgRepos(ctx, "core")
 type RepoService struct {
 	Resource[types.Repository, types.CreateRepoOption, types.EditRepoOption]
 }

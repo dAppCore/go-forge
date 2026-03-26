@@ -3,7 +3,6 @@ package forge
 import (
 	"context"
 
-	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -11,6 +10,11 @@ import (
 // markdown rendering, licence templates, gitignore templates, and
 // server metadata.
 // No Resource embedding — heterogeneous read-only endpoints.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Misc.GetVersion(ctx)
 type MiscService struct {
 	client *Client
 }
@@ -41,7 +45,7 @@ func (s *MiscService) ListLicenses(ctx context.Context) ([]types.LicensesTemplat
 
 // GetLicense returns a single licence template by name.
 func (s *MiscService) GetLicense(ctx context.Context, name string) (*types.LicenseTemplateInfo, error) {
-	path := core.Sprintf("/api/v1/licenses/%s", name)
+	path := ResolvePath("/api/v1/licenses/{name}", pathParams("name", name))
 	var out types.LicenseTemplateInfo
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -60,7 +64,7 @@ func (s *MiscService) ListGitignoreTemplates(ctx context.Context) ([]string, err
 
 // GetGitignoreTemplate returns a single gitignore template by name.
 func (s *MiscService) GetGitignoreTemplate(ctx context.Context, name string) (*types.GitignoreTemplateInfo, error) {
-	path := core.Sprintf("/api/v1/gitignore/templates/%s", name)
+	path := ResolvePath("/api/v1/gitignore/templates/{name}", pathParams("name", name))
 	var out types.GitignoreTemplateInfo
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err

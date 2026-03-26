@@ -9,6 +9,11 @@ import (
 
 // Resource provides generic CRUD operations for a Forgejo API resource.
 // T is the resource type, C is the create options type, U is the update options type.
+//
+// Usage:
+//
+//	r := forge.NewResource[types.Issue, types.CreateIssueOption, types.EditIssueOption](client, "/api/v1/repos/{owner}/{repo}/issues/{index}")
+//	_ = r
 type Resource[T any, C any, U any] struct {
 	client     *Client
 	path       string // item path: /api/v1/repos/{owner}/{repo}/issues/{index}
@@ -18,15 +23,19 @@ type Resource[T any, C any, U any] struct {
 // NewResource creates a new Resource for the given path pattern.
 // The path should be the item path (e.g., /repos/{owner}/{repo}/issues/{index}).
 // The collection path is derived by stripping the last /{placeholder} segment.
+//
+// Usage:
+//
+//	r := forge.NewResource[types.Issue, types.CreateIssueOption, types.EditIssueOption](client, "/api/v1/repos/{owner}/{repo}/issues/{index}")
+//	_ = r
 func NewResource[T any, C any, U any](c *Client, path string) *Resource[T, C, U] {
 	collection := path
 	// Strip last segment if it's a pure placeholder like /{index}
 	// Don't strip if mixed like /repos or /{org}/repos
-	parts := core.Split(path, "/")
-	if len(parts) > 0 {
-		lastSeg := parts[len(parts)-1]
+	if i := lastIndexByte(path, '/'); i >= 0 {
+		lastSeg := path[i+1:]
 		if core.HasPrefix(lastSeg, "{") && core.HasSuffix(lastSeg, "}") {
-			collection = path[:len(path)-len(lastSeg)-1]
+			collection = path[:i]
 		}
 	}
 	return &Resource[T, C, U]{client: c, path: path, collection: collection}

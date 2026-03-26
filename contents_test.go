@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestContentService_Good_GetFile(t *testing.T) {
+func TestContentService_GetFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -49,7 +49,7 @@ func TestContentService_Good_GetFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_CreateFile(t *testing.T) {
+func TestContentService_CreateFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -98,7 +98,7 @@ func TestContentService_Good_CreateFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_UpdateFile(t *testing.T) {
+func TestContentService_UpdateFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
@@ -138,7 +138,7 @@ func TestContentService_Good_UpdateFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_DeleteFile(t *testing.T) {
+func TestContentService_DeleteFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -168,7 +168,7 @@ func TestContentService_Good_DeleteFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_GetRawFile(t *testing.T) {
+func TestContentService_GetRawFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -192,7 +192,7 @@ func TestContentService_Good_GetRawFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Bad_NotFound(t *testing.T) {
+func TestContentService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "file not found"})
@@ -209,7 +209,7 @@ func TestContentService_Bad_NotFound(t *testing.T) {
 	}
 }
 
-func TestContentService_Bad_GetRawNotFound(t *testing.T) {
+func TestContentService_GetRawNotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "file not found"})

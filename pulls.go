@@ -4,11 +4,15 @@ import (
 	"context"
 	"iter"
 
-	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
 // PullService handles pull request operations within a repository.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Pulls.ListAll(ctx, forge.Params{"owner": "core", "repo": "go-forge"})
 type PullService struct {
 	Resource[types.PullRequest, types.CreatePullRequestOption, types.EditPullRequestOption]
 }
@@ -23,32 +27,32 @@ func newPullService(c *Client) *PullService {
 
 // Merge merges a pull request. Method is one of "merge", "rebase", "rebase-merge", "squash", "fast-forward-only", "manually-merged".
 func (s *PullService) Merge(ctx context.Context, owner, repo string, index int64, method string) error {
-	path := core.Sprintf("/api/v1/repos/%s/%s/pulls/%d/merge", owner, repo, index)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/merge", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	body := map[string]string{"Do": method}
 	return s.client.Post(ctx, path, body, nil)
 }
 
 // Update updates a pull request branch with the base branch.
 func (s *PullService) Update(ctx context.Context, owner, repo string, index int64) error {
-	path := core.Sprintf("/api/v1/repos/%s/%s/pulls/%d/update", owner, repo, index)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/update", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	return s.client.Post(ctx, path, nil, nil)
 }
 
 // ListReviews returns all reviews on a pull request.
 func (s *PullService) ListReviews(ctx context.Context, owner, repo string, index int64) ([]types.PullReview, error) {
-	path := core.Sprintf("/api/v1/repos/%s/%s/pulls/%d/reviews", owner, repo, index)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	return ListAll[types.PullReview](ctx, s.client, path, nil)
 }
 
 // IterReviews returns an iterator over all reviews on a pull request.
 func (s *PullService) IterReviews(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.PullReview, error] {
-	path := core.Sprintf("/api/v1/repos/%s/%s/pulls/%d/reviews", owner, repo, index)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	return ListIter[types.PullReview](ctx, s.client, path, nil)
 }
 
 // SubmitReview creates a new review on a pull request.
 func (s *PullService) SubmitReview(ctx context.Context, owner, repo string, index int64, review map[string]any) (*types.PullReview, error) {
-	path := core.Sprintf("/api/v1/repos/%s/%s/pulls/%d/reviews", owner, repo, index)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	var out types.PullReview
 	if err := s.client.Post(ctx, path, review, &out); err != nil {
 		return nil, err
@@ -58,13 +62,13 @@ func (s *PullService) SubmitReview(ctx context.Context, owner, repo string, inde
 
 // DismissReview dismisses a pull request review.
 func (s *PullService) DismissReview(ctx context.Context, owner, repo string, index, reviewID int64, msg string) error {
-	path := core.Sprintf("/api/v1/repos/%s/%s/pulls/%d/reviews/%d/dismissals", owner, repo, index, reviewID)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews/{reviewID}/dismissals", pathParams("owner", owner, "repo", repo, "index", int64String(index), "reviewID", int64String(reviewID)))
 	body := map[string]string{"message": msg}
 	return s.client.Post(ctx, path, body, nil)
 }
 
 // UndismissReview undismisses a pull request review.
 func (s *PullService) UndismissReview(ctx context.Context, owner, repo string, index, reviewID int64) error {
-	path := core.Sprintf("/api/v1/repos/%s/%s/pulls/%d/reviews/%d/undismissals", owner, repo, index, reviewID)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews/{reviewID}/undismissals", pathParams("owner", owner, "repo", repo, "index", int64String(index), "reviewID", int64String(reviewID)))
 	return s.client.Post(ctx, path, nil, nil)
 }

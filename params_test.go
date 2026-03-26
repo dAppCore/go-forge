@@ -2,7 +2,7 @@ package forge
 
 import "testing"
 
-func TestResolvePath_Good_Simple(t *testing.T) {
+func TestResolvePath_Simple_Good(t *testing.T) {
 	got := ResolvePath("/api/v1/repos/{owner}/{repo}", Params{"owner": "core", "repo": "go-forge"})
 	want := "/api/v1/repos/core/go-forge"
 	if got != want {
@@ -10,14 +10,14 @@ func TestResolvePath_Good_Simple(t *testing.T) {
 	}
 }
 
-func TestResolvePath_Good_NoParams(t *testing.T) {
+func TestResolvePath_NoParams_Good(t *testing.T) {
 	got := ResolvePath("/api/v1/user", nil)
 	if got != "/api/v1/user" {
 		t.Errorf("got %q", got)
 	}
 }
 
-func TestResolvePath_Good_WithID(t *testing.T) {
+func TestResolvePath_WithID_Good(t *testing.T) {
 	got := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}", Params{
 		"owner": "core", "repo": "go-forge", "index": "42",
 	})
@@ -27,7 +27,7 @@ func TestResolvePath_Good_WithID(t *testing.T) {
 	}
 }
 
-func TestResolvePath_Good_URLEncoding(t *testing.T) {
+func TestResolvePath_URLEncoding_Good(t *testing.T) {
 	got := ResolvePath("/api/v1/repos/{owner}/{repo}", Params{"owner": "my org", "repo": "my repo"})
 	want := "/api/v1/repos/my%20org/my%20repo"
 	if got != want {

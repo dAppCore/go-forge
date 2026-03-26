@@ -2,14 +2,13 @@ package main
 
 import (
 	"bytes"
+	"cmp"
 	"maps"
 	"slices"
-	"strings"
 	"text/template"
 
 	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
-	coreerr "dappco.re/go/core/log"
 )
 
 // typeGrouping maps type name prefixes to output file names.
@@ -151,7 +150,7 @@ func classifyType(name string) string {
 // sanitiseLine collapses a multi-line string into a single line,
 // replacing newlines and consecutive whitespace with a single space.
 func sanitiseLine(s string) string {
-	return core.Join(" ", strings.Fields(s)...)
+	return core.Join(" ", splitFields(s)...)
 }
 
 // enumConstName generates a Go constant name for an enum value.
@@ -204,9 +203,14 @@ type templateData struct {
 }
 
 // Generate writes Go source files for the extracted types, grouped by logical domain.
+//
+// Usage:
+//
+//	err := Generate(types, pairs, "types")
+//	_ = err
 func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	if err := coreio.Local.EnsureDir(outDir); err != nil {
-		return coreerr.E("Generate", "create output directory", err)
+		return core.E("Generate", "create output directory", err)
 	}
 
 	// Group types by output file.
@@ -219,13 +223,7 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	// Sort types within each group for deterministic output.
 	for file := range groups {
 		slices.SortFunc(groups[file], func(a, b *GoType) int {
-			if a.Name < b.Name {
-				return -1
-			}
-			if a.Name > b.Name {
-				return 1
-			}
-			return 0
+			return cmp.Compare(a.Name, b.Name)
 		})
 	}
 
@@ -236,7 +234,7 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	for _, file := range fileNames {
 		outPath := core.JoinPath(outDir, file+".go")
 		if err := writeFile(outPath, groups[file]); err != nil {
-			return coreerr.E("Generate", "write "+outPath, err)
+			return core.E("Generate", "write "+outPath, err)
 		}
 	}
 
@@ -258,11 +256,11 @@ func writeFile(path string, types []*GoType) error {
 
 	var buf bytes.Buffer
 	if err := fileHeader.Execute(&buf, data); err != nil {
-		return coreerr.E("writeFile", "execute template", err)
+		return core.E("writeFile", "execute template", err)
 	}
 
 	if err := coreio.Local.Write(path, buf.String()); err != nil {
-		return coreerr.E("writeFile", "write file", err)
+		return core.E("writeFile", "write file", err)
 	}
 
 	return nil

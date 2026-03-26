@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestMiscService_Good_RenderMarkdown(t *testing.T) {
+func TestMiscService_RenderMarkdown_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -44,7 +44,7 @@ func TestMiscService_Good_RenderMarkdown(t *testing.T) {
 	}
 }
 
-func TestMiscService_Good_GetVersion(t *testing.T) {
+func TestMiscService_GetVersion_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -68,7 +68,7 @@ func TestMiscService_Good_GetVersion(t *testing.T) {
 	}
 }
 
-func TestMiscService_Good_ListLicenses(t *testing.T) {
+func TestMiscService_ListLicenses_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -99,7 +99,7 @@ func TestMiscService_Good_ListLicenses(t *testing.T) {
 	}
 }
 
-func TestMiscService_Good_GetLicense(t *testing.T) {
+func TestMiscService_GetLicense_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -128,7 +128,7 @@ func TestMiscService_Good_GetLicense(t *testing.T) {
 	}
 }
 
-func TestMiscService_Good_ListGitignoreTemplates(t *testing.T) {
+func TestMiscService_ListGitignoreTemplates_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -153,7 +153,7 @@ func TestMiscService_Good_ListGitignoreTemplates(t *testing.T) {
 	}
 }
 
-func TestMiscService_Good_GetGitignoreTemplate(t *testing.T) {
+func TestMiscService_GetGitignoreTemplate_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -178,7 +178,7 @@ func TestMiscService_Good_GetGitignoreTemplate(t *testing.T) {
 	}
 }
 
-func TestMiscService_Good_GetNodeInfo(t *testing.T) {
+func TestMiscService_GetNodeInfo_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -209,7 +209,7 @@ func TestMiscService_Good_GetNodeInfo(t *testing.T) {
 	}
 }
 
-func TestMiscService_Bad_NotFound(t *testing.T) {
+func TestMiscService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "not found"})

@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestIssueService_Good_List(t *testing.T) {
+func TestIssueService_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -41,7 +41,7 @@ func TestIssueService_Good_List(t *testing.T) {
 	}
 }
 
-func TestIssueService_Good_Get(t *testing.T) {
+func TestIssueService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -63,7 +63,7 @@ func TestIssueService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestIssueService_Good_Create(t *testing.T) {
+func TestIssueService_Create_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -93,7 +93,7 @@ func TestIssueService_Good_Create(t *testing.T) {
 	}
 }
 
-func TestIssueService_Good_Update(t *testing.T) {
+func TestIssueService_Update_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -121,7 +121,7 @@ func TestIssueService_Good_Update(t *testing.T) {
 	}
 }
 
-func TestIssueService_Good_Delete(t *testing.T) {
+func TestIssueService_Delete_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -141,7 +141,7 @@ func TestIssueService_Good_Delete(t *testing.T) {
 	}
 }
 
-func TestIssueService_Good_CreateComment(t *testing.T) {
+func TestIssueService_CreateComment_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -168,7 +168,7 @@ func TestIssueService_Good_CreateComment(t *testing.T) {
 	}
 }
 
-func TestIssueService_Good_Pin(t *testing.T) {
+func TestIssueService_Pin_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -187,7 +187,7 @@ func TestIssueService_Good_Pin(t *testing.T) {
 	}
 }
 
-func TestIssueService_Bad_List(t *testing.T) {
+func TestIssueService_List_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{"message": "boom"})
@@ -200,7 +200,7 @@ func TestIssueService_Bad_List(t *testing.T) {
 	}
 }
 
-func TestIssueService_Ugly_ListIgnoresIndexParam(t *testing.T) {
+func TestIssueService_ListIgnoresIndexParam_Ugly(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v1/repos/core/go-forge/issues" {
 			t.Errorf("wrong path: %s", r.URL.Path)

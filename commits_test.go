@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestCommitService_Good_List(t *testing.T) {
+func TestCommitService_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -61,7 +61,7 @@ func TestCommitService_Good_List(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_Get(t *testing.T) {
+func TestCommitService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -95,7 +95,7 @@ func TestCommitService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_ListStatuses(t *testing.T) {
+func TestCommitService_ListStatuses_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -126,7 +126,7 @@ func TestCommitService_Good_ListStatuses(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_CreateStatus(t *testing.T) {
+func TestCommitService_CreateStatus_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -169,7 +169,7 @@ func TestCommitService_Good_CreateStatus(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_GetNote(t *testing.T) {
+func TestCommitService_GetNote_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -199,7 +199,7 @@ func TestCommitService_Good_GetNote(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_GetCombinedStatus(t *testing.T) {
+func TestCommitService_GetCombinedStatus_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -234,7 +234,7 @@ func TestCommitService_Good_GetCombinedStatus(t *testing.T) {
 	}
 }
 
-func TestCommitService_Bad_NotFound(t *testing.T) {
+func TestCommitService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "not found"})

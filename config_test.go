@@ -1,11 +1,10 @@
 package forge
 
 import (
-	"os"
 	"testing"
 )
 
-func TestResolveConfig_Good_EnvOverrides(t *testing.T) {
+func TestResolveConfig_EnvOverrides_Good(t *testing.T) {
 	t.Setenv("FORGE_URL", "https://forge.example.com")
 	t.Setenv("FORGE_TOKEN", "env-token")
 
@@ -21,7 +20,7 @@ func TestResolveConfig_Good_EnvOverrides(t *testing.T) {
 	}
 }
 
-func TestResolveConfig_Good_FlagOverridesEnv(t *testing.T) {
+func TestResolveConfig_FlagOverridesEnv_Good(t *testing.T) {
 	t.Setenv("FORGE_URL", "https://env.example.com")
 	t.Setenv("FORGE_TOKEN", "env-token")
 
@@ -37,9 +36,9 @@ func TestResolveConfig_Good_FlagOverridesEnv(t *testing.T) {
 	}
 }
 
-func TestResolveConfig_Good_DefaultURL(t *testing.T) {
-	os.Unsetenv("FORGE_URL")
-	os.Unsetenv("FORGE_TOKEN")
+func TestResolveConfig_DefaultURL_Good(t *testing.T) {
+	t.Setenv("FORGE_URL", "")
+	t.Setenv("FORGE_TOKEN", "")
 
 	url, _, err := ResolveConfig("", "")
 	if err != nil {
@@ -50,9 +49,9 @@ func TestResolveConfig_Good_DefaultURL(t *testing.T) {
 	}
 }
 
-func TestNewForgeFromConfig_Bad_NoToken(t *testing.T) {
-	os.Unsetenv("FORGE_URL")
-	os.Unsetenv("FORGE_TOKEN")
+func TestNewForgeFromConfig_NoToken_Bad(t *testing.T) {
+	t.Setenv("FORGE_URL", "")
+	t.Setenv("FORGE_TOKEN", "")
 
 	_, err := NewForgeFromConfig("", "")
 	if err == nil {

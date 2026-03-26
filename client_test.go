@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	core "dappco.re/go/core"
 )
 
-func TestClient_Good_Get(t *testing.T) {
+func TestClient_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -36,7 +36,7 @@ func TestClient_Good_Get(t *testing.T) {
 	}
 }
 
-func TestClient_Good_Post(t *testing.T) {
+func TestClient_Post_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -63,7 +63,7 @@ func TestClient_Good_Post(t *testing.T) {
 	}
 }
 
-func TestClient_Good_Delete(t *testing.T) {
+func TestClient_Delete_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -79,7 +79,7 @@ func TestClient_Good_Delete(t *testing.T) {
 	}
 }
 
-func TestClient_Bad_ServerError(t *testing.T) {
+func TestClient_ServerError_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{"message": "internal error"})
@@ -100,7 +100,7 @@ func TestClient_Bad_ServerError(t *testing.T) {
 	}
 }
 
-func TestClient_Bad_NotFound(t *testing.T) {
+func TestClient_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "not found"})
@@ -114,7 +114,7 @@ func TestClient_Bad_NotFound(t *testing.T) {
 	}
 }
 
-func TestClient_Good_ContextCancellation(t *testing.T) {
+func TestClient_ContextCancellation_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		<-r.Context().Done()
 	}))
@@ -129,7 +129,7 @@ func TestClient_Good_ContextCancellation(t *testing.T) {
 	}
 }
 
-func TestClient_Good_Options(t *testing.T) {
+func TestClient_Options_Good(t *testing.T) {
 	c := NewClient("https://forge.lthn.ai", "tok",
 		WithUserAgent("go-forge/1.0"),
 	)
@@ -138,7 +138,7 @@ func TestClient_Good_Options(t *testing.T) {
 	}
 }
 
-func TestClient_Good_WithHTTPClient(t *testing.T) {
+func TestClient_WithHTTPClient_Good(t *testing.T) {
 	custom := &http.Client{}
 	c := NewClient("https://forge.lthn.ai", "tok", WithHTTPClient(custom))
 	if c.httpClient != custom {
@@ -146,7 +146,7 @@ func TestClient_Good_WithHTTPClient(t *testing.T) {
 	}
 }
 
-func TestAPIError_Good_Error(t *testing.T) {
+func TestAPIError_Error_Good(t *testing.T) {
 	e := &APIError{StatusCode: 404, Message: "not found", URL: "/api/v1/repos/x/y"}
 	got := e.Error()
 	want := "forge: /api/v1/repos/x/y 404: not found"
@@ -155,28 +155,28 @@ func TestAPIError_Good_Error(t *testing.T) {
 	}
 }
 
-func TestIsConflict_Good(t *testing.T) {
+func TestIsConflict_Match_Good(t *testing.T) {
 	err := &APIError{StatusCode: http.StatusConflict, Message: "conflict", URL: "/test"}
 	if !IsConflict(err) {
 		t.Error("expected IsConflict to return true for 409")
 	}
 }
 
-func TestIsConflict_Bad_NotConflict(t *testing.T) {
+func TestIsConflict_NotConflict_Bad(t *testing.T) {
 	err := &APIError{StatusCode: http.StatusNotFound, Message: "not found", URL: "/test"}
 	if IsConflict(err) {
 		t.Error("expected IsConflict to return false for 404")
 	}
 }
 
-func TestIsForbidden_Bad_NotForbidden(t *testing.T) {
+func TestIsForbidden_NotForbidden_Bad(t *testing.T) {
 	err := &APIError{StatusCode: http.StatusNotFound, Message: "not found", URL: "/test"}
 	if IsForbidden(err) {
 		t.Error("expected IsForbidden to return false for 404")
 	}
 }
 
-func TestClient_Good_RateLimit(t *testing.T) {
+func TestClient_RateLimit_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-RateLimit-Limit", "100")
 		w.Header().Set("X-RateLimit-Remaining", "99")
@@ -203,7 +203,7 @@ func TestClient_Good_RateLimit(t *testing.T) {
 	}
 }
 
-func TestClient_Bad_Forbidden(t *testing.T) {
+func TestClient_Forbidden_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		json.NewEncoder(w).Encode(map[string]string{"message": "forbidden"})
@@ -217,7 +217,7 @@ func TestClient_Bad_Forbidden(t *testing.T) {
 	}
 }
 
-func TestClient_Bad_Conflict(t *testing.T) {
+func TestClient_Conflict_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusConflict)
 		json.NewEncoder(w).Encode(map[string]string{"message": "already exists"})

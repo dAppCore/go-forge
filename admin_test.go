@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestAdminService_Good_ListUsers(t *testing.T) {
+func TestAdminService_ListUsers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -39,7 +39,7 @@ func TestAdminService_Good_ListUsers(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_CreateUser(t *testing.T) {
+func TestAdminService_CreateUser_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -78,7 +78,7 @@ func TestAdminService_Good_CreateUser(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_DeleteUser(t *testing.T) {
+func TestAdminService_DeleteUser_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -96,7 +96,7 @@ func TestAdminService_Good_DeleteUser(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_RunCron(t *testing.T) {
+func TestAdminService_RunCron_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -114,7 +114,7 @@ func TestAdminService_Good_RunCron(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_EditUser(t *testing.T) {
+func TestAdminService_EditUser_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -142,7 +142,7 @@ func TestAdminService_Good_EditUser(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_RenameUser(t *testing.T) {
+func TestAdminService_RenameUser_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -167,7 +167,7 @@ func TestAdminService_Good_RenameUser(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_ListOrgs(t *testing.T) {
+func TestAdminService_ListOrgs_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -195,7 +195,7 @@ func TestAdminService_Good_ListOrgs(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_ListCron(t *testing.T) {
+func TestAdminService_ListCron_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -223,7 +223,7 @@ func TestAdminService_Good_ListCron(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_AdoptRepo(t *testing.T) {
+func TestAdminService_AdoptRepo_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -241,7 +241,7 @@ func TestAdminService_Good_AdoptRepo(t *testing.T) {
 	}
 }
 
-func TestAdminService_Good_GenerateRunnerToken(t *testing.T) {
+func TestAdminService_GenerateRunnerToken_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -263,7 +263,7 @@ func TestAdminService_Good_GenerateRunnerToken(t *testing.T) {
 	}
 }
 
-func TestAdminService_Bad_DeleteUser_NotFound(t *testing.T) {
+func TestAdminService_DeleteUser_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "user not found"})
@@ -277,7 +277,7 @@ func TestAdminService_Bad_DeleteUser_NotFound(t *testing.T) {
 	}
 }
 
-func TestAdminService_Bad_CreateUser_Forbidden(t *testing.T) {
+func TestAdminService_CreateUser_Forbidden_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		json.NewEncoder(w).Encode(map[string]string{"message": "only admins can create users"})

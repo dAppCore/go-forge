@@ -2,13 +2,13 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-func TestPagination_Good_SinglePage(t *testing.T) {
+func TestPagination_SinglePage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Total-Count", "2")
 		json.NewEncoder(w).Encode([]map[string]int{{"id": 1}, {"id": 2}})
@@ -25,7 +25,7 @@ func TestPagination_Good_SinglePage(t *testing.T) {
 	}
 }
 
-func TestPagination_Good_MultiPage(t *testing.T) {
+func TestPagination_MultiPage_Good(t *testing.T) {
 	page := 0
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		page++
@@ -48,7 +48,7 @@ func TestPagination_Good_MultiPage(t *testing.T) {
 	}
 }
 
-func TestPagination_Good_EmptyResult(t *testing.T) {
+func TestPagination_EmptyResult_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Total-Count", "0")
 		json.NewEncoder(w).Encode([]map[string]int{})
@@ -65,7 +65,7 @@ func TestPagination_Good_EmptyResult(t *testing.T) {
 	}
 }
 
-func TestPagination_Good_Iter(t *testing.T) {
+func TestPagination_Iter_Good(t *testing.T) {
 	page := 0
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		page++
@@ -95,7 +95,7 @@ func TestPagination_Good_Iter(t *testing.T) {
 	}
 }
 
-func TestListPage_Good_QueryParams(t *testing.T) {
+func TestListPage_QueryParams_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		p := r.URL.Query().Get("page")
 		l := r.URL.Query().Get("limit")
@@ -116,7 +116,7 @@ func TestListPage_Good_QueryParams(t *testing.T) {
 	}
 }
 
-func TestPagination_Bad_ServerError(t *testing.T) {
+func TestPagination_ServerError_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		json.NewEncoder(w).Encode(map[string]string{"message": "fail"})

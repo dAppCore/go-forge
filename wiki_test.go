@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestWikiService_Good_ListPages(t *testing.T) {
+func TestWikiService_ListPages_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -41,7 +41,7 @@ func TestWikiService_Good_ListPages(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_GetPage(t *testing.T) {
+func TestWikiService_GetPage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -74,7 +74,7 @@ func TestWikiService_Good_GetPage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_CreatePage(t *testing.T) {
+func TestWikiService_CreatePage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -118,7 +118,7 @@ func TestWikiService_Good_CreatePage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_EditPage(t *testing.T) {
+func TestWikiService_EditPage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -151,7 +151,7 @@ func TestWikiService_Good_EditPage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_DeletePage(t *testing.T) {
+func TestWikiService_DeletePage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -170,7 +170,7 @@ func TestWikiService_Good_DeletePage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Bad_NotFound(t *testing.T) {
+func TestWikiService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "page not found"})

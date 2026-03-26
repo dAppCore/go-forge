@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"os"
 
 	core "dappco.re/go/core"
 )
@@ -14,18 +13,16 @@ func main() {
 
 	spec, err := LoadSpec(*specPath)
 	if err != nil {
-		core.Print(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		panic(core.E("forgegen.main", "load spec", err))
 	}
 
 	types := ExtractTypes(spec)
 	pairs := DetectCRUDPairs(spec)
 
-	core.Print(os.Stdout, "Loaded %d types, %d CRUD pairs\n", len(types), len(pairs))
-	core.Print(os.Stdout, "Output dir: %s\n", *outDir)
+	core.Print(nil, "Loaded %d types, %d CRUD pairs", len(types), len(pairs))
+	core.Print(nil, "Output dir: %s", *outDir)
 
 	if err := Generate(types, pairs, *outDir); err != nil {
-		core.Print(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		panic(core.E("forgegen.main", "generate types", err))
 	}
 }

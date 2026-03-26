@@ -1,14 +1,13 @@
 package main
 
 import (
-	"os"
 	"testing"
 
 	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
 )
 
-func TestGenerate_Good_CreatesFiles(t *testing.T) {
+func TestGenerate_CreatesFiles_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -22,7 +21,7 @@ func TestGenerate_Good_CreatesFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := os.ReadDir(outDir)
+	entries, _ := coreio.Local.List(outDir)
 	goFiles := 0
 	for _, e := range entries {
 		if core.HasSuffix(e.Name(), ".go") {
@@ -34,7 +33,7 @@ func TestGenerate_Good_CreatesFiles(t *testing.T) {
 	}
 }
 
-func TestGenerate_Good_ValidGoSyntax(t *testing.T) {
+func TestGenerate_ValidGoSyntax_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -48,7 +47,7 @@ func TestGenerate_Good_ValidGoSyntax(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := os.ReadDir(outDir)
+	entries, _ := coreio.Local.List(outDir)
 	var content string
 	for _, e := range entries {
 		if core.HasSuffix(e.Name(), ".go") {
@@ -69,7 +68,7 @@ func TestGenerate_Good_ValidGoSyntax(t *testing.T) {
 	}
 }
 
-func TestGenerate_Good_RepositoryType(t *testing.T) {
+func TestGenerate_RepositoryType_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -84,7 +83,7 @@ func TestGenerate_Good_RepositoryType(t *testing.T) {
 	}
 
 	var content string
-	entries, _ := os.ReadDir(outDir)
+	entries, _ := coreio.Local.List(outDir)
 	for _, e := range entries {
 		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
 		if core.Contains(data, "type Repository struct") {
@@ -112,7 +111,7 @@ func TestGenerate_Good_RepositoryType(t *testing.T) {
 	}
 }
 
-func TestGenerate_Good_TimeImport(t *testing.T) {
+func TestGenerate_TimeImport_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -126,7 +125,7 @@ func TestGenerate_Good_TimeImport(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := os.ReadDir(outDir)
+	entries, _ := coreio.Local.List(outDir)
 	for _, e := range entries {
 		content, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
 		if core.Contains(content, "time.Time") && !core.Contains(content, "\"time\"") {

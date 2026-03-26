@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestParser_Good_LoadSpec(t *testing.T) {
+func TestParser_LoadSpec_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -17,7 +17,7 @@ func TestParser_Good_LoadSpec(t *testing.T) {
 	}
 }
 
-func TestParser_Good_ExtractTypes(t *testing.T) {
+func TestParser_ExtractTypes_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -38,7 +38,7 @@ func TestParser_Good_ExtractTypes(t *testing.T) {
 	}
 }
 
-func TestParser_Good_FieldTypes(t *testing.T) {
+func TestParser_FieldTypes_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -74,7 +74,7 @@ func TestParser_Good_FieldTypes(t *testing.T) {
 	}
 }
 
-func TestParser_Good_DetectCreateEditPairs(t *testing.T) {
+func TestParser_DetectCreateEditPairs_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)

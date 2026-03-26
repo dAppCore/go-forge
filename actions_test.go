@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestActionsService_Good_ListRepoSecrets(t *testing.T) {
+func TestActionsService_ListRepoSecrets_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -42,7 +42,7 @@ func TestActionsService_Good_ListRepoSecrets(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_CreateRepoSecret(t *testing.T) {
+func TestActionsService_CreateRepoSecret_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
@@ -68,7 +68,7 @@ func TestActionsService_Good_CreateRepoSecret(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_DeleteRepoSecret(t *testing.T) {
+func TestActionsService_DeleteRepoSecret_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -87,7 +87,7 @@ func TestActionsService_Good_DeleteRepoSecret(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_ListRepoVariables(t *testing.T) {
+func TestActionsService_ListRepoVariables_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -115,7 +115,7 @@ func TestActionsService_Good_ListRepoVariables(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_CreateRepoVariable(t *testing.T) {
+func TestActionsService_CreateRepoVariable_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -141,7 +141,7 @@ func TestActionsService_Good_CreateRepoVariable(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_DeleteRepoVariable(t *testing.T) {
+func TestActionsService_DeleteRepoVariable_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -160,7 +160,7 @@ func TestActionsService_Good_DeleteRepoVariable(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_ListOrgSecrets(t *testing.T) {
+func TestActionsService_ListOrgSecrets_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -188,7 +188,7 @@ func TestActionsService_Good_ListOrgSecrets(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_ListOrgVariables(t *testing.T) {
+func TestActionsService_ListOrgVariables_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -216,7 +216,7 @@ func TestActionsService_Good_ListOrgVariables(t *testing.T) {
 	}
 }
 
-func TestActionsService_Good_DispatchWorkflow(t *testing.T) {
+func TestActionsService_DispatchWorkflow_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -244,7 +244,7 @@ func TestActionsService_Good_DispatchWorkflow(t *testing.T) {
 	}
 }
 
-func TestActionsService_Bad_NotFound(t *testing.T) {
+func TestActionsService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "not found"})
