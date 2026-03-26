@@ -2,8 +2,8 @@ package forge
 
 import (
 	"context"
-	"fmt"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -19,7 +19,7 @@ func newWikiService(c *Client) *WikiService {
 
 // ListPages returns all wiki page metadata for a repository.
 func (s *WikiService) ListPages(ctx context.Context, owner, repo string) ([]types.WikiPageMetaData, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/wiki/pages", owner, repo)
+	path := core.Sprintf("/api/v1/repos/%s/%s/wiki/pages", owner, repo)
 	var out []types.WikiPageMetaData
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (s *WikiService) ListPages(ctx context.Context, owner, repo string) ([]type
 
 // GetPage returns a single wiki page by name.
 func (s *WikiService) GetPage(ctx context.Context, owner, repo, pageName string) (*types.WikiPage, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/wiki/page/%s", owner, repo, pageName)
+	path := core.Sprintf("/api/v1/repos/%s/%s/wiki/page/%s", owner, repo, pageName)
 	var out types.WikiPage
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (s *WikiService) GetPage(ctx context.Context, owner, repo, pageName string)
 
 // CreatePage creates a new wiki page.
 func (s *WikiService) CreatePage(ctx context.Context, owner, repo string, opts *types.CreateWikiPageOptions) (*types.WikiPage, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/wiki/new", owner, repo)
+	path := core.Sprintf("/api/v1/repos/%s/%s/wiki/new", owner, repo)
 	var out types.WikiPage
 	if err := s.client.Post(ctx, path, opts, &out); err != nil {
 		return nil, err
@@ -49,7 +49,7 @@ func (s *WikiService) CreatePage(ctx context.Context, owner, repo string, opts *
 
 // EditPage updates an existing wiki page.
 func (s *WikiService) EditPage(ctx context.Context, owner, repo, pageName string, opts *types.CreateWikiPageOptions) (*types.WikiPage, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/wiki/page/%s", owner, repo, pageName)
+	path := core.Sprintf("/api/v1/repos/%s/%s/wiki/page/%s", owner, repo, pageName)
 	var out types.WikiPage
 	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
 		return nil, err
@@ -59,6 +59,6 @@ func (s *WikiService) EditPage(ctx context.Context, owner, repo, pageName string
 
 // DeletePage removes a wiki page.
 func (s *WikiService) DeletePage(ctx context.Context, owner, repo, pageName string) error {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/wiki/page/%s", owner, repo, pageName)
+	path := core.Sprintf("/api/v1/repos/%s/%s/wiki/page/%s", owner, repo, pageName)
 	return s.client.Delete(ctx, path)
 }

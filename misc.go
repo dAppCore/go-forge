@@ -2,8 +2,8 @@ package forge
 
 import (
 	"context"
-	"fmt"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -41,7 +41,7 @@ func (s *MiscService) ListLicenses(ctx context.Context) ([]types.LicensesTemplat
 
 // GetLicense returns a single licence template by name.
 func (s *MiscService) GetLicense(ctx context.Context, name string) (*types.LicenseTemplateInfo, error) {
-	path := fmt.Sprintf("/api/v1/licenses/%s", name)
+	path := core.Sprintf("/api/v1/licenses/%s", name)
 	var out types.LicenseTemplateInfo
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (s *MiscService) ListGitignoreTemplates(ctx context.Context) ([]string, err
 
 // GetGitignoreTemplate returns a single gitignore template by name.
 func (s *MiscService) GetGitignoreTemplate(ctx context.Context, name string) (*types.GitignoreTemplateInfo, error) {
-	path := fmt.Sprintf("/api/v1/gitignore/templates/%s", name)
+	path := core.Sprintf("/api/v1/gitignore/templates/%s", name)
 	var out types.GitignoreTemplateInfo
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err

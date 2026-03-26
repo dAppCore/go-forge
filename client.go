@@ -4,13 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
-	"strings"
 
+	core "dappco.re/go/core"
 	coreerr "dappco.re/go/core/log"
 )
 
@@ -22,25 +20,25 @@ type APIError struct {
 }
 
 func (e *APIError) Error() string {
-	return fmt.Sprintf("forge: %s %d: %s", e.URL, e.StatusCode, e.Message)
+	return core.Sprintf("forge: %s %d: %s", e.URL, e.StatusCode, e.Message)
 }
 
 // IsNotFound returns true if the error is a 404 response.
 func IsNotFound(err error) bool {
 	var apiErr *APIError
-	return errors.As(err, &apiErr) && apiErr.StatusCode == http.StatusNotFound
+	return core.As(err, &apiErr) && apiErr.StatusCode == http.StatusNotFound
 }
 
 // IsForbidden returns true if the error is a 403 response.
 func IsForbidden(err error) bool {
 	var apiErr *APIError
-	return errors.As(err, &apiErr) && apiErr.StatusCode == http.StatusForbidden
+	return core.As(err, &apiErr) && apiErr.StatusCode == http.StatusForbidden
 }
 
 // IsConflict returns true if the error is a 409 response.
 func IsConflict(err error) bool {
 	var apiErr *APIError
-	return errors.As(err, &apiErr) && apiErr.StatusCode == http.StatusConflict
+	return core.As(err, &apiErr) && apiErr.StatusCode == http.StatusConflict
 }
 
 // Option configures the Client.
@@ -80,7 +78,7 @@ func (c *Client) RateLimit() RateLimit {
 // NewClient creates a new Forgejo API client.
 func NewClient(url, token string, opts ...Option) *Client {
 	c := &Client{
-		baseURL: strings.TrimRight(url, "/"),
+		baseURL: core.TrimSuffix(url, "/"),
 		token:   token,
 		httpClient: &http.Client{
 			CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -139,11 +137,11 @@ func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, er
 
 	var bodyReader io.Reader
 	if body != nil {
-		data, err := json.Marshal(body)
-		if err != nil {
-			return nil, coreerr.E("Client.PostRaw", "forge: marshal body", err)
+		r := core.JSONMarshal(body)
+		if !r.OK {
+			return nil, coreerr.E("Client.PostRaw", "forge: marshal body", nil)
 		}
-		bodyReader = bytes.NewReader(data)
+		bodyReader = bytes.NewReader(r.Value.([]byte))
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bodyReader)
@@ -218,11 +216,11 @@ func (c *Client) doJSON(ctx context.Context, method, path string, body, out any)
 
 	var bodyReader io.Reader
 	if body != nil {
-		data, err := json.Marshal(body)
-		if err != nil {
-			return nil, coreerr.E("Client.doJSON", "forge: marshal body", err)
+		r := core.JSONMarshal(body)
+		if !r.OK {
+			return nil, coreerr.E("Client.doJSON", "forge: marshal body", nil)
 		}
-		bodyReader = bytes.NewReader(data)
+		bodyReader = bytes.NewReader(r.Value.([]byte))
 	}
 
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
@@ -267,7 +265,7 @@ func (c *Client) parseError(resp *http.Response, path string) error {
 
 	// Read a bit of the body to see if we can get a message
 	data, _ := io.ReadAll(io.LimitReader(resp.Body, 1024))
-	_ = json.Unmarshal(data, &errBody)
+	core.JSONUnmarshal(data, &errBody)
 
 	msg := errBody.Message
 	if msg == "" && len(data) > 0 {

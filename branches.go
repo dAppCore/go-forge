@@ -2,9 +2,9 @@ package forge
 
 import (
 	"context"
-	"fmt"
 	"iter"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -23,19 +23,19 @@ func newBranchService(c *Client) *BranchService {
 
 // ListBranchProtections returns all branch protections for a repository.
 func (s *BranchService) ListBranchProtections(ctx context.Context, owner, repo string) ([]types.BranchProtection, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
+	path := core.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
 	return ListAll[types.BranchProtection](ctx, s.client, path, nil)
 }
 
 // IterBranchProtections returns an iterator over all branch protections for a repository.
 func (s *BranchService) IterBranchProtections(ctx context.Context, owner, repo string) iter.Seq2[types.BranchProtection, error] {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
+	path := core.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
 	return ListIter[types.BranchProtection](ctx, s.client, path, nil)
 }
 
 // GetBranchProtection returns a single branch protection by name.
 func (s *BranchService) GetBranchProtection(ctx context.Context, owner, repo, name string) (*types.BranchProtection, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections/%s", owner, repo, name)
+	path := core.Sprintf("/api/v1/repos/%s/%s/branch_protections/%s", owner, repo, name)
 	var out types.BranchProtection
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (s *BranchService) GetBranchProtection(ctx context.Context, owner, repo, na
 
 // CreateBranchProtection creates a new branch protection rule.
 func (s *BranchService) CreateBranchProtection(ctx context.Context, owner, repo string, opts *types.CreateBranchProtectionOption) (*types.BranchProtection, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
+	path := core.Sprintf("/api/v1/repos/%s/%s/branch_protections", owner, repo)
 	var out types.BranchProtection
 	if err := s.client.Post(ctx, path, opts, &out); err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *BranchService) CreateBranchProtection(ctx context.Context, owner, repo 
 
 // EditBranchProtection updates an existing branch protection rule.
 func (s *BranchService) EditBranchProtection(ctx context.Context, owner, repo, name string, opts *types.EditBranchProtectionOption) (*types.BranchProtection, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections/%s", owner, repo, name)
+	path := core.Sprintf("/api/v1/repos/%s/%s/branch_protections/%s", owner, repo, name)
 	var out types.BranchProtection
 	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
 		return nil, err
@@ -65,6 +65,6 @@ func (s *BranchService) EditBranchProtection(ctx context.Context, owner, repo, n
 
 // DeleteBranchProtection deletes a branch protection rule.
 func (s *BranchService) DeleteBranchProtection(ctx context.Context, owner, repo, name string) error {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/branch_protections/%s", owner, repo, name)
+	path := core.Sprintf("/api/v1/repos/%s/%s/branch_protections/%s", owner, repo, name)
 	return s.client.Delete(ctx, path)
 }

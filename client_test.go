@@ -3,10 +3,11 @@ package forge
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	core "dappco.re/go/core"
 )
 
 func TestClient_Good_Get(t *testing.T) {
@@ -91,7 +92,7 @@ func TestClient_Bad_ServerError(t *testing.T) {
 		t.Fatal("expected error")
 	}
 	var apiErr *APIError
-	if !errors.As(err, &apiErr) {
+	if !core.As(err, &apiErr) {
 		t.Fatalf("expected APIError, got %T", err)
 	}
 	if apiErr.StatusCode != 500 {

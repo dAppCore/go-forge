@@ -2,7 +2,8 @@ package forge
 
 import (
 	"net/url"
-	"strings"
+
+	core "dappco.re/go/core"
 )
 
 // Params maps path variable names to values.
@@ -12,7 +13,7 @@ type Params map[string]string
 // ResolvePath substitutes {placeholders} in path with values from params.
 func ResolvePath(path string, params Params) string {
 	for k, v := range params {
-		path = strings.ReplaceAll(path, "{"+k+"}", url.PathEscape(v))
+		path = core.Replace(path, "{"+k+"}", url.PathEscape(v))
 	}
 	return path
 }

@@ -3,7 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
-	"strings"
+
+	core "dappco.re/go/core"
 )
 
 // Resource provides generic CRUD operations for a Forgejo API resource.
@@ -21,10 +22,11 @@ func NewResource[T any, C any, U any](c *Client, path string) *Resource[T, C, U]
 	collection := path
 	// Strip last segment if it's a pure placeholder like /{index}
 	// Don't strip if mixed like /repos or /{org}/repos
-	if i := strings.LastIndex(path, "/"); i >= 0 {
-		lastSeg := path[i+1:]
-		if strings.HasPrefix(lastSeg, "{") && strings.HasSuffix(lastSeg, "}") {
-			collection = path[:i]
+	parts := core.Split(path, "/")
+	if len(parts) > 0 {
+		lastSeg := parts[len(parts)-1]
+		if core.HasPrefix(lastSeg, "{") && core.HasSuffix(lastSeg, "}") {
+			collection = path[:len(path)-len(lastSeg)-1]
 		}
 	}
 	return &Resource[T, C, U]{client: c, path: path, collection: collection}

@@ -2,9 +2,9 @@ package forge
 
 import (
 	"context"
-	"fmt"
 	"iter"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -32,60 +32,60 @@ func (s *UserService) GetCurrent(ctx context.Context) (*types.User, error) {
 
 // ListFollowers returns all followers of a user.
 func (s *UserService) ListFollowers(ctx context.Context, username string) ([]types.User, error) {
-	path := fmt.Sprintf("/api/v1/users/%s/followers", username)
+	path := core.Sprintf("/api/v1/users/%s/followers", username)
 	return ListAll[types.User](ctx, s.client, path, nil)
 }
 
 // IterFollowers returns an iterator over all followers of a user.
 func (s *UserService) IterFollowers(ctx context.Context, username string) iter.Seq2[types.User, error] {
-	path := fmt.Sprintf("/api/v1/users/%s/followers", username)
+	path := core.Sprintf("/api/v1/users/%s/followers", username)
 	return ListIter[types.User](ctx, s.client, path, nil)
 }
 
 // ListFollowing returns all users that a user is following.
 func (s *UserService) ListFollowing(ctx context.Context, username string) ([]types.User, error) {
-	path := fmt.Sprintf("/api/v1/users/%s/following", username)
+	path := core.Sprintf("/api/v1/users/%s/following", username)
 	return ListAll[types.User](ctx, s.client, path, nil)
 }
 
 // IterFollowing returns an iterator over all users that a user is following.
 func (s *UserService) IterFollowing(ctx context.Context, username string) iter.Seq2[types.User, error] {
-	path := fmt.Sprintf("/api/v1/users/%s/following", username)
+	path := core.Sprintf("/api/v1/users/%s/following", username)
 	return ListIter[types.User](ctx, s.client, path, nil)
 }
 
 // Follow follows a user as the authenticated user.
 func (s *UserService) Follow(ctx context.Context, username string) error {
-	path := fmt.Sprintf("/api/v1/user/following/%s", username)
+	path := core.Sprintf("/api/v1/user/following/%s", username)
 	return s.client.Put(ctx, path, nil, nil)
 }
 
 // Unfollow unfollows a user as the authenticated user.
 func (s *UserService) Unfollow(ctx context.Context, username string) error {
-	path := fmt.Sprintf("/api/v1/user/following/%s", username)
+	path := core.Sprintf("/api/v1/user/following/%s", username)
 	return s.client.Delete(ctx, path)
 }
 
 // ListStarred returns all repositories starred by a user.
 func (s *UserService) ListStarred(ctx context.Context, username string) ([]types.Repository, error) {
-	path := fmt.Sprintf("/api/v1/users/%s/starred", username)
+	path := core.Sprintf("/api/v1/users/%s/starred", username)
 	return ListAll[types.Repository](ctx, s.client, path, nil)
 }
 
 // IterStarred returns an iterator over all repositories starred by a user.
 func (s *UserService) IterStarred(ctx context.Context, username string) iter.Seq2[types.Repository, error] {
-	path := fmt.Sprintf("/api/v1/users/%s/starred", username)
+	path := core.Sprintf("/api/v1/users/%s/starred", username)
 	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
 // Star stars a repository as the authenticated user.
 func (s *UserService) Star(ctx context.Context, owner, repo string) error {
-	path := fmt.Sprintf("/api/v1/user/starred/%s/%s", owner, repo)
+	path := core.Sprintf("/api/v1/user/starred/%s/%s", owner, repo)
 	return s.client.Put(ctx, path, nil, nil)
 }
 
 // Unstar unstars a repository as the authenticated user.
 func (s *UserService) Unstar(ctx context.Context, owner, repo string) error {
-	path := fmt.Sprintf("/api/v1/user/starred/%s/%s", owner, repo)
+	path := core.Sprintf("/api/v1/user/starred/%s/%s", owner, repo)
 	return s.client.Delete(ctx, path)
 }

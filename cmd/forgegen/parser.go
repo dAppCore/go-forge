@@ -1,11 +1,10 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"slices"
 	"strings"
 
+	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
 	coreerr "dappco.re/go/core/log"
 )
@@ -77,8 +76,9 @@ func LoadSpec(path string) (*Spec, error) {
 		return nil, coreerr.E("LoadSpec", "read spec", err)
 	}
 	var spec Spec
-	if err := json.Unmarshal([]byte(content), &spec); err != nil {
-		return nil, coreerr.E("LoadSpec", "parse spec", err)
+	r := core.JSONUnmarshal([]byte(content), &spec)
+	if !r.OK {
+		return nil, coreerr.E("LoadSpec", "parse spec", nil)
 	}
 	return &spec, nil
 }
@@ -91,7 +91,7 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 		if len(def.Enum) > 0 {
 			gt.IsEnum = true
 			for _, v := range def.Enum {
-				gt.EnumValues = append(gt.EnumValues, fmt.Sprintf("%v", v))
+				gt.EnumValues = append(gt.EnumValues, core.Sprintf("%v", v))
 			}
 			slices.Sort(gt.EnumValues)
 			result[name] = gt
@@ -116,7 +116,13 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 			gt.Fields = append(gt.Fields, gf)
 		}
 		slices.SortFunc(gt.Fields, func(a, b GoField) int {
-			return strings.Compare(a.GoName, b.GoName)
+			if a.GoName < b.GoName {
+				return -1
+			}
+			if a.GoName > b.GoName {
+				return 1
+			}
+			return 0
 		})
 		result[name] = gt
 	}
@@ -128,11 +134,11 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 func DetectCRUDPairs(spec *Spec) []CRUDPair {
 	var pairs []CRUDPair
 	for name := range spec.Definitions {
-		if !strings.HasPrefix(name, "Create") || !strings.HasSuffix(name, "Option") {
+		if !core.HasPrefix(name, "Create") || !core.HasSuffix(name, "Option") {
 			continue
 		}
-		inner := strings.TrimPrefix(name, "Create")
-		inner = strings.TrimSuffix(inner, "Option")
+		inner := core.TrimPrefix(name, "Create")
+		inner = core.TrimSuffix(inner, "Option")
 		editName := "Edit" + inner + "Option"
 		pair := CRUDPair{Base: inner, Create: name}
 		if _, ok := spec.Definitions[editName]; ok {
@@ -141,7 +147,13 @@ func DetectCRUDPairs(spec *Spec) []CRUDPair {
 		pairs = append(pairs, pair)
 	}
 	slices.SortFunc(pairs, func(a, b CRUDPair) int {
-		return strings.Compare(a.Base, b.Base)
+		if a.Base < b.Base {
+			return -1
+		}
+		if a.Base > b.Base {
+			return 1
+		}
+		return 0
 	})
 	return pairs
 }
@@ -149,7 +161,7 @@ func DetectCRUDPairs(spec *Spec) []CRUDPair {
 // resolveGoType maps a swagger schema property to a Go type string.
 func resolveGoType(prop SchemaProperty) string {
 	if prop.Ref != "" {
-		parts := strings.Split(prop.Ref, "/")
+		parts := core.Split(prop.Ref, "/")
 		return "*" + parts[len(parts)-1]
 	}
 	switch prop.Type {
@@ -202,13 +214,13 @@ func pascalCase(s string) string {
 		if len(p) == 0 {
 			continue
 		}
-		upper := strings.ToUpper(p)
+		upper := core.Upper(p)
 		switch upper {
 		case "ID", "URL", "HTML", "SSH", "HTTP", "HTTPS", "API", "URI", "GPG", "IP", "CSS", "JS":
 			parts = append(parts, upper)
 		default:
-			parts = append(parts, strings.ToUpper(p[:1])+p[1:])
+			parts = append(parts, core.Upper(p[:1])+p[1:])
 		}
 	}
-	return strings.Join(parts, "")
+	return core.Join("", parts...)
 }
