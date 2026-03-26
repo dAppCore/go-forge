@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestForge_Good_NewForge(t *testing.T) {
+func TestForge_NewForge_Good(t *testing.T) {
 	f := NewForge("https://forge.lthn.ai", "tok")
 	if f.Repos == nil {
 		t.Fatal("Repos service is nil")
@@ -20,7 +20,7 @@ func TestForge_Good_NewForge(t *testing.T) {
 	}
 }
 
-func TestForge_Good_Client(t *testing.T) {
+func TestForge_Client_Good(t *testing.T) {
 	f := NewForge("https://forge.lthn.ai", "tok")
 	c := f.Client()
 	if c == nil {
@@ -31,7 +31,7 @@ func TestForge_Good_Client(t *testing.T) {
 	}
 }
 
-func TestRepoService_Good_ListOrgRepos(t *testing.T) {
+func TestRepoService_ListOrgRepos_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -56,7 +56,7 @@ func TestRepoService_Good_ListOrgRepos(t *testing.T) {
 	}
 }
 
-func TestRepoService_Good_Get(t *testing.T) {
+func TestRepoService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v1/repos/core/go-forge" {
 			t.Errorf("wrong path: %s", r.URL.Path)
@@ -77,7 +77,7 @@ func TestRepoService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestRepoService_Good_Update(t *testing.T) {
+func TestRepoService_Update_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -105,7 +105,7 @@ func TestRepoService_Good_Update(t *testing.T) {
 	}
 }
 
-func TestRepoService_Good_Delete(t *testing.T) {
+func TestRepoService_Delete_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -125,7 +125,7 @@ func TestRepoService_Good_Delete(t *testing.T) {
 	}
 }
 
-func TestRepoService_Bad_Get(t *testing.T) {
+func TestRepoService_Get_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "not found"})
@@ -138,7 +138,7 @@ func TestRepoService_Bad_Get(t *testing.T) {
 	}
 }
 
-func TestRepoService_Good_Fork(t *testing.T) {
+func TestRepoService_Fork_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)

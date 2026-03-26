@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestPullService_Good_List(t *testing.T) {
+func TestPullService_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -41,7 +41,7 @@ func TestPullService_Good_List(t *testing.T) {
 	}
 }
 
-func TestPullService_Good_Get(t *testing.T) {
+func TestPullService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -63,7 +63,7 @@ func TestPullService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestPullService_Good_Create(t *testing.T) {
+func TestPullService_Create_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -94,7 +94,7 @@ func TestPullService_Good_Create(t *testing.T) {
 	}
 }
 
-func TestPullService_Good_Merge(t *testing.T) {
+func TestPullService_Merge_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -118,7 +118,7 @@ func TestPullService_Good_Merge(t *testing.T) {
 	}
 }
 
-func TestPullService_Bad_Merge(t *testing.T) {
+func TestPullService_Merge_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusConflict)
 		json.NewEncoder(w).Encode(map[string]string{"message": "already merged"})

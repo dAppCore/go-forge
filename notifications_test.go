@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestNotificationService_Good_List(t *testing.T) {
+func TestNotificationService_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -45,7 +45,7 @@ func TestNotificationService_Good_List(t *testing.T) {
 	}
 }
 
-func TestNotificationService_Good_ListRepo(t *testing.T) {
+func TestNotificationService_ListRepo_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -73,7 +73,7 @@ func TestNotificationService_Good_ListRepo(t *testing.T) {
 	}
 }
 
-func TestNotificationService_Good_GetThread(t *testing.T) {
+func TestNotificationService_GetThread_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -107,7 +107,7 @@ func TestNotificationService_Good_GetThread(t *testing.T) {
 	}
 }
 
-func TestNotificationService_Good_MarkRead(t *testing.T) {
+func TestNotificationService_MarkRead_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
@@ -126,7 +126,7 @@ func TestNotificationService_Good_MarkRead(t *testing.T) {
 	}
 }
 
-func TestNotificationService_Good_MarkThreadRead(t *testing.T) {
+func TestNotificationService_MarkThreadRead_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -145,7 +145,7 @@ func TestNotificationService_Good_MarkThreadRead(t *testing.T) {
 	}
 }
 
-func TestNotificationService_Bad_NotFound(t *testing.T) {
+func TestNotificationService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "thread not found"})

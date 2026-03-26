@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestPackageService_Good_List(t *testing.T) {
+func TestPackageService_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -42,7 +42,7 @@ func TestPackageService_Good_List(t *testing.T) {
 	}
 }
 
-func TestPackageService_Good_Get(t *testing.T) {
+func TestPackageService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -75,7 +75,7 @@ func TestPackageService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestPackageService_Good_Delete(t *testing.T) {
+func TestPackageService_Delete_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -94,7 +94,7 @@ func TestPackageService_Good_Delete(t *testing.T) {
 	}
 }
 
-func TestPackageService_Good_ListFiles(t *testing.T) {
+func TestPackageService_ListFiles_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -125,7 +125,7 @@ func TestPackageService_Good_ListFiles(t *testing.T) {
 	}
 }
 
-func TestPackageService_Bad_NotFound(t *testing.T) {
+func TestPackageService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "package not found"})

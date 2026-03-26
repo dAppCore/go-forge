@@ -2,7 +2,6 @@ package forge
 
 import (
 	"context"
-	"fmt"
 	"iter"
 
 	"dappco.re/go/core/forge/types"
@@ -10,6 +9,11 @@ import (
 
 // NotificationService handles notification operations via the Forgejo API.
 // No Resource embedding — varied endpoint shapes.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Notifications.List(ctx)
 type NotificationService struct {
 	client *Client
 }
@@ -30,13 +34,13 @@ func (s *NotificationService) Iter(ctx context.Context) iter.Seq2[types.Notifica
 
 // ListRepo returns all notifications for a specific repository.
 func (s *NotificationService) ListRepo(ctx context.Context, owner, repo string) ([]types.NotificationThread, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/notifications", owner, repo)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/notifications", pathParams("owner", owner, "repo", repo))
 	return ListAll[types.NotificationThread](ctx, s.client, path, nil)
 }
 
 // IterRepo returns an iterator over all notifications for a specific repository.
 func (s *NotificationService) IterRepo(ctx context.Context, owner, repo string) iter.Seq2[types.NotificationThread, error] {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/notifications", owner, repo)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/notifications", pathParams("owner", owner, "repo", repo))
 	return ListIter[types.NotificationThread](ctx, s.client, path, nil)
 }
 
@@ -47,7 +51,7 @@ func (s *NotificationService) MarkRead(ctx context.Context) error {
 
 // GetThread returns a single notification thread by ID.
 func (s *NotificationService) GetThread(ctx context.Context, id int64) (*types.NotificationThread, error) {
-	path := fmt.Sprintf("/api/v1/notifications/threads/%d", id)
+	path := ResolvePath("/api/v1/notifications/threads/{id}", pathParams("id", int64String(id)))
 	var out types.NotificationThread
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -57,6 +61,6 @@ func (s *NotificationService) GetThread(ctx context.Context, id int64) (*types.N
 
 // MarkThreadRead marks a single notification thread as read.
 func (s *NotificationService) MarkThreadRead(ctx context.Context, id int64) error {
-	path := fmt.Sprintf("/api/v1/notifications/threads/%d", id)
+	path := ResolvePath("/api/v1/notifications/threads/{id}", pathParams("id", int64String(id)))
 	return s.client.Patch(ctx, path, nil, nil)
 }

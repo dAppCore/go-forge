@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestUserService_Good_Get(t *testing.T) {
+func TestUserService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -32,7 +32,7 @@ func TestUserService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestUserService_Good_GetCurrent(t *testing.T) {
+func TestUserService_GetCurrent_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -54,7 +54,7 @@ func TestUserService_Good_GetCurrent(t *testing.T) {
 	}
 }
 
-func TestUserService_Good_ListFollowers(t *testing.T) {
+func TestUserService_ListFollowers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)

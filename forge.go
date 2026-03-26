@@ -1,6 +1,11 @@
 package forge
 
 // Forge is the top-level client for the Forgejo API.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_ = f.Repos
 type Forge struct {
 	client *Client
 
@@ -26,6 +31,11 @@ type Forge struct {
 }
 
 // NewForge creates a new Forge client.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_ = f
 func NewForge(url, token string, opts ...Option) *Forge {
 	c := NewClient(url, token, opts...)
 	f := &Forge{client: c}

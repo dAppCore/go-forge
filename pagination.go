@@ -7,19 +7,34 @@ import (
 	"net/url"
 	"strconv"
 
-	coreerr "dappco.re/go/core/log"
+	core "dappco.re/go/core"
 )
 
 // ListOptions controls pagination.
+//
+// Usage:
+//
+//	opts := forge.ListOptions{Page: 1, Limit: 50}
+//	_ = opts
 type ListOptions struct {
 	Page  int // 1-based page number
 	Limit int // items per page (default 50)
 }
 
 // DefaultList returns sensible default pagination.
+//
+// Usage:
+//
+//	page, err := forge.ListPage[types.Repository](ctx, client, path, nil, forge.DefaultList)
+//	_ = page
 var DefaultList = ListOptions{Page: 1, Limit: 50}
 
 // PagedResult holds a single page of results with metadata.
+//
+// Usage:
+//
+//	page, err := forge.ListPage[types.Repository](ctx, client, path, nil, forge.DefaultList)
+//	_ = page
 type PagedResult[T any] struct {
 	Items      []T
 	TotalCount int
@@ -29,6 +44,11 @@ type PagedResult[T any] struct {
 
 // ListPage fetches a single page of results.
 // Extra query params can be passed via the query map.
+//
+// Usage:
+//
+//	page, err := forge.ListPage[types.Repository](ctx, client, "/api/v1/user/repos", nil, forge.DefaultList)
+//	_ = page
 func ListPage[T any](ctx context.Context, c *Client, path string, query map[string]string, opts ListOptions) (*PagedResult[T], error) {
 	if opts.Page < 1 {
 		opts.Page = 1
@@ -39,7 +59,7 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 
 	u, err := url.Parse(path)
 	if err != nil {
-		return nil, coreerr.E("ListPage", "forge: parse path", err)
+		return nil, core.E("ListPage", "forge: parse path", err)
 	}
 
 	q := u.Query()
@@ -70,6 +90,11 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 }
 
 // ListAll fetches all pages of results.
+//
+// Usage:
+//
+//	items, err := forge.ListAll[types.Repository](ctx, client, "/api/v1/user/repos", nil)
+//	_ = items
 func ListAll[T any](ctx context.Context, c *Client, path string, query map[string]string) ([]T, error) {
 	var all []T
 	page := 1
@@ -90,6 +115,12 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 }
 
 // ListIter returns an iterator over all resources across all pages.
+//
+// Usage:
+//
+//	for item, err := range forge.ListIter[types.Repository](ctx, client, "/api/v1/user/repos", nil) {
+//	    _, _ = item, err
+//	}
 func ListIter[T any](ctx context.Context, c *Client, path string, query map[string]string) iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
 		page := 1

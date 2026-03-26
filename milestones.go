@@ -2,12 +2,16 @@ package forge
 
 import (
 	"context"
-	"fmt"
 
 	"dappco.re/go/core/forge/types"
 )
 
 // MilestoneService handles repository milestones.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Milestones.ListAll(ctx, forge.Params{"owner": "core", "repo": "go-forge"})
 type MilestoneService struct {
 	client *Client
 }
@@ -18,13 +22,13 @@ func newMilestoneService(c *Client) *MilestoneService {
 
 // ListAll returns all milestones for a repository.
 func (s *MilestoneService) ListAll(ctx context.Context, params Params) ([]types.Milestone, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/milestones", params["owner"], params["repo"])
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones", params)
 	return ListAll[types.Milestone](ctx, s.client, path, nil)
 }
 
 // Get returns a single milestone by ID.
 func (s *MilestoneService) Get(ctx context.Context, owner, repo string, id int64) (*types.Milestone, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/milestones/%d", owner, repo, id)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 	var out types.Milestone
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -34,7 +38,7 @@ func (s *MilestoneService) Get(ctx context.Context, owner, repo string, id int64
 
 // Create creates a new milestone.
 func (s *MilestoneService) Create(ctx context.Context, owner, repo string, opts *types.CreateMilestoneOption) (*types.Milestone, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/milestones", owner, repo)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones", pathParams("owner", owner, "repo", repo))
 	var out types.Milestone
 	if err := s.client.Post(ctx, path, opts, &out); err != nil {
 		return nil, err

@@ -2,7 +2,6 @@ package forge
 
 import (
 	"context"
-	"fmt"
 	"iter"
 
 	"dappco.re/go/core/forge/types"
@@ -12,6 +11,11 @@ import (
 // and git notes.
 // No Resource embedding — collection and item commit paths differ, and the
 // remaining endpoints are heterogeneous across status and note paths.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Commits.GetCombinedStatus(ctx, "core", "go-forge", "main")
 type CommitService struct {
 	client *Client
 }
@@ -51,7 +55,7 @@ func (s *CommitService) Get(ctx context.Context, params Params) (*types.Commit, 
 
 // GetCombinedStatus returns the combined status for a given ref (branch, tag, or SHA).
 func (s *CommitService) GetCombinedStatus(ctx context.Context, owner, repo, ref string) (*types.CombinedStatus, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/statuses/%s", owner, repo, ref)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/statuses/{ref}", pathParams("owner", owner, "repo", repo, "ref", ref))
 	var out types.CombinedStatus
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -61,7 +65,7 @@ func (s *CommitService) GetCombinedStatus(ctx context.Context, owner, repo, ref 
 
 // ListStatuses returns all commit statuses for a given ref.
 func (s *CommitService) ListStatuses(ctx context.Context, owner, repo, ref string) ([]types.CommitStatus, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/commits/%s/statuses", owner, repo, ref)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/commits/{ref}/statuses", pathParams("owner", owner, "repo", repo, "ref", ref))
 	var out []types.CommitStatus
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -71,7 +75,7 @@ func (s *CommitService) ListStatuses(ctx context.Context, owner, repo, ref strin
 
 // CreateStatus creates a new commit status for the given SHA.
 func (s *CommitService) CreateStatus(ctx context.Context, owner, repo, sha string, opts *types.CreateStatusOption) (*types.CommitStatus, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/statuses/%s", owner, repo, sha)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/statuses/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
 	var out types.CommitStatus
 	if err := s.client.Post(ctx, path, opts, &out); err != nil {
 		return nil, err
@@ -81,7 +85,7 @@ func (s *CommitService) CreateStatus(ctx context.Context, owner, repo, sha strin
 
 // GetNote returns the git note for a given commit SHA.
 func (s *CommitService) GetNote(ctx context.Context, owner, repo, sha string) (*types.Note, error) {
-	path := fmt.Sprintf("/api/v1/repos/%s/%s/git/notes/%s", owner, repo, sha)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/notes/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
 	var out types.Note
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err

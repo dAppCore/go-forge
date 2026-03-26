@@ -10,6 +10,11 @@ import (
 // AdminService handles site administration operations.
 // Unlike other services, AdminService does not embed Resource[T,C,U]
 // because admin endpoints are heterogeneous.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Admin.ListUsers(ctx)
 type AdminService struct {
 	client *Client
 }

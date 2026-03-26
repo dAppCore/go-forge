@@ -2,14 +2,13 @@ package main
 
 import (
 	"bytes"
+	"cmp"
 	"maps"
-	"path/filepath"
 	"slices"
-	"strings"
 	"text/template"
 
+	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
-	coreerr "dappco.re/go/core/log"
 )
 
 // typeGrouping maps type name prefixes to output file names.
@@ -110,7 +109,7 @@ func classifyType(name string) string {
 	bestKey := ""
 	bestGroup := ""
 	for key, group := range typeGrouping {
-		if strings.HasPrefix(name, key) && len(key) > len(bestKey) {
+		if core.HasPrefix(name, key) && len(key) > len(bestKey) {
 			bestKey = key
 			bestGroup = group
 		}
@@ -122,10 +121,10 @@ func classifyType(name string) string {
 	// Strip CRUD prefixes and Option suffix, then retry.
 	base := name
 	for _, prefix := range []string{"Create", "Edit", "Delete", "Update", "Add", "Submit", "Replace", "Set", "Transfer"} {
-		base = strings.TrimPrefix(base, prefix)
+		base = core.TrimPrefix(base, prefix)
 	}
-	base = strings.TrimSuffix(base, "Option")
-	base = strings.TrimSuffix(base, "Options")
+	base = core.TrimSuffix(base, "Option")
+	base = core.TrimSuffix(base, "Options")
 
 	if base != name && base != "" {
 		if group, ok := typeGrouping[base]; ok {
@@ -135,7 +134,7 @@ func classifyType(name string) string {
 		bestKey = ""
 		bestGroup = ""
 		for key, group := range typeGrouping {
-			if strings.HasPrefix(base, key) && len(key) > len(bestKey) {
+			if core.HasPrefix(base, key) && len(key) > len(bestKey) {
 				bestKey = key
 				bestGroup = group
 			}
@@ -151,7 +150,7 @@ func classifyType(name string) string {
 // sanitiseLine collapses a multi-line string into a single line,
 // replacing newlines and consecutive whitespace with a single space.
 func sanitiseLine(s string) string {
-	return strings.Join(strings.Fields(s), " ")
+	return core.Join(" ", splitFields(s)...)
 }
 
 // enumConstName generates a Go constant name for an enum value.
@@ -204,9 +203,14 @@ type templateData struct {
 }
 
 // Generate writes Go source files for the extracted types, grouped by logical domain.
+//
+// Usage:
+//
+//	err := Generate(types, pairs, "types")
+//	_ = err
 func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	if err := coreio.Local.EnsureDir(outDir); err != nil {
-		return coreerr.E("Generate", "create output directory", err)
+		return core.E("Generate", "create output directory", err)
 	}
 
 	// Group types by output file.
@@ -219,7 +223,7 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	// Sort types within each group for deterministic output.
 	for file := range groups {
 		slices.SortFunc(groups[file], func(a, b *GoType) int {
-			return strings.Compare(a.Name, b.Name)
+			return cmp.Compare(a.Name, b.Name)
 		})
 	}
 
@@ -228,9 +232,9 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	slices.Sort(fileNames)
 
 	for _, file := range fileNames {
-		outPath := filepath.Join(outDir, file+".go")
+		outPath := core.JoinPath(outDir, file+".go")
 		if err := writeFile(outPath, groups[file]); err != nil {
-			return coreerr.E("Generate", "write "+outPath, err)
+			return core.E("Generate", "write "+outPath, err)
 		}
 	}
 
@@ -241,7 +245,7 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 func writeFile(path string, types []*GoType) error {
 	needTime := slices.ContainsFunc(types, func(gt *GoType) bool {
 		return slices.ContainsFunc(gt.Fields, func(f GoField) bool {
-			return strings.Contains(f.GoType, "time.Time")
+			return core.Contains(f.GoType, "time.Time")
 		})
 	})
 
@@ -252,11 +256,11 @@ func writeFile(path string, types []*GoType) error {
 
 	var buf bytes.Buffer
 	if err := fileHeader.Execute(&buf, data); err != nil {
-		return coreerr.E("writeFile", "execute template", err)
+		return core.E("writeFile", "execute template", err)
 	}
 
 	if err := coreio.Local.Write(path, buf.String()); err != nil {
-		return coreerr.E("writeFile", "write file", err)
+		return core.E("writeFile", "write file", err)
 	}
 
 	return nil

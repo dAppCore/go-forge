@@ -1,16 +1,20 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"cmp"
+	json "github.com/goccy/go-json"
 	"slices"
-	"strings"
 
+	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
-	coreerr "dappco.re/go/core/log"
 )
 
 // Spec represents a Swagger 2.0 specification document.
+//
+// Usage:
+//
+//	spec, err := LoadSpec("testdata/swagger.v1.json")
+//	_ = spec
 type Spec struct {
 	Swagger     string                      `json:"swagger"`
 	Info        SpecInfo                    `json:"info"`
@@ -19,12 +23,20 @@ type Spec struct {
 }
 
 // SpecInfo holds metadata about the API specification.
+//
+// Usage:
+//
+//	_ = SpecInfo{Title: "Forgejo API", Version: "1.0"}
 type SpecInfo struct {
 	Title   string `json:"title"`
 	Version string `json:"version"`
 }
 
 // SchemaDefinition represents a single type definition in the swagger spec.
+//
+// Usage:
+//
+//	_ = SchemaDefinition{Type: "object"}
 type SchemaDefinition struct {
 	Description string                    `json:"description"`
 	Type        string                    `json:"type"`
@@ -35,6 +47,10 @@ type SchemaDefinition struct {
 }
 
 // SchemaProperty represents a single property within a schema definition.
+//
+// Usage:
+//
+//	_ = SchemaProperty{Type: "string"}
 type SchemaProperty struct {
 	Type        string          `json:"type"`
 	Format      string          `json:"format"`
@@ -46,6 +62,10 @@ type SchemaProperty struct {
 }
 
 // GoType is the intermediate representation for a Go type to be generated.
+//
+// Usage:
+//
+//	_ = GoType{Name: "Repository"}
 type GoType struct {
 	Name        string
 	Description string
@@ -55,6 +75,10 @@ type GoType struct {
 }
 
 // GoField is the intermediate representation for a single struct field.
+//
+// Usage:
+//
+//	_ = GoField{GoName: "ID", GoType: "int64"}
 type GoField struct {
 	GoName   string
 	GoType   string
@@ -64,6 +88,10 @@ type GoField struct {
 }
 
 // CRUDPair groups a base type with its corresponding Create and Edit option types.
+//
+// Usage:
+//
+//	_ = CRUDPair{Base: "Repository", Create: "CreateRepoOption", Edit: "EditRepoOption"}
 type CRUDPair struct {
 	Base   string
 	Create string
@@ -71,19 +99,29 @@ type CRUDPair struct {
 }
 
 // LoadSpec reads and parses a Swagger 2.0 JSON file from the given path.
+//
+// Usage:
+//
+//	spec, err := LoadSpec("testdata/swagger.v1.json")
+//	_ = spec
 func LoadSpec(path string) (*Spec, error) {
 	content, err := coreio.Local.Read(path)
 	if err != nil {
-		return nil, coreerr.E("LoadSpec", "read spec", err)
+		return nil, core.E("LoadSpec", "read spec", err)
 	}
 	var spec Spec
 	if err := json.Unmarshal([]byte(content), &spec); err != nil {
-		return nil, coreerr.E("LoadSpec", "parse spec", err)
+		return nil, core.E("LoadSpec", "parse spec", err)
 	}
 	return &spec, nil
 }
 
 // ExtractTypes converts all swagger definitions into Go type intermediate representations.
+//
+// Usage:
+//
+//	types := ExtractTypes(spec)
+//	_ = types["Repository"]
 func ExtractTypes(spec *Spec) map[string]*GoType {
 	result := make(map[string]*GoType)
 	for name, def := range spec.Definitions {
@@ -91,7 +129,7 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 		if len(def.Enum) > 0 {
 			gt.IsEnum = true
 			for _, v := range def.Enum {
-				gt.EnumValues = append(gt.EnumValues, fmt.Sprintf("%v", v))
+				gt.EnumValues = append(gt.EnumValues, core.Sprint(v))
 			}
 			slices.Sort(gt.EnumValues)
 			result[name] = gt
@@ -116,7 +154,7 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 			gt.Fields = append(gt.Fields, gf)
 		}
 		slices.SortFunc(gt.Fields, func(a, b GoField) int {
-			return strings.Compare(a.GoName, b.GoName)
+			return cmp.Compare(a.GoName, b.GoName)
 		})
 		result[name] = gt
 	}
@@ -125,15 +163,20 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 
 // DetectCRUDPairs finds Create*Option / Edit*Option pairs in the swagger definitions
 // and maps them back to the base type name.
+//
+// Usage:
+//
+//	pairs := DetectCRUDPairs(spec)
+//	_ = pairs
 func DetectCRUDPairs(spec *Spec) []CRUDPair {
 	var pairs []CRUDPair
 	for name := range spec.Definitions {
-		if !strings.HasPrefix(name, "Create") || !strings.HasSuffix(name, "Option") {
+		if !core.HasPrefix(name, "Create") || !core.HasSuffix(name, "Option") {
 			continue
 		}
-		inner := strings.TrimPrefix(name, "Create")
-		inner = strings.TrimSuffix(inner, "Option")
-		editName := "Edit" + inner + "Option"
+		inner := core.TrimPrefix(name, "Create")
+		inner = core.TrimSuffix(inner, "Option")
+		editName := core.Concat("Edit", inner, "Option")
 		pair := CRUDPair{Base: inner, Create: name}
 		if _, ok := spec.Definitions[editName]; ok {
 			pair.Edit = editName
@@ -141,7 +184,7 @@ func DetectCRUDPairs(spec *Spec) []CRUDPair {
 		pairs = append(pairs, pair)
 	}
 	slices.SortFunc(pairs, func(a, b CRUDPair) int {
-		return strings.Compare(a.Base, b.Base)
+		return cmp.Compare(a.Base, b.Base)
 	})
 	return pairs
 }
@@ -149,7 +192,7 @@ func DetectCRUDPairs(spec *Spec) []CRUDPair {
 // resolveGoType maps a swagger schema property to a Go type string.
 func resolveGoType(prop SchemaProperty) string {
 	if prop.Ref != "" {
-		parts := strings.Split(prop.Ref, "/")
+		parts := core.Split(prop.Ref, "/")
 		return "*" + parts[len(parts)-1]
 	}
 	switch prop.Type {
@@ -196,19 +239,17 @@ func resolveGoType(prop SchemaProperty) string {
 // with common acronyms kept uppercase.
 func pascalCase(s string) string {
 	var parts []string
-	for p := range strings.FieldsFuncSeq(s, func(r rune) bool {
-		return r == '_' || r == '-'
-	}) {
+	for _, p := range splitSnakeKebab(s) {
 		if len(p) == 0 {
 			continue
 		}
-		upper := strings.ToUpper(p)
+		upper := core.Upper(p)
 		switch upper {
 		case "ID", "URL", "HTML", "SSH", "HTTP", "HTTPS", "API", "URI", "GPG", "IP", "CSS", "JS":
 			parts = append(parts, upper)
 		default:
-			parts = append(parts, strings.ToUpper(p[:1])+p[1:])
+			parts = append(parts, core.Concat(core.Upper(p[:1]), p[1:]))
 		}
 	}
-	return strings.Join(parts, "")
+	return core.Concat(parts...)
 }
