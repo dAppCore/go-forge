@@ -142,7 +142,7 @@ Services that embed `Resource[T, C, U]` inherit `List`, `ListAll`, `Iter`, `Get`
 
 ## Dependencies
 
-This module has **zero external dependencies**. It relies solely on the Go standard library (`net/http`, `encoding/json`, `context`, `iter`, etc.) and requires Go 1.26 or later.
+This module has a small dependency set: `dappco.re/go/core` and `github.com/goccy/go-json`, plus the Go standard library (`net/http`, `context`, `iter`, etc.) where appropriate.
 
 ```
 module dappco.re/go/core/forge
