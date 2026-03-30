@@ -39,7 +39,7 @@ All tests use the standard `testing` package with `net/http/httptest` for HTTP s
 go test ./...
 
 # Run a specific test by name
-go test -v -run TestClient_Good_Get ./...
+go test -v -run TestClient_Get_Good ./...
 
 # Run tests with race detection
 go test -race ./...
@@ -59,7 +59,7 @@ core go cov --open   # Open coverage report in browser
 
 ### Test naming convention
 
-Tests follow the `_Good`, `_Bad`, `_Ugly` suffix pattern:
+Tests follow `Test<TypeOrArea>_<MethodOrCase>_<Good|Bad|Ugly>`:
 
 - **`_Good`** — Happy-path tests confirming correct behaviour.
 - **`_Bad`** — Expected error conditions (e.g. 404, 500 responses).
@@ -67,11 +67,11 @@ Tests follow the `_Good`, `_Bad`, `_Ugly` suffix pattern:
 
 Examples:
 ```
-TestClient_Good_Get
-TestClient_Bad_ServerError
-TestClient_Bad_NotFound
-TestClient_Good_ContextCancellation
-TestResource_Good_ListAll
+TestClient_Get_Good
+TestClient_ServerError_Bad
+TestClient_NotFound_Bad
+TestClient_ContextCancellation_Good
+TestResource_ListAll_Good
 ```
 
 
@@ -173,7 +173,7 @@ To add coverage for a new Forgejo API domain:
 
    ```go
    func (s *TopicService) ListRepoTopics(ctx context.Context, owner, repo string) ([]types.Topic, error) {
-       path := fmt.Sprintf("/api/v1/repos/%s/%s/topics", owner, repo)
+       path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics", pathParams("owner", owner, "repo", repo))
        return ListAll[types.Topic](ctx, s.client, path, nil)
    }
    ```
