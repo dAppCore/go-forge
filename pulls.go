@@ -62,6 +62,22 @@ func (s *PullService) IterReviewers(ctx context.Context, owner, repo string) ite
 	return ListIter[types.User](ctx, s.client, path, nil)
 }
 
+// RequestReviewers creates review requests for a pull request.
+func (s *PullService) RequestReviewers(ctx context.Context, owner, repo string, index int64, opts *types.PullReviewRequestOptions) ([]types.PullReview, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/requested_reviewers", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	var out []types.PullReview
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CancelReviewRequests cancels review requests for a pull request.
+func (s *PullService) CancelReviewRequests(ctx context.Context, owner, repo string, index int64, opts *types.PullReviewRequestOptions) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/requested_reviewers", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.DeleteWithBody(ctx, path, opts)
+}
+
 // SubmitReview creates a new review on a pull request.
 func (s *PullService) SubmitReview(ctx context.Context, owner, repo string, index int64, review map[string]any) (*types.PullReview, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews", pathParams("owner", owner, "repo", repo, "index", int64String(index)))

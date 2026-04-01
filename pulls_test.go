@@ -165,6 +165,78 @@ func TestPullService_IterReviewers_Good(t *testing.T) {
 	}
 }
 
+func TestPullService_RequestReviewers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/7/requested_reviewers" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.PullReviewRequestOptions
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if len(body.Reviewers) != 2 || body.Reviewers[0] != "alice" || body.Reviewers[1] != "bob" {
+			t.Fatalf("got reviewers %#v", body.Reviewers)
+		}
+		if len(body.TeamReviewers) != 1 || body.TeamReviewers[0] != "platform" {
+			t.Fatalf("got team reviewers %#v", body.TeamReviewers)
+		}
+		json.NewEncoder(w).Encode([]types.PullReview{
+			{ID: 101, Body: "requested"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	reviews, err := f.Pulls.RequestReviewers(context.Background(), "core", "go-forge", 7, &types.PullReviewRequestOptions{
+		Reviewers:     []string{"alice", "bob"},
+		TeamReviewers: []string{"platform"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(reviews) != 1 || reviews[0].ID != 101 || reviews[0].Body != "requested" {
+		t.Fatalf("got %#v", reviews)
+	}
+}
+
+func TestPullService_CancelReviewRequests_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/7/requested_reviewers" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.PullReviewRequestOptions
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if len(body.Reviewers) != 1 || body.Reviewers[0] != "alice" {
+			t.Fatalf("got reviewers %#v", body.Reviewers)
+		}
+		if len(body.TeamReviewers) != 1 || body.TeamReviewers[0] != "platform" {
+			t.Fatalf("got team reviewers %#v", body.TeamReviewers)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Pulls.CancelReviewRequests(context.Background(), "core", "go-forge", 7, &types.PullReviewRequestOptions{
+		Reviewers:     []string{"alice"},
+		TeamReviewers: []string{"platform"},
+	}); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestPullService_Merge_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
