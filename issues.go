@@ -235,6 +235,44 @@ func (s *IssueService) CreateComment(ctx context.Context, owner, repo string, in
 	return &out, nil
 }
 
+// ListAttachments returns all attachments on an issue.
+func (s *IssueService) ListAttachments(ctx context.Context, owner, repo string, index int64) ([]types.Attachment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/assets", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListAll[types.Attachment](ctx, s.client, path, nil)
+}
+
+// IterAttachments returns an iterator over all attachments on an issue.
+func (s *IssueService) IterAttachments(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.Attachment, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/assets", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListIter[types.Attachment](ctx, s.client, path, nil)
+}
+
+// GetAttachment returns a single attachment on an issue.
+func (s *IssueService) GetAttachment(ctx context.Context, owner, repo string, index, attachmentID int64) (*types.Attachment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/assets/{attachment_id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "attachment_id", int64String(attachmentID)))
+	var out types.Attachment
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditAttachment updates an issue attachment.
+func (s *IssueService) EditAttachment(ctx context.Context, owner, repo string, index, attachmentID int64, opts *types.EditAttachmentOptions) (*types.Attachment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/assets/{attachment_id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "attachment_id", int64String(attachmentID)))
+	var out types.Attachment
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteAttachment removes an issue attachment.
+func (s *IssueService) DeleteAttachment(ctx context.Context, owner, repo string, index, attachmentID int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/assets/{attachment_id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "attachment_id", int64String(attachmentID)))
+	return s.client.Delete(ctx, path)
+}
+
 // ListTimeline returns all comments and events on an issue.
 func (s *IssueService) ListTimeline(ctx context.Context, owner, repo string, index int64, since, before *time.Time) ([]types.TimelineComment, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/timeline", pathParams("owner", owner, "repo", repo, "index", int64String(index)))

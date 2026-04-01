@@ -318,6 +318,135 @@ func TestIssueService_CreateComment_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_ListAttachments_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/assets" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.Attachment{
+			{ID: 4, Name: "design.png"},
+			{ID: 5, Name: "notes.txt"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachments, err := f.Issues.ListAttachments(context.Background(), "core", "go-forge", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(attachments, []types.Attachment{{ID: 4, Name: "design.png"}, {ID: 5, Name: "notes.txt"}}) {
+		t.Fatalf("got %#v", attachments)
+	}
+}
+
+func TestIssueService_IterAttachments_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/assets" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Attachment{{ID: 4, Name: "design.png"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var seen []types.Attachment
+	for attachment, err := range f.Issues.IterAttachments(context.Background(), "core", "go-forge", 1) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		seen = append(seen, attachment)
+	}
+	if !reflect.DeepEqual(seen, []types.Attachment{{ID: 4, Name: "design.png"}}) {
+		t.Fatalf("got %#v", seen)
+	}
+}
+
+func TestIssueService_GetAttachment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/assets/4" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.Attachment{ID: 4, Name: "design.png"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Issues.GetAttachment(context.Background(), "core", "go-forge", 1, 4)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "design.png" {
+		t.Fatalf("got name=%q", attachment.Name)
+	}
+}
+
+func TestIssueService_EditAttachment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/assets/4" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.EditAttachmentOptions
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Name != "updated.png" {
+			t.Fatalf("got body=%#v", body)
+		}
+		json.NewEncoder(w).Encode(types.Attachment{ID: 4, Name: body.Name})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Issues.EditAttachment(context.Background(), "core", "go-forge", 1, 4, &types.EditAttachmentOptions{Name: "updated.png"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "updated.png" {
+		t.Fatalf("got name=%q", attachment.Name)
+	}
+}
+
+func TestIssueService_DeleteAttachment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/assets/4" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.DeleteAttachment(context.Background(), "core", "go-forge", 1, 4); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestIssueService_ListTimeline_Good(t *testing.T) {
 	since := time.Date(2026, time.March, 1, 12, 30, 0, 0, time.UTC)
 	before := time.Date(2026, time.March, 2, 12, 30, 0, 0, time.UTC)
