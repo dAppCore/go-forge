@@ -73,6 +73,28 @@ func TestNotificationService_ListRepo_Good(t *testing.T) {
 	}
 }
 
+func TestNotificationService_NewAvailable_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/notifications/new" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.NotificationCount{New: 3})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	count, err := f.Notifications.NewAvailable(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if count.New != 3 {
+		t.Fatalf("got new=%d, want 3", count.New)
+	}
+}
+
 func TestNotificationService_GetThread_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

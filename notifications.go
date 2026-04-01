@@ -32,6 +32,15 @@ func (s *NotificationService) Iter(ctx context.Context) iter.Seq2[types.Notifica
 	return ListIter[types.NotificationThread](ctx, s.client, "/api/v1/notifications", nil)
 }
 
+// NewAvailable returns the count of unread notifications for the authenticated user.
+func (s *NotificationService) NewAvailable(ctx context.Context) (*types.NotificationCount, error) {
+	var out types.NotificationCount
+	if err := s.client.Get(ctx, "/api/v1/notifications/new", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListRepo returns all notifications for a specific repository.
 func (s *NotificationService) ListRepo(ctx context.Context, owner, repo string) ([]types.NotificationThread, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/notifications", pathParams("owner", owner, "repo", repo))
