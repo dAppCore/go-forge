@@ -151,6 +151,34 @@ func TestRepoService_DeleteTag_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListForks_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/forks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.Repository{
+			{ID: 11, Name: "go-forge-fork", FullName: "alice/go-forge-fork"},
+			{ID: 12, Name: "go-forge-fork-2", FullName: "bob/go-forge-fork-2"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	forks, err := f.Repos.ListForks(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(forks) != 2 || forks[0].FullName != "alice/go-forge-fork" || forks[1].FullName != "bob/go-forge-fork-2" {
+		t.Fatalf("got %#v", forks)
+	}
+}
+
 func TestRepoService_ListTagProtections_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

@@ -363,6 +363,18 @@ func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types
 	return &out, nil
 }
 
+// ListForks returns all forks of a repository.
+func (s *RepoService) ListForks(ctx context.Context, owner, repo string) ([]types.Repository, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/forks", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Repository](ctx, s.client, path, nil)
+}
+
+// IterForks returns an iterator over all forks of a repository.
+func (s *RepoService) IterForks(ctx context.Context, owner, repo string) iter.Seq2[types.Repository, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/forks", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Repository](ctx, s.client, path, nil)
+}
+
 // Transfer initiates a repository transfer.
 func (s *RepoService) Transfer(ctx context.Context, owner, repo string, opts map[string]any) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/transfer", pathParams("owner", owner, "repo", repo))
