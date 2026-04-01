@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"strconv"
 	"time"
 
 	"dappco.re/go/core/forge/types"
@@ -24,6 +25,93 @@ func newIssueService(c *Client) *IssueService {
 			c, "/api/v1/repos/{owner}/{repo}/issues/{index}",
 		),
 	}
+}
+
+// SearchIssuesOptions controls filtering for the global issue search endpoint.
+type SearchIssuesOptions struct {
+	State           string
+	Labels          string
+	Milestones      string
+	Query           string
+	PriorityRepoID  int64
+	Type            string
+	Since           *time.Time
+	Before          *time.Time
+	Assigned        bool
+	Created         bool
+	Mentioned       bool
+	ReviewRequested bool
+	Reviewed        bool
+	Owner           string
+	Team            string
+}
+
+func (o SearchIssuesOptions) queryParams() map[string]string {
+	query := make(map[string]string, 12)
+	if o.State != "" {
+		query["state"] = o.State
+	}
+	if o.Labels != "" {
+		query["labels"] = o.Labels
+	}
+	if o.Milestones != "" {
+		query["milestones"] = o.Milestones
+	}
+	if o.Query != "" {
+		query["q"] = o.Query
+	}
+	if o.PriorityRepoID != 0 {
+		query["priority_repo_id"] = strconv.FormatInt(o.PriorityRepoID, 10)
+	}
+	if o.Type != "" {
+		query["type"] = o.Type
+	}
+	if o.Since != nil {
+		query["since"] = o.Since.Format(time.RFC3339)
+	}
+	if o.Before != nil {
+		query["before"] = o.Before.Format(time.RFC3339)
+	}
+	if o.Assigned {
+		query["assigned"] = strconv.FormatBool(true)
+	}
+	if o.Created {
+		query["created"] = strconv.FormatBool(true)
+	}
+	if o.Mentioned {
+		query["mentioned"] = strconv.FormatBool(true)
+	}
+	if o.ReviewRequested {
+		query["review_requested"] = strconv.FormatBool(true)
+	}
+	if o.Reviewed {
+		query["reviewed"] = strconv.FormatBool(true)
+	}
+	if o.Owner != "" {
+		query["owner"] = o.Owner
+	}
+	if o.Team != "" {
+		query["team"] = o.Team
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
+// SearchIssuesPage returns a single page of issues matching the search filters.
+func (s *IssueService) SearchIssuesPage(ctx context.Context, opts SearchIssuesOptions, pageOpts ListOptions) (*PagedResult[types.Issue], error) {
+	return ListPage[types.Issue](ctx, s.client, "/api/v1/repos/issues/search", opts.queryParams(), pageOpts)
+}
+
+// SearchIssues returns all issues matching the search filters.
+func (s *IssueService) SearchIssues(ctx context.Context, opts SearchIssuesOptions) ([]types.Issue, error) {
+	return ListAll[types.Issue](ctx, s.client, "/api/v1/repos/issues/search", opts.queryParams())
+}
+
+// IterSearchIssues returns an iterator over issues matching the search filters.
+func (s *IssueService) IterSearchIssues(ctx context.Context, opts SearchIssuesOptions) iter.Seq2[types.Issue, error] {
+	return ListIter[types.Issue](ctx, s.client, "/api/v1/repos/issues/search", opts.queryParams())
 }
 
 // Pin pins an issue.

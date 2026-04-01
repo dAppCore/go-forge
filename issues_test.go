@@ -143,6 +143,154 @@ func TestIssueService_Delete_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_SearchIssuesPage_Good(t *testing.T) {
+	since := time.Date(2026, time.March, 1, 12, 30, 0, 0, time.UTC)
+	before := time.Date(2026, time.March, 2, 12, 30, 0, 0, time.UTC)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/issues/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		want := map[string]string{
+			"state":            "open",
+			"labels":           "bug,help wanted",
+			"milestones":       "v1.0",
+			"q":                "panic",
+			"priority_repo_id": "42",
+			"type":             "issues",
+			"since":            since.Format(time.RFC3339),
+			"before":           before.Format(time.RFC3339),
+			"assigned":         "true",
+			"created":          "true",
+			"mentioned":        "true",
+			"review_requested": "true",
+			"reviewed":         "true",
+			"owner":            "core",
+			"team":             "platform",
+			"page":             "2",
+			"limit":            "25",
+		}
+		for key, wantValue := range want {
+			if got := r.URL.Query().Get(key); got != wantValue {
+				t.Errorf("got %s=%q, want %q", key, got, wantValue)
+			}
+		}
+		w.Header().Set("X-Total-Count", "100")
+		json.NewEncoder(w).Encode([]types.Issue{
+			{ID: 1, Title: "panic in parser"},
+			{ID: 2, Title: "panic in generator"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	page, err := f.Issues.SearchIssuesPage(context.Background(), SearchIssuesOptions{
+		State:           "open",
+		Labels:          "bug,help wanted",
+		Milestones:      "v1.0",
+		Query:           "panic",
+		PriorityRepoID:  42,
+		Type:            "issues",
+		Since:           &since,
+		Before:          &before,
+		Assigned:        true,
+		Created:         true,
+		Mentioned:       true,
+		ReviewRequested: true,
+		Reviewed:        true,
+		Owner:           "core",
+		Team:            "platform",
+	}, ListOptions{Page: 2, Limit: 25})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := len(page.Items), 2; got != want {
+		t.Fatalf("got %d items, want %d", got, want)
+	}
+	if !page.HasMore {
+		t.Fatalf("expected HasMore to be true")
+	}
+	if page.TotalCount != 100 {
+		t.Fatalf("got total count %d, want 100", page.TotalCount)
+	}
+	if page.Items[0].Title != "panic in parser" {
+		t.Fatalf("got first title %q", page.Items[0].Title)
+	}
+}
+
+func TestIssueService_SearchIssues_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/issues/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "panic" {
+			t.Errorf("got q=%q, want %q", got, "panic")
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.Issue{
+			{ID: 1, Title: "panic in parser"},
+			{ID: 2, Title: "panic in generator"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issues, err := f.Issues.SearchIssues(context.Background(), SearchIssuesOptions{Query: "panic"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := len(issues), 2; got != want {
+		t.Fatalf("got %d items, want %d", got, want)
+	}
+	if issues[1].Title != "panic in generator" {
+		t.Fatalf("got second title %q", issues[1].Title)
+	}
+}
+
+func TestIssueService_IterSearchIssues_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/issues/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "panic" {
+			t.Errorf("got q=%q, want %q", got, "panic")
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Issue{{ID: 1, Title: "panic in parser"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var seen []types.Issue
+	for issue, err := range f.Issues.IterSearchIssues(context.Background(), SearchIssuesOptions{Query: "panic"}) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		seen = append(seen, issue)
+	}
+	if got, want := len(seen), 1; got != want {
+		t.Fatalf("got %d items, want %d", got, want)
+	}
+	if seen[0].Title != "panic in parser" {
+		t.Fatalf("got title %q", seen[0].Title)
+	}
+}
+
 func TestIssueService_CreateComment_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
