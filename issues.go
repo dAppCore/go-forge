@@ -31,6 +31,12 @@ func (s *IssueService) Pin(ctx context.Context, owner, repo string, index int64)
 	return s.client.Post(ctx, path, nil, nil)
 }
 
+// MovePin moves a pinned issue to a new position.
+func (s *IssueService) MovePin(ctx context.Context, owner, repo string, index, position int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/pin/{position}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "position", int64String(position)))
+	return s.client.Patch(ctx, path, nil, nil)
+}
+
 // Unpin unpins an issue.
 func (s *IssueService) Unpin(ctx context.Context, owner, repo string, index int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/pin", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
