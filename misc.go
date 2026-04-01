@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"iter"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -53,6 +54,22 @@ func (s *MiscService) ListLicenses(ctx context.Context) ([]types.LicensesTemplat
 	return out, nil
 }
 
+// IterLicenses returns an iterator over all available licence templates.
+func (s *MiscService) IterLicenses(ctx context.Context) iter.Seq2[types.LicensesTemplateListEntry, error] {
+	return func(yield func(types.LicensesTemplateListEntry, error) bool) {
+		items, err := s.ListLicenses(ctx)
+		if err != nil {
+			yield(*new(types.LicensesTemplateListEntry), err)
+			return
+		}
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
+}
+
 // GetLicense returns a single licence template by name.
 func (s *MiscService) GetLicense(ctx context.Context, name string) (*types.LicenseTemplateInfo, error) {
 	path := ResolvePath("/api/v1/licenses/{name}", pathParams("name", name))
@@ -70,6 +87,22 @@ func (s *MiscService) ListGitignoreTemplates(ctx context.Context) ([]string, err
 		return nil, err
 	}
 	return out, nil
+}
+
+// IterGitignoreTemplates returns an iterator over all available gitignore template names.
+func (s *MiscService) IterGitignoreTemplates(ctx context.Context) iter.Seq2[string, error] {
+	return func(yield func(string, error) bool) {
+		items, err := s.ListGitignoreTemplates(ctx)
+		if err != nil {
+			yield("", err)
+			return
+		}
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
 }
 
 // GetGitignoreTemplate returns a single gitignore template by name.

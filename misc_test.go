@@ -138,6 +138,37 @@ func TestMiscService_ListLicenses_Good(t *testing.T) {
 	}
 }
 
+func TestMiscService_IterLicenses_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/licenses" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.LicensesTemplateListEntry{
+			{Key: "mit", Name: "MIT License"},
+			{Key: "gpl-3.0", Name: "GNU General Public License v3.0"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var names []string
+	for item, err := range f.Misc.IterLicenses(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		names = append(names, item.Name)
+	}
+	if len(names) != 2 {
+		t.Fatalf("got %d licences, want 2", len(names))
+	}
+	if names[0] != "MIT License" || names[1] != "GNU General Public License v3.0" {
+		t.Fatalf("unexpected licences: %+v", names)
+	}
+}
+
 func TestMiscService_GetLicense_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -183,6 +214,34 @@ func TestMiscService_ListGitignoreTemplates_Good(t *testing.T) {
 	names, err := f.Misc.ListGitignoreTemplates(context.Background())
 	if err != nil {
 		t.Fatal(err)
+	}
+	if len(names) != 3 {
+		t.Fatalf("got %d templates, want 3", len(names))
+	}
+	if names[0] != "Go" {
+		t.Errorf("got [0]=%q, want %q", names[0], "Go")
+	}
+}
+
+func TestMiscService_IterGitignoreTemplates_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/gitignore/templates" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]string{"Go", "Python", "Node"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var names []string
+	for item, err := range f.Misc.IterGitignoreTemplates(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		names = append(names, item)
 	}
 	if len(names) != 3 {
 		t.Fatalf("got %d templates, want 3", len(names))
