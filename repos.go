@@ -27,12 +27,14 @@ func newRepoService(c *Client) *RepoService {
 
 // ListOrgRepos returns all repositories for an organisation.
 func (s *RepoService) ListOrgRepos(ctx context.Context, org string) ([]types.Repository, error) {
-	return ListAll[types.Repository](ctx, s.client, "/api/v1/orgs/"+org+"/repos", nil)
+	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
+	return ListAll[types.Repository](ctx, s.client, path, nil)
 }
 
 // IterOrgRepos returns an iterator over all repositories for an organisation.
 func (s *RepoService) IterOrgRepos(ctx context.Context, org string) iter.Seq2[types.Repository, error] {
-	return ListIter[types.Repository](ctx, s.client, "/api/v1/orgs/"+org+"/repos", nil)
+	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
+	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
 // ListUserRepos returns all repositories for the authenticated user.
@@ -86,7 +88,8 @@ func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types
 		body["organization"] = org
 	}
 	var out types.Repository
-	err := s.client.Post(ctx, "/api/v1/repos/"+owner+"/"+repo+"/forks", body, &out)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/forks", pathParams("owner", owner, "repo", repo))
+	err := s.client.Post(ctx, path, body, &out)
 	if err != nil {
 		return nil, err
 	}
@@ -95,20 +98,24 @@ func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types
 
 // Transfer initiates a repository transfer.
 func (s *RepoService) Transfer(ctx context.Context, owner, repo string, opts map[string]any) error {
-	return s.client.Post(ctx, "/api/v1/repos/"+owner+"/"+repo+"/transfer", opts, nil)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/transfer", pathParams("owner", owner, "repo", repo))
+	return s.client.Post(ctx, path, opts, nil)
 }
 
 // AcceptTransfer accepts a pending repository transfer.
 func (s *RepoService) AcceptTransfer(ctx context.Context, owner, repo string) error {
-	return s.client.Post(ctx, "/api/v1/repos/"+owner+"/"+repo+"/transfer/accept", nil, nil)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/transfer/accept", pathParams("owner", owner, "repo", repo))
+	return s.client.Post(ctx, path, nil, nil)
 }
 
 // RejectTransfer rejects a pending repository transfer.
 func (s *RepoService) RejectTransfer(ctx context.Context, owner, repo string) error {
-	return s.client.Post(ctx, "/api/v1/repos/"+owner+"/"+repo+"/transfer/reject", nil, nil)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/transfer/reject", pathParams("owner", owner, "repo", repo))
+	return s.client.Post(ctx, path, nil, nil)
 }
 
 // MirrorSync triggers a mirror sync.
 func (s *RepoService) MirrorSync(ctx context.Context, owner, repo string) error {
-	return s.client.Post(ctx, "/api/v1/repos/"+owner+"/"+repo+"/mirror-sync", nil, nil)
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/mirror-sync", pathParams("owner", owner, "repo", repo))
+	return s.client.Post(ctx, path, nil, nil)
 }

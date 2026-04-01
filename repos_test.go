@@ -63,3 +63,45 @@ func TestRepoService_UpdateTopics_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
+	owner := "acme org"
+	repo := "my/repo"
+	org := "team alpha"
+
+	t.Run("ListOrgRepos", func(t *testing.T) {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path != "/api/v1/orgs/team%20alpha/repos" {
+				t.Errorf("got path %q, want %q", r.URL.Path, "/api/v1/orgs/team%20alpha/repos")
+				http.NotFound(w, r)
+				return
+			}
+			json.NewEncoder(w).Encode([]types.Repository{})
+		}))
+		defer srv.Close()
+
+		f := NewForge(srv.URL, "tok")
+		_, err := f.Repos.ListOrgRepos(context.Background(), org)
+		if err != nil {
+			t.Fatal(err)
+		}
+	})
+
+	t.Run("Fork", func(t *testing.T) {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			want := "/api/v1/repos/acme%20org/my%2Frepo/forks"
+			if r.URL.Path != want {
+				t.Errorf("got path %q, want %q", r.URL.Path, want)
+				http.NotFound(w, r)
+				return
+			}
+			json.NewEncoder(w).Encode(types.Repository{Name: repo})
+		}))
+		defer srv.Close()
+
+		f := NewForge(srv.URL, "tok")
+		if _, err := f.Repos.Fork(context.Background(), owner, repo, ""); err != nil {
+			t.Fatal(err)
+		}
+	})
+}
