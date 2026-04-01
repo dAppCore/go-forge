@@ -83,6 +83,41 @@ func (s *IssueService) DeleteStopwatch(ctx context.Context, owner, repo string, 
 	return s.client.Delete(ctx, path)
 }
 
+// ListTimes returns all tracked times on an issue.
+func (s *IssueService) ListTimes(ctx context.Context, owner, repo string, index int64, user string, since, before *time.Time) ([]types.TrackedTime, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/times", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	query := make(map[string]string, 3)
+	if user != "" {
+		query["user"] = user
+	}
+	if since != nil {
+		query["since"] = since.Format(time.RFC3339)
+	}
+	if before != nil {
+		query["before"] = before.Format(time.RFC3339)
+	}
+	if len(query) == 0 {
+		query = nil
+	}
+	return ListAll[types.TrackedTime](ctx, s.client, path, query)
+}
+
+// AddTime adds tracked time to an issue.
+func (s *IssueService) AddTime(ctx context.Context, owner, repo string, index int64, opts *types.AddTimeOption) (*types.TrackedTime, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/times", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	var out types.TrackedTime
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ResetTime removes all tracked time from an issue.
+func (s *IssueService) ResetTime(ctx context.Context, owner, repo string, index int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/times", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.Delete(ctx, path)
+}
+
 // AddLabels adds labels to an issue.
 func (s *IssueService) AddLabels(ctx context.Context, owner, repo string, index int64, labelIDs []int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/labels", pathParams("owner", owner, "repo", repo, "index", int64String(index)))

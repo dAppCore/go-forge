@@ -413,6 +413,102 @@ func TestIssueService_DeleteStopwatch_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_ListTimes_Good(t *testing.T) {
+	since := time.Date(2026, time.March, 3, 9, 15, 0, 0, time.UTC)
+	before := time.Date(2026, time.March, 4, 9, 15, 0, 0, time.UTC)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/42/times" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("user"); got != "alice" {
+			t.Errorf("got user=%q, want %q", got, "alice")
+		}
+		if got := r.URL.Query().Get("since"); got != since.Format(time.RFC3339) {
+			t.Errorf("got since=%q, want %q", got, since.Format(time.RFC3339))
+		}
+		if got := r.URL.Query().Get("before"); got != before.Format(time.RFC3339) {
+			t.Errorf("got before=%q, want %q", got, before.Format(time.RFC3339))
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.TrackedTime{
+			{ID: 11, Time: 30, UserName: "alice"},
+			{ID: 12, Time: 90, UserName: "bob"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	times, err := f.Issues.ListTimes(context.Background(), "core", "go-forge", 42, "alice", &since, &before)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(times, []types.TrackedTime{
+		{ID: 11, Time: 30, UserName: "alice"},
+		{ID: 12, Time: 90, UserName: "bob"},
+	}) {
+		t.Fatalf("got %#v", times)
+	}
+}
+
+func TestIssueService_AddTime_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/42/times" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.AddTimeOption
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Time != 180 || body.User != "alice" {
+			t.Fatalf("got body=%#v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.TrackedTime{ID: 99, Time: body.Time, UserName: body.User})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	got, err := f.Issues.AddTime(context.Background(), "core", "go-forge", 42, &types.AddTimeOption{
+		Time: 180,
+		User: "alice",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.ID != 99 || got.Time != 180 || got.UserName != "alice" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
+func TestIssueService_ResetTime_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/42/times" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.ResetTime(context.Background(), "core", "go-forge", 42); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestIssueService_List_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
