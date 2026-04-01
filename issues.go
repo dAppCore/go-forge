@@ -308,6 +308,54 @@ func (s *IssueService) UnsubscribeUser(ctx context.Context, owner, repo string, 
 	return s.client.Delete(ctx, path)
 }
 
+// ListDependencies returns all issues that block the given issue.
+func (s *IssueService) ListDependencies(ctx context.Context, owner, repo string, index int64) ([]types.Issue, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/dependencies", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListAll[types.Issue](ctx, s.client, path, nil)
+}
+
+// IterDependencies returns an iterator over all issues that block the given issue.
+func (s *IssueService) IterDependencies(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.Issue, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/dependencies", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListIter[types.Issue](ctx, s.client, path, nil)
+}
+
+// AddDependency makes another issue block the issue at the given path.
+func (s *IssueService) AddDependency(ctx context.Context, owner, repo string, index int64, dependency types.IssueMeta) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/dependencies", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.Post(ctx, path, dependency, nil)
+}
+
+// RemoveDependency removes an issue dependency from the issue at the given path.
+func (s *IssueService) RemoveDependency(ctx context.Context, owner, repo string, index int64, dependency types.IssueMeta) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/dependencies", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.DeleteWithBody(ctx, path, dependency)
+}
+
+// ListBlocks returns all issues blocked by the given issue.
+func (s *IssueService) ListBlocks(ctx context.Context, owner, repo string, index int64) ([]types.Issue, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/blocks", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListAll[types.Issue](ctx, s.client, path, nil)
+}
+
+// IterBlocks returns an iterator over all issues blocked by the given issue.
+func (s *IssueService) IterBlocks(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.Issue, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/blocks", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListIter[types.Issue](ctx, s.client, path, nil)
+}
+
+// AddBlock makes the issue at the given path block another issue.
+func (s *IssueService) AddBlock(ctx context.Context, owner, repo string, index int64, blockedIssue types.IssueMeta) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/blocks", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.Post(ctx, path, blockedIssue, nil)
+}
+
+// RemoveBlock removes an issue block from the issue at the given path.
+func (s *IssueService) RemoveBlock(ctx context.Context, owner, repo string, index int64, blockedIssue types.IssueMeta) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/blocks", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.DeleteWithBody(ctx, path, blockedIssue)
+}
+
 // toAnySlice converts a slice of int64 to a slice of any for IssueLabelsOption.
 func toAnySlice(ids []int64) []any {
 	out := make([]any, len(ids))

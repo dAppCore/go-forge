@@ -506,6 +506,160 @@ func TestIssueService_UnsubscribeUser_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_ListDependencies_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/dependencies" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Issue{{ID: 11, Index: 11, Title: "blocking issue"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issues, err := f.Issues.ListDependencies(context.Background(), "core", "go-forge", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(issues, []types.Issue{{ID: 11, Index: 11, Title: "blocking issue"}}) {
+		t.Fatalf("got %#v", issues)
+	}
+}
+
+func TestIssueService_AddDependency_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/dependencies" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.IssueMeta
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Owner != "core" || body.Name != "go-forge" || body.Index != 2 {
+			t.Fatalf("got body=%#v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.Issue{ID: 11, Index: 11, Title: "blocking issue"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.AddDependency(context.Background(), "core", "go-forge", 1, types.IssueMeta{Owner: "core", Name: "go-forge", Index: 2}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestIssueService_RemoveDependency_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/dependencies" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.IssueMeta
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Owner != "core" || body.Name != "go-forge" || body.Index != 2 {
+			t.Fatalf("got body=%#v", body)
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(types.Issue{ID: 11, Index: 11, Title: "blocking issue"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.RemoveDependency(context.Background(), "core", "go-forge", 1, types.IssueMeta{Owner: "core", Name: "go-forge", Index: 2}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestIssueService_ListBlocks_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/blocks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Issue{{ID: 22, Index: 22, Title: "blocked issue"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issues, err := f.Issues.ListBlocks(context.Background(), "core", "go-forge", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(issues, []types.Issue{{ID: 22, Index: 22, Title: "blocked issue"}}) {
+		t.Fatalf("got %#v", issues)
+	}
+}
+
+func TestIssueService_AddBlock_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/blocks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.IssueMeta
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Owner != "core" || body.Name != "go-forge" || body.Index != 3 {
+			t.Fatalf("got body=%#v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.Issue{ID: 22, Index: 22, Title: "blocked issue"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.AddBlock(context.Background(), "core", "go-forge", 1, types.IssueMeta{Owner: "core", Name: "go-forge", Index: 3}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestIssueService_RemoveBlock_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/blocks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.IssueMeta
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Owner != "core" || body.Name != "go-forge" || body.Index != 3 {
+			t.Fatalf("got body=%#v", body)
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(types.Issue{ID: 22, Index: 22, Title: "blocked issue"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.RemoveBlock(context.Background(), "core", "go-forge", 1, types.IssueMeta{Owner: "core", Name: "go-forge", Index: 3}); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestIssueService_Pin_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
