@@ -155,6 +155,134 @@ func TestWebhookService_ListOrgHooks_Good(t *testing.T) {
 	}
 }
 
+func TestWebhookService_GetOrgHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/myorg/hooks/10" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     10,
+			Type:   "forgejo",
+			Active: true,
+			URL:    "https://example.com/org-hook",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Webhooks.GetOrgHook(context.Background(), "myorg", 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 10 {
+		t.Errorf("got id=%d, want 10", hook.ID)
+	}
+	if hook.URL != "https://example.com/org-hook" {
+		t.Errorf("got url=%q, want %q", hook.URL, "https://example.com/org-hook")
+	}
+}
+
+func TestWebhookService_CreateOrgHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/myorg/hooks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateHookOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Type != "forgejo" {
+			t.Errorf("got type=%q, want %q", opts.Type, "forgejo")
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     11,
+			Type:   opts.Type,
+			Active: opts.Active,
+			Events: opts.Events,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Webhooks.CreateOrgHook(context.Background(), "myorg", &types.CreateHookOption{
+		Type:   "forgejo",
+		Active: true,
+		Events: []string{"push"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 11 {
+		t.Errorf("got id=%d, want 11", hook.ID)
+	}
+	if hook.Type != "forgejo" {
+		t.Errorf("got type=%q, want %q", hook.Type, "forgejo")
+	}
+}
+
+func TestWebhookService_EditOrgHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/myorg/hooks/10" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.EditHookOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Active != false {
+			t.Fatalf("unexpected edit payload: %+v", opts)
+		}
+		active := false
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     10,
+			Type:   "forgejo",
+			Active: active,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Webhooks.EditOrgHook(context.Background(), "myorg", 10, &types.EditHookOption{
+		Active: false,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 10 {
+		t.Errorf("got id=%d, want 10", hook.ID)
+	}
+	if hook.Active {
+		t.Error("expected active=false")
+	}
+}
+
+func TestWebhookService_DeleteOrgHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/myorg/hooks/10" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Webhooks.DeleteOrgHook(context.Background(), "myorg", 10); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestWebhookService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)

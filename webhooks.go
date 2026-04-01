@@ -43,3 +43,39 @@ func (s *WebhookService) IterOrgHooks(ctx context.Context, org string) iter.Seq2
 	path := ResolvePath("/api/v1/orgs/{org}/hooks", pathParams("org", org))
 	return ListIter[types.Hook](ctx, s.client, path, nil)
 }
+
+// GetOrgHook returns a single webhook for an organisation.
+func (s *WebhookService) GetOrgHook(ctx context.Context, org string, id int64) (*types.Hook, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/hooks/{id}", pathParams("org", org, "id", int64String(id)))
+	var out types.Hook
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateOrgHook creates a webhook for an organisation.
+func (s *WebhookService) CreateOrgHook(ctx context.Context, org string, opts *types.CreateHookOption) (*types.Hook, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/hooks", pathParams("org", org))
+	var out types.Hook
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditOrgHook updates an existing organisation webhook.
+func (s *WebhookService) EditOrgHook(ctx context.Context, org string, id int64, opts *types.EditHookOption) (*types.Hook, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/hooks/{id}", pathParams("org", org, "id", int64String(id)))
+	var out types.Hook
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteOrgHook deletes an organisation webhook.
+func (s *WebhookService) DeleteOrgHook(ctx context.Context, org string, id int64) error {
+	path := ResolvePath("/api/v1/orgs/{org}/hooks/{id}", pathParams("org", org, "id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
