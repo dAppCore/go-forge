@@ -154,6 +154,16 @@ func (s *RepoService) GetRawFile(ctx context.Context, owner, repo, filepath stri
 	return s.client.GetRaw(ctx, path)
 }
 
+// GetSigningKey returns the repository signing key as ASCII-armoured text.
+func (s *RepoService) GetSigningKey(ctx context.Context, owner, repo string) (string, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/signing-key.gpg", pathParams("owner", owner, "repo", repo))
+	data, err := s.client.GetRaw(ctx, path)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 // ListIssueTemplates returns all issue templates available for a repository.
 func (s *RepoService) ListIssueTemplates(ctx context.Context, owner, repo string) ([]types.IssueTemplate, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issue_templates", pathParams("owner", owner, "repo", repo))

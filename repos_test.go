@@ -426,6 +426,32 @@ func TestRepoService_ListSubscribers_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetSigningKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/signing-key.gpg" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte("-----BEGIN PGP PUBLIC KEY BLOCK-----\n..."))
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Repos.GetSigningKey(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "-----BEGIN PGP PUBLIC KEY BLOCK-----\n..."
+	if key != want {
+		t.Fatalf("got %q, want %q", key, want)
+	}
+}
+
 func TestRepoService_ListAssignees_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
