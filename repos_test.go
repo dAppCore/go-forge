@@ -64,6 +64,46 @@ func TestRepoService_UpdateTopics_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_AddTopic_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.EscapedPath() != "/api/v1/repos/core/go-forge/topics/release%20candidate" {
+			t.Errorf("wrong path: %s", r.URL.EscapedPath())
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.AddTopic(context.Background(), "core", "go-forge", "release candidate"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_DeleteTopic_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.EscapedPath() != "/api/v1/repos/core/go-forge/topics/release%20candidate" {
+			t.Errorf("wrong path: %s", r.URL.EscapedPath())
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteTopic(context.Background(), "core", "go-forge", "release candidate"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_GetNewPinAllowed_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

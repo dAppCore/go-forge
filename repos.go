@@ -105,6 +105,18 @@ func (s *RepoService) UpdateTopics(ctx context.Context, owner, repo string, topi
 	return s.client.Put(ctx, path, types.RepoTopicOptions{Topics: topics}, nil)
 }
 
+// AddTopic adds a topic to a repository.
+func (s *RepoService) AddTopic(ctx context.Context, owner, repo, topic string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics/{topic}", pathParams("owner", owner, "repo", repo, "topic", topic))
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// DeleteTopic removes a topic from a repository.
+func (s *RepoService) DeleteTopic(ctx context.Context, owner, repo, topic string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics/{topic}", pathParams("owner", owner, "repo", repo, "topic", topic))
+	return s.client.Delete(ctx, path)
+}
+
 // GetNewPinAllowed returns whether new issue pins are allowed for a repository.
 func (s *RepoService) GetNewPinAllowed(ctx context.Context, owner, repo string) (*types.NewIssuePinsAllowed, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/new_pin_allowed", pathParams("owner", owner, "repo", repo))
