@@ -83,6 +83,53 @@ func (s *RepoService) IterSubscribers(ctx context.Context, owner, repo string) i
 	return ListIter[types.User](ctx, s.client, path, nil)
 }
 
+// ListCollaborators returns all collaborators on a repository.
+func (s *RepoService) ListCollaborators(ctx context.Context, owner, repo string) ([]types.User, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterCollaborators returns an iterator over all collaborators on a repository.
+func (s *RepoService) IterCollaborators(ctx context.Context, owner, repo string) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// CheckCollaborator reports whether a user is a collaborator on a repository.
+func (s *RepoService) CheckCollaborator(ctx context.Context, owner, repo, collaborator string) (bool, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators/{collaborator}", pathParams("owner", owner, "repo", repo, "collaborator", collaborator))
+	resp, err := s.client.doJSON(ctx, "GET", path, nil, nil)
+	if err != nil {
+		if IsNotFound(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return resp.StatusCode == 204, nil
+}
+
+// AddCollaborator adds a user as a collaborator on a repository.
+func (s *RepoService) AddCollaborator(ctx context.Context, owner, repo, collaborator string, opts *types.AddCollaboratorOption) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators/{collaborator}", pathParams("owner", owner, "repo", repo, "collaborator", collaborator))
+	return s.client.Put(ctx, path, opts, nil)
+}
+
+// DeleteCollaborator removes a user from a repository's collaborators.
+func (s *RepoService) DeleteCollaborator(ctx context.Context, owner, repo, collaborator string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators/{collaborator}", pathParams("owner", owner, "repo", repo, "collaborator", collaborator))
+	return s.client.Delete(ctx, path)
+}
+
+// GetCollaboratorPermission returns repository permissions for a collaborator.
+func (s *RepoService) GetCollaboratorPermission(ctx context.Context, owner, repo, collaborator string) (*types.RepoCollaboratorPermission, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators/{collaborator}/permission", pathParams("owner", owner, "repo", repo, "collaborator", collaborator))
+	var out types.RepoCollaboratorPermission
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetArchive returns a repository archive as raw bytes.
 func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive string) ([]byte, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/archive/{archive}", pathParams("owner", owner, "repo", repo, "archive", archive))

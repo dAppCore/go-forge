@@ -206,6 +206,129 @@ func TestRepoService_ListSubscribers_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListCollaborators_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/collaborators" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]types.User{{UserName: "alice"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	users, err := f.Repos.ListCollaborators(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(users) != 1 || users[0].UserName != "alice" {
+		t.Fatalf("got %#v", users)
+	}
+}
+
+func TestRepoService_AddCollaborator_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/collaborators/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.AddCollaboratorOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body.Permission != "write" {
+			t.Fatalf("got permission=%q, want %q", body.Permission, "write")
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.AddCollaborator(context.Background(), "core", "go-forge", "alice", &types.AddCollaboratorOption{Permission: "write"}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_DeleteCollaborator_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/collaborators/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteCollaborator(context.Background(), "core", "go-forge", "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_CheckCollaborator_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/collaborators/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	ok, err := f.Repos.CheckCollaborator(context.Background(), "core", "go-forge", "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !ok {
+		t.Fatal("expected collaborator check to return true")
+	}
+}
+
+func TestRepoService_GetCollaboratorPermission_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/collaborators/alice/permission" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.RepoCollaboratorPermission{
+			Permission: "write",
+			RoleName:   "collaborator",
+			User:       &types.User{UserName: "alice"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	perm, err := f.Repos.GetCollaboratorPermission(context.Background(), "core", "go-forge", "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if perm.Permission != "write" || perm.User == nil || perm.User.UserName != "alice" {
+		t.Fatalf("got %#v", perm)
+	}
+}
+
 func TestRepoService_Watch_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
