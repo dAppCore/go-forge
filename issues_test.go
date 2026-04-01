@@ -758,6 +758,56 @@ func TestIssueService_ListTimes_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_IterTimes_Good(t *testing.T) {
+	since := time.Date(2026, time.March, 3, 9, 15, 0, 0, time.UTC)
+	before := time.Date(2026, time.March, 4, 9, 15, 0, 0, time.UTC)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/42/times" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("user"); got != "alice" {
+			t.Errorf("got user=%q, want %q", got, "alice")
+		}
+		if got := r.URL.Query().Get("since"); got != since.Format(time.RFC3339) {
+			t.Errorf("got since=%q, want %q", got, since.Format(time.RFC3339))
+		}
+		if got := r.URL.Query().Get("before"); got != before.Format(time.RFC3339) {
+			t.Errorf("got before=%q, want %q", got, before.Format(time.RFC3339))
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("got page=%q, want %q", got, "1")
+		}
+		if got := r.URL.Query().Get("limit"); got != "50" {
+			t.Errorf("got limit=%q, want %q", got, "50")
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.TrackedTime{
+			{ID: 11, Time: 30, UserName: "alice"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var seen []types.TrackedTime
+	for entry, err := range f.Issues.IterTimes(context.Background(), "core", "go-forge", 42, "alice", &since, &before) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		seen = append(seen, entry)
+	}
+	if !reflect.DeepEqual(seen, []types.TrackedTime{
+		{ID: 11, Time: 30, UserName: "alice"},
+	}) {
+		t.Fatalf("got %#v", seen)
+	}
+}
+
 func TestIssueService_AddTime_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

@@ -174,20 +174,13 @@ func (s *IssueService) DeleteStopwatch(ctx context.Context, owner, repo string, 
 // ListTimes returns all tracked times on an issue.
 func (s *IssueService) ListTimes(ctx context.Context, owner, repo string, index int64, user string, since, before *time.Time) ([]types.TrackedTime, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/times", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
-	query := make(map[string]string, 3)
-	if user != "" {
-		query["user"] = user
-	}
-	if since != nil {
-		query["since"] = since.Format(time.RFC3339)
-	}
-	if before != nil {
-		query["before"] = before.Format(time.RFC3339)
-	}
-	if len(query) == 0 {
-		query = nil
-	}
-	return ListAll[types.TrackedTime](ctx, s.client, path, query)
+	return ListAll[types.TrackedTime](ctx, s.client, path, issueTimeQuery(user, since, before))
+}
+
+// IterTimes returns an iterator over all tracked times on an issue.
+func (s *IssueService) IterTimes(ctx context.Context, owner, repo string, index int64, user string, since, before *time.Time) iter.Seq2[types.TrackedTime, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/times", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListIter[types.TrackedTime](ctx, s.client, path, issueTimeQuery(user, since, before))
 }
 
 // AddTime adds tracked time to an issue.
@@ -363,4 +356,21 @@ func toAnySlice(ids []int64) []any {
 		out[i] = id
 	}
 	return out
+}
+
+func issueTimeQuery(user string, since, before *time.Time) map[string]string {
+	query := make(map[string]string, 3)
+	if user != "" {
+		query["user"] = user
+	}
+	if since != nil {
+		query["since"] = since.Format(time.RFC3339)
+	}
+	if before != nil {
+		query["before"] = before.Format(time.RFC3339)
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
