@@ -70,6 +70,12 @@ func (s *IssueService) StopStopwatch(ctx context.Context, owner, repo string, in
 	return s.client.Post(ctx, path, nil, nil)
 }
 
+// DeleteStopwatch deletes an issue's existing stopwatch.
+func (s *IssueService) DeleteStopwatch(ctx context.Context, owner, repo string, index int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/stopwatch/delete", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.Delete(ctx, path)
+}
+
 // AddLabels adds labels to an issue.
 func (s *IssueService) AddLabels(ctx context.Context, owner, repo string, index int64, labelIDs []int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/labels", pathParams("owner", owner, "repo", repo, "index", int64String(index)))

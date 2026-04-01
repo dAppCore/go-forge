@@ -187,6 +187,24 @@ func TestIssueService_Pin_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_DeleteStopwatch_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/42/stopwatch/delete" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.DeleteStopwatch(context.Background(), "core", "go-forge", 42); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestIssueService_List_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
