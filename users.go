@@ -94,6 +94,12 @@ func (s *UserService) Block(ctx context.Context, username string) error {
 	return s.client.Put(ctx, path, nil, nil)
 }
 
+// Unblock unblocks a user as the authenticated user.
+func (s *UserService) Unblock(ctx context.Context, username string) error {
+	path := ResolvePath("/api/v1/user/unblock/{username}", pathParams("username", username))
+	return s.client.Put(ctx, path, nil, nil)
+}
+
 // ListMySubscriptions returns all repositories watched by the authenticated user.
 func (s *UserService) ListMySubscriptions(ctx context.Context) ([]types.Repository, error) {
 	return ListAll[types.Repository](ctx, s.client, "/api/v1/user/subscriptions", nil)
