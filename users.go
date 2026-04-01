@@ -58,6 +58,16 @@ func (s *UserService) DeleteEmails(ctx context.Context, emails ...string) error 
 	return s.client.DeleteWithBody(ctx, "/api/v1/user/emails", types.DeleteEmailOption{Emails: emails})
 }
 
+// UpdateAvatar updates the authenticated user's avatar.
+func (s *UserService) UpdateAvatar(ctx context.Context, opts *types.UpdateUserAvatarOption) error {
+	return s.client.Post(ctx, "/api/v1/user/avatar", opts, nil)
+}
+
+// DeleteAvatar deletes the authenticated user's avatar.
+func (s *UserService) DeleteAvatar(ctx context.Context) error {
+	return s.client.Delete(ctx, "/api/v1/user/avatar")
+}
+
 // ListStopwatches returns all existing stopwatches for the authenticated user.
 func (s *UserService) ListStopwatches(ctx context.Context) ([]types.StopWatch, error) {
 	return ListAll[types.StopWatch](ctx, s.client, "/api/v1/user/stopwatches", nil)

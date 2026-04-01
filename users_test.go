@@ -263,6 +263,49 @@ func TestUserService_DeleteEmails_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_UpdateAvatar_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/avatar" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.UpdateUserAvatarOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Image != "aGVsbG8=" {
+			t.Fatalf("unexpected body: %+v", body)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Users.UpdateAvatar(context.Background(), &types.UpdateUserAvatarOption{Image: "aGVsbG8="}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestUserService_DeleteAvatar_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/avatar" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Users.DeleteAvatar(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestUserService_ListFollowers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
