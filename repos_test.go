@@ -206,6 +206,58 @@ func TestRepoService_ListSubscribers_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListAssignees_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/assignees" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]types.User{{UserName: "alice"}, {UserName: "bob"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	users, err := f.Repos.ListAssignees(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(users) != 2 || users[0].UserName != "alice" || users[1].UserName != "bob" {
+		t.Fatalf("got %#v", users)
+	}
+}
+
+func TestRepoService_IterAssignees_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/assignees" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.User{{UserName: "alice"}, {UserName: "bob"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var names []string
+	for user, err := range f.Repos.IterAssignees(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		names = append(names, user.UserName)
+	}
+	if len(names) != 2 || names[0] != "alice" || names[1] != "bob" {
+		t.Fatalf("got %#v", names)
+	}
+}
+
 func TestRepoService_ListCollaborators_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

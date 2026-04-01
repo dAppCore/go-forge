@@ -83,6 +83,18 @@ func (s *RepoService) IterSubscribers(ctx context.Context, owner, repo string) i
 	return ListIter[types.User](ctx, s.client, path, nil)
 }
 
+// ListAssignees returns all users that can be assigned to issues in a repository.
+func (s *RepoService) ListAssignees(ctx context.Context, owner, repo string) ([]types.User, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/assignees", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterAssignees returns an iterator over all users that can be assigned to issues in a repository.
+func (s *RepoService) IterAssignees(ctx context.Context, owner, repo string) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/assignees", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
 // ListCollaborators returns all collaborators on a repository.
 func (s *RepoService) ListCollaborators(ctx context.Context, owner, repo string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators", pathParams("owner", owner, "repo", repo))
