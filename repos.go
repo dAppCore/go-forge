@@ -244,6 +244,16 @@ func (s *RepoService) ListTopics(ctx context.Context, owner, repo string) ([]str
 	return out.TopicNames, nil
 }
 
+// SearchTopics searches topics by keyword.
+func (s *RepoService) SearchTopics(ctx context.Context, query string) ([]types.TopicResponse, error) {
+	return ListAll[types.TopicResponse](ctx, s.client, "/api/v1/topics/search", map[string]string{"q": query})
+}
+
+// IterSearchTopics returns an iterator over topic search results.
+func (s *RepoService) IterSearchTopics(ctx context.Context, query string) iter.Seq2[types.TopicResponse, error] {
+	return ListIter[types.TopicResponse](ctx, s.client, "/api/v1/topics/search", map[string]string{"q": query})
+}
+
 // UpdateTopics replaces the topics assigned to a repository.
 func (s *RepoService) UpdateTopics(ctx context.Context, owner, repo string, topics []string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics", pathParams("owner", owner, "repo", repo))

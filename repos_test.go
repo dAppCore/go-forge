@@ -35,6 +35,84 @@ func TestRepoService_ListTopics_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_SearchTopics_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/topics/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "go" {
+			t.Errorf("wrong query: %s", got)
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("wrong page: %s", got)
+		}
+		if got := r.URL.Query().Get("limit"); got != "50" {
+			t.Errorf("wrong limit: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.TopicResponse{
+			{Name: "go", RepoCount: 10},
+			{Name: "forge", RepoCount: 4},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	topics, err := f.Repos.SearchTopics(context.Background(), "go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(topics) != 2 || topics[0].Name != "go" || topics[1].RepoCount != 4 {
+		t.Fatalf("got %#v", topics)
+	}
+}
+
+func TestRepoService_IterSearchTopics_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/topics/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "go" {
+			t.Errorf("wrong query: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.TopicResponse{{Name: "go", RepoCount: 10}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []types.TopicResponse
+	for topic, err := range f.Repos.IterSearchTopics(context.Background(), "go") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, topic)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(got) != 1 || got[0].Name != "go" || got[0].RepoCount != 10 {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestRepoService_UpdateTopics_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
