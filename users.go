@@ -78,6 +78,16 @@ func (s *UserService) IterStopwatches(ctx context.Context) iter.Seq2[types.StopW
 	return ListIter[types.StopWatch](ctx, s.client, "/api/v1/user/stopwatches", nil)
 }
 
+// ListBlockedUsers returns all users blocked by the authenticated user.
+func (s *UserService) ListBlockedUsers(ctx context.Context) ([]types.BlockedUser, error) {
+	return ListAll[types.BlockedUser](ctx, s.client, "/api/v1/user/list_blocked", nil)
+}
+
+// IterBlockedUsers returns an iterator over all users blocked by the authenticated user.
+func (s *UserService) IterBlockedUsers(ctx context.Context) iter.Seq2[types.BlockedUser, error] {
+	return ListIter[types.BlockedUser](ctx, s.client, "/api/v1/user/list_blocked", nil)
+}
+
 // ListMySubscriptions returns all repositories watched by the authenticated user.
 func (s *UserService) ListMySubscriptions(ctx context.Context) ([]types.Repository, error) {
 	return ListAll[types.Repository](ctx, s.client, "/api/v1/user/subscriptions", nil)

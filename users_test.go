@@ -112,6 +112,66 @@ func TestUserService_ListStopwatches_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListBlockedUsers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/list_blocked" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.BlockedUser{
+			{BlockID: 11},
+			{BlockID: 12},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	blocked, err := f.Users.ListBlockedUsers(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(blocked) != 2 {
+		t.Fatalf("got %d blocked users, want 2", len(blocked))
+	}
+	if blocked[0].BlockID != 11 {
+		t.Errorf("unexpected first blocked user: %+v", blocked[0])
+	}
+}
+
+func TestUserService_IterBlockedUsers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/list_blocked" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.BlockedUser{
+			{BlockID: 77},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	count := 0
+	for blocked, err := range f.Users.IterBlockedUsers(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if blocked.BlockID != 77 {
+			t.Errorf("unexpected blocked user: %+v", blocked)
+		}
+	}
+	if count != 1 {
+		t.Fatalf("got %d blocked users, want 1", count)
+	}
+}
+
 func TestUserService_ListMySubscriptions_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
