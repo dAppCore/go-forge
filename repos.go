@@ -91,6 +91,32 @@ func (s *RepoService) GetNewPinAllowed(ctx context.Context, owner, repo string) 
 	return &out, nil
 }
 
+// GetSubscription returns the current user's watch state for a repository.
+func (s *RepoService) GetSubscription(ctx context.Context, owner, repo string) (*types.WatchInfo, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/subscription", pathParams("owner", owner, "repo", repo))
+	var out types.WatchInfo
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Watch subscribes the current user to repository notifications.
+func (s *RepoService) Watch(ctx context.Context, owner, repo string) (*types.WatchInfo, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/subscription", pathParams("owner", owner, "repo", repo))
+	var out types.WatchInfo
+	if err := s.client.Put(ctx, path, nil, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Unwatch unsubscribes the current user from repository notifications.
+func (s *RepoService) Unwatch(ctx context.Context, owner, repo string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/subscription", pathParams("owner", owner, "repo", repo))
+	return s.client.Delete(ctx, path)
+}
+
 // Fork forks a repository. If org is non-empty, forks into that organisation.
 func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types.Repository, error) {
 	body := map[string]string{}

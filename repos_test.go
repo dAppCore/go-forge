@@ -91,6 +91,80 @@ func TestRepoService_GetNewPinAllowed_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetSubscription_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/subscription" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.WatchInfo{
+			Subscribed: true,
+			Ignored:    false,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Repos.GetSubscription(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result.Subscribed || result.Ignored {
+		t.Fatalf("got %#v", result)
+	}
+}
+
+func TestRepoService_Watch_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/subscription" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.WatchInfo{
+			Subscribed: true,
+			Ignored:    false,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Repos.Watch(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result.Subscribed || result.Ignored {
+		t.Fatalf("got %#v", result)
+	}
+}
+
+func TestRepoService_Unwatch_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/subscription" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.Unwatch(context.Background(), "core", "go-forge"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 	owner := "acme org"
 	repo := "my/repo"
