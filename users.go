@@ -34,6 +34,30 @@ func (s *UserService) GetCurrent(ctx context.Context) (*types.User, error) {
 	return &out, nil
 }
 
+// ListEmails returns all email addresses for the authenticated user.
+func (s *UserService) ListEmails(ctx context.Context) ([]types.Email, error) {
+	return ListAll[types.Email](ctx, s.client, "/api/v1/user/emails", nil)
+}
+
+// IterEmails returns an iterator over all email addresses for the authenticated user.
+func (s *UserService) IterEmails(ctx context.Context) iter.Seq2[types.Email, error] {
+	return ListIter[types.Email](ctx, s.client, "/api/v1/user/emails", nil)
+}
+
+// AddEmails adds email addresses for the authenticated user.
+func (s *UserService) AddEmails(ctx context.Context, emails ...string) ([]types.Email, error) {
+	var out []types.Email
+	if err := s.client.Post(ctx, "/api/v1/user/emails", types.CreateEmailOption{Emails: emails}, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DeleteEmails deletes email addresses for the authenticated user.
+func (s *UserService) DeleteEmails(ctx context.Context, emails ...string) error {
+	return s.client.DeleteWithBody(ctx, "/api/v1/user/emails", types.DeleteEmailOption{Emails: emails})
+}
+
 // ListFollowers returns all followers of a user.
 func (s *UserService) ListFollowers(ctx context.Context, username string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/users/{username}/followers", pathParams("username", username))
