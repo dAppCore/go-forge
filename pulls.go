@@ -32,6 +32,12 @@ func (s *PullService) Merge(ctx context.Context, owner, repo string, index int64
 	return s.client.Post(ctx, path, body, nil)
 }
 
+// CancelScheduledAutoMerge cancels the scheduled auto merge for a pull request.
+func (s *PullService) CancelScheduledAutoMerge(ctx context.Context, owner, repo string, index int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/merge", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return s.client.Delete(ctx, path)
+}
+
 // Update updates a pull request branch with the base branch.
 func (s *PullService) Update(ctx context.Context, owner, repo string, index int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/update", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
