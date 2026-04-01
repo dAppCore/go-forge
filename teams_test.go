@@ -79,3 +79,25 @@ func TestTeamService_AddMember_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestTeamService_GetMember_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/teams/42/members/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.User{ID: 1, UserName: "alice"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	member, err := f.Teams.GetMember(context.Background(), 42, "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if member.UserName != "alice" {
+		t.Errorf("got username=%q, want %q", member.UserName, "alice")
+	}
+}

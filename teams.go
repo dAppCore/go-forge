@@ -43,6 +43,16 @@ func (s *TeamService) AddMember(ctx context.Context, teamID int64, username stri
 	return s.client.Put(ctx, path, nil, nil)
 }
 
+// GetMember returns a particular member of a team.
+func (s *TeamService) GetMember(ctx context.Context, teamID int64, username string) (*types.User, error) {
+	path := ResolvePath("/api/v1/teams/{teamID}/members/{username}", pathParams("teamID", int64String(teamID), "username", username))
+	var out types.User
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // RemoveMember removes a user from a team.
 func (s *TeamService) RemoveMember(ctx context.Context, teamID int64, username string) error {
 	path := ResolvePath("/api/v1/teams/{teamID}/members/{username}", pathParams("teamID", int64String(teamID), "username", username))
