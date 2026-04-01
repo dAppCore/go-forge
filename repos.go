@@ -218,6 +218,28 @@ func (s *RepoService) GetRawFile(ctx context.Context, owner, repo, filepath stri
 	return s.client.GetRaw(ctx, path)
 }
 
+// ListFlags returns all flags for a repository.
+func (s *RepoService) ListFlags(ctx context.Context, owner, repo string) ([]string, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags", pathParams("owner", owner, "repo", repo))
+	var out []string
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ReplaceFlags replaces all flags for a repository.
+func (s *RepoService) ReplaceFlags(ctx context.Context, owner, repo string, opts *types.ReplaceFlagsOption) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags", pathParams("owner", owner, "repo", repo))
+	return s.client.Put(ctx, path, opts, nil)
+}
+
+// DeleteFlags removes all flags from a repository.
+func (s *RepoService) DeleteFlags(ctx context.Context, owner, repo string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags", pathParams("owner", owner, "repo", repo))
+	return s.client.Delete(ctx, path)
+}
+
 // GetSigningKey returns the repository signing key as ASCII-armoured text.
 func (s *RepoService) GetSigningKey(ctx context.Context, owner, repo string) (string, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/signing-key.gpg", pathParams("owner", owner, "repo", repo))

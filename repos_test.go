@@ -782,6 +782,79 @@ func TestRepoService_GetSigningKey_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListFlags_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/flags" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]string{"alpha", "beta"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	flags, err := f.Repos.ListFlags(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(flags, []string{"alpha", "beta"}) {
+		t.Fatalf("got %#v", flags)
+	}
+}
+
+func TestRepoService_ReplaceFlags_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/flags" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.ReplaceFlagsOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Errorf("decode body: %v", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		if !reflect.DeepEqual(body.Flags, []string{"alpha", "beta"}) {
+			t.Fatalf("got %#v", body.Flags)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.ReplaceFlags(context.Background(), "core", "go-forge", &types.ReplaceFlagsOption{Flags: []string{"alpha", "beta"}}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_DeleteFlags_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/flags" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteFlags(context.Background(), "core", "go-forge"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_ListAssignees_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
