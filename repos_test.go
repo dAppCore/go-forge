@@ -131,6 +131,55 @@ func TestRepoService_GetNewPinAllowed_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_UpdateAvatar_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/avatar" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.UpdateRepoAvatarOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body.Image != "iVBORw0KGgoAAAANSUhEUg==" {
+			t.Fatalf("got image=%q", body.Image)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.UpdateAvatar(context.Background(), "core", "go-forge", &types.UpdateRepoAvatarOption{
+		Image: "iVBORw0KGgoAAAANSUhEUg==",
+	}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_DeleteAvatar_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/avatar" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteAvatar(context.Background(), "core", "go-forge"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_GetSubscription_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

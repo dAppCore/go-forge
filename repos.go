@@ -186,6 +186,18 @@ func (s *RepoService) GetNewPinAllowed(ctx context.Context, owner, repo string) 
 	return &out, nil
 }
 
+// UpdateAvatar updates a repository avatar.
+func (s *RepoService) UpdateAvatar(ctx context.Context, owner, repo string, opts *types.UpdateRepoAvatarOption) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/avatar", pathParams("owner", owner, "repo", repo))
+	return s.client.Post(ctx, path, opts, nil)
+}
+
+// DeleteAvatar deletes a repository avatar.
+func (s *RepoService) DeleteAvatar(ctx context.Context, owner, repo string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/avatar", pathParams("owner", owner, "repo", repo))
+	return s.client.Delete(ctx, path)
+}
+
 // GetSubscription returns the current user's watch state for a repository.
 func (s *RepoService) GetSubscription(ctx context.Context, owner, repo string) (*types.WatchInfo, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/subscription", pathParams("owner", owner, "repo", repo))

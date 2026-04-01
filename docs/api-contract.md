@@ -184,6 +184,8 @@ Coverage notes: rows list direct tests when a symbol is named in test names or r
 | method | RepoService.ListUserRepos | `func (s *RepoService) ListUserRepos(ctx context.Context) ([]types.Repository, error)` | ListUserRepos returns all repositories for the authenticated user. | No direct tests. |
 | method | RepoService.MirrorSync | `func (s *RepoService) MirrorSync(ctx context.Context, owner, repo string) error` | MirrorSync triggers a mirror sync. | No direct tests. |
 | method | RepoService.RejectTransfer | `func (s *RepoService) RejectTransfer(ctx context.Context, owner, repo string) error` | RejectTransfer rejects a pending repository transfer. | No direct tests. |
+| method | RepoService.DeleteAvatar | `func (s *RepoService) DeleteAvatar(ctx context.Context, owner, repo string) error` | DeleteAvatar deletes a repository avatar. | `TestRepoService_DeleteAvatar_Good` |
+| method | RepoService.UpdateAvatar | `func (s *RepoService) UpdateAvatar(ctx context.Context, owner, repo string, opts *types.UpdateRepoAvatarOption) error` | UpdateAvatar updates a repository avatar. | `TestRepoService_UpdateAvatar_Good` |
 | method | RepoService.Transfer | `func (s *RepoService) Transfer(ctx context.Context, owner, repo string, opts map[string]any) error` | Transfer initiates a repository transfer. | No direct tests. |
 | method | Resource.Create | `func (r *Resource[T, C, U]) Create(ctx context.Context, params Params, body *C) (*T, error)` | Create creates a new resource. | `TestResource_Good_Create` |
 | method | Resource.Delete | `func (r *Resource[T, C, U]) Delete(ctx context.Context, params Params) error` | Delete removes a resource. | `TestResource_Good_Delete` |
