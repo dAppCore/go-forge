@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"iter"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -29,6 +30,22 @@ func (s *WikiService) ListPages(ctx context.Context, owner, repo string) ([]type
 		return nil, err
 	}
 	return out, nil
+}
+
+// IterPages returns an iterator over all wiki page metadata for a repository.
+func (s *WikiService) IterPages(ctx context.Context, owner, repo string) iter.Seq2[types.WikiPageMetaData, error] {
+	return func(yield func(types.WikiPageMetaData, error) bool) {
+		items, err := s.ListPages(ctx, owner, repo)
+		if err != nil {
+			yield(*new(types.WikiPageMetaData), err)
+			return
+		}
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
 }
 
 // GetPage returns a single wiki page by name.

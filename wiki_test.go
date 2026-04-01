@@ -41,6 +41,37 @@ func TestWikiService_ListPages_Good(t *testing.T) {
 	}
 }
 
+func TestWikiService_IterPages_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/wiki/pages" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.WikiPageMetaData{
+			{Title: "Home", SubURL: "Home"},
+			{Title: "Setup", SubURL: "Setup"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var titles []string
+	for page, err := range f.Wiki.IterPages(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		titles = append(titles, page.Title)
+	}
+	if len(titles) != 2 {
+		t.Fatalf("got %d pages, want 2", len(titles))
+	}
+	if titles[0] != "Home" || titles[1] != "Setup" {
+		t.Fatalf("unexpected titles: %+v", titles)
+	}
+}
+
 func TestWikiService_GetPage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
