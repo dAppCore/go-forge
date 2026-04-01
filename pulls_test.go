@@ -121,6 +121,80 @@ func TestPullService_ListReviewers_Good(t *testing.T) {
 	}
 }
 
+func TestPullService_ListFiles_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/7/files" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.ChangedFile{
+			{Filename: "README.md", Status: "modified", Additions: 2, Deletions: 1},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	files, err := f.Pulls.ListFiles(context.Background(), "core", "go-forge", 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(files) != 1 {
+		t.Fatalf("got %d files, want 1", len(files))
+	}
+	if files[0].Filename != "README.md" || files[0].Status != "modified" {
+		t.Fatalf("got %#v", files[0])
+	}
+}
+
+func TestPullService_IterFiles_Good(t *testing.T) {
+	requests := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/7/files" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		switch requests {
+		case 1:
+			if got := r.URL.Query().Get("page"); got != "1" {
+				t.Errorf("got page=%q, want %q", got, "1")
+			}
+			w.Header().Set("X-Total-Count", "2")
+			json.NewEncoder(w).Encode([]types.ChangedFile{{Filename: "README.md", Status: "modified"}})
+		case 2:
+			if got := r.URL.Query().Get("page"); got != "2" {
+				t.Errorf("got page=%q, want %q", got, "2")
+			}
+			w.Header().Set("X-Total-Count", "2")
+			json.NewEncoder(w).Encode([]types.ChangedFile{{Filename: "docs/guide.md", Status: "added"}})
+		default:
+			t.Fatalf("unexpected request %d", requests)
+		}
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for file, err := range f.Pulls.IterFiles(context.Background(), "core", "go-forge", 7) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, file.Filename)
+	}
+	if len(got) != 2 || got[0] != "README.md" || got[1] != "docs/guide.md" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestPullService_IterReviewers_Good(t *testing.T) {
 	requests := 0
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
