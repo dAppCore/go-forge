@@ -244,6 +244,87 @@ func TestActionsService_DispatchWorkflow_Good(t *testing.T) {
 	}
 }
 
+func TestActionsService_ListRepoTasks_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/actions/tasks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("page"); got != "2" {
+			t.Errorf("got page=%q, want %q", got, "2")
+		}
+		if got := r.URL.Query().Get("limit"); got != "25" {
+			t.Errorf("got limit=%q, want %q", got, "25")
+		}
+		json.NewEncoder(w).Encode(types.ActionTaskResponse{
+			Entries: []*types.ActionTask{
+				{ID: 101, Name: "build"},
+				{ID: 102, Name: "test"},
+			},
+			TotalCount: 2,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	resp, err := f.Actions.ListRepoTasks(context.Background(), "core", "go-forge", ListOptions{Page: 2, Limit: 25})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.TotalCount != 2 {
+		t.Fatalf("got total_count=%d, want 2", resp.TotalCount)
+	}
+	if len(resp.Entries) != 2 {
+		t.Fatalf("got %d tasks, want 2", len(resp.Entries))
+	}
+	if resp.Entries[0].ID != 101 || resp.Entries[1].Name != "test" {
+		t.Fatalf("unexpected tasks: %#v", resp.Entries)
+	}
+}
+
+func TestActionsService_IterRepoTasks_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/actions/tasks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		switch r.URL.Query().Get("page") {
+		case "1":
+			json.NewEncoder(w).Encode(types.ActionTaskResponse{
+				Entries:    []*types.ActionTask{{ID: 1, Name: "build"}},
+				TotalCount: 2,
+			})
+		case "2":
+			json.NewEncoder(w).Encode(types.ActionTaskResponse{
+				Entries:    []*types.ActionTask{{ID: 2, Name: "test"}},
+				TotalCount: 2,
+			})
+		default:
+			t.Fatalf("unexpected page %q", r.URL.Query().Get("page"))
+		}
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []types.ActionTask
+	for task, err := range f.Actions.IterRepoTasks(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, task)
+	}
+	if len(got) != 2 {
+		t.Fatalf("got %d tasks, want 2", len(got))
+	}
+	if got[0].ID != 1 || got[1].Name != "test" {
+		t.Fatalf("unexpected tasks: %#v", got)
+	}
+}
+
 func TestActionsService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)

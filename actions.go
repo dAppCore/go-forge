@@ -3,12 +3,14 @@ package forge
 import (
 	"context"
 	"iter"
+	"net/url"
+	"strconv"
 
 	"dappco.re/go/core/forge/types"
 )
 
 // ActionsService handles CI/CD actions operations across repositories and
-// organisations — secrets, variables, and workflow dispatches.
+// organisations — secrets, variables, workflow dispatches, and tasks.
 // No Resource embedding — heterogeneous endpoints across repo and org levels.
 //
 // Usage:
@@ -103,4 +105,61 @@ func (s *ActionsService) IterOrgVariables(ctx context.Context, org string) iter.
 func (s *ActionsService) DispatchWorkflow(ctx context.Context, owner, repo, workflow string, opts map[string]any) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/workflows/{workflow}/dispatches", pathParams("owner", owner, "repo", repo, "workflow", workflow))
 	return s.client.Post(ctx, path, opts, nil)
+}
+
+// ListRepoTasks returns a single page of action tasks for a repository.
+func (s *ActionsService) ListRepoTasks(ctx context.Context, owner, repo string, opts ListOptions) (*types.ActionTaskResponse, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/tasks", pathParams("owner", owner, "repo", repo))
+
+	if opts.Page > 0 || opts.Limit > 0 {
+		u, err := url.Parse(path)
+		if err != nil {
+			return nil, err
+		}
+		q := u.Query()
+		if opts.Page > 0 {
+			q.Set("page", strconv.Itoa(opts.Page))
+		}
+		if opts.Limit > 0 {
+			q.Set("limit", strconv.Itoa(opts.Limit))
+		}
+		u.RawQuery = q.Encode()
+		path = u.String()
+	}
+
+	var out types.ActionTaskResponse
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// IterRepoTasks returns an iterator over all action tasks for a repository.
+func (s *ActionsService) IterRepoTasks(ctx context.Context, owner, repo string) iter.Seq2[types.ActionTask, error] {
+	return func(yield func(types.ActionTask, error) bool) {
+		const limit = 50
+		var seen int64
+		for page := 1; ; page++ {
+			resp, err := s.ListRepoTasks(ctx, owner, repo, ListOptions{Page: page, Limit: limit})
+			if err != nil {
+				yield(*new(types.ActionTask), err)
+				return
+			}
+			for _, item := range resp.Entries {
+				if !yield(*item, nil) {
+					return
+				}
+				seen++
+			}
+			if resp.TotalCount > 0 {
+				if seen >= resp.TotalCount {
+					return
+				}
+				continue
+			}
+			if len(resp.Entries) < limit {
+				return
+			}
+		}
+	}
 }

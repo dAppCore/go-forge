@@ -92,7 +92,7 @@ go-forge/
 ├── webhooks.go        WebhookService — repo and org webhooks
 ├── notifications.go   NotificationService — notifications, threads
 ├── packages.go        PackageService — package registry
-├── actions.go         ActionsService — CI/CD secrets, variables, dispatches
+├── actions.go         ActionsService — CI/CD secrets, variables, dispatches, tasks
 ├── contents.go        ContentService — file read/write/delete
 ├── wiki.go            WikiService — wiki pages
 ├── commits.go         CommitService — statuses, notes
@@ -131,7 +131,7 @@ The `Forge` struct exposes 18 service fields, each handling a different API doma
 | `Webhooks`      | `WebhookService`    | `Resource[Hook, ...]`            | Repo and org webhooks                |
 | `Notifications` | `NotificationService` | (standalone)                   | Notifications, threads               |
 | `Packages`      | `PackageService`    | (standalone)                     | Package registry                     |
-| `Actions`       | `ActionsService`    | (standalone)                     | CI/CD secrets, variables, dispatches |
+| `Actions`       | `ActionsService`    | (standalone)                     | CI/CD secrets, variables, dispatches, tasks |
 | `Contents`      | `ContentService`    | (standalone)                     | File read/write/delete               |
 | `Wiki`          | `WikiService`       | (standalone)                     | Wiki pages                           |
 | `Commits`       | `CommitService`     | (standalone)                     | Commit statuses, git notes           |
