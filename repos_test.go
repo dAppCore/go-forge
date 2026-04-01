@@ -113,6 +113,135 @@ func TestRepoService_IterSearchTopics_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_SearchRepositoriesPage_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "go" {
+			t.Errorf("wrong query: %s", got)
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("wrong page: %s", got)
+		}
+		if got := r.URL.Query().Get("limit"); got != "2" {
+			t.Errorf("wrong limit: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "3")
+		json.NewEncoder(w).Encode(types.SearchResults{
+			Data: []*types.Repository{
+				{Name: "go-forge"},
+				{Name: "go-core"},
+			},
+			OK: true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	page, err := f.Repos.SearchRepositoriesPage(context.Background(), "go", ListOptions{Page: 1, Limit: 2})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if page.Page != 1 || page.TotalCount != 3 || !page.HasMore {
+		t.Fatalf("got %#v", page)
+	}
+	if !reflect.DeepEqual(page.Items, []types.Repository{{Name: "go-forge"}, {Name: "go-core"}}) {
+		t.Fatalf("got %#v", page.Items)
+	}
+}
+
+func TestRepoService_SearchRepositories_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "go" {
+			t.Errorf("wrong query: %s", got)
+		}
+		switch r.URL.Query().Get("page") {
+		case "1":
+			w.Header().Set("X-Total-Count", "3")
+			json.NewEncoder(w).Encode(types.SearchResults{
+				Data: []*types.Repository{
+					{Name: "go-forge"},
+					{Name: "go-core"},
+				},
+				OK: true,
+			})
+		case "2":
+			w.Header().Set("X-Total-Count", "3")
+			json.NewEncoder(w).Encode(types.SearchResults{
+				Data: []*types.Repository{{Name: "go-utils"}},
+				OK:   true,
+			})
+		default:
+			t.Fatalf("unexpected page %q", r.URL.Query().Get("page"))
+		}
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repos, err := f.Repos.SearchRepositories(context.Background(), "go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if requests != 2 {
+		t.Fatalf("expected 2 requests, got %d", requests)
+	}
+	if !reflect.DeepEqual(repos, []types.Repository{{Name: "go-forge"}, {Name: "go-core"}, {Name: "go-utils"}}) {
+		t.Fatalf("got %#v", repos)
+	}
+}
+
+func TestRepoService_IterSearchRepositories_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode(types.SearchResults{
+			Data: []*types.Repository{{Name: "go-forge"}},
+			OK:   true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []types.Repository
+	for repo, err := range f.Repos.IterSearchRepositories(context.Background(), "go") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, repo)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if !reflect.DeepEqual(got, []types.Repository{{Name: "go-forge"}}) {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestRepoService_UpdateTopics_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {

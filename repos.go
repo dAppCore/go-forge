@@ -3,6 +3,9 @@ package forge
 import (
 	"context"
 	"iter"
+	"net/http"
+	"net/url"
+	"strconv"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -274,6 +277,92 @@ func (s *RepoService) SearchTopics(ctx context.Context, query string) ([]types.T
 // IterSearchTopics returns an iterator over topic search results.
 func (s *RepoService) IterSearchTopics(ctx context.Context, query string) iter.Seq2[types.TopicResponse, error] {
 	return ListIter[types.TopicResponse](ctx, s.client, "/api/v1/topics/search", map[string]string{"q": query})
+}
+
+// SearchRepositoriesPage returns a single page of repository search results.
+func (s *RepoService) SearchRepositoriesPage(ctx context.Context, query string, pageOpts ListOptions) (*PagedResult[types.Repository], error) {
+	if pageOpts.Page < 1 {
+		pageOpts.Page = 1
+	}
+	if pageOpts.Limit < 1 {
+		pageOpts.Limit = 50
+	}
+
+	u, err := url.Parse("/api/v1/repos/search")
+	if err != nil {
+		return nil, err
+	}
+
+	q := u.Query()
+	q.Set("q", query)
+	q.Set("page", strconv.Itoa(pageOpts.Page))
+	q.Set("limit", strconv.Itoa(pageOpts.Limit))
+	u.RawQuery = q.Encode()
+
+	var out types.SearchResults
+	resp, err := s.client.doJSON(ctx, http.MethodGet, u.String(), nil, &out)
+	if err != nil {
+		return nil, err
+	}
+
+	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	items := make([]types.Repository, 0, len(out.Data))
+	for _, repo := range out.Data {
+		if repo != nil {
+			items = append(items, *repo)
+		}
+	}
+
+	return &PagedResult[types.Repository]{
+		Items:      items,
+		TotalCount: totalCount,
+		Page:       pageOpts.Page,
+		HasMore: (totalCount > 0 && (pageOpts.Page-1)*pageOpts.Limit+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= pageOpts.Limit),
+	}, nil
+}
+
+// SearchRepositories returns all repositories matching the search query.
+func (s *RepoService) SearchRepositories(ctx context.Context, query string) ([]types.Repository, error) {
+	var all []types.Repository
+	page := 1
+
+	for {
+		result, err := s.SearchRepositoriesPage(ctx, query, ListOptions{Page: page, Limit: 50})
+		if err != nil {
+			return nil, err
+		}
+		all = append(all, result.Items...)
+		if !result.HasMore {
+			break
+		}
+		page++
+	}
+
+	return all, nil
+}
+
+// IterSearchRepositories returns an iterator over all repositories matching the search query.
+func (s *RepoService) IterSearchRepositories(ctx context.Context, query string) iter.Seq2[types.Repository, error] {
+	return func(yield func(types.Repository, error) bool) {
+		page := 1
+		for {
+			result, err := s.SearchRepositoriesPage(ctx, query, ListOptions{Page: page, Limit: 50})
+			if err != nil {
+				yield(*new(types.Repository), err)
+				return
+			}
+			for _, item := range result.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+			if !result.HasMore {
+				break
+			}
+			page++
+		}
+	}
 }
 
 // UpdateTopics replaces the topics assigned to a repository.
