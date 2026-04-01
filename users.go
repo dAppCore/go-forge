@@ -68,6 +68,16 @@ func (s *UserService) IterStopwatches(ctx context.Context) iter.Seq2[types.StopW
 	return ListIter[types.StopWatch](ctx, s.client, "/api/v1/user/stopwatches", nil)
 }
 
+// ListMySubscriptions returns all repositories watched by the authenticated user.
+func (s *UserService) ListMySubscriptions(ctx context.Context) ([]types.Repository, error) {
+	return ListAll[types.Repository](ctx, s.client, "/api/v1/user/subscriptions", nil)
+}
+
+// IterMySubscriptions returns an iterator over all repositories watched by the authenticated user.
+func (s *UserService) IterMySubscriptions(ctx context.Context) iter.Seq2[types.Repository, error] {
+	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/subscriptions", nil)
+}
+
 // ListFollowers returns all followers of a user.
 func (s *UserService) ListFollowers(ctx context.Context, username string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/users/{username}/followers", pathParams("username", username))
@@ -78,6 +88,18 @@ func (s *UserService) ListFollowers(ctx context.Context, username string) ([]typ
 func (s *UserService) IterFollowers(ctx context.Context, username string) iter.Seq2[types.User, error] {
 	path := ResolvePath("/api/v1/users/{username}/followers", pathParams("username", username))
 	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// ListSubscriptions returns all repositories watched by a user.
+func (s *UserService) ListSubscriptions(ctx context.Context, username string) ([]types.Repository, error) {
+	path := ResolvePath("/api/v1/users/{username}/subscriptions", pathParams("username", username))
+	return ListAll[types.Repository](ctx, s.client, path, nil)
+}
+
+// IterSubscriptions returns an iterator over all repositories watched by a user.
+func (s *UserService) IterSubscriptions(ctx context.Context, username string) iter.Seq2[types.Repository, error] {
+	path := ResolvePath("/api/v1/users/{username}/subscriptions", pathParams("username", username))
+	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
 // ListFollowing returns all users that a user is following.

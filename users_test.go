@@ -112,6 +112,65 @@ func TestUserService_ListStopwatches_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListMySubscriptions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/subscriptions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Repository{
+			{Name: "go-forge", FullName: "core/go-forge"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repos, err := f.Users.ListMySubscriptions(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(repos) != 1 {
+		t.Fatalf("got %d repositories, want 1", len(repos))
+	}
+	if repos[0].FullName != "core/go-forge" {
+		t.Errorf("got full name=%q, want %q", repos[0].FullName, "core/go-forge")
+	}
+}
+
+func TestUserService_IterMySubscriptions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/subscriptions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Repository{
+			{Name: "go-forge", FullName: "core/go-forge"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	count := 0
+	for repo, err := range f.Users.IterMySubscriptions(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if repo.FullName != "core/go-forge" {
+			t.Errorf("got full name=%q, want %q", repo.FullName, "core/go-forge")
+		}
+	}
+	if count != 1 {
+		t.Fatalf("got %d repositories, want 1", count)
+	}
+}
+
 func TestUserService_IterStopwatches_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -230,5 +289,64 @@ func TestUserService_ListFollowers_Good(t *testing.T) {
 	}
 	if followers[0].UserName != "bob" {
 		t.Errorf("got username=%q, want %q", followers[0].UserName, "bob")
+	}
+}
+
+func TestUserService_ListSubscriptions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/subscriptions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Repository{
+			{Name: "go-forge", FullName: "core/go-forge"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repos, err := f.Users.ListSubscriptions(context.Background(), "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(repos) != 1 {
+		t.Fatalf("got %d repositories, want 1", len(repos))
+	}
+	if repos[0].Name != "go-forge" {
+		t.Errorf("got name=%q, want %q", repos[0].Name, "go-forge")
+	}
+}
+
+func TestUserService_IterSubscriptions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/subscriptions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Repository{
+			{Name: "go-forge", FullName: "core/go-forge"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	count := 0
+	for repo, err := range f.Users.IterSubscriptions(context.Background(), "alice") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if repo.Name != "go-forge" {
+			t.Errorf("got name=%q, want %q", repo.Name, "go-forge")
+		}
+	}
+	if count != 1 {
+		t.Fatalf("got %d repositories, want 1", count)
 	}
 }
