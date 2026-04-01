@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"strconv"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -52,6 +53,20 @@ func (s *WikiService) IterPages(ctx context.Context, owner, repo string) iter.Se
 func (s *WikiService) GetPage(ctx context.Context, owner, repo, pageName string) (*types.WikiPage, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/wiki/page/{pageName}", pathParams("owner", owner, "repo", repo, "pageName", pageName))
 	var out types.WikiPage
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetPageRevisions returns the revision history for a wiki page.
+// Page is optional; pass a value greater than zero to request a specific page of results.
+func (s *WikiService) GetPageRevisions(ctx context.Context, owner, repo, pageName string, page int) (*types.WikiCommitList, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/wiki/revisions/{pageName}", pathParams("owner", owner, "repo", repo, "pageName", pageName))
+	if page > 0 {
+		path += "?page=" + strconv.Itoa(page)
+	}
+	var out types.WikiCommitList
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
 	}

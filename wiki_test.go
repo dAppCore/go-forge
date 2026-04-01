@@ -105,6 +105,43 @@ func TestWikiService_GetPage_Good(t *testing.T) {
 	}
 }
 
+func TestWikiService_GetPageRevisions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/wiki/revisions/Home" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("page"); got != "2" {
+			t.Errorf("got page=%q, want %q", got, "2")
+		}
+		json.NewEncoder(w).Encode(types.WikiCommitList{
+			Count: 2,
+			WikiCommits: []*types.WikiCommit{
+				{ID: "abc123", Message: "Initial import"},
+				{ID: "def456", Message: "Updated home page"},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	revisions, err := f.Wiki.GetPageRevisions(context.Background(), "core", "go-forge", "Home", 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if revisions.Count != 2 {
+		t.Fatalf("got count=%d, want 2", revisions.Count)
+	}
+	if len(revisions.WikiCommits) != 2 {
+		t.Fatalf("got %d revisions, want 2", len(revisions.WikiCommits))
+	}
+	if revisions.WikiCommits[0].ID != "abc123" || revisions.WikiCommits[1].Message != "Updated home page" {
+		t.Fatalf("got %#v", revisions.WikiCommits)
+	}
+}
+
 func TestWikiService_CreatePage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
