@@ -180,6 +180,143 @@ func TestRepoService_DeleteAvatar_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListPushMirrors_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/push_mirrors" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.PushMirror{
+			{RemoteName: "mirror-a"},
+			{RemoteName: "mirror-b"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	mirrors, err := f.Repos.ListPushMirrors(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(mirrors) != 2 || mirrors[0].RemoteName != "mirror-a" || mirrors[1].RemoteName != "mirror-b" {
+		t.Fatalf("got %#v", mirrors)
+	}
+}
+
+func TestRepoService_GetPushMirror_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/push_mirrors/mirror-a" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.PushMirror{
+			RemoteName:    "mirror-a",
+			RemoteAddress: "ssh://git@example.com/core/go-forge.git",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	mirror, err := f.Repos.GetPushMirror(context.Background(), "core", "go-forge", "mirror-a")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if mirror.RemoteName != "mirror-a" {
+		t.Fatalf("got remote_name=%q", mirror.RemoteName)
+	}
+}
+
+func TestRepoService_CreatePushMirror_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/push_mirrors" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.CreatePushMirrorOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body.RemoteAddress != "ssh://git@example.com/core/go-forge.git" || !body.SyncOnCommit {
+			t.Fatalf("got %#v", body)
+		}
+		json.NewEncoder(w).Encode(types.PushMirror{
+			RemoteName:    "mirror-a",
+			RemoteAddress: body.RemoteAddress,
+			SyncOnCommit:  body.SyncOnCommit,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	mirror, err := f.Repos.CreatePushMirror(context.Background(), "core", "go-forge", &types.CreatePushMirrorOption{
+		RemoteAddress:  "ssh://git@example.com/core/go-forge.git",
+		RemoteUsername: "git",
+		RemotePassword: "secret",
+		Interval:       "1h",
+		SyncOnCommit:   true,
+		UseSSH:         true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if mirror.RemoteName != "mirror-a" || !mirror.SyncOnCommit {
+		t.Fatalf("got %#v", mirror)
+	}
+}
+
+func TestRepoService_DeletePushMirror_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/push_mirrors/mirror-a" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeletePushMirror(context.Background(), "core", "go-forge", "mirror-a"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_SyncPushMirrors_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/push_mirrors-sync" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.SyncPushMirrors(context.Background(), "core", "go-forge"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_GetSubscription_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

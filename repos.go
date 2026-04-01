@@ -198,6 +198,44 @@ func (s *RepoService) DeleteAvatar(ctx context.Context, owner, repo string) erro
 	return s.client.Delete(ctx, path)
 }
 
+// ListPushMirrors returns all push mirrors configured for a repository.
+func (s *RepoService) ListPushMirrors(ctx context.Context, owner, repo string) ([]types.PushMirror, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.PushMirror](ctx, s.client, path, nil)
+}
+
+// IterPushMirrors returns an iterator over all push mirrors configured for a repository.
+func (s *RepoService) IterPushMirrors(ctx context.Context, owner, repo string) iter.Seq2[types.PushMirror, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.PushMirror](ctx, s.client, path, nil)
+}
+
+// GetPushMirror returns a push mirror by its remote name.
+func (s *RepoService) GetPushMirror(ctx context.Context, owner, repo, name string) (*types.PushMirror, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	var out types.PushMirror
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreatePushMirror adds a push mirror to a repository.
+func (s *RepoService) CreatePushMirror(ctx context.Context, owner, repo string, opts *types.CreatePushMirrorOption) (*types.PushMirror, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors", pathParams("owner", owner, "repo", repo))
+	var out types.PushMirror
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeletePushMirror removes a push mirror from a repository by remote name.
+func (s *RepoService) DeletePushMirror(ctx context.Context, owner, repo, name string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	return s.client.Delete(ctx, path)
+}
+
 // GetSubscription returns the current user's watch state for a repository.
 func (s *RepoService) GetSubscription(ctx context.Context, owner, repo string) (*types.WatchInfo, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/subscription", pathParams("owner", owner, "repo", repo))
@@ -260,5 +298,11 @@ func (s *RepoService) RejectTransfer(ctx context.Context, owner, repo string) er
 // MirrorSync triggers a mirror sync.
 func (s *RepoService) MirrorSync(ctx context.Context, owner, repo string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/mirror-sync", pathParams("owner", owner, "repo", repo))
+	return s.client.Post(ctx, path, nil, nil)
+}
+
+// SyncPushMirrors triggers a sync across all push mirrors configured for a repository.
+func (s *RepoService) SyncPushMirrors(ctx context.Context, owner, repo string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors-sync", pathParams("owner", owner, "repo", repo))
 	return s.client.Post(ctx, path, nil, nil)
 }
