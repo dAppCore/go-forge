@@ -81,6 +81,16 @@ func (s *RepoService) UpdateTopics(ctx context.Context, owner, repo string, topi
 	return s.client.Put(ctx, path, types.RepoTopicOptions{Topics: topics}, nil)
 }
 
+// GetNewPinAllowed returns whether new issue pins are allowed for a repository.
+func (s *RepoService) GetNewPinAllowed(ctx context.Context, owner, repo string) (*types.NewIssuePinsAllowed, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/new_pin_allowed", pathParams("owner", owner, "repo", repo))
+	var out types.NewIssuePinsAllowed
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // Fork forks a repository. If org is non-empty, forks into that organisation.
 func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types.Repository, error) {
 	body := map[string]string{}

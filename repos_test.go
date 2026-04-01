@@ -64,6 +64,33 @@ func TestRepoService_UpdateTopics_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetNewPinAllowed_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/new_pin_allowed" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.NewIssuePinsAllowed{
+			Issues:       true,
+			PullRequests: false,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Repos.GetNewPinAllowed(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result.Issues || result.PullRequests {
+		t.Fatalf("got %#v", result)
+	}
+}
+
 func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 	owner := "acme org"
 	repo := "my/repo"
@@ -71,8 +98,8 @@ func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 
 	t.Run("ListOrgRepos", func(t *testing.T) {
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if r.URL.Path != "/api/v1/orgs/team%20alpha/repos" {
-				t.Errorf("got path %q, want %q", r.URL.Path, "/api/v1/orgs/team%20alpha/repos")
+			if r.URL.EscapedPath() != "/api/v1/orgs/team%20alpha/repos" {
+				t.Errorf("got path %q, want %q", r.URL.EscapedPath(), "/api/v1/orgs/team%20alpha/repos")
 				http.NotFound(w, r)
 				return
 			}
@@ -90,8 +117,8 @@ func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 	t.Run("Fork", func(t *testing.T) {
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			want := "/api/v1/repos/acme%20org/my%2Frepo/forks"
-			if r.URL.Path != want {
-				t.Errorf("got path %q, want %q", r.URL.Path, want)
+			if r.URL.EscapedPath() != want {
+				t.Errorf("got path %q, want %q", r.URL.EscapedPath(), want)
 				http.NotFound(w, r)
 				return
 			}
