@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"net/http"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -46,6 +47,43 @@ func (s *OrgService) AddMember(ctx context.Context, org, username string) error 
 // RemoveMember removes a user from an organisation.
 func (s *OrgService) RemoveMember(ctx context.Context, org, username string) error {
 	path := ResolvePath("/api/v1/orgs/{org}/members/{username}", pathParams("org", org, "username", username))
+	return s.client.Delete(ctx, path)
+}
+
+// ListBlockedUsers returns all users blocked by an organisation.
+func (s *OrgService) ListBlockedUsers(ctx context.Context, org string) ([]types.User, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/blocks", pathParams("org", org))
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterBlockedUsers returns an iterator over all users blocked by an organisation.
+func (s *OrgService) IterBlockedUsers(ctx context.Context, org string) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/blocks", pathParams("org", org))
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// IsBlocked reports whether a user is blocked by an organisation.
+func (s *OrgService) IsBlocked(ctx context.Context, org, username string) (bool, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/blocks/{username}", pathParams("org", org, "username", username))
+	resp, err := s.client.doJSON(ctx, "GET", path, nil, nil)
+	if err != nil {
+		if IsNotFound(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return resp.StatusCode == http.StatusNoContent, nil
+}
+
+// Block blocks a user within an organisation.
+func (s *OrgService) Block(ctx context.Context, org, username string) error {
+	path := ResolvePath("/api/v1/orgs/{org}/blocks/{username}", pathParams("org", org, "username", username))
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// Unblock unblocks a user within an organisation.
+func (s *OrgService) Unblock(ctx context.Context, org, username string) error {
+	path := ResolvePath("/api/v1/orgs/{org}/blocks/{username}", pathParams("org", org, "username", username))
 	return s.client.Delete(ctx, path)
 }
 

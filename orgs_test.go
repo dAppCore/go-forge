@@ -86,3 +86,90 @@ func TestOrgService_ListMembers_Good(t *testing.T) {
 		t.Errorf("got username=%q, want %q", members[0].UserName, "alice")
 	}
 }
+
+func TestOrgService_ListBlockedUsers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/blocks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.User{
+			{ID: 1, UserName: "alice"},
+			{ID: 2, UserName: "bob"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	blocked, err := f.Orgs.ListBlockedUsers(context.Background(), "core")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(blocked) != 2 {
+		t.Fatalf("got %d blocked users, want 2", len(blocked))
+	}
+	if blocked[0].UserName != "alice" {
+		t.Errorf("got username=%q, want %q", blocked[0].UserName, "alice")
+	}
+}
+
+func TestOrgService_Block_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/blocks/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Orgs.Block(context.Background(), "core", "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestOrgService_Unblock_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/blocks/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Orgs.Unblock(context.Background(), "core", "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestOrgService_IsBlocked_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/blocks/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	blocked, err := f.Orgs.IsBlocked(context.Background(), "core", "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !blocked {
+		t.Fatal("got blocked=false, want true")
+	}
+}
