@@ -92,3 +92,19 @@ func (s *CommitService) GetNote(ctx context.Context, owner, repo, sha string) (*
 	}
 	return &out, nil
 }
+
+// SetNote creates or updates the git note for a given commit SHA.
+func (s *CommitService) SetNote(ctx context.Context, owner, repo, sha, message string) (*types.Note, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/notes/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
+	var out types.Note
+	if err := s.client.Post(ctx, path, types.NoteOptions{Message: message}, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteNote removes the git note for a given commit SHA.
+func (s *CommitService) DeleteNote(ctx context.Context, owner, repo, sha string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/notes/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
+	return s.client.Delete(ctx, path)
+}

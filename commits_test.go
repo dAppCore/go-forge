@@ -199,6 +199,61 @@ func TestCommitService_GetNote_Good(t *testing.T) {
 	}
 }
 
+func TestCommitService_SetNote_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/notes/abc123" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.NoteOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Message != "reviewed and approved" {
+			t.Errorf("got message=%q, want %q", opts.Message, "reviewed and approved")
+		}
+		json.NewEncoder(w).Encode(types.Note{
+			Message: "reviewed and approved",
+			Commit: &types.Commit{
+				SHA: "abc123",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	note, err := f.Commits.SetNote(context.Background(), "core", "go-forge", "abc123", "reviewed and approved")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if note.Message != "reviewed and approved" {
+		t.Errorf("got message=%q, want %q", note.Message, "reviewed and approved")
+	}
+	if note.Commit.SHA != "abc123" {
+		t.Errorf("got commit sha=%q, want %q", note.Commit.SHA, "abc123")
+	}
+}
+
+func TestCommitService_DeleteNote_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/notes/abc123" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Commits.DeleteNote(context.Background(), "core", "go-forge", "abc123"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestCommitService_GetCombinedStatus_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
