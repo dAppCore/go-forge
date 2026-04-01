@@ -118,6 +118,54 @@ func TestRepoService_GetSubscription_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListStargazers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/stargazers" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]types.User{{UserName: "alice"}, {UserName: "bob"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	users, err := f.Repos.ListStargazers(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(users) != 2 || users[0].UserName != "alice" || users[1].UserName != "bob" {
+		t.Fatalf("got %#v", users)
+	}
+}
+
+func TestRepoService_ListSubscribers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/subscribers" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]types.User{{UserName: "charlie"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	users, err := f.Repos.ListSubscribers(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(users) != 1 || users[0].UserName != "charlie" {
+		t.Fatalf("got %#v", users)
+	}
+}
+
 func TestRepoService_Watch_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {

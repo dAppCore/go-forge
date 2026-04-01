@@ -59,6 +59,30 @@ func (s *RepoService) IterTags(ctx context.Context, owner, repo string) iter.Seq
 	return ListIter[types.Tag](ctx, s.client, path, nil)
 }
 
+// ListStargazers returns all users who starred a repository.
+func (s *RepoService) ListStargazers(ctx context.Context, owner, repo string) ([]types.User, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/stargazers", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterStargazers returns an iterator over all users who starred a repository.
+func (s *RepoService) IterStargazers(ctx context.Context, owner, repo string) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/stargazers", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// ListSubscribers returns all users watching a repository.
+func (s *RepoService) ListSubscribers(ctx context.Context, owner, repo string) ([]types.User, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/subscribers", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterSubscribers returns an iterator over all users watching a repository.
+func (s *RepoService) IterSubscribers(ctx context.Context, owner, repo string) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/subscribers", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
 // GetArchive returns a repository archive as raw bytes.
 func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive string) ([]byte, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/archive/{archive}", pathParams("owner", owner, "repo", repo, "archive", archive))
