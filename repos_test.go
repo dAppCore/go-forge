@@ -151,6 +151,159 @@ func TestRepoService_DeleteTag_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListTagProtections_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tag_protections" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.TagProtection{
+			{ID: 1, NamePattern: "v*"},
+			{ID: 2, NamePattern: "release-*"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	tagProtections, err := f.Repos.ListTagProtections(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tagProtections) != 2 || tagProtections[0].ID != 1 || tagProtections[1].NamePattern != "release-*" {
+		t.Fatalf("got %#v", tagProtections)
+	}
+}
+
+func TestRepoService_GetTagProtection_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tag_protections/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.TagProtection{
+			ID:          7,
+			NamePattern: "v*",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	tagProtection, err := f.Repos.GetTagProtection(context.Background(), "core", "go-forge", 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tagProtection.ID != 7 || tagProtection.NamePattern != "v*" {
+		t.Fatalf("got %#v", tagProtection)
+	}
+}
+
+func TestRepoService_CreateTagProtection_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tag_protections" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.CreateTagProtectionOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body.NamePattern != "v*" || !reflect.DeepEqual(body.WhitelistTeams, []string{"release-team"}) || !reflect.DeepEqual(body.WhitelistUsernames, []string{"alice"}) {
+			t.Fatalf("got %#v", body)
+		}
+		json.NewEncoder(w).Encode(types.TagProtection{
+			ID:                 9,
+			NamePattern:        body.NamePattern,
+			WhitelistTeams:     body.WhitelistTeams,
+			WhitelistUsernames: body.WhitelistUsernames,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	tagProtection, err := f.Repos.CreateTagProtection(context.Background(), "core", "go-forge", &types.CreateTagProtectionOption{
+		NamePattern:        "v*",
+		WhitelistTeams:     []string{"release-team"},
+		WhitelistUsernames: []string{"alice"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tagProtection.ID != 9 || tagProtection.NamePattern != "v*" {
+		t.Fatalf("got %#v", tagProtection)
+	}
+}
+
+func TestRepoService_EditTagProtection_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tag_protections/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.EditTagProtectionOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body.NamePattern != "release-*" || !reflect.DeepEqual(body.WhitelistTeams, []string{"release-team"}) {
+			t.Fatalf("got %#v", body)
+		}
+		json.NewEncoder(w).Encode(types.TagProtection{
+			ID:             7,
+			NamePattern:    body.NamePattern,
+			WhitelistTeams: body.WhitelistTeams,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	tagProtection, err := f.Repos.EditTagProtection(context.Background(), "core", "go-forge", 7, &types.EditTagProtectionOption{
+		NamePattern:    "release-*",
+		WhitelistTeams: []string{"release-team"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tagProtection.ID != 7 || tagProtection.NamePattern != "release-*" {
+		t.Fatalf("got %#v", tagProtection)
+	}
+}
+
+func TestRepoService_DeleteTagProtection_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tag_protections/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteTagProtection(context.Background(), "core", "go-forge", 7); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_DeleteTag_Bad_NotFound(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {

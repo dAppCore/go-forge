@@ -75,6 +75,54 @@ func (s *RepoService) DeleteTag(ctx context.Context, owner, repo, tag string) er
 	return s.client.Delete(ctx, path)
 }
 
+// ListTagProtections returns all tag protections for a repository.
+func (s *RepoService) ListTagProtections(ctx context.Context, owner, repo string) ([]types.TagProtection, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tag_protections", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.TagProtection](ctx, s.client, path, nil)
+}
+
+// IterTagProtections returns an iterator over all tag protections for a repository.
+func (s *RepoService) IterTagProtections(ctx context.Context, owner, repo string) iter.Seq2[types.TagProtection, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tag_protections", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.TagProtection](ctx, s.client, path, nil)
+}
+
+// GetTagProtection returns a single tag protection by ID.
+func (s *RepoService) GetTagProtection(ctx context.Context, owner, repo string, id int64) (*types.TagProtection, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tag_protections/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	var out types.TagProtection
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateTagProtection creates a new tag protection for a repository.
+func (s *RepoService) CreateTagProtection(ctx context.Context, owner, repo string, opts *types.CreateTagProtectionOption) (*types.TagProtection, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tag_protections", pathParams("owner", owner, "repo", repo))
+	var out types.TagProtection
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditTagProtection updates an existing tag protection for a repository.
+func (s *RepoService) EditTagProtection(ctx context.Context, owner, repo string, id int64, opts *types.EditTagProtectionOption) (*types.TagProtection, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tag_protections/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	var out types.TagProtection
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteTagProtection deletes a tag protection from a repository.
+func (s *RepoService) DeleteTagProtection(ctx context.Context, owner, repo string, id int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tag_protections/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
 // ListStargazers returns all users who starred a repository.
 func (s *RepoService) ListStargazers(ctx context.Context, owner, repo string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/stargazers", pathParams("owner", owner, "repo", repo))
