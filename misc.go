@@ -35,6 +35,17 @@ func (s *MiscService) RenderMarkdown(ctx context.Context, text, mode string) (st
 	return string(data), nil
 }
 
+// RenderMarkup renders markup text to HTML. The response is raw HTML text,
+// not JSON.
+func (s *MiscService) RenderMarkup(ctx context.Context, text, mode string) (string, error) {
+	body := types.MarkupOption{Text: text, Mode: mode}
+	data, err := s.client.PostRaw(ctx, "/api/v1/markup", body)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 // RenderMarkdownRaw renders raw markdown text to HTML. The request body is
 // sent as text/plain and the response is raw HTML text, not JSON.
 func (s *MiscService) RenderMarkdownRaw(ctx context.Context, text string) (string, error) {

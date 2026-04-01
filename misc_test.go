@@ -46,6 +46,40 @@ func TestMiscService_RenderMarkdown_Good(t *testing.T) {
 	}
 }
 
+func TestMiscService_RenderMarkup_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/markup" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.MarkupOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Text != "**Hello**" {
+			t.Errorf("got text=%q, want %q", opts.Text, "**Hello**")
+		}
+		if opts.Mode != "gfm" {
+			t.Errorf("got mode=%q, want %q", opts.Mode, "gfm")
+		}
+		w.Header().Set("Content-Type", "text/html")
+		w.Write([]byte("<p><strong>Hello</strong></p>\n"))
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	html, err := f.Misc.RenderMarkup(context.Background(), "**Hello**", "gfm")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "<p><strong>Hello</strong></p>\n"
+	if html != want {
+		t.Errorf("got %q, want %q", html, want)
+	}
+}
+
 func TestMiscService_RenderMarkdownRaw_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
