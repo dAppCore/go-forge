@@ -104,6 +104,77 @@ func TestRepoService_DeleteTopic_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetTag_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tags/v1.0.0" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.Tag{
+			Name:    "v1.0.0",
+			Message: "Release 1.0.0",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	tag, err := f.Repos.GetTag(context.Background(), "core", "go-forge", "v1.0.0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tag.Name != "v1.0.0" || tag.Message != "Release 1.0.0" {
+		t.Fatalf("got %#v", tag)
+	}
+}
+
+func TestRepoService_DeleteTag_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tags/v1.0.0" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteTag(context.Background(), "core", "go-forge", "v1.0.0"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_DeleteTag_Bad_NotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tags/missing" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		http.NotFound(w, r)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	err := f.Repos.DeleteTag(context.Background(), "core", "go-forge", "missing")
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if !IsNotFound(err) {
+		t.Fatalf("got %v, want not found", err)
+	}
+}
+
 func TestRepoService_ListIssueTemplates_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

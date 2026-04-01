@@ -59,6 +59,22 @@ func (s *RepoService) IterTags(ctx context.Context, owner, repo string) iter.Seq
 	return ListIter[types.Tag](ctx, s.client, path, nil)
 }
 
+// GetTag returns a single tag by name.
+func (s *RepoService) GetTag(ctx context.Context, owner, repo, tag string) (*types.Tag, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tags/{tag}", pathParams("owner", owner, "repo", repo, "tag", tag))
+	var out types.Tag
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteTag deletes a repository tag by name.
+func (s *RepoService) DeleteTag(ctx context.Context, owner, repo, tag string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tags/{tag}", pathParams("owner", owner, "repo", repo, "tag", tag))
+	return s.client.Delete(ctx, path)
+}
+
 // ListStargazers returns all users who starred a repository.
 func (s *RepoService) ListStargazers(ctx context.Context, owner, repo string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/stargazers", pathParams("owner", owner, "repo", repo))
