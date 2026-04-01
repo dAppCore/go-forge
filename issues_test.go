@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
+	"time"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -166,6 +167,74 @@ func TestIssueService_CreateComment_Good(t *testing.T) {
 	}
 	if comment.Body != "first!" {
 		t.Errorf("got body=%q", comment.Body)
+	}
+}
+
+func TestIssueService_ListTimeline_Good(t *testing.T) {
+	since := time.Date(2026, time.March, 1, 12, 30, 0, 0, time.UTC)
+	before := time.Date(2026, time.March, 2, 12, 30, 0, 0, time.UTC)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/timeline" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("since"); got != since.Format(time.RFC3339) {
+			t.Errorf("got since=%q, want %q", got, since.Format(time.RFC3339))
+		}
+		if got := r.URL.Query().Get("before"); got != before.Format(time.RFC3339) {
+			t.Errorf("got before=%q, want %q", got, before.Format(time.RFC3339))
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.TimelineComment{
+			{ID: 11, Type: "comment", Body: "first"},
+			{ID: 12, Type: "state_change", Body: "second"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	events, err := f.Issues.ListTimeline(context.Background(), "core", "go-forge", 1, &since, &before)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(events, []types.TimelineComment{
+		{ID: 11, Type: "comment", Body: "first"},
+		{ID: 12, Type: "state_change", Body: "second"},
+	}) {
+		t.Fatalf("got %#v", events)
+	}
+}
+
+func TestIssueService_IterTimeline_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/timeline" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.TimelineComment{{ID: 11, Type: "comment", Body: "first"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var seen []types.TimelineComment
+	for event, err := range f.Issues.IterTimeline(context.Background(), "core", "go-forge", 1, nil, nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		seen = append(seen, event)
+	}
+	if !reflect.DeepEqual(seen, []types.TimelineComment{{ID: 11, Type: "comment", Body: "first"}}) {
+		t.Fatalf("got %#v", seen)
 	}
 }
 

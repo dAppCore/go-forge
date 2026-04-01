@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"time"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -116,6 +117,38 @@ func (s *IssueService) CreateComment(ctx context.Context, owner, repo string, in
 		return nil, err
 	}
 	return &out, nil
+}
+
+// ListTimeline returns all comments and events on an issue.
+func (s *IssueService) ListTimeline(ctx context.Context, owner, repo string, index int64, since, before *time.Time) ([]types.TimelineComment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/timeline", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	query := make(map[string]string, 2)
+	if since != nil {
+		query["since"] = since.Format(time.RFC3339)
+	}
+	if before != nil {
+		query["before"] = before.Format(time.RFC3339)
+	}
+	if len(query) == 0 {
+		query = nil
+	}
+	return ListAll[types.TimelineComment](ctx, s.client, path, query)
+}
+
+// IterTimeline returns an iterator over all comments and events on an issue.
+func (s *IssueService) IterTimeline(ctx context.Context, owner, repo string, index int64, since, before *time.Time) iter.Seq2[types.TimelineComment, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/timeline", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	query := make(map[string]string, 2)
+	if since != nil {
+		query["since"] = since.Format(time.RFC3339)
+	}
+	if before != nil {
+		query["before"] = before.Format(time.RFC3339)
+	}
+	if len(query) == 0 {
+		query = nil
+	}
+	return ListIter[types.TimelineComment](ctx, s.client, path, query)
 }
 
 // ListSubscriptions returns all users subscribed to an issue.
