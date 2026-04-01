@@ -1,6 +1,7 @@
 package forge
 
 import (
+	"bytes"
 	"context"
 	json "github.com/goccy/go-json"
 	"net/http"
@@ -155,5 +156,31 @@ func TestRepoService_Fork_Good(t *testing.T) {
 	}
 	if !repo.Fork {
 		t.Error("expected fork=true")
+	}
+}
+
+func TestRepoService_GetArchive_Good(t *testing.T) {
+	want := []byte("zip-bytes")
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/archive/master.zip" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(want)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	got, err := f.Repos.GetArchive(context.Background(), "core", "go-forge", "master.zip")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(got, want) {
+		t.Fatalf("got %q, want %q", got, want)
 	}
 }

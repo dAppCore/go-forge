@@ -45,6 +45,12 @@ func (s *RepoService) IterUserRepos(ctx context.Context) iter.Seq2[types.Reposit
 	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/repos", nil)
 }
 
+// GetArchive returns a repository archive as raw bytes.
+func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive string) ([]byte, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/archive/{archive}", pathParams("owner", owner, "repo", repo, "archive", archive))
+	return s.client.GetRaw(ctx, path)
+}
+
 // Fork forks a repository. If org is non-empty, forks into that organisation.
 func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types.Repository, error) {
 	body := map[string]string{}
