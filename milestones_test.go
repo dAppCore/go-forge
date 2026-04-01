@@ -97,3 +97,56 @@ func TestMilestoneService_Create_Good(t *testing.T) {
 		t.Errorf("got title=%q, want %q", milestone.Title, "v1.0")
 	}
 }
+
+func TestMilestoneService_Edit_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/milestones/3" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.EditMilestoneOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Title != "v1.1" {
+			t.Errorf("got title=%q, want %q", opts.Title, "v1.1")
+		}
+
+		json.NewEncoder(w).Encode(types.Milestone{ID: 3, Title: opts.Title})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	milestone, err := f.Milestones.Edit(context.Background(), "core", "go-forge", 3, &types.EditMilestoneOption{
+		Title: "v1.1",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if milestone.ID != 3 {
+		t.Errorf("got id=%d, want 3", milestone.ID)
+	}
+	if milestone.Title != "v1.1" {
+		t.Errorf("got title=%q, want %q", milestone.Title, "v1.1")
+	}
+}
+
+func TestMilestoneService_Delete_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/milestones/3" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Milestones.Delete(context.Background(), "core", "go-forge", 3); err != nil {
+		t.Fatal(err)
+	}
+}
