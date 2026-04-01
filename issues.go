@@ -118,6 +118,40 @@ func (s *IssueService) CreateComment(ctx context.Context, owner, repo string, in
 	return &out, nil
 }
 
+// ListSubscriptions returns all users subscribed to an issue.
+func (s *IssueService) ListSubscriptions(ctx context.Context, owner, repo string, index int64) ([]types.User, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/subscriptions", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterSubscriptions returns an iterator over all users subscribed to an issue.
+func (s *IssueService) IterSubscriptions(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/subscriptions", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// CheckSubscription returns the authenticated user's subscription state for an issue.
+func (s *IssueService) CheckSubscription(ctx context.Context, owner, repo string, index int64) (*types.WatchInfo, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/subscriptions/check", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	var out types.WatchInfo
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// SubscribeUser subscribes a user to an issue.
+func (s *IssueService) SubscribeUser(ctx context.Context, owner, repo string, index int64, user string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/subscriptions/{user}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "user", user))
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// UnsubscribeUser unsubscribes a user from an issue.
+func (s *IssueService) UnsubscribeUser(ctx context.Context, owner, repo string, index int64, user string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/subscriptions/{user}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "user", user))
+	return s.client.Delete(ctx, path)
+}
+
 // toAnySlice converts a slice of int64 to a slice of any for IssueLabelsOption.
 func toAnySlice(ids []int64) []any {
 	out := make([]any, len(ids))

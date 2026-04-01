@@ -5,6 +5,7 @@ import (
 	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"dappco.re/go/core/forge/types"
@@ -165,6 +166,126 @@ func TestIssueService_CreateComment_Good(t *testing.T) {
 	}
 	if comment.Body != "first!" {
 		t.Errorf("got body=%q", comment.Body)
+	}
+}
+
+func TestIssueService_ListSubscriptions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/subscriptions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.User{
+			{ID: 1, UserName: "alice"},
+			{ID: 2, UserName: "bob"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	users, err := f.Issues.ListSubscriptions(context.Background(), "core", "go-forge", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(users, []types.User{{ID: 1, UserName: "alice"}, {ID: 2, UserName: "bob"}}) {
+		t.Fatalf("got %#v", users)
+	}
+}
+
+func TestIssueService_IterSubscriptions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/subscriptions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.User{{ID: 1, UserName: "alice"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var seen []types.User
+	for user, err := range f.Issues.IterSubscriptions(context.Background(), "core", "go-forge", 1) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		seen = append(seen, user)
+	}
+	if !reflect.DeepEqual(seen, []types.User{{ID: 1, UserName: "alice"}}) {
+		t.Fatalf("got %#v", seen)
+	}
+}
+
+func TestIssueService_CheckSubscription_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/subscriptions/check" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.WatchInfo{Subscribed: true, Ignored: false})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Issues.CheckSubscription(context.Background(), "core", "go-forge", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !result.Subscribed || result.Ignored {
+		t.Fatalf("got %#v", result)
+	}
+}
+
+func TestIssueService_SubscribeUser_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/subscriptions/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.SubscribeUser(context.Background(), "core", "go-forge", 1, "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestIssueService_UnsubscribeUser_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/subscriptions/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.UnsubscribeUser(context.Background(), "core", "go-forge", 1, "alice"); err != nil {
+		t.Fatal(err)
 	}
 }
 
