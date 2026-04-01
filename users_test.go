@@ -141,6 +141,24 @@ func TestUserService_ListBlockedUsers_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_Block_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/block/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Users.Block(context.Background(), "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestUserService_IterBlockedUsers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

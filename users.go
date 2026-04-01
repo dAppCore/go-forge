@@ -88,6 +88,12 @@ func (s *UserService) IterBlockedUsers(ctx context.Context) iter.Seq2[types.Bloc
 	return ListIter[types.BlockedUser](ctx, s.client, "/api/v1/user/list_blocked", nil)
 }
 
+// Block blocks a user as the authenticated user.
+func (s *UserService) Block(ctx context.Context, username string) error {
+	path := ResolvePath("/api/v1/user/block/{username}", pathParams("username", username))
+	return s.client.Put(ctx, path, nil, nil)
+}
+
 // ListMySubscriptions returns all repositories watched by the authenticated user.
 func (s *UserService) ListMySubscriptions(ctx context.Context) ([]types.Repository, error) {
 	return ListAll[types.Repository](ctx, s.client, "/api/v1/user/subscriptions", nil)
