@@ -127,6 +127,161 @@ func TestWebhookService_TestHook_Good(t *testing.T) {
 	}
 }
 
+func TestWebhookService_ListUserHooks_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/hooks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Hook{
+			{ID: 20, Type: "forgejo", Active: true},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hooks, err := f.Webhooks.ListUserHooks(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hooks) != 1 {
+		t.Fatalf("got %d hooks, want 1", len(hooks))
+	}
+	if hooks[0].ID != 20 {
+		t.Errorf("got id=%d, want 20", hooks[0].ID)
+	}
+}
+
+func TestWebhookService_GetUserHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/hooks/20" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     20,
+			Type:   "forgejo",
+			Active: true,
+			URL:    "https://example.com/user-hook",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Webhooks.GetUserHook(context.Background(), 20)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 20 {
+		t.Errorf("got id=%d, want 20", hook.ID)
+	}
+	if hook.URL != "https://example.com/user-hook" {
+		t.Errorf("got url=%q, want %q", hook.URL, "https://example.com/user-hook")
+	}
+}
+
+func TestWebhookService_CreateUserHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/hooks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateHookOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Type != "forgejo" {
+			t.Errorf("got type=%q, want %q", opts.Type, "forgejo")
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     21,
+			Type:   opts.Type,
+			Active: opts.Active,
+			Events: opts.Events,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Webhooks.CreateUserHook(context.Background(), &types.CreateHookOption{
+		Type:   "forgejo",
+		Active: true,
+		Events: []string{"push"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 21 {
+		t.Errorf("got id=%d, want 21", hook.ID)
+	}
+	if hook.Type != "forgejo" {
+		t.Errorf("got type=%q, want %q", hook.Type, "forgejo")
+	}
+}
+
+func TestWebhookService_EditUserHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/hooks/20" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.EditHookOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Active != false {
+			t.Fatalf("unexpected edit payload: %+v", opts)
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     20,
+			Type:   "forgejo",
+			Active: false,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Webhooks.EditUserHook(context.Background(), 20, &types.EditHookOption{
+		Active: false,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 20 {
+		t.Errorf("got id=%d, want 20", hook.ID)
+	}
+	if hook.Active {
+		t.Error("expected active=false")
+	}
+}
+
+func TestWebhookService_DeleteUserHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/hooks/20" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Webhooks.DeleteUserHook(context.Background(), 20); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestWebhookService_ListOrgHooks_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

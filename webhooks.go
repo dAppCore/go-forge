@@ -32,6 +32,51 @@ func (s *WebhookService) TestHook(ctx context.Context, owner, repo string, id in
 	return s.client.Post(ctx, path, nil, nil)
 }
 
+// ListUserHooks returns all webhooks for the authenticated user.
+func (s *WebhookService) ListUserHooks(ctx context.Context) ([]types.Hook, error) {
+	return ListAll[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil)
+}
+
+// IterUserHooks returns an iterator over all webhooks for the authenticated user.
+func (s *WebhookService) IterUserHooks(ctx context.Context) iter.Seq2[types.Hook, error] {
+	return ListIter[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil)
+}
+
+// GetUserHook returns a single webhook for the authenticated user.
+func (s *WebhookService) GetUserHook(ctx context.Context, id int64) (*types.Hook, error) {
+	path := ResolvePath("/api/v1/user/hooks/{id}", pathParams("id", int64String(id)))
+	var out types.Hook
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateUserHook creates a webhook for the authenticated user.
+func (s *WebhookService) CreateUserHook(ctx context.Context, opts *types.CreateHookOption) (*types.Hook, error) {
+	var out types.Hook
+	if err := s.client.Post(ctx, "/api/v1/user/hooks", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditUserHook updates an existing authenticated-user webhook.
+func (s *WebhookService) EditUserHook(ctx context.Context, id int64, opts *types.EditHookOption) (*types.Hook, error) {
+	path := ResolvePath("/api/v1/user/hooks/{id}", pathParams("id", int64String(id)))
+	var out types.Hook
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteUserHook deletes an authenticated-user webhook.
+func (s *WebhookService) DeleteUserHook(ctx context.Context, id int64) error {
+	path := ResolvePath("/api/v1/user/hooks/{id}", pathParams("id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
 // ListOrgHooks returns all webhooks for an organisation.
 func (s *WebhookService) ListOrgHooks(ctx context.Context, org string) ([]types.Hook, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/hooks", pathParams("org", org))
