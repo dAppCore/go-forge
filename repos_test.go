@@ -104,6 +104,40 @@ func TestRepoService_DeleteTopic_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListIssueTemplates_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issue_templates" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.IssueTemplate{
+			{
+				Name:    "bug report",
+				Title:   "Bug report",
+				Content: "Describe the problem",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	templates, err := f.Repos.ListIssueTemplates(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(templates) != 1 {
+		t.Fatalf("got %d templates, want 1", len(templates))
+	}
+	if templates[0].Name != "bug report" || templates[0].Title != "Bug report" {
+		t.Fatalf("got %#v", templates[0])
+	}
+}
+
 func TestRepoService_GetNewPinAllowed_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

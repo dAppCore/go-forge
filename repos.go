@@ -148,6 +148,12 @@ func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive strin
 	return s.client.GetRaw(ctx, path)
 }
 
+// ListIssueTemplates returns all issue templates available for a repository.
+func (s *RepoService) ListIssueTemplates(ctx context.Context, owner, repo string) ([]types.IssueTemplate, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issue_templates", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.IssueTemplate](ctx, s.client, path, nil)
+}
+
 // ListTopics returns the topics assigned to a repository.
 func (s *RepoService) ListTopics(ctx context.Context, owner, repo string) ([]string, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics", pathParams("owner", owner, "repo", repo))
