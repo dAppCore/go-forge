@@ -50,6 +50,18 @@ func (s *PullService) IterReviews(ctx context.Context, owner, repo string, index
 	return ListIter[types.PullReview](ctx, s.client, path, nil)
 }
 
+// ListReviewers returns all users who can be requested to review a pull request.
+func (s *PullService) ListReviewers(ctx context.Context, owner, repo string) ([]types.User, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/reviewers", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterReviewers returns an iterator over all users who can be requested to review a pull request.
+func (s *PullService) IterReviewers(ctx context.Context, owner, repo string) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/reviewers", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
 // SubmitReview creates a new review on a pull request.
 func (s *PullService) SubmitReview(ctx context.Context, owner, repo string, index int64, review map[string]any) (*types.PullReview, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews", pathParams("owner", owner, "repo", repo, "index", int64String(index)))

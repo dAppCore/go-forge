@@ -94,6 +94,77 @@ func TestPullService_Create_Good(t *testing.T) {
 	}
 }
 
+func TestPullService_ListReviewers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/reviewers" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]types.User{
+			{UserName: "alice"},
+			{UserName: "bob"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	reviewers, err := f.Pulls.ListReviewers(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(reviewers) != 2 || reviewers[0].UserName != "alice" || reviewers[1].UserName != "bob" {
+		t.Fatalf("got %#v", reviewers)
+	}
+}
+
+func TestPullService_IterReviewers_Good(t *testing.T) {
+	requests := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/reviewers" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		switch requests {
+		case 1:
+			if got := r.URL.Query().Get("page"); got != "1" {
+				t.Errorf("got page=%q, want %q", got, "1")
+			}
+			w.Header().Set("X-Total-Count", "2")
+			json.NewEncoder(w).Encode([]types.User{{UserName: "alice"}})
+		case 2:
+			if got := r.URL.Query().Get("page"); got != "2" {
+				t.Errorf("got page=%q, want %q", got, "2")
+			}
+			w.Header().Set("X-Total-Count", "2")
+			json.NewEncoder(w).Encode([]types.User{{UserName: "bob"}})
+		default:
+			t.Fatalf("unexpected request %d", requests)
+		}
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for reviewer, err := range f.Pulls.IterReviewers(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, reviewer.UserName)
+	}
+	if len(got) != 2 || got[0] != "alice" || got[1] != "bob" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestPullService_Merge_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
