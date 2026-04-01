@@ -63,6 +63,22 @@ func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive strin
 	return s.client.GetRaw(ctx, path)
 }
 
+// ListTopics returns the topics assigned to a repository.
+func (s *RepoService) ListTopics(ctx context.Context, owner, repo string) ([]string, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics", pathParams("owner", owner, "repo", repo))
+	var out types.TopicName
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return out.TopicNames, nil
+}
+
+// UpdateTopics replaces the topics assigned to a repository.
+func (s *RepoService) UpdateTopics(ctx context.Context, owner, repo string, topics []string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics", pathParams("owner", owner, "repo", repo))
+	return s.client.Put(ctx, path, types.RepoTopicOptions{Topics: topics}, nil)
+}
+
 // Fork forks a repository. If org is non-empty, forks into that organisation.
 func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types.Repository, error) {
 	body := map[string]string{}
