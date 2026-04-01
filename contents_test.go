@@ -10,6 +10,37 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
+func TestContentService_ListContents_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("ref"); got != "main" {
+			t.Errorf("got ref=%q, want %q", got, "main")
+		}
+		json.NewEncoder(w).Encode([]types.ContentsResponse{
+			{Name: "README.md", Path: "README.md", Type: "file"},
+			{Name: "docs", Path: "docs", Type: "dir"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	items, err := f.Contents.ListContents(context.Background(), "core", "go-forge", "main")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(items) != 2 {
+		t.Fatalf("got %d items, want 2", len(items))
+	}
+	if items[0].Name != "README.md" || items[1].Type != "dir" {
+		t.Fatalf("unexpected results: %+v", items)
+	}
+}
+
 func TestContentService_GetFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

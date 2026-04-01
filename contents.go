@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"net/url"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -19,6 +20,28 @@ type ContentService struct {
 
 func newContentService(c *Client) *ContentService {
 	return &ContentService{client: c}
+}
+
+// ListContents returns the entries in a repository directory.
+// If ref is non-empty, the listing is resolved against that branch, tag, or commit.
+func (s *ContentService) ListContents(ctx context.Context, owner, repo, ref string) ([]types.ContentsResponse, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/contents", pathParams("owner", owner, "repo", repo))
+	if ref != "" {
+		u, err := url.Parse(path)
+		if err != nil {
+			return nil, err
+		}
+		q := u.Query()
+		q.Set("ref", ref)
+		u.RawQuery = q.Encode()
+		path = u.String()
+	}
+
+	var out []types.ContentsResponse
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // GetFile returns metadata and content for a file in a repository.
