@@ -185,6 +185,32 @@ func TestRepoService_GetArchive_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetRawFile_Good(t *testing.T) {
+	want := []byte("# go-forge\n\nA Go client for Forgejo.")
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/raw/README.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(want)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	got, err := f.Repos.GetRawFile(context.Background(), "core", "go-forge", "README.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(got, want) {
+		t.Fatalf("got %q, want %q", got, want)
+	}
+}
+
 func TestRepoService_ListTags_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

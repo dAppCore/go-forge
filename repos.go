@@ -148,6 +148,12 @@ func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive strin
 	return s.client.GetRaw(ctx, path)
 }
 
+// GetRawFile returns the raw content of a repository file as bytes.
+func (s *RepoService) GetRawFile(ctx context.Context, owner, repo, filepath string) ([]byte, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/raw/{filepath}", pathParams("owner", owner, "repo", repo, "filepath", filepath))
+	return s.client.GetRaw(ctx, path)
+}
+
 // ListIssueTemplates returns all issue templates available for a repository.
 func (s *RepoService) ListIssueTemplates(ctx context.Context, owner, repo string) ([]types.IssueTemplate, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issue_templates", pathParams("owner", owner, "repo", repo))
