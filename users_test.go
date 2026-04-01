@@ -83,6 +83,66 @@ func TestUserService_ListEmails_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListStopwatches_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/stopwatches" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.StopWatch{
+			{IssueIndex: 12, IssueTitle: "First issue", RepoOwnerName: "core", RepoName: "go-forge", Seconds: 30},
+			{IssueIndex: 13, IssueTitle: "Second issue", RepoOwnerName: "core", RepoName: "go-forge", Seconds: 90},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	stopwatches, err := f.Users.ListStopwatches(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(stopwatches) != 2 {
+		t.Fatalf("got %d stopwatches, want 2", len(stopwatches))
+	}
+	if stopwatches[0].IssueIndex != 12 || stopwatches[0].Seconds != 30 {
+		t.Errorf("unexpected first stopwatch: %+v", stopwatches[0])
+	}
+}
+
+func TestUserService_IterStopwatches_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/stopwatches" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.StopWatch{
+			{IssueIndex: 99, IssueTitle: "Running task", RepoOwnerName: "core", RepoName: "go-forge", Seconds: 300},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	count := 0
+	for sw, err := range f.Users.IterStopwatches(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if sw.IssueIndex != 99 || sw.Seconds != 300 {
+			t.Errorf("unexpected stopwatch: %+v", sw)
+		}
+	}
+	if count != 1 {
+		t.Fatalf("got %d stopwatches, want 1", count)
+	}
+}
+
 func TestUserService_AddEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

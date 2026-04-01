@@ -58,6 +58,16 @@ func (s *UserService) DeleteEmails(ctx context.Context, emails ...string) error 
 	return s.client.DeleteWithBody(ctx, "/api/v1/user/emails", types.DeleteEmailOption{Emails: emails})
 }
 
+// ListStopwatches returns all existing stopwatches for the authenticated user.
+func (s *UserService) ListStopwatches(ctx context.Context) ([]types.StopWatch, error) {
+	return ListAll[types.StopWatch](ctx, s.client, "/api/v1/user/stopwatches", nil)
+}
+
+// IterStopwatches returns an iterator over all existing stopwatches for the authenticated user.
+func (s *UserService) IterStopwatches(ctx context.Context) iter.Seq2[types.StopWatch, error] {
+	return ListIter[types.StopWatch](ctx, s.client, "/api/v1/user/stopwatches", nil)
+}
+
 // ListFollowers returns all followers of a user.
 func (s *UserService) ListFollowers(ctx context.Context, username string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/users/{username}/followers", pathParams("username", username))
