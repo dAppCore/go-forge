@@ -45,6 +45,18 @@ func (s *RepoService) IterUserRepos(ctx context.Context) iter.Seq2[types.Reposit
 	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/repos", nil)
 }
 
+// ListTags returns all tags for a repository.
+func (s *RepoService) ListTags(ctx context.Context, owner, repo string) ([]types.Tag, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tags", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Tag](ctx, s.client, path, nil)
+}
+
+// IterTags returns an iterator over all tags for a repository.
+func (s *RepoService) IterTags(ctx context.Context, owner, repo string) iter.Seq2[types.Tag, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tags", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Tag](ctx, s.client, path, nil)
+}
+
 // GetArchive returns a repository archive as raw bytes.
 func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive string) ([]byte, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/archive/{archive}", pathParams("owner", owner, "repo", repo, "archive", archive))

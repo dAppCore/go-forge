@@ -184,3 +184,28 @@ func TestRepoService_GetArchive_Good(t *testing.T) {
 		t.Fatalf("got %q, want %q", got, want)
 	}
 }
+
+func TestRepoService_ListTags_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/tags" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Tag{{Name: "v1.0.0"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	tags, err := f.Repos.ListTags(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tags) != 1 || tags[0].Name != "v1.0.0" {
+		t.Fatalf("unexpected result: %+v", tags)
+	}
+}
