@@ -34,6 +34,16 @@ func (s *MiscService) RenderMarkdown(ctx context.Context, text, mode string) (st
 	return string(data), nil
 }
 
+// RenderMarkdownRaw renders raw markdown text to HTML. The request body is
+// sent as text/plain and the response is raw HTML text, not JSON.
+func (s *MiscService) RenderMarkdownRaw(ctx context.Context, text string) (string, error) {
+	data, err := s.client.postRawText(ctx, "/api/v1/markdown/raw", text)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 // ListLicenses returns all available licence templates.
 func (s *MiscService) ListLicenses(ctx context.Context) ([]types.LicensesTemplateListEntry, error) {
 	var out []types.LicensesTemplateListEntry

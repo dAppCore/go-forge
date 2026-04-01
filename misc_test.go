@@ -3,8 +3,10 @@ package forge
 import (
 	"context"
 	json "github.com/goccy/go-json"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"dappco.re/go/core/forge/types"
@@ -35,6 +37,43 @@ func TestMiscService_RenderMarkdown_Good(t *testing.T) {
 
 	f := NewForge(srv.URL, "tok")
 	html, err := f.Misc.RenderMarkdown(context.Background(), "# Hello", "gfm")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "<h1>Hello</h1>\n"
+	if html != want {
+		t.Errorf("got %q, want %q", html, want)
+	}
+}
+
+func TestMiscService_RenderMarkdownRaw_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/markdown/raw" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.Header.Get("Content-Type"); !strings.HasPrefix(got, "text/plain") {
+			t.Errorf("got content-type=%q, want text/plain", got)
+		}
+		if got := r.Header.Get("Accept"); got != "text/html" {
+			t.Errorf("got accept=%q, want text/html", got)
+		}
+		data, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(data) != "# Hello" {
+			t.Errorf("got body=%q, want %q", string(data), "# Hello")
+		}
+		w.Header().Set("Content-Type", "text/html")
+		w.Write([]byte("<h1>Hello</h1>\n"))
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	html, err := f.Misc.RenderMarkdownRaw(context.Background(), "# Hello")
 	if err != nil {
 		t.Fatal(err)
 	}

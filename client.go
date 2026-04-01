@@ -183,6 +183,10 @@ func (c *Client) DeleteWithBody(ctx context.Context, path string, body any) erro
 // response body as bytes instead of JSON-decoding. Useful for endpoints
 // such as /markdown that return raw HTML text.
 func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, error) {
+	return c.postRawJSON(ctx, path, body)
+}
+
+func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte, error) {
 	url := c.baseURL + path
 
 	var bodyReader io.Reader
@@ -218,6 +222,39 @@ func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, er
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, core.E("Client.PostRaw", "forge: read response body", err)
+	}
+
+	return data, nil
+}
+
+func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, error) {
+	url := c.baseURL + path
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBufferString(body))
+	if err != nil {
+		return nil, core.E("Client.PostText", "forge: create request", err)
+	}
+
+	req.Header.Set("Authorization", "token "+c.token)
+	req.Header.Set("Accept", "text/html")
+	req.Header.Set("Content-Type", "text/plain")
+	if c.userAgent != "" {
+		req.Header.Set("User-Agent", c.userAgent)
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, core.E("Client.PostText", "forge: request POST "+path, err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return nil, c.parseError(resp, path)
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, core.E("Client.PostText", "forge: read response body", err)
 	}
 
 	return data, nil
