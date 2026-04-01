@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"iter"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -18,6 +19,18 @@ type MilestoneService struct {
 
 func newMilestoneService(c *Client) *MilestoneService {
 	return &MilestoneService{client: c}
+}
+
+// List returns a single page of milestones for a repository.
+func (s *MilestoneService) List(ctx context.Context, params Params, opts ListOptions) (*PagedResult[types.Milestone], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones", params)
+	return ListPage[types.Milestone](ctx, s.client, path, nil, opts)
+}
+
+// Iter returns an iterator over all milestones for a repository.
+func (s *MilestoneService) Iter(ctx context.Context, params Params) iter.Seq2[types.Milestone, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones", params)
+	return ListIter[types.Milestone](ctx, s.client, path, nil)
 }
 
 // ListAll returns all milestones for a repository.
