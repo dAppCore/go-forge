@@ -88,6 +88,35 @@ func TestOrgService_ListMembers_Good(t *testing.T) {
 	}
 }
 
+func TestOrgService_ListPublicMembers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/public_members" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.User{
+			{ID: 1, UserName: "alice"},
+			{ID: 2, UserName: "bob"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	members, err := f.Orgs.ListPublicMembers(context.Background(), "core")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(members) != 2 {
+		t.Errorf("got %d members, want 2", len(members))
+	}
+	if members[0].UserName != "alice" {
+		t.Errorf("got username=%q, want %q", members[0].UserName, "alice")
+	}
+}
+
 func TestOrgService_ListBlockedUsers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -114,6 +143,42 @@ func TestOrgService_ListBlockedUsers_Good(t *testing.T) {
 	}
 	if blocked[0].UserName != "alice" {
 		t.Errorf("got username=%q, want %q", blocked[0].UserName, "alice")
+	}
+}
+
+func TestOrgService_PublicizeMember_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/public_members/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Orgs.PublicizeMember(context.Background(), "core", "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestOrgService_ConcealMember_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/public_members/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Orgs.ConcealMember(context.Background(), "core", "alice"); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -238,5 +303,27 @@ func TestOrgService_IsBlocked_Good(t *testing.T) {
 	}
 	if !blocked {
 		t.Fatal("got blocked=false, want true")
+	}
+}
+
+func TestOrgService_IsPublicMember_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/public_members/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	public, err := f.Orgs.IsPublicMember(context.Background(), "core", "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !public {
+		t.Fatal("got public=false, want true")
 	}
 }
