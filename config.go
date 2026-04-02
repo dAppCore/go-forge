@@ -1,9 +1,13 @@
 package forge
 
 import (
+	"encoding/json"
+	"os"
+	"path/filepath"
 	"syscall"
 
 	core "dappco.re/go/core"
+	coreio "dappco.re/go/core/io"
 )
 
 const (
@@ -16,8 +20,62 @@ const (
 	DefaultURL = "http://localhost:3000"
 )
 
+const defaultConfigPath = ".config/forge/config.json"
+
+type configFile struct {
+	URL   string `json:"url"`
+	Token string `json:"token"`
+}
+
+func configPath() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", core.E("configPath", "forge: resolve home directory", err)
+	}
+	return filepath.Join(home, defaultConfigPath), nil
+}
+
+func readConfigFile() (url, token string, err error) {
+	path, err := configPath()
+	if err != nil {
+		return "", "", err
+	}
+
+	data, err := coreio.Local.Read(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return "", "", nil
+		}
+		return "", "", core.E("ResolveConfig", "forge: read config file", err)
+	}
+
+	var cfg configFile
+	if err := json.Unmarshal([]byte(data), &cfg); err != nil {
+		return "", "", core.E("ResolveConfig", "forge: decode config file", err)
+	}
+	return cfg.URL, cfg.Token, nil
+}
+
+// SaveConfig persists the Forgejo URL and API token to the default config file.
+//
+// Usage:
+//
+//	_ = forge.SaveConfig("https://forge.example.com", "token")
+func SaveConfig(url, token string) error {
+	path, err := configPath()
+	if err != nil {
+		return err
+	}
+	payload, err := json.MarshalIndent(configFile{URL: url, Token: token}, "", "  ")
+	if err != nil {
+		return core.E("SaveConfig", "forge: encode config file", err)
+	}
+	return coreio.Local.WriteMode(path, string(payload), 0600)
+}
+
 // ResolveConfig resolves the Forgejo URL and API token from flags, environment
-// variables, and built-in defaults. Priority order: flags > env > defaults.
+// variables, config file, and built-in defaults. Priority order:
+// flags > env > config file > defaults.
 //
 // Environment variables:
 //   - FORGE_URL   — base URL of the Forgejo instance
@@ -29,8 +87,19 @@ const (
 //	_ = url
 //	_ = token
 func ResolveConfig(flagURL, flagToken string) (url, token string, err error) {
-	url, _ = syscall.Getenv("FORGE_URL")
-	token, _ = syscall.Getenv("FORGE_TOKEN")
+	if fileURL, fileToken, fileErr := readConfigFile(); fileErr != nil {
+		return "", "", fileErr
+	} else {
+		url = fileURL
+		token = fileToken
+	}
+
+	if envURL, ok := syscall.Getenv("FORGE_URL"); ok && envURL != "" {
+		url = envURL
+	}
+	if envToken, ok := syscall.Getenv("FORGE_TOKEN"); ok && envToken != "" {
+		token = envToken
+	}
 
 	if flagURL != "" {
 		url = flagURL
@@ -42,6 +111,16 @@ func ResolveConfig(flagURL, flagToken string) (url, token string, err error) {
 		url = DefaultURL
 	}
 	return url, token, nil
+}
+
+// NewFromConfig creates a new Forge client using resolved configuration.
+//
+// Usage:
+//
+//	f, err := forge.NewFromConfig("", "")
+//	_ = f
+func NewFromConfig(flagURL, flagToken string, opts ...Option) (*Forge, error) {
+	return NewForgeFromConfig(flagURL, flagToken, opts...)
 }
 
 // NewForgeFromConfig creates a new Forge client using resolved configuration.
