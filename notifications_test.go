@@ -46,6 +46,54 @@ func TestNotificationService_List_Good(t *testing.T) {
 	}
 }
 
+func TestNotificationService_List_Filters(t *testing.T) {
+	since := time.Date(2026, time.April, 1, 12, 0, 0, 0, time.UTC)
+	before := time.Date(2026, time.April, 2, 12, 0, 0, 0, time.UTC)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/notifications" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("all"); got != "true" {
+			t.Errorf("got all=%q, want true", got)
+		}
+		if got := r.URL.Query()["status-types"]; len(got) != 2 || got[0] != "unread" || got[1] != "pinned" {
+			t.Errorf("got status-types=%v, want [unread pinned]", got)
+		}
+		if got := r.URL.Query()["subject-type"]; len(got) != 2 || got[0] != "issue" || got[1] != "pull" {
+			t.Errorf("got subject-type=%v, want [issue pull]", got)
+		}
+		if got := r.URL.Query().Get("since"); got != since.Format(time.RFC3339) {
+			t.Errorf("got since=%q, want %q", got, since.Format(time.RFC3339))
+		}
+		if got := r.URL.Query().Get("before"); got != before.Format(time.RFC3339) {
+			t.Errorf("got before=%q, want %q", got, before.Format(time.RFC3339))
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.NotificationThread{
+			{ID: 11, Unread: true, Subject: &types.NotificationSubject{Title: "Filtered"}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	threads, err := f.Notifications.List(context.Background(), NotificationListOptions{
+		All:          true,
+		StatusTypes:  []string{"unread", "pinned"},
+		SubjectTypes: []string{"issue", "pull"},
+		Since:        &since,
+		Before:       &before,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(threads) != 1 || threads[0].ID != 11 {
+		t.Fatalf("got threads=%+v", threads)
+	}
+}
+
 func TestNotificationService_ListRepo_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -71,6 +119,45 @@ func TestNotificationService_ListRepo_Good(t *testing.T) {
 	}
 	if threads[0].ID != 10 {
 		t.Errorf("got id=%d, want 10", threads[0].ID)
+	}
+}
+
+func TestNotificationService_ListRepo_Filters(t *testing.T) {
+	since := time.Date(2026, time.April, 1, 12, 0, 0, 0, time.UTC)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/notifications" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query()["status-types"]; len(got) != 1 || got[0] != "read" {
+			t.Errorf("got status-types=%v, want [read]", got)
+		}
+		if got := r.URL.Query()["subject-type"]; len(got) != 1 || got[0] != "repository" {
+			t.Errorf("got subject-type=%v, want [repository]", got)
+		}
+		if got := r.URL.Query().Get("since"); got != since.Format(time.RFC3339) {
+			t.Errorf("got since=%q, want %q", got, since.Format(time.RFC3339))
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.NotificationThread{
+			{ID: 12, Unread: false, Subject: &types.NotificationSubject{Title: "Repo filtered"}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	threads, err := f.Notifications.ListRepo(context.Background(), "core", "go-forge", NotificationListOptions{
+		StatusTypes:  []string{"read"},
+		SubjectTypes: []string{"repository"},
+		Since:        &since,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(threads) != 1 || threads[0].ID != 12 {
+		t.Fatalf("got threads=%+v", threads)
 	}
 }
 
