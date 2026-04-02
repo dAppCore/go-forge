@@ -223,6 +223,66 @@ func TestUserService_IterQuotaArtifacts_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListQuotaAttachments_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/quota/attachments" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.QuotaUsedAttachment{
+			{Name: "issue-attachment.png", Size: 123, APIURL: "https://example.com/api/attachments/1"},
+			{Name: "release-attachment.tar.gz", Size: 456, APIURL: "https://example.com/api/attachments/2"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachments, err := f.Users.ListQuotaAttachments(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(attachments) != 2 {
+		t.Fatalf("got %d attachments, want 2", len(attachments))
+	}
+	if attachments[0].Name != "issue-attachment.png" || attachments[0].Size != 123 {
+		t.Errorf("unexpected first attachment: %+v", attachments[0])
+	}
+}
+
+func TestUserService_IterQuotaAttachments_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/quota/attachments" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.QuotaUsedAttachment{
+			{Name: "issue-attachment.png", Size: 123, APIURL: "https://example.com/api/attachments/1"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []types.QuotaUsedAttachment
+	for attachment, err := range f.Users.IterQuotaAttachments(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, attachment)
+	}
+	if len(got) != 1 {
+		t.Fatalf("got %d attachments, want 1", len(got))
+	}
+	if got[0].Name != "issue-attachment.png" {
+		t.Errorf("unexpected attachment: %+v", got[0])
+	}
+}
+
 func TestUserService_ListEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
