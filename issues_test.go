@@ -1,8 +1,12 @@
 package forge
 
 import (
+	"bytes"
 	"context"
 	json "github.com/goccy/go-json"
+	"io"
+	"mime"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -11,6 +15,37 @@ import (
 
 	"dappco.re/go/core/forge/types"
 )
+
+func readMultipartAttachment(t *testing.T, r *http.Request) (string, string) {
+	t.Helper()
+
+	mediaType, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if mediaType != "multipart/form-data" {
+		t.Fatalf("got content-type=%q", mediaType)
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	reader := multipart.NewReader(bytes.NewReader(body), params["boundary"])
+	part, err := reader.NextPart()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if part.FormName() != "attachment" {
+		t.Fatalf("got form name=%q", part.FormName())
+	}
+	content, err := io.ReadAll(part)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return part.FileName(), string(content)
+}
 
 func TestIssueService_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -444,6 +479,102 @@ func TestIssueService_DeleteAttachment_Good(t *testing.T) {
 	f := NewForge(srv.URL, "tok")
 	if err := f.Issues.DeleteAttachment(context.Background(), "core", "go-forge", 1, 4); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestIssueService_CreateAttachment_Good(t *testing.T) {
+	updatedAt := time.Date(2026, time.March, 3, 11, 22, 33, 0, time.UTC)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/assets" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("name"); got != "diagram" {
+			t.Fatalf("got name=%q", got)
+		}
+		if got := r.URL.Query().Get("updated_at"); got != updatedAt.Format(time.RFC3339) {
+			t.Fatalf("got updated_at=%q", got)
+		}
+		filename, content := readMultipartAttachment(t, r)
+		if filename != "design.png" {
+			t.Fatalf("got filename=%q", filename)
+		}
+		if content != "attachment bytes" {
+			t.Fatalf("got content=%q", content)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.Attachment{ID: 9, Name: filename})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Issues.CreateAttachment(
+		context.Background(),
+		"core",
+		"go-forge",
+		1,
+		&AttachmentUploadOptions{Name: "diagram", UpdatedAt: &updatedAt},
+		"design.png",
+		bytes.NewBufferString("attachment bytes"),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "design.png" {
+		t.Fatalf("got name=%q", attachment.Name)
+	}
+}
+
+func TestIssueService_CreateCommentAttachment_Good(t *testing.T) {
+	updatedAt := time.Date(2026, time.March, 4, 9, 10, 11, 0, time.UTC)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments/7/assets" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("name"); got != "screenshot" {
+			t.Fatalf("got name=%q", got)
+		}
+		if got := r.URL.Query().Get("updated_at"); got != updatedAt.Format(time.RFC3339) {
+			t.Fatalf("got updated_at=%q", got)
+		}
+		filename, content := readMultipartAttachment(t, r)
+		if filename != "comment.png" {
+			t.Fatalf("got filename=%q", filename)
+		}
+		if content != "comment attachment bytes" {
+			t.Fatalf("got content=%q", content)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.Attachment{ID: 11, Name: filename})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Issues.CreateCommentAttachment(
+		context.Background(),
+		"core",
+		"go-forge",
+		7,
+		&AttachmentUploadOptions{Name: "screenshot", UpdatedAt: &updatedAt},
+		"comment.png",
+		bytes.NewBufferString("comment attachment bytes"),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "comment.png" {
+		t.Fatalf("got name=%q", attachment.Name)
 	}
 }
 

@@ -5,7 +5,9 @@ import (
 	"context"
 	json "github.com/goccy/go-json"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	core "dappco.re/go/core"
@@ -258,6 +260,64 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 	}
 
 	return data, nil
+}
+
+func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[string]string, fieldName, fileName string, content io.Reader, out any) error {
+	target, err := url.Parse(c.baseURL + path)
+	if err != nil {
+		return core.E("Client.PostMultipart", "forge: parse url", err)
+	}
+	if len(query) > 0 {
+		values := target.Query()
+		for key, value := range query {
+			values.Set(key, value)
+		}
+		target.RawQuery = values.Encode()
+	}
+
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	part, err := writer.CreateFormFile(fieldName, fileName)
+	if err != nil {
+		return core.E("Client.PostMultipart", "forge: create multipart form file", err)
+	}
+	if content != nil {
+		if _, err := io.Copy(part, content); err != nil {
+			return core.E("Client.PostMultipart", "forge: write multipart form file", err)
+		}
+	}
+	if err := writer.Close(); err != nil {
+		return core.E("Client.PostMultipart", "forge: close multipart writer", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target.String(), &body)
+	if err != nil {
+		return core.E("Client.PostMultipart", "forge: create request", err)
+	}
+
+	req.Header.Set("Authorization", "token "+c.token)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	if c.userAgent != "" {
+		req.Header.Set("User-Agent", c.userAgent)
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return core.E("Client.PostMultipart", "forge: request POST "+path, err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return c.parseError(resp, path)
+	}
+
+	if out == nil {
+		return nil
+	}
+	if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
+		return core.E("Client.PostMultipart", "forge: decode response body", err)
+	}
+	return nil
 }
 
 // GetRaw performs a GET request and returns the raw response body as bytes
