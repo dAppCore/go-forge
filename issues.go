@@ -133,6 +133,18 @@ func (s *IssueService) MovePin(ctx context.Context, owner, repo string, index, p
 	return s.client.Patch(ctx, path, nil, nil)
 }
 
+// ListPinnedIssues returns all pinned issues in a repository.
+func (s *IssueService) ListPinnedIssues(ctx context.Context, owner, repo string) ([]types.Issue, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/pinned", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Issue](ctx, s.client, path, nil)
+}
+
+// IterPinnedIssues returns an iterator over all pinned issues in a repository.
+func (s *IssueService) IterPinnedIssues(ctx context.Context, owner, repo string) iter.Seq2[types.Issue, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/pinned", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Issue](ctx, s.client, path, nil)
+}
+
 // Unpin unpins an issue.
 func (s *IssueService) Unpin(ctx context.Context, owner, repo string, index int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/pin", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
