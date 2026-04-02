@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	json "github.com/goccy/go-json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -92,6 +93,29 @@ func TestCommitService_Get_Good(t *testing.T) {
 	}
 	if commit.Commit.Message != "initial import" {
 		t.Errorf("got message=%q, want %q", commit.Commit.Message, "initial import")
+	}
+}
+
+func TestCommitService_GetDiffOrPatch_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/commits/abc123.diff" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "text/plain")
+		io.WriteString(w, "diff --git a/README.md b/README.md")
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	data, err := f.Commits.GetDiffOrPatch(context.Background(), "core", "go-forge", "abc123", "diff")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "diff --git a/README.md b/README.md" {
+		t.Fatalf("got body=%q", string(data))
 	}
 }
 

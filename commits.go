@@ -53,6 +53,12 @@ func (s *CommitService) Get(ctx context.Context, params Params) (*types.Commit, 
 	return &out, nil
 }
 
+// GetDiffOrPatch returns a commit diff or patch as raw bytes.
+func (s *CommitService) GetDiffOrPatch(ctx context.Context, owner, repo, sha, diffType string) ([]byte, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/commits/{sha}.{diffType}", pathParams("owner", owner, "repo", repo, "sha", sha, "diffType", diffType))
+	return s.client.GetRaw(ctx, path)
+}
+
 // GetPullRequest returns the pull request associated with a commit SHA.
 //
 // Usage:
