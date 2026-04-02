@@ -102,11 +102,8 @@ func milestoneQuery(filters ...MilestoneListOptions) map[string]string {
 
 	query := make(map[string]string, 2)
 	for _, filter := range filters {
-		if filter.State != "" {
-			query["state"] = filter.State
-		}
-		if filter.Name != "" {
-			query["name"] = filter.Name
+		for key, value := range filter.queryParams() {
+			query[key] = value
 		}
 	}
 	if len(query) == 0 {

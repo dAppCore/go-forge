@@ -5,7 +5,7 @@ description: Full-coverage Go client for the Forgejo API with generics-based CRU
 
 # go-forge
 
-`dappco.re/go/core/forge` is a Go client library for the [Forgejo](https://forgejo.org) REST API. It provides typed access to 19 API domains (repositories, issues, pull requests, organisations, ActivityPub, and more) through a single top-level `Forge` client. Types are generated directly from Forgejo's `swagger.v1.json` specification, keeping the library in lockstep with the server.
+`dappco.re/go/core/forge` is a Go client library for the [Forgejo](https://forgejo.org) REST API. It provides typed access to 20 API domains (repositories, issues, pull requests, organisations, milestones, ActivityPub, and more) through a single top-level `Forge` client. Types are generated directly from Forgejo's `swagger.v1.json` specification, keeping the library in lockstep with the server.
 
 **Module path:** `dappco.re/go/core/forge`
 **Go version:** 1.26+
@@ -75,7 +75,7 @@ Environment variables:
 go-forge/
 ├── client.go          HTTP client, auth, error handling, rate limits
 ├── config.go          Config resolution: flags > env > defaults
-├── forge.go           Top-level Forge struct aggregating all 19 services
+├── forge.go           Top-level Forge struct aggregating all 20 services
 ├── resource.go        Generic Resource[T, C, U] for CRUD operations
 ├── pagination.go      ListPage, ListAll, ListIter — paginated requests
 ├── params.go          Path variable resolution ({owner}/{repo} -> values)
@@ -95,8 +95,10 @@ go-forge/
 ├── actions.go         ActionsService — CI/CD secrets, variables, dispatches, tasks
 ├── contents.go        ContentService — file read/write/delete
 ├── wiki.go            WikiService — wiki pages
-├── commits.go         CommitService — statuses, notes
 ├── misc.go            MiscService — markdown, licences, gitignore, version
+├── commits.go         CommitService — statuses, notes
+├── milestones.go      MilestoneService — repository milestones
+├── activitypub.go     ActivityPubService — ActivityPub actors and inboxes
 ├── types/             229 generated Go types from swagger.v1.json
 │   ├── generate.go    go:generate directive
 │   ├── repo.go        Repository, CreateRepoOption, EditRepoOption, ...
@@ -114,7 +116,7 @@ go-forge/
 
 ## Services
 
-The `Forge` struct exposes 19 service fields, each handling a different API domain:
+The `Forge` struct exposes 20 service fields, each handling a different API domain:
 
 | Service         | Struct              | Embedding                        | Domain                               |
 |-----------------|---------------------|----------------------------------|--------------------------------------|
@@ -134,8 +136,9 @@ The `Forge` struct exposes 19 service fields, each handling a different API doma
 | `Actions`       | `ActionsService`    | (standalone)                     | CI/CD secrets, variables, dispatches, tasks |
 | `Contents`      | `ContentService`    | (standalone)                     | File read/write/delete               |
 | `Wiki`          | `WikiService`       | (standalone)                     | Wiki pages                           |
-| `Commits`       | `CommitService`     | (standalone)                     | Commit statuses, git notes           |
 | `Misc`          | `MiscService`       | (standalone)                     | Markdown, licences, gitignore, version |
+| `Commits`       | `CommitService`     | (standalone)                     | Commit statuses, git notes           |
+| `Milestones`    | `MilestoneService`  | (standalone)                     | Repository milestones                |
 | `ActivityPub`   | `ActivityPubService` | (standalone)                    | ActivityPub actors and inboxes       |
 
 Services that embed `Resource[T, C, U]` inherit `List`, `ListAll`, `Iter`, `Get`, `Create`, `Update`, and `Delete` methods automatically. Standalone services have hand-written methods because their API endpoints are heterogeneous and do not fit a uniform CRUD pattern.

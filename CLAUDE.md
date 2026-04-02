@@ -33,9 +33,9 @@ The library is a flat package (`package forge`) with a layered design:
 
 5. **`config.go`** — Config resolution: flags > env (`FORGE_URL`, `FORGE_TOKEN`) > defaults (`http://localhost:3000`).
 
-6. **`forge.go`** — Top-level `Forge` struct aggregating all 19 service fields. Created via `NewForge(url, token)` or `NewForgeFromConfig(flagURL, flagToken)`.
+6. **`forge.go`** — Top-level `Forge` struct aggregating all 20 service fields. Created via `NewForge(url, token)` or `NewForgeFromConfig(flagURL, flagToken)`.
 
-7. **Service files** (`repos.go`, `issues.go`, etc.) — Each service struct embeds `Resource[T,C,U]` for standard CRUD, then adds hand-written action methods (e.g. `Fork`, `Pin`, `MirrorSync`). 19 services total: repos, issues, pulls, orgs, users, teams, admin, branches, releases, labels, webhooks, notifications, packages, actions, contents, wiki, commits, misc, activitypub.
+7. **Service files** (`repos.go`, `issues.go`, etc.) — Each service struct embeds `Resource[T,C,U]` for standard CRUD, then adds hand-written action methods (e.g. `Fork`, `Pin`, `MirrorSync`). 20 services total: repos, issues, pulls, orgs, users, teams, admin, branches, releases, labels, webhooks, notifications, packages, actions, contents, wiki, commits, milestones, misc, activitypub.
 
 8. **`types/`** — Generated Go types from `swagger.v1.json` (229 types). The `//go:generate` directive lives in `types/generate.go`. **Do not hand-edit generated type files** — modify `cmd/forgegen/` instead.
 
