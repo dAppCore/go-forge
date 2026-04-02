@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"fmt"
 	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
@@ -222,6 +223,18 @@ func TestClient_WithHTTPClient_Good(t *testing.T) {
 	}
 	if got := c.HTTPClient(); got != custom {
 		t.Error("expected HTTPClient() to return the configured HTTP client")
+	}
+}
+
+func TestClient_String_Good(t *testing.T) {
+	c := NewClient("https://forge.lthn.ai", "tok", WithUserAgent("go-forge/1.0"))
+	got := fmt.Sprint(c)
+	want := `forge.Client{baseURL="https://forge.lthn.ai", token=set, userAgent="go-forge/1.0"}`
+	if got != want {
+		t.Fatalf("got %q, want %q", got, want)
+	}
+	if got := c.String(); got != want {
+		t.Fatalf("got String()=%q, want %q", got, want)
 	}
 }
 

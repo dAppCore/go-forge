@@ -159,6 +159,19 @@ func (c *Client) HTTPClient() *http.Client {
 	return c.httpClient
 }
 
+// String returns a safe summary of the client configuration.
+//
+// Usage:
+//
+//	s := client.String()
+func (c *Client) String() string {
+	tokenState := "unset"
+	if c.HasToken() {
+		tokenState = "set"
+	}
+	return core.Concat("forge.Client{baseURL=", strconv.Quote(c.baseURL), ", token=", tokenState, ", userAgent=", strconv.Quote(c.userAgent), "}")
+}
+
 // HasToken reports whether the client was configured with an API token.
 //
 // Usage:

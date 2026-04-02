@@ -3,6 +3,7 @@ package forge
 import (
 	"bytes"
 	"context"
+	"fmt"
 	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
@@ -78,6 +79,18 @@ func TestForge_HasToken_Bad(t *testing.T) {
 	f := NewForge("https://forge.lthn.ai", "")
 	if f.HasToken() {
 		t.Fatal("expected HasToken to report missing token")
+	}
+}
+
+func TestForge_String_Good(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "tok", WithUserAgent("go-forge/1.0"))
+	got := fmt.Sprint(f)
+	want := `forge.Forge{forge.Client{baseURL="https://forge.lthn.ai", token=set, userAgent="go-forge/1.0"}}`
+	if got != want {
+		t.Fatalf("got %q, want %q", got, want)
+	}
+	if got := f.String(); got != want {
+		t.Fatalf("got String()=%q, want %q", got, want)
 	}
 }
 

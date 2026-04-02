@@ -110,3 +110,12 @@ func (f *Forge) HTTPClient() *http.Client { return f.client.HTTPClient() }
 //	    _ = "authenticated"
 //	}
 func (f *Forge) HasToken() bool { return f.client.HasToken() }
+
+// String returns a safe summary of the Forge client.
+//
+// Usage:
+//
+//	s := f.String()
+func (f *Forge) String() string {
+	return "forge.Forge{" + f.client.String() + "}"
+}
