@@ -1196,6 +1196,26 @@ func TestIssueService_ResetTime_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_DeleteTime_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/42/times/99" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.DeleteTime(context.Background(), "core", "go-forge", 42, 99); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestIssueService_List_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)

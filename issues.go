@@ -218,6 +218,12 @@ func (s *IssueService) ResetTime(ctx context.Context, owner, repo string, index 
 	return s.client.Delete(ctx, path)
 }
 
+// DeleteTime removes a specific tracked time entry from an issue.
+func (s *IssueService) DeleteTime(ctx context.Context, owner, repo string, index, timeID int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/times/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(timeID)))
+	return s.client.Delete(ctx, path)
+}
+
 // AddLabels adds labels to an issue.
 func (s *IssueService) AddLabels(ctx context.Context, owner, repo string, index int64, labelIDs []int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/labels", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
