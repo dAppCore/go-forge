@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	json "github.com/goccy/go-json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -2000,6 +2001,105 @@ func TestRepoService_ForkWithOptions_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 	if repo.Name != "go-forge-fork" || repo.FullName != "core-team/go-forge-fork" {
+		t.Fatalf("got %#v", repo)
+	}
+}
+
+func TestRepoService_Transfer_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/transfer" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.TransferRepoOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body.NewOwner != "core-team" || !reflect.DeepEqual(body.TeamIDs, []int64{7, 9}) {
+			t.Fatalf("got %#v", body)
+		}
+		w.WriteHeader(http.StatusAccepted)
+		json.NewEncoder(w).Encode(types.Repository{Name: "go-forge", FullName: "core-team/go-forge"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repo, err := f.Repos.Transfer(context.Background(), "core", "go-forge", &types.TransferRepoOption{
+		NewOwner: "core-team",
+		TeamIDs:  []int64{7, 9},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if repo.Name != "go-forge" || repo.FullName != "core-team/go-forge" {
+		t.Fatalf("got %#v", repo)
+	}
+}
+
+func TestRepoService_AcceptTransfer_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/transfer/accept" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("read body: %v", err)
+		}
+		if len(body) != 0 {
+			t.Fatalf("expected empty body, got %q", body)
+		}
+		w.WriteHeader(http.StatusAccepted)
+		json.NewEncoder(w).Encode(types.Repository{Name: "go-forge", FullName: "core/go-forge"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repo, err := f.Repos.AcceptTransfer(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if repo.Name != "go-forge" || repo.FullName != "core/go-forge" {
+		t.Fatalf("got %#v", repo)
+	}
+}
+
+func TestRepoService_RejectTransfer_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/transfer/reject" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("read body: %v", err)
+		}
+		if len(body) != 0 {
+			t.Fatalf("expected empty body, got %q", body)
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(types.Repository{Name: "go-forge", FullName: "core/go-forge"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repo, err := f.Repos.RejectTransfer(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if repo.Name != "go-forge" || repo.FullName != "core/go-forge" {
 		t.Fatalf("got %#v", repo)
 	}
 }

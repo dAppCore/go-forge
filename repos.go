@@ -848,21 +848,33 @@ func (s *RepoService) IterForks(ctx context.Context, owner, repo string) iter.Se
 }
 
 // Transfer initiates a repository transfer.
-func (s *RepoService) Transfer(ctx context.Context, owner, repo string, opts map[string]any) error {
+func (s *RepoService) Transfer(ctx context.Context, owner, repo string, opts *types.TransferRepoOption) (*types.Repository, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/transfer", pathParams("owner", owner, "repo", repo))
-	return s.client.Post(ctx, path, opts, nil)
+	var out types.Repository
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 // AcceptTransfer accepts a pending repository transfer.
-func (s *RepoService) AcceptTransfer(ctx context.Context, owner, repo string) error {
+func (s *RepoService) AcceptTransfer(ctx context.Context, owner, repo string) (*types.Repository, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/transfer/accept", pathParams("owner", owner, "repo", repo))
-	return s.client.Post(ctx, path, nil, nil)
+	var out types.Repository
+	if err := s.client.Post(ctx, path, nil, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 // RejectTransfer rejects a pending repository transfer.
-func (s *RepoService) RejectTransfer(ctx context.Context, owner, repo string) error {
+func (s *RepoService) RejectTransfer(ctx context.Context, owner, repo string) (*types.Repository, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/transfer/reject", pathParams("owner", owner, "repo", repo))
-	return s.client.Post(ctx, path, nil, nil)
+	var out types.Repository
+	if err := s.client.Post(ctx, path, nil, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 // MirrorSync triggers a mirror sync.
