@@ -535,6 +535,16 @@ func (s *UserService) IterMyFollowers(ctx context.Context) iter.Seq2[types.User,
 	return ListIter[types.User](ctx, s.client, "/api/v1/user/followers", nil)
 }
 
+// ListMyFollowing returns all users followed by the authenticated user.
+func (s *UserService) ListMyFollowing(ctx context.Context) ([]types.User, error) {
+	return ListAll[types.User](ctx, s.client, "/api/v1/user/following", nil)
+}
+
+// IterMyFollowing returns an iterator over all users followed by the authenticated user.
+func (s *UserService) IterMyFollowing(ctx context.Context) iter.Seq2[types.User, error] {
+	return ListIter[types.User](ctx, s.client, "/api/v1/user/following", nil)
+}
+
 // ListMyTeams returns all teams the authenticated user belongs to.
 func (s *UserService) ListMyTeams(ctx context.Context) ([]types.Team, error) {
 	return ListAll[types.Team](ctx, s.client, "/api/v1/user/teams", nil)

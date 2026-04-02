@@ -25,6 +25,27 @@ func newBranchService(c *Client) *BranchService {
 	}
 }
 
+// ListBranches returns all branches for a repository.
+func (s *BranchService) ListBranches(ctx context.Context, owner, repo string) ([]types.Branch, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Branch](ctx, s.client, path, nil)
+}
+
+// IterBranches returns an iterator over all branches for a repository.
+func (s *BranchService) IterBranches(ctx context.Context, owner, repo string) iter.Seq2[types.Branch, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Branch](ctx, s.client, path, nil)
+}
+
+// CreateBranch creates a new branch in a repository.
+func (s *BranchService) CreateBranch(ctx context.Context, owner, repo string, opts *types.CreateBranchRepoOption) (*types.Branch, error) {
+	var out types.Branch
+	if err := s.client.Post(ctx, ResolvePath("/api/v1/repos/{owner}/{repo}/branches", pathParams("owner", owner, "repo", repo)), opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListBranchProtections returns all branch protections for a repository.
 func (s *BranchService) ListBranchProtections(ctx context.Context, owner, repo string) ([]types.BranchProtection, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branch_protections", pathParams("owner", owner, "repo", repo))

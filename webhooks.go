@@ -26,6 +26,27 @@ func newWebhookService(c *Client) *WebhookService {
 	}
 }
 
+// ListHooks returns all webhooks for a repository.
+func (s *WebhookService) ListHooks(ctx context.Context, owner, repo string) ([]types.Hook, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Hook](ctx, s.client, path, nil)
+}
+
+// IterHooks returns an iterator over all webhooks for a repository.
+func (s *WebhookService) IterHooks(ctx context.Context, owner, repo string) iter.Seq2[types.Hook, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Hook](ctx, s.client, path, nil)
+}
+
+// CreateHook creates a webhook for a repository.
+func (s *WebhookService) CreateHook(ctx context.Context, owner, repo string, opts *types.CreateHookOption) (*types.Hook, error) {
+	var out types.Hook
+	if err := s.client.Post(ctx, ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo)), opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // TestHook triggers a test delivery for a webhook.
 func (s *WebhookService) TestHook(ctx context.Context, owner, repo string, id int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks/{id}/tests", pathParams("owner", owner, "repo", repo, "id", int64String(id)))

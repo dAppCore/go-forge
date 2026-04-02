@@ -25,6 +25,27 @@ func newPullService(c *Client) *PullService {
 	}
 }
 
+// ListPullRequests returns all pull requests in a repository.
+func (s *PullService) ListPullRequests(ctx context.Context, owner, repo string) ([]types.PullRequest, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.PullRequest](ctx, s.client, path, nil)
+}
+
+// IterPullRequests returns an iterator over all pull requests in a repository.
+func (s *PullService) IterPullRequests(ctx context.Context, owner, repo string) iter.Seq2[types.PullRequest, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.PullRequest](ctx, s.client, path, nil)
+}
+
+// CreatePullRequest creates a pull request in a repository.
+func (s *PullService) CreatePullRequest(ctx context.Context, owner, repo string, opts *types.CreatePullRequestOption) (*types.PullRequest, error) {
+	var out types.PullRequest
+	if err := s.client.Post(ctx, ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo)), opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // Merge merges a pull request. Method is one of "merge", "rebase", "rebase-merge", "squash", "fast-forward-only", "manually-merged".
 func (s *PullService) Merge(ctx context.Context, owner, repo string, index int64, method string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/merge", pathParams("owner", owner, "repo", repo, "index", int64String(index)))

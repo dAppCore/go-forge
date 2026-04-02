@@ -41,6 +41,25 @@ func newOrgService(c *Client) *OrgService {
 	}
 }
 
+// ListOrgs returns all organisations.
+func (s *OrgService) ListOrgs(ctx context.Context) ([]types.Organization, error) {
+	return ListAll[types.Organization](ctx, s.client, "/api/v1/orgs", nil)
+}
+
+// IterOrgs returns an iterator over all organisations.
+func (s *OrgService) IterOrgs(ctx context.Context) iter.Seq2[types.Organization, error] {
+	return ListIter[types.Organization](ctx, s.client, "/api/v1/orgs", nil)
+}
+
+// CreateOrg creates a new organisation.
+func (s *OrgService) CreateOrg(ctx context.Context, opts *types.CreateOrgOption) (*types.Organization, error) {
+	var out types.Organization
+	if err := s.client.Post(ctx, "/api/v1/orgs", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListMembers returns all members of an organisation.
 func (s *OrgService) ListMembers(ctx context.Context, org string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/members", pathParams("org", org))

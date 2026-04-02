@@ -142,6 +142,27 @@ func (s *IssueService) IterSearchIssues(ctx context.Context, opts SearchIssuesOp
 	return ListIter[types.Issue](ctx, s.client, "/api/v1/repos/issues/search", opts.queryParams())
 }
 
+// ListIssues returns all issues in a repository.
+func (s *IssueService) ListIssues(ctx context.Context, owner, repo string) ([]types.Issue, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Issue](ctx, s.client, path, nil)
+}
+
+// IterIssues returns an iterator over all issues in a repository.
+func (s *IssueService) IterIssues(ctx context.Context, owner, repo string) iter.Seq2[types.Issue, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Issue](ctx, s.client, path, nil)
+}
+
+// CreateIssue creates a new issue in a repository.
+func (s *IssueService) CreateIssue(ctx context.Context, owner, repo string, opts *types.CreateIssueOption) (*types.Issue, error) {
+	var out types.Issue
+	if err := s.client.Post(ctx, ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo)), opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // Pin pins an issue.
 func (s *IssueService) Pin(ctx context.Context, owner, repo string, index int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/pin", pathParams("owner", owner, "repo", repo, "index", int64String(index)))

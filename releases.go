@@ -44,6 +44,27 @@ func newReleaseService(c *Client) *ReleaseService {
 	}
 }
 
+// ListReleases returns all releases in a repository.
+func (s *ReleaseService) ListReleases(ctx context.Context, owner, repo string) ([]types.Release, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Release](ctx, s.client, path, nil)
+}
+
+// IterReleases returns an iterator over all releases in a repository.
+func (s *ReleaseService) IterReleases(ctx context.Context, owner, repo string) iter.Seq2[types.Release, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Release](ctx, s.client, path, nil)
+}
+
+// CreateRelease creates a release in a repository.
+func (s *ReleaseService) CreateRelease(ctx context.Context, owner, repo string, opts *types.CreateReleaseOption) (*types.Release, error) {
+	var out types.Release
+	if err := s.client.Post(ctx, ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo)), opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetByTag returns a release by its tag name.
 func (s *ReleaseService) GetByTag(ctx context.Context, owner, repo, tag string) (*types.Release, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/tags/{tag}", pathParams("owner", owner, "repo", repo, "tag", tag))
@@ -72,7 +93,7 @@ func (s *ReleaseService) DeleteByTag(ctx context.Context, owner, repo, tag strin
 
 // ListAssets returns all assets for a release.
 func (s *ReleaseService) ListAssets(ctx context.Context, owner, repo string, releaseID int64) ([]types.Attachment, error) {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{releaseID}/assets", pathParams("owner", owner, "repo", repo, "releaseID", int64String(releaseID)))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{id}/assets", pathParams("owner", owner, "repo", repo, "id", int64String(releaseID)))
 	return ListAll[types.Attachment](ctx, s.client, path, nil)
 }
 
@@ -81,7 +102,7 @@ func (s *ReleaseService) ListAssets(ctx context.Context, owner, repo string, rel
 // If opts.ExternalURL is set, the upload uses the external_url form field and
 // ignores filename/content.
 func (s *ReleaseService) CreateAttachment(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content goio.Reader) (*types.Attachment, error) {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{releaseID}/assets", pathParams("owner", owner, "repo", repo, "releaseID", int64String(releaseID)))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{id}/assets", pathParams("owner", owner, "repo", repo, "id", int64String(releaseID)))
 	fields := make(map[string]string, 1)
 	fieldName := "attachment"
 	if opts != nil && opts.ExternalURL != "" {
@@ -119,7 +140,7 @@ func (s *ReleaseService) EditAsset(ctx context.Context, owner, repo string, rele
 
 // IterAssets returns an iterator over all assets for a release.
 func (s *ReleaseService) IterAssets(ctx context.Context, owner, repo string, releaseID int64) iter.Seq2[types.Attachment, error] {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{releaseID}/assets", pathParams("owner", owner, "repo", repo, "releaseID", int64String(releaseID)))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{id}/assets", pathParams("owner", owner, "repo", repo, "id", int64String(releaseID)))
 	return ListIter[types.Attachment](ctx, s.client, path, nil)
 }
 

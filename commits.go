@@ -84,6 +84,16 @@ func (s *CommitService) GetCombinedStatus(ctx context.Context, owner, repo, ref 
 	return &out, nil
 }
 
+// GetCombinedStatusByRef returns the combined status for a given commit reference.
+func (s *CommitService) GetCombinedStatusByRef(ctx context.Context, owner, repo, ref string) (*types.CombinedStatus, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/commits/{ref}/status", pathParams("owner", owner, "repo", repo, "ref", ref))
+	var out types.CombinedStatus
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListStatuses returns all commit statuses for a given ref.
 func (s *CommitService) ListStatuses(ctx context.Context, owner, repo, ref string) ([]types.CommitStatus, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/commits/{ref}/statuses", pathParams("owner", owner, "repo", repo, "ref", ref))
