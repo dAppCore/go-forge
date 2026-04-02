@@ -867,6 +867,58 @@ func TestAdminService_AdoptRepo_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_ListUnadoptedRepos_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/unadopted" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("pattern"); got != "core/*" {
+			t.Errorf("got pattern=%q, want %q", got, "core/*")
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("got page=%q, want %q", got, "1")
+		}
+		if got := r.URL.Query().Get("limit"); got != "50" {
+			t.Errorf("got limit=%q, want %q", got, "50")
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]string{"core/myrepo"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repos, err := f.Admin.ListUnadoptedRepos(context.Background(), AdminUnadoptedListOptions{Pattern: "core/*"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(repos) != 1 || repos[0] != "core/myrepo" {
+		t.Fatalf("unexpected result: %#v", repos)
+	}
+}
+
+func TestAdminService_DeleteUnadoptedRepo_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/unadopted/alice/myrepo" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Admin.DeleteUnadoptedRepo(context.Background(), "alice", "myrepo"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestAdminService_ListActionsRuns_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

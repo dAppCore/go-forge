@@ -353,6 +353,119 @@ func TestIssueService_CreateComment_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_ListRepoComments_Good(t *testing.T) {
+	since := time.Date(2026, 4, 1, 10, 0, 0, 0, time.UTC)
+	before := time.Date(2026, 4, 2, 10, 0, 0, 0, time.UTC)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("since"); got != since.Format(time.RFC3339) {
+			t.Errorf("got since=%q, want %q", got, since.Format(time.RFC3339))
+		}
+		if got := r.URL.Query().Get("before"); got != before.Format(time.RFC3339) {
+			t.Errorf("got before=%q, want %q", got, before.Format(time.RFC3339))
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Comment{
+			{ID: 7, Body: "repo-wide comment"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	comments, err := f.Issues.ListRepoComments(context.Background(), "core", "go-forge", RepoCommentListOptions{
+		Since:  &since,
+		Before: &before,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(comments) != 1 || comments[0].Body != "repo-wide comment" {
+		t.Fatalf("unexpected result: %#v", comments)
+	}
+}
+
+func TestIssueService_GetRepoComment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.Comment{ID: 7, Body: "repo-wide comment"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	comment, err := f.Issues.GetRepoComment(context.Background(), "core", "go-forge", 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if comment.Body != "repo-wide comment" {
+		t.Fatalf("got body=%q", comment.Body)
+	}
+}
+
+func TestIssueService_EditRepoComment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.EditIssueCommentOption
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Body != "updated comment" {
+			t.Fatalf("got body=%#v", body)
+		}
+		json.NewEncoder(w).Encode(types.Comment{ID: 7, Body: body.Body})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	comment, err := f.Issues.EditRepoComment(context.Background(), "core", "go-forge", 7, &types.EditIssueCommentOption{
+		Body: "updated comment",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if comment.Body != "updated comment" {
+		t.Fatalf("got body=%q", comment.Body)
+	}
+}
+
+func TestIssueService_DeleteRepoComment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.DeleteRepoComment(context.Background(), "core", "go-forge", 7); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestIssueService_ListReactions_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

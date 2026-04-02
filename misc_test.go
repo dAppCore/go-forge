@@ -451,6 +451,29 @@ func TestMiscService_GetNodeInfo_Good(t *testing.T) {
 	}
 }
 
+func TestMiscService_GetSigningKey_Good(t *testing.T) {
+	want := "-----BEGIN PGP PUBLIC KEY BLOCK-----\n..."
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/signing-key.gpg" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		_, _ = w.Write([]byte(want))
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Misc.GetSigningKey(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key != want {
+		t.Fatalf("got %q, want %q", key, want)
+	}
+}
+
 func TestMiscService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)

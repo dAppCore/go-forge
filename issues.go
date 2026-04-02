@@ -26,6 +26,26 @@ type AttachmentUploadOptions struct {
 	UpdatedAt *time.Time
 }
 
+// RepoCommentListOptions controls filtering for repository-wide issue comment listings.
+type RepoCommentListOptions struct {
+	Since  *time.Time
+	Before *time.Time
+}
+
+func (o RepoCommentListOptions) queryParams() map[string]string {
+	query := make(map[string]string, 2)
+	if o.Since != nil {
+		query["since"] = o.Since.Format(time.RFC3339)
+	}
+	if o.Before != nil {
+		query["before"] = o.Before.Format(time.RFC3339)
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
 func newIssueService(c *Client) *IssueService {
 	return &IssueService{
 		Resource: *NewResource[types.Issue, types.CreateIssueOption, types.EditIssueOption](
@@ -285,6 +305,44 @@ func (s *IssueService) EditComment(ctx context.Context, owner, repo string, inde
 // DeleteComment deletes an issue comment.
 func (s *IssueService) DeleteComment(ctx context.Context, owner, repo string, index, id int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/comments/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
+// ListRepoComments returns all comments in a repository.
+func (s *IssueService) ListRepoComments(ctx context.Context, owner, repo string, filters ...RepoCommentListOptions) ([]types.Comment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Comment](ctx, s.client, path, repoCommentQuery(filters...))
+}
+
+// IterRepoComments returns an iterator over all comments in a repository.
+func (s *IssueService) IterRepoComments(ctx context.Context, owner, repo string, filters ...RepoCommentListOptions) iter.Seq2[types.Comment, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Comment](ctx, s.client, path, repoCommentQuery(filters...))
+}
+
+// GetRepoComment returns a single comment in a repository.
+func (s *IssueService) GetRepoComment(ctx context.Context, owner, repo string, id int64) (*types.Comment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	var out types.Comment
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditRepoComment updates a repository comment.
+func (s *IssueService) EditRepoComment(ctx context.Context, owner, repo string, id int64, opts *types.EditIssueCommentOption) (*types.Comment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	var out types.Comment
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteRepoComment deletes a repository comment.
+func (s *IssueService) DeleteRepoComment(ctx context.Context, owner, repo string, id int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 	return s.client.Delete(ctx, path)
 }
 
@@ -550,6 +608,23 @@ func toAnySlice(ids []int64) []any {
 		out[i] = id
 	}
 	return out
+}
+
+func repoCommentQuery(filters ...RepoCommentListOptions) map[string]string {
+	if len(filters) == 0 {
+		return nil
+	}
+
+	query := make(map[string]string, 2)
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
 
 func issueTimeQuery(user string, since, before *time.Time) map[string]string {

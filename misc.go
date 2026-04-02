@@ -135,6 +135,15 @@ func (s *MiscService) GetNodeInfo(ctx context.Context) (*types.NodeInfo, error) 
 	return &out, nil
 }
 
+// GetSigningKey returns the instance's default signing key.
+func (s *MiscService) GetSigningKey(ctx context.Context) (string, error) {
+	data, err := s.client.GetRaw(ctx, "/api/v1/signing-key.gpg")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 // GetAPISettings returns the instance's global API settings.
 func (s *MiscService) GetAPISettings(ctx context.Context) (*types.GeneralAPISettings, error) {
 	var out types.GeneralAPISettings

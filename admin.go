@@ -54,6 +54,18 @@ func (o AdminActionsRunListOptions) queryParams() map[string]string {
 	return query
 }
 
+// AdminUnadoptedListOptions controls filtering for unadopted repository listings.
+type AdminUnadoptedListOptions struct {
+	Pattern string
+}
+
+func (o AdminUnadoptedListOptions) queryParams() map[string]string {
+	if o.Pattern == "" {
+		return nil
+	}
+	return map[string]string{"pattern": o.Pattern}
+}
+
 func newAdminService(c *Client) *AdminService {
 	return &AdminService{client: c}
 }
@@ -350,6 +362,16 @@ func (s *AdminService) DeleteQuotaRule(ctx context.Context, quotarule string) er
 	return s.client.Delete(ctx, path)
 }
 
+// ListUnadoptedRepos returns all unadopted repositories on the instance.
+func (s *AdminService) ListUnadoptedRepos(ctx context.Context, filters ...AdminUnadoptedListOptions) ([]string, error) {
+	return ListAll[string](ctx, s.client, "/api/v1/admin/unadopted", adminUnadoptedQuery(filters...))
+}
+
+// IterUnadoptedRepos returns an iterator over all unadopted repositories on the instance.
+func (s *AdminService) IterUnadoptedRepos(ctx context.Context, filters ...AdminUnadoptedListOptions) iter.Seq2[string, error] {
+	return ListIter[string](ctx, s.client, "/api/v1/admin/unadopted", adminUnadoptedQuery(filters...))
+}
+
 // SearchEmails searches all email addresses by keyword (admin only).
 func (s *AdminService) SearchEmails(ctx context.Context, q string) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/admin/emails/search", map[string]string{"q": q})
@@ -448,6 +470,29 @@ func (s *AdminService) IterActionsRuns(ctx context.Context, filters AdminActions
 func (s *AdminService) AdoptRepo(ctx context.Context, owner, repo string) error {
 	path := ResolvePath("/api/v1/admin/unadopted/{owner}/{repo}", Params{"owner": owner, "repo": repo})
 	return s.client.Post(ctx, path, nil, nil)
+}
+
+// DeleteUnadoptedRepo deletes an unadopted repository's files.
+func (s *AdminService) DeleteUnadoptedRepo(ctx context.Context, owner, repo string) error {
+	path := ResolvePath("/api/v1/admin/unadopted/{owner}/{repo}", Params{"owner": owner, "repo": repo})
+	return s.client.Delete(ctx, path)
+}
+
+func adminUnadoptedQuery(filters ...AdminUnadoptedListOptions) map[string]string {
+	if len(filters) == 0 {
+		return nil
+	}
+
+	query := make(map[string]string, 1)
+	for _, filter := range filters {
+		if filter.Pattern != "" {
+			query["pattern"] = filter.Pattern
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
 
 // GenerateRunnerToken generates an actions runner registration token.
