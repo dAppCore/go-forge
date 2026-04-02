@@ -33,8 +33,25 @@ type APIError struct {
 //
 //	err := (&forge.APIError{StatusCode: 404, Message: "not found", URL: "/api/v1/repos/x/y"}).Error()
 func (e *APIError) Error() string {
+	if e == nil {
+		return "forge.APIError{<nil>}"
+	}
 	return core.Concat("forge: ", e.URL, " ", strconv.Itoa(e.StatusCode), ": ", e.Message)
 }
+
+// String returns a safe summary of the API error.
+//
+// Usage:
+//
+//	s := err.String()
+func (e *APIError) String() string { return e.Error() }
+
+// GoString returns a safe Go-syntax summary of the API error.
+//
+// Usage:
+//
+//	s := fmt.Sprintf("%#v", err)
+func (e *APIError) GoString() string { return e.Error() }
 
 // IsNotFound returns true if the error is a 404 response.
 //

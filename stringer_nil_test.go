@@ -46,3 +46,17 @@ func TestResource_String_NilSafe(t *testing.T) {
 		t.Fatalf("got GoString=%q, want %q", got, want)
 	}
 }
+
+func TestAPIError_String_NilSafe(t *testing.T) {
+	var e *APIError
+	want := "forge.APIError{<nil>}"
+	if got := e.String(); got != want {
+		t.Fatalf("got String()=%q, want %q", got, want)
+	}
+	if got := fmt.Sprint(e); got != want {
+		t.Fatalf("got fmt.Sprint=%q, want %q", got, want)
+	}
+	if got := fmt.Sprintf("%#v", e); got != want {
+		t.Fatalf("got GoString=%q, want %q", got, want)
+	}
+}

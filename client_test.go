@@ -248,6 +248,15 @@ func TestAPIError_Error_Good(t *testing.T) {
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
+	if got := e.String(); got != want {
+		t.Errorf("got String()=%q, want %q", got, want)
+	}
+	if got := fmt.Sprint(e); got != want {
+		t.Errorf("got fmt.Sprint=%q, want %q", got, want)
+	}
+	if got := fmt.Sprintf("%#v", e); got != want {
+		t.Errorf("got GoString=%q, want %q", got, want)
+	}
 }
 
 func TestIsConflict_Match_Good(t *testing.T) {
