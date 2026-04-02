@@ -170,6 +170,16 @@ func (s *UserService) IterStarred(ctx context.Context, username string) iter.Seq
 	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
+// GetHeatmap returns a user's contribution heatmap data.
+func (s *UserService) GetHeatmap(ctx context.Context, username string) ([]types.UserHeatmapData, error) {
+	path := ResolvePath("/api/v1/users/{username}/heatmap", pathParams("username", username))
+	var out []types.UserHeatmapData
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Star stars a repository as the authenticated user.
 func (s *UserService) Star(ctx context.Context, owner, repo string) error {
 	path := ResolvePath("/api/v1/user/starred/{owner}/{repo}", pathParams("owner", owner, "repo", repo))

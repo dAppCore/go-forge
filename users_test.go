@@ -489,3 +489,31 @@ func TestUserService_IterSubscriptions_Good(t *testing.T) {
 		t.Fatalf("got %d repositories, want 1", count)
 	}
 }
+
+func TestUserService_GetHeatmap_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/heatmap" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.UserHeatmapData{
+			{Contributions: 3},
+			{Contributions: 7},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	heatmap, err := f.Users.GetHeatmap(context.Background(), "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(heatmap) != 2 {
+		t.Fatalf("got %d heatmap points, want 2", len(heatmap))
+	}
+	if heatmap[0].Contributions != 3 || heatmap[1].Contributions != 7 {
+		t.Errorf("unexpected heatmap data: %+v", heatmap)
+	}
+}
