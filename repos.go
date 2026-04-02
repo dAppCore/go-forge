@@ -106,6 +106,16 @@ func (s *RepoService) CreateOrgRepo(ctx context.Context, org string, opts *types
 	return &out, nil
 }
 
+// CreateOrgRepoDeprecated creates a repository in an organisation using the deprecated route.
+func (s *RepoService) CreateOrgRepoDeprecated(ctx context.Context, org string, opts *types.CreateRepoOption) (*types.Repository, error) {
+	path := ResolvePath("/api/v1/org/{org}/repos", pathParams("org", org))
+	var out types.Repository
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListOrgRepos returns all repositories for an organisation.
 func (s *RepoService) ListOrgRepos(ctx context.Context, org string) ([]types.Repository, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
