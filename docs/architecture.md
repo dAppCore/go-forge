@@ -15,7 +15,7 @@ go-forge is organised in three layers, each building on the one below:
 ```
 ┌─────────────────────────────────────────────────┐
 │  Forge (top-level client)                       │
-│  Aggregates 18 service structs                  │
+│  Aggregates 19 service structs                  │
 ├─────────────────────────────────────────────────┤
 │  Service layer                                  │
 │  RepoService, IssueService, PullService, ...    │
