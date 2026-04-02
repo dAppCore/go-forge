@@ -1009,6 +1009,49 @@ func TestRepoService_ListIssueTemplates_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_IterIssueTemplates_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issue_templates" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]types.IssueTemplate{
+			{
+				Name:    "bug report",
+				Title:   "Bug report",
+				Content: "Describe the problem",
+			},
+			{
+				Name:    "feature request",
+				Title:   "Feature request",
+				Content: "Describe the idea",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for template, err := range f.Repos.IterIssueTemplates(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, template.Name)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(got) != 2 || got[0] != "bug report" || got[1] != "feature request" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestRepoService_GetIssueConfig_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

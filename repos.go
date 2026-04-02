@@ -497,6 +497,22 @@ func (s *RepoService) ListIssueTemplates(ctx context.Context, owner, repo string
 	return ListAll[types.IssueTemplate](ctx, s.client, path, nil)
 }
 
+// IterIssueTemplates returns an iterator over all issue templates available for a repository.
+func (s *RepoService) IterIssueTemplates(ctx context.Context, owner, repo string) iter.Seq2[types.IssueTemplate, error] {
+	return func(yield func(types.IssueTemplate, error) bool) {
+		templates, err := s.ListIssueTemplates(ctx, owner, repo)
+		if err != nil {
+			yield(*new(types.IssueTemplate), err)
+			return
+		}
+		for _, template := range templates {
+			if !yield(template, nil) {
+				return
+			}
+		}
+	}
+}
+
 // GetIssueConfig returns the issue config for a repository.
 func (s *RepoService) GetIssueConfig(ctx context.Context, owner, repo string) (*types.IssueConfig, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issue_config", pathParams("owner", owner, "repo", repo))

@@ -217,6 +217,22 @@ func (s *AdminService) ListQuotaGroups(ctx context.Context) ([]types.QuotaGroup,
 	return ListAll[types.QuotaGroup](ctx, s.client, "/api/v1/admin/quota/groups", nil)
 }
 
+// IterQuotaGroups returns an iterator over all available quota groups.
+func (s *AdminService) IterQuotaGroups(ctx context.Context) iter.Seq2[types.QuotaGroup, error] {
+	return func(yield func(types.QuotaGroup, error) bool) {
+		groups, err := s.ListQuotaGroups(ctx)
+		if err != nil {
+			yield(*new(types.QuotaGroup), err)
+			return
+		}
+		for _, group := range groups {
+			if !yield(group, nil) {
+				return
+			}
+		}
+	}
+}
+
 // CreateQuotaGroup creates a new quota group.
 func (s *AdminService) CreateQuotaGroup(ctx context.Context, opts *types.CreateQuotaGroupOptions) (*types.QuotaGroup, error) {
 	var out types.QuotaGroup
@@ -281,6 +297,22 @@ func (s *AdminService) RemoveQuotaGroupUser(ctx context.Context, quotagroup, use
 // ListQuotaRules returns all available quota rules.
 func (s *AdminService) ListQuotaRules(ctx context.Context) ([]types.QuotaRuleInfo, error) {
 	return ListAll[types.QuotaRuleInfo](ctx, s.client, "/api/v1/admin/quota/rules", nil)
+}
+
+// IterQuotaRules returns an iterator over all available quota rules.
+func (s *AdminService) IterQuotaRules(ctx context.Context) iter.Seq2[types.QuotaRuleInfo, error] {
+	return func(yield func(types.QuotaRuleInfo, error) bool) {
+		rules, err := s.ListQuotaRules(ctx)
+		if err != nil {
+			yield(*new(types.QuotaRuleInfo), err)
+			return
+		}
+		for _, rule := range rules {
+			if !yield(rule, nil) {
+				return
+			}
+		}
+	}
 }
 
 // CreateQuotaRule creates a new quota rule.

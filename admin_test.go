@@ -411,6 +411,39 @@ func TestAdminService_ListQuotaGroups_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_IterQuotaGroups_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.QuotaGroup{
+			{Name: "default"},
+			{Name: "premium"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for group, err := range f.Admin.IterQuotaGroups(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, group.Name)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(got) != 2 || got[0] != "default" || got[1] != "premium" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestAdminService_CreateQuotaGroup_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -603,6 +636,39 @@ func TestAdminService_ListQuotaRules_Good(t *testing.T) {
 	}
 	if rules[0].Name != "git" {
 		t.Errorf("got name=%q, want %q", rules[0].Name, "git")
+	}
+}
+
+func TestAdminService_IterQuotaRules_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/rules" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.QuotaRuleInfo{
+			{Name: "git"},
+			{Name: "artifacts"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for rule, err := range f.Admin.IterQuotaRules(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, rule.Name)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(got) != 2 || got[0] != "git" || got[1] != "artifacts" {
+		t.Fatalf("got %#v", got)
 	}
 }
 

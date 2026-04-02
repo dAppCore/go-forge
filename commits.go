@@ -94,6 +94,22 @@ func (s *CommitService) ListStatuses(ctx context.Context, owner, repo, ref strin
 	return out, nil
 }
 
+// IterStatuses returns an iterator over all commit statuses for a given ref.
+func (s *CommitService) IterStatuses(ctx context.Context, owner, repo, ref string) iter.Seq2[types.CommitStatus, error] {
+	return func(yield func(types.CommitStatus, error) bool) {
+		statuses, err := s.ListStatuses(ctx, owner, repo, ref)
+		if err != nil {
+			yield(*new(types.CommitStatus), err)
+			return
+		}
+		for _, status := range statuses {
+			if !yield(status, nil) {
+				return
+			}
+		}
+	}
+}
+
 // CreateStatus creates a new commit status for the given SHA.
 func (s *CommitService) CreateStatus(ctx context.Context, owner, repo, sha string, opts *types.CreateStatusOption) (*types.CommitStatus, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/statuses/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))

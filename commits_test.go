@@ -185,6 +185,39 @@ func TestCommitService_ListStatuses_Good(t *testing.T) {
 	}
 }
 
+func TestCommitService_IterStatuses_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits/abc123/statuses" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.CommitStatus{
+			{ID: 1, Context: "ci/build"},
+			{ID: 2, Context: "ci/test"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for status, err := range f.Commits.IterStatuses(context.Background(), "core", "go-forge", "abc123") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, status.Context)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(got) != 2 || got[0] != "ci/build" || got[1] != "ci/test" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestCommitService_CreateStatus_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
