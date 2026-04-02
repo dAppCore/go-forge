@@ -283,6 +283,66 @@ func TestUserService_IterQuotaAttachments_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListQuotaPackages_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/quota/packages" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.QuotaUsedPackage{
+			{Name: "pkg-one", Type: "container", Version: "1.0.0", Size: 123, HTMLURL: "https://example.com/packages/1"},
+			{Name: "pkg-two", Type: "npm", Version: "2.0.0", Size: 456, HTMLURL: "https://example.com/packages/2"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	packages, err := f.Users.ListQuotaPackages(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(packages) != 2 {
+		t.Fatalf("got %d packages, want 2", len(packages))
+	}
+	if packages[0].Name != "pkg-one" || packages[0].Type != "container" || packages[0].Size != 123 {
+		t.Errorf("unexpected first package: %+v", packages[0])
+	}
+}
+
+func TestUserService_IterQuotaPackages_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/quota/packages" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.QuotaUsedPackage{
+			{Name: "pkg-one", Type: "container", Version: "1.0.0", Size: 123, HTMLURL: "https://example.com/packages/1"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []types.QuotaUsedPackage
+	for pkg, err := range f.Users.IterQuotaPackages(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, pkg)
+	}
+	if len(got) != 1 {
+		t.Fatalf("got %d packages, want 1", len(got))
+	}
+	if got[0].Name != "pkg-one" || got[0].Type != "container" {
+		t.Errorf("unexpected package: %+v", got[0])
+	}
+}
+
 func TestUserService_ListEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

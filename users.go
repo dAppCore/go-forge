@@ -82,6 +82,16 @@ func (s *UserService) IterQuotaAttachments(ctx context.Context) iter.Seq2[types.
 	return ListIter[types.QuotaUsedAttachment](ctx, s.client, "/api/v1/user/quota/attachments", nil)
 }
 
+// ListQuotaPackages returns all packages affecting the authenticated user's quota.
+func (s *UserService) ListQuotaPackages(ctx context.Context) ([]types.QuotaUsedPackage, error) {
+	return ListAll[types.QuotaUsedPackage](ctx, s.client, "/api/v1/user/quota/packages", nil)
+}
+
+// IterQuotaPackages returns an iterator over all packages affecting the authenticated user's quota.
+func (s *UserService) IterQuotaPackages(ctx context.Context) iter.Seq2[types.QuotaUsedPackage, error] {
+	return ListIter[types.QuotaUsedPackage](ctx, s.client, "/api/v1/user/quota/packages", nil)
+}
+
 // ListEmails returns all email addresses for the authenticated user.
 func (s *UserService) ListEmails(ctx context.Context) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/user/emails", nil)
