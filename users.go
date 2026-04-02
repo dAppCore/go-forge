@@ -62,6 +62,16 @@ func (s *UserService) GetQuota(ctx context.Context) (*types.QuotaInfo, error) {
 	return &out, nil
 }
 
+// ListQuotaArtifacts returns all artifacts affecting the authenticated user's quota.
+func (s *UserService) ListQuotaArtifacts(ctx context.Context) ([]types.QuotaUsedArtifact, error) {
+	return ListAll[types.QuotaUsedArtifact](ctx, s.client, "/api/v1/user/quota/artifacts", nil)
+}
+
+// IterQuotaArtifacts returns an iterator over all artifacts affecting the authenticated user's quota.
+func (s *UserService) IterQuotaArtifacts(ctx context.Context) iter.Seq2[types.QuotaUsedArtifact, error] {
+	return ListIter[types.QuotaUsedArtifact](ctx, s.client, "/api/v1/user/quota/artifacts", nil)
+}
+
 // ListEmails returns all email addresses for the authenticated user.
 func (s *UserService) ListEmails(ctx context.Context) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/user/emails", nil)

@@ -163,6 +163,66 @@ func TestUserService_GetQuota_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListQuotaArtifacts_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/quota/artifacts" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.QuotaUsedArtifact{
+			{Name: "artifact-1", Size: 123, HTMLURL: "https://example.com/actions/runs/1"},
+			{Name: "artifact-2", Size: 456, HTMLURL: "https://example.com/actions/runs/2"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	artifacts, err := f.Users.ListQuotaArtifacts(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(artifacts) != 2 {
+		t.Fatalf("got %d artifacts, want 2", len(artifacts))
+	}
+	if artifacts[0].Name != "artifact-1" || artifacts[0].Size != 123 {
+		t.Errorf("unexpected first artifact: %+v", artifacts[0])
+	}
+}
+
+func TestUserService_IterQuotaArtifacts_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/quota/artifacts" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.QuotaUsedArtifact{
+			{Name: "artifact-1", Size: 123, HTMLURL: "https://example.com/actions/runs/1"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []types.QuotaUsedArtifact
+	for artifact, err := range f.Users.IterQuotaArtifacts(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, artifact)
+	}
+	if len(got) != 1 {
+		t.Fatalf("got %d artifacts, want 1", len(got))
+	}
+	if got[0].Name != "artifact-1" {
+		t.Errorf("unexpected artifact: %+v", got[0])
+	}
+}
+
 func TestUserService_ListEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
