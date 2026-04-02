@@ -3,6 +3,9 @@ package forge
 import (
 	"context"
 	"iter"
+	"net/http"
+	"net/url"
+	"strconv"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -17,6 +20,38 @@ import (
 //	_, err := f.Admin.ListUsers(ctx)
 type AdminService struct {
 	client *Client
+}
+
+// AdminActionsRunListOptions controls filtering for admin Actions run listings.
+type AdminActionsRunListOptions struct {
+	Event   string
+	Branch  string
+	Status  string
+	Actor   string
+	HeadSHA string
+}
+
+func (o AdminActionsRunListOptions) queryParams() map[string]string {
+	query := make(map[string]string, 5)
+	if o.Event != "" {
+		query["event"] = o.Event
+	}
+	if o.Branch != "" {
+		query["branch"] = o.Branch
+	}
+	if o.Status != "" {
+		query["status"] = o.Status
+	}
+	if o.Actor != "" {
+		query["actor"] = o.Actor
+	}
+	if o.HeadSHA != "" {
+		query["head_sha"] = o.HeadSHA
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
 
 func newAdminService(c *Client) *AdminService {
@@ -243,6 +278,74 @@ func (s *AdminService) ListCron(ctx context.Context) ([]types.Cron, error) {
 // IterCron returns an iterator over all cron tasks (admin only).
 func (s *AdminService) IterCron(ctx context.Context) iter.Seq2[types.Cron, error] {
 	return ListIter[types.Cron](ctx, s.client, "/api/v1/admin/cron", nil)
+}
+
+// ListActionsRuns returns a single page of Actions workflow runs across the instance.
+func (s *AdminService) ListActionsRuns(ctx context.Context, filters AdminActionsRunListOptions, opts ListOptions) (*PagedResult[types.ActionTask], error) {
+	if opts.Page < 1 {
+		opts.Page = 1
+	}
+	if opts.Limit < 1 {
+		opts.Limit = 50
+	}
+
+	u, err := url.Parse("/api/v1/admin/actions/runs")
+	if err != nil {
+		return nil, err
+	}
+
+	q := u.Query()
+	for key, value := range filters.queryParams() {
+		q.Set(key, value)
+	}
+	q.Set("page", strconv.Itoa(opts.Page))
+	q.Set("limit", strconv.Itoa(opts.Limit))
+	u.RawQuery = q.Encode()
+
+	var out types.ActionTaskResponse
+	resp, err := s.client.doJSON(ctx, http.MethodGet, u.String(), nil, &out)
+	if err != nil {
+		return nil, err
+	}
+
+	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	items := make([]types.ActionTask, 0, len(out.Entries))
+	for _, run := range out.Entries {
+		if run != nil {
+			items = append(items, *run)
+		}
+	}
+
+	return &PagedResult[types.ActionTask]{
+		Items:      items,
+		TotalCount: totalCount,
+		Page:       opts.Page,
+		HasMore: (totalCount > 0 && (opts.Page-1)*opts.Limit+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= opts.Limit),
+	}, nil
+}
+
+// IterActionsRuns returns an iterator over all Actions workflow runs across the instance.
+func (s *AdminService) IterActionsRuns(ctx context.Context, filters AdminActionsRunListOptions) iter.Seq2[types.ActionTask, error] {
+	return func(yield func(types.ActionTask, error) bool) {
+		page := 1
+		for {
+			result, err := s.ListActionsRuns(ctx, filters, ListOptions{Page: page, Limit: 50})
+			if err != nil {
+				yield(*new(types.ActionTask), err)
+				return
+			}
+			for _, item := range result.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+			if !result.HasMore {
+				break
+			}
+			page++
+		}
+	}
 }
 
 // AdoptRepo adopts an unadopted repository (admin only).

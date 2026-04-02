@@ -801,6 +801,100 @@ func TestAdminService_AdoptRepo_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_ListActionsRuns_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/actions/runs" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("status"); got != "in_progress" {
+			t.Errorf("got status=%q, want %q", got, "in_progress")
+		}
+		if got := r.URL.Query().Get("branch"); got != "main" {
+			t.Errorf("got branch=%q, want %q", got, "main")
+		}
+		if got := r.URL.Query().Get("actor"); got != "alice" {
+			t.Errorf("got actor=%q, want %q", got, "alice")
+		}
+		if got := r.URL.Query().Get("page"); got != "2" {
+			t.Errorf("got page=%q, want %q", got, "2")
+		}
+		if got := r.URL.Query().Get("limit"); got != "25" {
+			t.Errorf("got limit=%q, want %q", got, "25")
+		}
+		w.Header().Set("X-Total-Count", "3")
+		json.NewEncoder(w).Encode(types.ActionTaskResponse{
+			Entries: []*types.ActionTask{
+				{ID: 101, Name: "build", Status: "in_progress", Event: "push"},
+				{ID: 102, Name: "test", Status: "queued", Event: "push"},
+			},
+			TotalCount: 3,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Admin.ListActionsRuns(context.Background(), AdminActionsRunListOptions{
+		Status: "in_progress",
+		Branch: "main",
+		Actor:  "alice",
+	}, ListOptions{Page: 2, Limit: 25})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.TotalCount != 3 {
+		t.Fatalf("got total count=%d, want 3", result.TotalCount)
+	}
+	if len(result.Items) != 2 {
+		t.Fatalf("got %d runs, want 2", len(result.Items))
+	}
+	if result.Items[0].ID != 101 || result.Items[0].Name != "build" {
+		t.Errorf("unexpected first run: %+v", result.Items[0])
+	}
+}
+
+func TestAdminService_IterActionsRuns_Good(t *testing.T) {
+	calls := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		if r.URL.Path != "/api/v1/admin/actions/runs" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		switch calls {
+		case 1:
+			json.NewEncoder(w).Encode(types.ActionTaskResponse{
+				Entries: []*types.ActionTask{
+					{ID: 201, Name: "build"},
+				},
+				TotalCount: 2,
+			})
+		default:
+			json.NewEncoder(w).Encode(types.ActionTaskResponse{
+				Entries: []*types.ActionTask{
+					{ID: 202, Name: "test"},
+				},
+				TotalCount: 2,
+			})
+		}
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var ids []int64
+	for run, err := range f.Admin.IterActionsRuns(context.Background(), AdminActionsRunListOptions{}) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		ids = append(ids, run.ID)
+	}
+	if len(ids) != 2 || ids[0] != 201 || ids[1] != 202 {
+		t.Fatalf("unexpected run ids: %v", ids)
+	}
+}
+
 func TestAdminService_GenerateRunnerToken_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
