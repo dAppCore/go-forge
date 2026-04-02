@@ -168,6 +168,16 @@ func (s *UserService) IterMySubscriptions(ctx context.Context) iter.Seq2[types.R
 	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/subscriptions", nil)
 }
 
+// ListMyStarred returns all repositories starred by the authenticated user.
+func (s *UserService) ListMyStarred(ctx context.Context) ([]types.Repository, error) {
+	return ListAll[types.Repository](ctx, s.client, "/api/v1/user/starred", nil)
+}
+
+// IterMyStarred returns an iterator over all repositories starred by the authenticated user.
+func (s *UserService) IterMyStarred(ctx context.Context) iter.Seq2[types.Repository, error] {
+	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/starred", nil)
+}
+
 // ListFollowers returns all followers of a user.
 func (s *UserService) ListFollowers(ctx context.Context, username string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/users/{username}/followers", pathParams("username", username))
