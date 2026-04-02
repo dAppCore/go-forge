@@ -53,6 +53,21 @@ func (s *CommitService) Get(ctx context.Context, params Params) (*types.Commit, 
 	return &out, nil
 }
 
+// GetPullRequest returns the pull request associated with a commit SHA.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Commits.GetPullRequest(ctx, "core", "go-forge", "abc123")
+func (s *CommitService) GetPullRequest(ctx context.Context, owner, repo, sha string) (*types.PullRequest, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/commits/{sha}/pull", pathParams("owner", owner, "repo", repo, "sha", sha))
+	var out types.PullRequest
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetCombinedStatus returns the combined status for a given ref (branch, tag, or SHA).
 func (s *CommitService) GetCombinedStatus(ctx context.Context, owner, repo, ref string) (*types.CombinedStatus, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/statuses/{ref}", pathParams("owner", owner, "repo", repo, "ref", ref))

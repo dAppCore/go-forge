@@ -95,6 +95,41 @@ func TestCommitService_Get_Good(t *testing.T) {
 	}
 }
 
+func TestCommitService_GetPullRequest_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits/abc123/pull" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.PullRequest{
+			ID:    17,
+			Index: 9,
+			Title: "Add commit-linked pull request",
+			Head: &types.PRBranchInfo{
+				Ref: "feature/commit-link",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	pr, err := f.Commits.GetPullRequest(context.Background(), "core", "go-forge", "abc123")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if pr.ID != 17 {
+		t.Errorf("got id=%d, want 17", pr.ID)
+	}
+	if pr.Index != 9 {
+		t.Errorf("got index=%d, want 9", pr.Index)
+	}
+	if pr.Head == nil || pr.Head.Ref != "feature/commit-link" {
+		t.Fatalf("unexpected head branch info: %+v", pr.Head)
+	}
+}
+
 func TestCommitService_ListStatuses_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
