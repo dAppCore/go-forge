@@ -155,6 +155,46 @@ func (s *AdminService) DeleteQuotaGroup(ctx context.Context, quotagroup string) 
 	return s.client.Delete(ctx, path)
 }
 
+// ListQuotaRules returns all available quota rules.
+func (s *AdminService) ListQuotaRules(ctx context.Context) ([]types.QuotaRuleInfo, error) {
+	return ListAll[types.QuotaRuleInfo](ctx, s.client, "/api/v1/admin/quota/rules", nil)
+}
+
+// CreateQuotaRule creates a new quota rule.
+func (s *AdminService) CreateQuotaRule(ctx context.Context, opts *types.CreateQuotaRuleOptions) (*types.QuotaRuleInfo, error) {
+	var out types.QuotaRuleInfo
+	if err := s.client.Post(ctx, "/api/v1/admin/quota/rules", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetQuotaRule returns information about a quota rule.
+func (s *AdminService) GetQuotaRule(ctx context.Context, quotarule string) (*types.QuotaRuleInfo, error) {
+	path := ResolvePath("/api/v1/admin/quota/rules/{quotarule}", Params{"quotarule": quotarule})
+	var out types.QuotaRuleInfo
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditQuotaRule updates an existing quota rule.
+func (s *AdminService) EditQuotaRule(ctx context.Context, quotarule string, opts *types.EditQuotaRuleOptions) (*types.QuotaRuleInfo, error) {
+	path := ResolvePath("/api/v1/admin/quota/rules/{quotarule}", Params{"quotarule": quotarule})
+	var out types.QuotaRuleInfo
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteQuotaRule deletes a quota rule.
+func (s *AdminService) DeleteQuotaRule(ctx context.Context, quotarule string) error {
+	path := ResolvePath("/api/v1/admin/quota/rules/{quotarule}", Params{"quotarule": quotarule})
+	return s.client.Delete(ctx, path)
+}
+
 // SearchEmails searches all email addresses by keyword (admin only).
 func (s *AdminService) SearchEmails(ctx context.Context, q string) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/admin/emails/search", map[string]string{"q": q})

@@ -513,6 +513,153 @@ func TestAdminService_DeleteQuotaGroup_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_ListQuotaRules_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/rules" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.QuotaRuleInfo{
+			{Name: "git", Limit: 200000000, Subjects: []string{"size:repos:all"}},
+			{Name: "artifacts", Limit: 50000000, Subjects: []string{"size:assets:artifacts"}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	rules, err := f.Admin.ListQuotaRules(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(rules) != 2 {
+		t.Fatalf("got %d rules, want 2", len(rules))
+	}
+	if rules[0].Name != "git" {
+		t.Errorf("got name=%q, want %q", rules[0].Name, "git")
+	}
+}
+
+func TestAdminService_CreateQuotaRule_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/rules" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateQuotaRuleOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Name != "git" || opts.Limit != 200000000 {
+			t.Fatalf("unexpected options: %+v", opts)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.QuotaRuleInfo{
+			Name:     opts.Name,
+			Limit:    opts.Limit,
+			Subjects: opts.Subjects,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	rule, err := f.Admin.CreateQuotaRule(context.Background(), &types.CreateQuotaRuleOptions{
+		Name:     "git",
+		Limit:    200000000,
+		Subjects: []string{"size:repos:all"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rule.Name != "git" || rule.Limit != 200000000 {
+		t.Errorf("unexpected rule: %+v", rule)
+	}
+}
+
+func TestAdminService_GetQuotaRule_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/rules/git" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.QuotaRuleInfo{
+			Name:     "git",
+			Limit:    200000000,
+			Subjects: []string{"size:repos:all"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	rule, err := f.Admin.GetQuotaRule(context.Background(), "git")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rule.Name != "git" {
+		t.Errorf("got name=%q, want %q", rule.Name, "git")
+	}
+}
+
+func TestAdminService_EditQuotaRule_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/rules/git" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.EditQuotaRuleOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Limit != 500000000 {
+			t.Fatalf("unexpected options: %+v", opts)
+		}
+		json.NewEncoder(w).Encode(types.QuotaRuleInfo{
+			Name:     "git",
+			Limit:    opts.Limit,
+			Subjects: opts.Subjects,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	rule, err := f.Admin.EditQuotaRule(context.Background(), "git", &types.EditQuotaRuleOptions{
+		Limit:    500000000,
+		Subjects: []string{"size:repos:all", "size:assets:packages"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rule.Limit != 500000000 {
+		t.Errorf("got limit=%d, want 500000000", rule.Limit)
+	}
+}
+
+func TestAdminService_DeleteQuotaRule_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/rules/git" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Admin.DeleteQuotaRule(context.Background(), "git"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestAdminService_SearchEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
