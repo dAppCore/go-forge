@@ -238,6 +238,41 @@ func (s *UserService) DeleteAvatar(ctx context.Context) error {
 	return s.client.Delete(ctx, "/api/v1/user/avatar")
 }
 
+// ListGPGKeys returns all GPG keys owned by the authenticated user.
+func (s *UserService) ListGPGKeys(ctx context.Context) ([]types.GPGKey, error) {
+	return ListAll[types.GPGKey](ctx, s.client, "/api/v1/user/gpg_keys", nil)
+}
+
+// IterGPGKeys returns an iterator over all GPG keys owned by the authenticated user.
+func (s *UserService) IterGPGKeys(ctx context.Context) iter.Seq2[types.GPGKey, error] {
+	return ListIter[types.GPGKey](ctx, s.client, "/api/v1/user/gpg_keys", nil)
+}
+
+// CreateGPGKey adds a GPG key for the authenticated user.
+func (s *UserService) CreateGPGKey(ctx context.Context, opts *types.CreateGPGKeyOption) (*types.GPGKey, error) {
+	var out types.GPGKey
+	if err := s.client.Post(ctx, "/api/v1/user/gpg_keys", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetGPGKey returns a single GPG key owned by the authenticated user.
+func (s *UserService) GetGPGKey(ctx context.Context, id int64) (*types.GPGKey, error) {
+	path := ResolvePath("/api/v1/user/gpg_keys/{id}", pathParams("id", int64String(id)))
+	var out types.GPGKey
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteGPGKey removes a GPG key owned by the authenticated user.
+func (s *UserService) DeleteGPGKey(ctx context.Context, id int64) error {
+	path := ResolvePath("/api/v1/user/gpg_keys/{id}", pathParams("id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
 // ListOAuth2Applications returns all OAuth2 applications owned by the authenticated user.
 func (s *UserService) ListOAuth2Applications(ctx context.Context) ([]types.OAuth2Application, error) {
 	return ListAll[types.OAuth2Application](ctx, s.client, "/api/v1/user/applications/oauth2", nil)

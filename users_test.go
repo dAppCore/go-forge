@@ -841,6 +841,146 @@ func TestUserService_DeleteAvatar_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListGPGKeys_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/gpg_keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.GPGKey{
+			{ID: 1, KeyID: "ABCD1234", PublicKey: "-----BEGIN PGP PUBLIC KEY BLOCK-----"},
+			{ID: 2, KeyID: "EFGH5678", Verified: true},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	keys, err := f.Users.ListGPGKeys(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(keys) != 2 {
+		t.Fatalf("got %d keys, want 2", len(keys))
+	}
+	if keys[0].ID != 1 || keys[0].KeyID != "ABCD1234" {
+		t.Errorf("unexpected first key: %+v", keys[0])
+	}
+}
+
+func TestUserService_IterGPGKeys_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/gpg_keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.GPGKey{
+			{ID: 3, KeyID: "IJKL9012", Verified: true},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	count := 0
+	for key, err := range f.Users.IterGPGKeys(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if key.ID != 3 || key.KeyID != "IJKL9012" {
+			t.Errorf("unexpected key: %+v", key)
+		}
+	}
+	if count != 1 {
+		t.Fatalf("got %d keys, want 1", count)
+	}
+}
+
+func TestUserService_CreateGPGKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/gpg_keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateGPGKeyOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.ArmoredKey != "-----BEGIN PGP PUBLIC KEY BLOCK-----" || body.Signature != "sig" {
+			t.Fatalf("unexpected body: %+v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.GPGKey{
+			ID:       9,
+			KeyID:    "MNOP3456",
+			Verified: true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Users.CreateGPGKey(context.Background(), &types.CreateGPGKeyOption{
+		ArmoredKey: "-----BEGIN PGP PUBLIC KEY BLOCK-----",
+		Signature:  "sig",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key.ID != 9 || key.KeyID != "MNOP3456" || !key.Verified {
+		t.Errorf("unexpected key: %+v", key)
+	}
+}
+
+func TestUserService_GetGPGKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/gpg_keys/9" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.GPGKey{
+			ID:    9,
+			KeyID: "MNOP3456",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Users.GetGPGKey(context.Background(), 9)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key.ID != 9 || key.KeyID != "MNOP3456" {
+		t.Errorf("unexpected key: %+v", key)
+	}
+}
+
+func TestUserService_DeleteGPGKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/gpg_keys/9" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Users.DeleteGPGKey(context.Background(), 9); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestUserService_ListOAuth2Applications_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
