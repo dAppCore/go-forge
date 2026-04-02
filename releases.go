@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"io"
 	"iter"
 
 	"dappco.re/go/core/forge/types"
@@ -15,6 +16,23 @@ import (
 //	_, err := f.Releases.ListAll(ctx, forge.Params{"owner": "core", "repo": "go-forge"})
 type ReleaseService struct {
 	Resource[types.Release, types.CreateReleaseOption, types.EditReleaseOption]
+}
+
+// ReleaseAttachmentUploadOptions controls metadata sent when uploading a release attachment.
+type ReleaseAttachmentUploadOptions struct {
+	Name        string
+	ExternalURL string
+}
+
+func releaseAttachmentUploadQuery(opts *ReleaseAttachmentUploadOptions) map[string]string {
+	if opts == nil || opts.Name == "" {
+		return nil
+	}
+	query := make(map[string]string, 1)
+	if opts.Name != "" {
+		query["name"] = opts.Name
+	}
+	return query
 }
 
 func newReleaseService(c *Client) *ReleaseService {
@@ -45,6 +63,32 @@ func (s *ReleaseService) DeleteByTag(ctx context.Context, owner, repo, tag strin
 func (s *ReleaseService) ListAssets(ctx context.Context, owner, repo string, releaseID int64) ([]types.Attachment, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{releaseID}/assets", pathParams("owner", owner, "repo", repo, "releaseID", int64String(releaseID)))
 	return ListAll[types.Attachment](ctx, s.client, path, nil)
+}
+
+// CreateAttachment uploads a new attachment to a release.
+//
+// If opts.ExternalURL is set, the upload uses the external_url form field and
+// ignores filename/content.
+func (s *ReleaseService) CreateAttachment(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{releaseID}/assets", pathParams("owner", owner, "repo", repo, "releaseID", int64String(releaseID)))
+	fields := make(map[string]string, 1)
+	fieldName := "attachment"
+	if opts != nil && opts.ExternalURL != "" {
+		fields["external_url"] = opts.ExternalURL
+		fieldName = ""
+		filename = ""
+		content = nil
+	}
+	var out types.Attachment
+	if err := s.client.postMultipartJSON(ctx, path, releaseAttachmentUploadQuery(opts), fields, fieldName, filename, content, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateAsset uploads a new asset to a release.
+func (s *ReleaseService) CreateAsset(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
+	return s.CreateAttachment(ctx, owner, repo, releaseID, opts, filename, content)
 }
 
 // IterAssets returns an iterator over all assets for a release.

@@ -273,7 +273,7 @@ func attachmentUploadQuery(opts *AttachmentUploadOptions) map[string]string {
 
 func (s *IssueService) createAttachment(ctx context.Context, path string, opts *AttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
 	var out types.Attachment
-	if err := s.client.postMultipartJSON(ctx, path, attachmentUploadQuery(opts), "attachment", filename, content, &out); err != nil {
+	if err := s.client.postMultipartJSON(ctx, path, attachmentUploadQuery(opts), nil, "attachment", filename, content, &out); err != nil {
 		return nil, err
 	}
 	return &out, nil

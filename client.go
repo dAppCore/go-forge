@@ -262,7 +262,7 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 	return data, nil
 }
 
-func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[string]string, fieldName, fileName string, content io.Reader, out any) error {
+func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[string]string, fields map[string]string, fieldName, fileName string, content io.Reader, out any) error {
 	target, err := url.Parse(c.baseURL + path)
 	if err != nil {
 		return core.E("Client.PostMultipart", "forge: parse url", err)
@@ -277,13 +277,20 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)
-	part, err := writer.CreateFormFile(fieldName, fileName)
-	if err != nil {
-		return core.E("Client.PostMultipart", "forge: create multipart form file", err)
+	for key, value := range fields {
+		if err := writer.WriteField(key, value); err != nil {
+			return core.E("Client.PostMultipart", "forge: create multipart form field", err)
+		}
 	}
-	if content != nil {
-		if _, err := io.Copy(part, content); err != nil {
-			return core.E("Client.PostMultipart", "forge: write multipart form file", err)
+	if fieldName != "" {
+		part, err := writer.CreateFormFile(fieldName, fileName)
+		if err != nil {
+			return core.E("Client.PostMultipart", "forge: create multipart form file", err)
+		}
+		if content != nil {
+			if _, err := io.Copy(part, content); err != nil {
+				return core.E("Client.PostMultipart", "forge: write multipart form file", err)
+			}
 		}
 	}
 	if err := writer.Close(); err != nil {
