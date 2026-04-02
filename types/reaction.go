@@ -4,7 +4,6 @@ package types
 
 import "time"
 
-
 // EditReactionOption — EditReactionOption contain the reaction type
 type EditReactionOption struct {
 	Reaction string `json:"content,omitempty"`
@@ -12,8 +11,7 @@ type EditReactionOption struct {
 
 // Reaction — Reaction contain one reaction
 type Reaction struct {
-	Created time.Time `json:"created_at,omitempty"`
-	Reaction string `json:"content,omitempty"`
-	User *User `json:"user,omitempty"`
+	Created  time.Time `json:"created_at,omitempty"`
+	Reaction string    `json:"content,omitempty"`
+	User     *User     `json:"user,omitempty"`
 }
-

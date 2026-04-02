@@ -4,14 +4,13 @@ package types
 
 import "time"
 
-
 // CreateLabelOption — CreateLabelOption options for creating a label
 type CreateLabelOption struct {
-	Color string `json:"color"`
+	Color       string `json:"color"`
 	Description string `json:"description,omitempty"`
-	Exclusive bool `json:"exclusive,omitempty"`
-	IsArchived bool `json:"is_archived,omitempty"`
-	Name string `json:"name"`
+	Exclusive   bool   `json:"exclusive,omitempty"`
+	IsArchived  bool   `json:"is_archived,omitempty"`
+	Name        string `json:"name"`
 }
 
 // DeleteLabelsOption — DeleteLabelOption options for deleting a label
@@ -21,29 +20,28 @@ type DeleteLabelsOption struct {
 
 // EditLabelOption — EditLabelOption options for editing a label
 type EditLabelOption struct {
-	Color string `json:"color,omitempty"`
+	Color       string `json:"color,omitempty"`
 	Description string `json:"description,omitempty"`
-	Exclusive bool `json:"exclusive,omitempty"`
-	IsArchived bool `json:"is_archived,omitempty"`
-	Name string `json:"name,omitempty"`
+	Exclusive   bool   `json:"exclusive,omitempty"`
+	IsArchived  bool   `json:"is_archived,omitempty"`
+	Name        string `json:"name,omitempty"`
 }
 
 // Label — Label a label to an issue or a pr
 type Label struct {
-	Color string `json:"color,omitempty"`
+	Color       string `json:"color,omitempty"`
 	Description string `json:"description,omitempty"`
-	Exclusive bool `json:"exclusive,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	IsArchived bool `json:"is_archived,omitempty"`
-	Name string `json:"name,omitempty"`
-	URL string `json:"url,omitempty"`
+	Exclusive   bool   `json:"exclusive,omitempty"`
+	ID          int64  `json:"id,omitempty"`
+	IsArchived  bool   `json:"is_archived,omitempty"`
+	Name        string `json:"name,omitempty"`
+	URL         string `json:"url,omitempty"`
 }
 
 // LabelTemplate — LabelTemplate info of a Label template
 type LabelTemplate struct {
-	Color string `json:"color,omitempty"`
+	Color       string `json:"color,omitempty"`
 	Description string `json:"description,omitempty"`
-	Exclusive bool `json:"exclusive,omitempty"`
-	Name string `json:"name,omitempty"`
+	Exclusive   bool   `json:"exclusive,omitempty"`
+	Name        string `json:"name,omitempty"`
 }
-

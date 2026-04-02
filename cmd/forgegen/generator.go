@@ -183,6 +183,8 @@ const (
 	{{enumConstName $t.Name .}} {{$t.Name}} = "{{.}}"
 {{- end}}
 )
+{{- else if .IsAlias}}
+type {{.Name}} {{.AliasType}}
 {{- else if (eq (len .Fields) 0)}}
 // {{.Name}} has no fields in the swagger spec.
 type {{.Name}} struct{}
@@ -244,6 +246,9 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 // writeFile renders and writes a single Go source file for the given types.
 func writeFile(path string, types []*GoType) error {
 	needTime := slices.ContainsFunc(types, func(gt *GoType) bool {
+		if core.Contains(gt.AliasType, "time.Time") {
+			return true
+		}
 		return slices.ContainsFunc(gt.Fields, func(f GoField) bool {
 			return core.Contains(f.GoType, "time.Time")
 		})

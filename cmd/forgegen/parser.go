@@ -38,12 +38,13 @@ type SpecInfo struct {
 //
 //	_ = SchemaDefinition{Type: "object"}
 type SchemaDefinition struct {
-	Description string                    `json:"description"`
-	Type        string                    `json:"type"`
-	Properties  map[string]SchemaProperty `json:"properties"`
-	Required    []string                  `json:"required"`
-	Enum        []any                     `json:"enum"`
-	XGoName     string                    `json:"x-go-name"`
+	Description          string                    `json:"description"`
+	Type                 string                    `json:"type"`
+	Properties           map[string]SchemaProperty `json:"properties"`
+	Required             []string                  `json:"required"`
+	Enum                 []any                     `json:"enum"`
+	AdditionalProperties *SchemaProperty           `json:"additionalProperties"`
+	XGoName              string                    `json:"x-go-name"`
 }
 
 // SchemaProperty represents a single property within a schema definition.
@@ -52,13 +53,14 @@ type SchemaDefinition struct {
 //
 //	_ = SchemaProperty{Type: "string"}
 type SchemaProperty struct {
-	Type        string          `json:"type"`
-	Format      string          `json:"format"`
-	Description string          `json:"description"`
-	Ref         string          `json:"$ref"`
-	Items       *SchemaProperty `json:"items"`
-	Enum        []any           `json:"enum"`
-	XGoName     string          `json:"x-go-name"`
+	Type                 string          `json:"type"`
+	Format               string          `json:"format"`
+	Description          string          `json:"description"`
+	Ref                  string          `json:"$ref"`
+	Items                *SchemaProperty `json:"items"`
+	Enum                 []any           `json:"enum"`
+	AdditionalProperties *SchemaProperty `json:"additionalProperties"`
+	XGoName              string          `json:"x-go-name"`
 }
 
 // GoType is the intermediate representation for a Go type to be generated.
@@ -72,6 +74,8 @@ type GoType struct {
 	Fields      []GoField
 	IsEnum      bool
 	EnumValues  []string
+	IsAlias     bool
+	AliasType   string
 }
 
 // GoField is the intermediate representation for a single struct field.
@@ -132,6 +136,12 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 				gt.EnumValues = append(gt.EnumValues, core.Sprint(v))
 			}
 			slices.Sort(gt.EnumValues)
+			result[name] = gt
+			continue
+		}
+		if len(def.Properties) == 0 && def.AdditionalProperties != nil {
+			gt.IsAlias = true
+			gt.AliasType = resolveMapType(*def.AdditionalProperties)
 			result[name] = gt
 			continue
 		}
@@ -229,10 +239,19 @@ func resolveGoType(prop SchemaProperty) string {
 		}
 		return "[]any"
 	case "object":
-		return "map[string]any"
+		return resolveMapType(prop)
 	default:
 		return "any"
 	}
+}
+
+// resolveMapType maps a swagger object with additionalProperties to a Go map type.
+func resolveMapType(prop SchemaProperty) string {
+	valueType := "any"
+	if prop.AdditionalProperties != nil {
+		valueType = resolveGoType(*prop.AdditionalProperties)
+	}
+	return "map[string]" + valueType
 }
 
 // pascalCase converts a snake_case or kebab-case string to PascalCase,

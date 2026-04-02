@@ -4,26 +4,24 @@ package types
 
 import "time"
 
-
 // StopWatch — StopWatch represent a running stopwatch
 type StopWatch struct {
-	Created time.Time `json:"created,omitempty"`
-	Duration string `json:"duration,omitempty"`
-	IssueIndex int64 `json:"issue_index,omitempty"`
-	IssueTitle string `json:"issue_title,omitempty"`
-	RepoName string `json:"repo_name,omitempty"`
-	RepoOwnerName string `json:"repo_owner_name,omitempty"`
-	Seconds int64 `json:"seconds,omitempty"`
+	Created       time.Time `json:"created,omitempty"`
+	Duration      string    `json:"duration,omitempty"`
+	IssueIndex    int64     `json:"issue_index,omitempty"`
+	IssueTitle    string    `json:"issue_title,omitempty"`
+	RepoName      string    `json:"repo_name,omitempty"`
+	RepoOwnerName string    `json:"repo_owner_name,omitempty"`
+	Seconds       int64     `json:"seconds,omitempty"`
 }
 
 // TrackedTime — TrackedTime worked time for an issue / pr
 type TrackedTime struct {
-	Created time.Time `json:"created,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Issue *Issue `json:"issue,omitempty"`
-	IssueID int64 `json:"issue_id,omitempty"` // deprecated (only for backwards compatibility)
-	Time int64 `json:"time,omitempty"` // Time in seconds
-	UserID int64 `json:"user_id,omitempty"` // deprecated (only for backwards compatibility)
-	UserName string `json:"user_name,omitempty"`
+	Created  time.Time `json:"created,omitempty"`
+	ID       int64     `json:"id,omitempty"`
+	Issue    *Issue    `json:"issue,omitempty"`
+	IssueID  int64     `json:"issue_id,omitempty"` // deprecated (only for backwards compatibility)
+	Time     int64     `json:"time,omitempty"`     // Time in seconds
+	UserID   int64     `json:"user_id,omitempty"`  // deprecated (only for backwards compatibility)
+	UserName string    `json:"user_name,omitempty"`
 }
-

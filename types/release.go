@@ -4,48 +4,46 @@ package types
 
 import "time"
 
-
 // CreateReleaseOption — CreateReleaseOption options when creating a release
 type CreateReleaseOption struct {
-	HideArchiveLinks bool `json:"hide_archive_links,omitempty"`
-	IsDraft bool `json:"draft,omitempty"`
-	IsPrerelease bool `json:"prerelease,omitempty"`
-	Note string `json:"body,omitempty"`
-	TagName string `json:"tag_name"`
-	Target string `json:"target_commitish,omitempty"`
-	Title string `json:"name,omitempty"`
+	HideArchiveLinks bool   `json:"hide_archive_links,omitempty"`
+	IsDraft          bool   `json:"draft,omitempty"`
+	IsPrerelease     bool   `json:"prerelease,omitempty"`
+	Note             string `json:"body,omitempty"`
+	TagName          string `json:"tag_name"`
+	Target           string `json:"target_commitish,omitempty"`
+	Title            string `json:"name,omitempty"`
 }
 
 // EditReleaseOption — EditReleaseOption options when editing a release
 type EditReleaseOption struct {
-	HideArchiveLinks bool `json:"hide_archive_links,omitempty"`
-	IsDraft bool `json:"draft,omitempty"`
-	IsPrerelease bool `json:"prerelease,omitempty"`
-	Note string `json:"body,omitempty"`
-	TagName string `json:"tag_name,omitempty"`
-	Target string `json:"target_commitish,omitempty"`
-	Title string `json:"name,omitempty"`
+	HideArchiveLinks bool   `json:"hide_archive_links,omitempty"`
+	IsDraft          bool   `json:"draft,omitempty"`
+	IsPrerelease     bool   `json:"prerelease,omitempty"`
+	Note             string `json:"body,omitempty"`
+	TagName          string `json:"tag_name,omitempty"`
+	Target           string `json:"target_commitish,omitempty"`
+	Title            string `json:"name,omitempty"`
 }
 
 // Release — Release represents a repository release
 type Release struct {
 	ArchiveDownloadCount *TagArchiveDownloadCount `json:"archive_download_count,omitempty"`
-	Attachments []*Attachment `json:"assets,omitempty"`
-	Author *User `json:"author,omitempty"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	HideArchiveLinks bool `json:"hide_archive_links,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	IsDraft bool `json:"draft,omitempty"`
-	IsPrerelease bool `json:"prerelease,omitempty"`
-	Note string `json:"body,omitempty"`
-	PublishedAt time.Time `json:"published_at,omitempty"`
-	TagName string `json:"tag_name,omitempty"`
-	TarURL string `json:"tarball_url,omitempty"`
-	Target string `json:"target_commitish,omitempty"`
-	Title string `json:"name,omitempty"`
-	URL string `json:"url,omitempty"`
-	UploadURL string `json:"upload_url,omitempty"`
-	ZipURL string `json:"zipball_url,omitempty"`
+	Attachments          []*Attachment            `json:"assets,omitempty"`
+	Author               *User                    `json:"author,omitempty"`
+	CreatedAt            time.Time                `json:"created_at,omitempty"`
+	HTMLURL              string                   `json:"html_url,omitempty"`
+	HideArchiveLinks     bool                     `json:"hide_archive_links,omitempty"`
+	ID                   int64                    `json:"id,omitempty"`
+	IsDraft              bool                     `json:"draft,omitempty"`
+	IsPrerelease         bool                     `json:"prerelease,omitempty"`
+	Note                 string                   `json:"body,omitempty"`
+	PublishedAt          time.Time                `json:"published_at,omitempty"`
+	TagName              string                   `json:"tag_name,omitempty"`
+	TarURL               string                   `json:"tarball_url,omitempty"`
+	Target               string                   `json:"target_commitish,omitempty"`
+	Title                string                   `json:"name,omitempty"`
+	URL                  string                   `json:"url,omitempty"`
+	UploadURL            string                   `json:"upload_url,omitempty"`
+	ZipURL               string                   `json:"zipball_url,omitempty"`
 }
-

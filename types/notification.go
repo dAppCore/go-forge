@@ -4,7 +4,6 @@ package types
 
 import "time"
 
-
 // NotificationCount — NotificationCount number of unread notifications
 type NotificationCount struct {
 	New int64 `json:"new,omitempty"`
@@ -12,23 +11,22 @@ type NotificationCount struct {
 
 // NotificationSubject — NotificationSubject contains the notification subject (Issue/Pull/Commit)
 type NotificationSubject struct {
-	HTMLURL string `json:"html_url,omitempty"`
-	LatestCommentHTMLURL string `json:"latest_comment_html_url,omitempty"`
-	LatestCommentURL string `json:"latest_comment_url,omitempty"`
-	State StateType `json:"state,omitempty"`
-	Title string `json:"title,omitempty"`
-	Type *NotifySubjectType `json:"type,omitempty"`
-	URL string `json:"url,omitempty"`
+	HTMLURL              string             `json:"html_url,omitempty"`
+	LatestCommentHTMLURL string             `json:"latest_comment_html_url,omitempty"`
+	LatestCommentURL     string             `json:"latest_comment_url,omitempty"`
+	State                *StateType         `json:"state,omitempty"`
+	Title                string             `json:"title,omitempty"`
+	Type                 *NotifySubjectType `json:"type,omitempty"`
+	URL                  string             `json:"url,omitempty"`
 }
 
 // NotificationThread — NotificationThread expose Notification on API
 type NotificationThread struct {
-	ID int64 `json:"id,omitempty"`
-	Pinned bool `json:"pinned,omitempty"`
-	Repository *Repository `json:"repository,omitempty"`
-	Subject *NotificationSubject `json:"subject,omitempty"`
-	URL string `json:"url,omitempty"`
-	Unread bool `json:"unread,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	ID         int64                `json:"id,omitempty"`
+	Pinned     bool                 `json:"pinned,omitempty"`
+	Repository *Repository          `json:"repository,omitempty"`
+	Subject    *NotificationSubject `json:"subject,omitempty"`
+	URL        string               `json:"url,omitempty"`
+	Unread     bool                 `json:"unread,omitempty"`
+	UpdatedAt  time.Time            `json:"updated_at,omitempty"`
 }
-

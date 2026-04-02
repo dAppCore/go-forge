@@ -70,6 +70,10 @@ func TestParser_FieldTypes_Good(t *testing.T) {
 			if f.GoType != "*User" {
 				t.Errorf("owner: got %q, want *User", f.GoType)
 			}
+		case "units_map":
+			if f.GoType != "map[string]string" {
+				t.Errorf("units_map: got %q, want map[string]string", f.GoType)
+			}
 		}
 	}
 }
@@ -99,5 +103,24 @@ func TestParser_DetectCreateEditPairs_Good(t *testing.T) {
 	}
 	if !found {
 		t.Fatal("Repo pair not found")
+	}
+}
+
+func TestParser_AdditionalPropertiesAlias_Good(t *testing.T) {
+	spec, err := LoadSpec("../../testdata/swagger.v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	types := ExtractTypes(spec)
+	alias, ok := types["CreateHookOptionConfig"]
+	if !ok {
+		t.Fatal("CreateHookOptionConfig type not found")
+	}
+	if !alias.IsAlias {
+		t.Fatal("expected CreateHookOptionConfig to be emitted as an alias")
+	}
+	if alias.AliasType != "map[string]any" {
+		t.Fatalf("got alias type %q, want map[string]any", alias.AliasType)
 	}
 }
