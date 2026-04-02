@@ -3,6 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
+	"net/url"
+	"time"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -18,8 +20,35 @@ type NotificationService struct {
 	client *Client
 }
 
+// NotificationRepoMarkOptions controls how repository notifications are marked.
+type NotificationRepoMarkOptions struct {
+	All         bool
+	StatusTypes []string
+	ToStatus    string
+	LastReadAt  *time.Time
+}
+
 func newNotificationService(c *Client) *NotificationService {
 	return &NotificationService{client: c}
+}
+
+func (o NotificationRepoMarkOptions) queryString() string {
+	values := url.Values{}
+	if o.All {
+		values.Set("all", "true")
+	}
+	for _, status := range o.StatusTypes {
+		if status != "" {
+			values.Add("status-types", status)
+		}
+	}
+	if o.ToStatus != "" {
+		values.Set("to-status", o.ToStatus)
+	}
+	if o.LastReadAt != nil {
+		values.Set("last_read_at", o.LastReadAt.Format(time.RFC3339))
+	}
+	return values.Encode()
 }
 
 // List returns all notifications for the authenticated user.
@@ -51,6 +80,21 @@ func (s *NotificationService) ListRepo(ctx context.Context, owner, repo string) 
 func (s *NotificationService) IterRepo(ctx context.Context, owner, repo string) iter.Seq2[types.NotificationThread, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/notifications", pathParams("owner", owner, "repo", repo))
 	return ListIter[types.NotificationThread](ctx, s.client, path, nil)
+}
+
+// MarkRepoNotifications marks repository notification threads as read, unread, or pinned.
+func (s *NotificationService) MarkRepoNotifications(ctx context.Context, owner, repo string, opts *NotificationRepoMarkOptions) ([]types.NotificationThread, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/notifications", pathParams("owner", owner, "repo", repo))
+	if opts != nil {
+		if query := opts.queryString(); query != "" {
+			path += "?" + query
+		}
+	}
+	var out []types.NotificationThread
+	if err := s.client.Put(ctx, path, nil, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // MarkRead marks all notifications as read.
