@@ -34,6 +34,20 @@ func (o UserSearchOptions) queryParams() map[string]string {
 	}
 }
 
+// UserKeyListOptions controls filtering for authenticated user public key listings.
+type UserKeyListOptions struct {
+	Fingerprint string
+}
+
+func (o UserKeyListOptions) queryParams() map[string]string {
+	if o.Fingerprint == "" {
+		return nil
+	}
+	return map[string]string{
+		"fingerprint": o.Fingerprint,
+	}
+}
+
 type userSearchResults struct {
 	Data []*types.User `json:"data,omitempty"`
 	OK   bool          `json:"ok,omitempty"`
@@ -236,6 +250,59 @@ func (s *UserService) UpdateAvatar(ctx context.Context, opts *types.UpdateUserAv
 // DeleteAvatar deletes the authenticated user's avatar.
 func (s *UserService) DeleteAvatar(ctx context.Context) error {
 	return s.client.Delete(ctx, "/api/v1/user/avatar")
+}
+
+// ListKeys returns all public keys owned by the authenticated user.
+func (s *UserService) ListKeys(ctx context.Context, filters ...UserKeyListOptions) ([]types.PublicKey, error) {
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		query = nil
+	}
+	return ListAll[types.PublicKey](ctx, s.client, "/api/v1/user/keys", query)
+}
+
+// IterKeys returns an iterator over all public keys owned by the authenticated user.
+func (s *UserService) IterKeys(ctx context.Context, filters ...UserKeyListOptions) iter.Seq2[types.PublicKey, error] {
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		query = nil
+	}
+	return ListIter[types.PublicKey](ctx, s.client, "/api/v1/user/keys", query)
+}
+
+// CreateKey creates a public key for the authenticated user.
+func (s *UserService) CreateKey(ctx context.Context, opts *types.CreateKeyOption) (*types.PublicKey, error) {
+	var out types.PublicKey
+	if err := s.client.Post(ctx, "/api/v1/user/keys", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetKey returns a single public key owned by the authenticated user.
+func (s *UserService) GetKey(ctx context.Context, id int64) (*types.PublicKey, error) {
+	path := ResolvePath("/api/v1/user/keys/{id}", pathParams("id", int64String(id)))
+	var out types.PublicKey
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteKey removes a public key owned by the authenticated user.
+func (s *UserService) DeleteKey(ctx context.Context, id int64) error {
+	path := ResolvePath("/api/v1/user/keys/{id}", pathParams("id", int64String(id)))
+	return s.client.Delete(ctx, path)
 }
 
 // ListGPGKeys returns all GPG keys owned by the authenticated user.

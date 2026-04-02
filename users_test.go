@@ -841,6 +841,153 @@ func TestUserService_DeleteAvatar_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListKeysWithFilters_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("fingerprint"); got != "ABCD1234" {
+			t.Fatalf("unexpected fingerprint query: %q", got)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.PublicKey{
+			{ID: 1, Title: "laptop", ReadOnly: true},
+			{ID: 2, Title: "desktop", ReadOnly: false},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	keys, err := f.Users.ListKeys(context.Background(), UserKeyListOptions{
+		Fingerprint: "ABCD1234",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(keys) != 2 {
+		t.Fatalf("got %d keys, want 2", len(keys))
+	}
+	if keys[0].ID != 1 || keys[0].Title != "laptop" || !keys[0].ReadOnly {
+		t.Errorf("unexpected first key: %+v", keys[0])
+	}
+}
+
+func TestUserService_IterKeys_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.PublicKey{
+			{ID: 3, Title: "workstation", KeyType: "ssh-ed25519"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	count := 0
+	for key, err := range f.Users.IterKeys(context.Background()) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+		if key.ID != 3 || key.Title != "workstation" || key.KeyType != "ssh-ed25519" {
+			t.Errorf("unexpected key: %+v", key)
+		}
+	}
+	if count != 1 {
+		t.Fatalf("got %d keys, want 1", count)
+	}
+}
+
+func TestUserService_CreateKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateKeyOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Key != "ssh-ed25519 AAAAC3Nza..." || body.Title != "laptop" || !body.ReadOnly {
+			t.Fatalf("unexpected body: %+v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.PublicKey{
+			ID:       9,
+			Title:    "laptop",
+			KeyType:  "ssh-ed25519",
+			ReadOnly: true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Users.CreateKey(context.Background(), &types.CreateKeyOption{
+		Key:      "ssh-ed25519 AAAAC3Nza...",
+		Title:    "laptop",
+		ReadOnly: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key.ID != 9 || key.Title != "laptop" || key.KeyType != "ssh-ed25519" || !key.ReadOnly {
+		t.Errorf("unexpected key: %+v", key)
+	}
+}
+
+func TestUserService_GetKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/keys/9" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.PublicKey{
+			ID:    9,
+			Title: "laptop",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Users.GetKey(context.Background(), 9)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key.ID != 9 || key.Title != "laptop" {
+		t.Errorf("unexpected key: %+v", key)
+	}
+}
+
+func TestUserService_DeleteKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/keys/9" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Users.DeleteKey(context.Background(), 9); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestUserService_ListGPGKeys_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
