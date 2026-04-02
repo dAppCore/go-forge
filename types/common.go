@@ -4,17 +4,20 @@ package types
 
 import "time"
 
-
 // Attachment — Attachment a generic attachment
+//
+// Usage:
+//
+//	opts := Attachment{Name: "example"}
 type Attachment struct {
-	Created time.Time `json:"created_at,omitempty"`
-	DownloadCount int64 `json:"download_count,omitempty"`
-	DownloadURL string `json:"browser_download_url,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Size int64 `json:"size,omitempty"`
-	Type string `json:"type,omitempty"`
-	UUID string `json:"uuid,omitempty"`
+	Created       time.Time `json:"created_at,omitempty"`
+	DownloadCount int64     `json:"download_count,omitempty"`
+	DownloadURL   string    `json:"browser_download_url,omitempty"`
+	ID            int64     `json:"id,omitempty"`
+	Name          string    `json:"name,omitempty"`
+	Size          int64     `json:"size,omitempty"`
+	Type          string    `json:"type,omitempty"`
+	UUID          string    `json:"uuid,omitempty"`
 }
 
 // EditAttachmentOptions — EditAttachmentOptions options for editing attachments
@@ -24,18 +27,30 @@ type Attachment struct {
 //	opts := EditAttachmentOptions{Name: "example"}
 type EditAttachmentOptions struct {
 	DownloadURL string `json:"browser_download_url,omitempty"` // (Can only be set if existing attachment is of external type)
-	Name string `json:"name,omitempty"`
+	Name        string `json:"name,omitempty"`
 }
 
 // Permission — Permission represents a set of permissions
+//
+// Usage:
+//
+//	opts := Permission{Admin: true}
 type Permission struct {
 	Admin bool `json:"admin,omitempty"`
-	Pull bool `json:"pull,omitempty"`
-	Push bool `json:"push,omitempty"`
+	Pull  bool `json:"pull,omitempty"`
+	Push  bool `json:"push,omitempty"`
 }
 
 // StateType — StateType issue state type
+//
+// Usage:
+//
+//	opts := StateType("example")
 type StateType string
 
 // TimeStamp — TimeStamp defines a timestamp
+//
+// Usage:
+//
+//	opts := TimeStamp(1)
 type TimeStamp int64

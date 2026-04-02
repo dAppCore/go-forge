@@ -2,42 +2,61 @@
 
 package types
 
-
 // NodeInfo — NodeInfo contains standardized way of exposing metadata about a server running one of the distributed social networks
+//
+// Usage:
+//
+//	opts := NodeInfo{Protocols: []string{"example"}}
 type NodeInfo struct {
-	Metadata map[string]any `json:"metadata,omitempty"`
-	OpenRegistrations bool `json:"openRegistrations,omitempty"`
-	Protocols []string `json:"protocols,omitempty"`
-	Services *NodeInfoServices `json:"services,omitempty"`
-	Software *NodeInfoSoftware `json:"software,omitempty"`
-	Usage *NodeInfoUsage `json:"usage,omitempty"`
-	Version string `json:"version,omitempty"`
+	Metadata          map[string]any    `json:"metadata,omitempty"`
+	OpenRegistrations bool              `json:"openRegistrations,omitempty"`
+	Protocols         []string          `json:"protocols,omitempty"`
+	Services          *NodeInfoServices `json:"services,omitempty"`
+	Software          *NodeInfoSoftware `json:"software,omitempty"`
+	Usage             *NodeInfoUsage    `json:"usage,omitempty"`
+	Version           string            `json:"version,omitempty"`
 }
 
 // NodeInfoServices — NodeInfoServices contains the third party sites this server can connect to via their application API
+//
+// Usage:
+//
+//	opts := NodeInfoServices{Inbound: []string{"example"}}
 type NodeInfoServices struct {
-	Inbound []string `json:"inbound,omitempty"`
+	Inbound  []string `json:"inbound,omitempty"`
 	Outbound []string `json:"outbound,omitempty"`
 }
 
 // NodeInfoSoftware — NodeInfoSoftware contains Metadata about server software in use
+//
+// Usage:
+//
+//	opts := NodeInfoSoftware{Name: "example"}
 type NodeInfoSoftware struct {
-	Homepage string `json:"homepage,omitempty"`
-	Name string `json:"name,omitempty"`
+	Homepage   string `json:"homepage,omitempty"`
+	Name       string `json:"name,omitempty"`
 	Repository string `json:"repository,omitempty"`
-	Version string `json:"version,omitempty"`
+	Version    string `json:"version,omitempty"`
 }
 
 // NodeInfoUsage — NodeInfoUsage contains usage statistics for this server
+//
+// Usage:
+//
+//	opts := NodeInfoUsage{LocalComments: 1}
 type NodeInfoUsage struct {
-	LocalComments int64 `json:"localComments,omitempty"`
-	LocalPosts int64 `json:"localPosts,omitempty"`
-	Users *NodeInfoUsageUsers `json:"users,omitempty"`
+	LocalComments int64               `json:"localComments,omitempty"`
+	LocalPosts    int64               `json:"localPosts,omitempty"`
+	Users         *NodeInfoUsageUsers `json:"users,omitempty"`
 }
 
 // NodeInfoUsageUsers — NodeInfoUsageUsers contains statistics about the users of this server
+//
+// Usage:
+//
+//	opts := NodeInfoUsageUsers{ActiveHalfyear: 1}
 type NodeInfoUsageUsers struct {
 	ActiveHalfyear int64 `json:"activeHalfyear,omitempty"`
-	ActiveMonth int64 `json:"activeMonth,omitempty"`
-	Total int64 `json:"total,omitempty"`
+	ActiveMonth    int64 `json:"activeMonth,omitempty"`
+	Total          int64 `json:"total,omitempty"`
 }

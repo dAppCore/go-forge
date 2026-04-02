@@ -4,27 +4,34 @@ package types
 
 import "time"
 
-
 // Package — Package represents a package
+//
+// Usage:
+//
+//	opts := Package{Name: "example"}
 type Package struct {
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	Creator *User `json:"creator,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Owner *User `json:"owner,omitempty"`
+	CreatedAt  time.Time   `json:"created_at,omitempty"`
+	Creator    *User       `json:"creator,omitempty"`
+	HTMLURL    string      `json:"html_url,omitempty"`
+	ID         int64       `json:"id,omitempty"`
+	Name       string      `json:"name,omitempty"`
+	Owner      *User       `json:"owner,omitempty"`
 	Repository *Repository `json:"repository,omitempty"`
-	Type string `json:"type,omitempty"`
-	Version string `json:"version,omitempty"`
+	Type       string      `json:"type,omitempty"`
+	Version    string      `json:"version,omitempty"`
 }
 
 // PackageFile — PackageFile represents a package file
+//
+// Usage:
+//
+//	opts := PackageFile{Name: "example"}
 type PackageFile struct {
-	HashMD5 string `json:"md5,omitempty"`
-	HashSHA1 string `json:"sha1,omitempty"`
+	HashMD5    string `json:"md5,omitempty"`
+	HashSHA1   string `json:"sha1,omitempty"`
 	HashSHA256 string `json:"sha256,omitempty"`
 	HashSHA512 string `json:"sha512,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Size int64 `json:"Size,omitempty"`
+	ID         int64  `json:"id,omitempty"`
+	Name       string `json:"name,omitempty"`
+	Size       int64  `json:"Size,omitempty"`
 }

@@ -4,7 +4,6 @@ package types
 
 import "time"
 
-
 // CreateTagOption — CreateTagOption options when creating a tag
 //
 // Usage:
@@ -13,7 +12,7 @@ import "time"
 type CreateTagOption struct {
 	Message string `json:"message,omitempty"`
 	TagName string `json:"tag_name"`
-	Target string `json:"target,omitempty"`
+	Target  string `json:"target,omitempty"`
 }
 
 // CreateTagProtectionOption — CreateTagProtectionOption options for creating a tag protection
@@ -22,8 +21,8 @@ type CreateTagOption struct {
 //
 //	opts := CreateTagProtectionOption{NamePattern: "example"}
 type CreateTagProtectionOption struct {
-	NamePattern string `json:"name_pattern,omitempty"`
-	WhitelistTeams []string `json:"whitelist_teams,omitempty"`
+	NamePattern        string   `json:"name_pattern,omitempty"`
+	WhitelistTeams     []string `json:"whitelist_teams,omitempty"`
 	WhitelistUsernames []string `json:"whitelist_usernames,omitempty"`
 }
 
@@ -33,34 +32,46 @@ type CreateTagProtectionOption struct {
 //
 //	opts := EditTagProtectionOption{NamePattern: "example"}
 type EditTagProtectionOption struct {
-	NamePattern string `json:"name_pattern,omitempty"`
-	WhitelistTeams []string `json:"whitelist_teams,omitempty"`
+	NamePattern        string   `json:"name_pattern,omitempty"`
+	WhitelistTeams     []string `json:"whitelist_teams,omitempty"`
 	WhitelistUsernames []string `json:"whitelist_usernames,omitempty"`
 }
 
 // Tag — Tag represents a repository tag
+//
+// Usage:
+//
+//	opts := Tag{Name: "example"}
 type Tag struct {
 	ArchiveDownloadCount *TagArchiveDownloadCount `json:"archive_download_count,omitempty"`
-	Commit *CommitMeta `json:"commit,omitempty"`
-	ID string `json:"id,omitempty"`
-	Message string `json:"message,omitempty"`
-	Name string `json:"name,omitempty"`
-	TarballURL string `json:"tarball_url,omitempty"`
-	ZipballURL string `json:"zipball_url,omitempty"`
+	Commit               *CommitMeta              `json:"commit,omitempty"`
+	ID                   string                   `json:"id,omitempty"`
+	Message              string                   `json:"message,omitempty"`
+	Name                 string                   `json:"name,omitempty"`
+	TarballURL           string                   `json:"tarball_url,omitempty"`
+	ZipballURL           string                   `json:"zipball_url,omitempty"`
 }
 
 // TagArchiveDownloadCount — TagArchiveDownloadCount counts how many times a archive was downloaded
+//
+// Usage:
+//
+//	opts := TagArchiveDownloadCount{TarGz: 1}
 type TagArchiveDownloadCount struct {
 	TarGz int64 `json:"tar_gz,omitempty"`
-	Zip int64 `json:"zip,omitempty"`
+	Zip   int64 `json:"zip,omitempty"`
 }
 
 // TagProtection — TagProtection represents a tag protection
+//
+// Usage:
+//
+//	opts := TagProtection{NamePattern: "example"}
 type TagProtection struct {
-	Created time.Time `json:"created_at,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	NamePattern string `json:"name_pattern,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
-	WhitelistTeams []string `json:"whitelist_teams,omitempty"`
-	WhitelistUsernames []string `json:"whitelist_usernames,omitempty"`
+	Created            time.Time `json:"created_at,omitempty"`
+	ID                 int64     `json:"id,omitempty"`
+	NamePattern        string    `json:"name_pattern,omitempty"`
+	Updated            time.Time `json:"updated_at,omitempty"`
+	WhitelistTeams     []string  `json:"whitelist_teams,omitempty"`
+	WhitelistUsernames []string  `json:"whitelist_usernames,omitempty"`
 }

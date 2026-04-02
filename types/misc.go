@@ -4,7 +4,6 @@ package types
 
 import "time"
 
-
 // AddCollaboratorOption — AddCollaboratorOption options when adding a user as a collaborator of a repository
 //
 // Usage:
@@ -21,17 +20,21 @@ type AddCollaboratorOption struct {
 //	opts := AddTimeOption{Time: 1}
 type AddTimeOption struct {
 	Created time.Time `json:"created,omitempty"`
-	Time int64 `json:"time"` // time in seconds
-	User string `json:"user_name,omitempty"` // User who spent the time (optional)
+	Time    int64     `json:"time"`                // time in seconds
+	User    string    `json:"user_name,omitempty"` // User who spent the time (optional)
 }
 
 // ChangeFileOperation — ChangeFileOperation for creating, updating or deleting a file
+//
+// Usage:
+//
+//	opts := ChangeFileOperation{Operation: "example"}
 type ChangeFileOperation struct {
-	ContentBase64 string `json:"content,omitempty"` // new or updated file content, must be base64 encoded
-	FromPath string `json:"from_path,omitempty"` // old path of the file to move
-	Operation string `json:"operation"` // indicates what to do with the file
-	Path string `json:"path"` // path to the existing or new file
-	SHA string `json:"sha,omitempty"` // sha is the SHA for the file that already exists, required for update or delete
+	ContentBase64 string `json:"content,omitempty"`   // new or updated file content, must be base64 encoded
+	FromPath      string `json:"from_path,omitempty"` // old path of the file to move
+	Operation     string `json:"operation"`           // indicates what to do with the file
+	Path          string `json:"path"`                // path to the existing or new file
+	SHA           string `json:"sha,omitempty"`       // sha is the SHA for the file that already exists, required for update or delete
 }
 
 // ChangeFilesOptions — ChangeFilesOptions options for creating, updating or deleting multiple files Note: `author` and `committer` are optional (if only one is given, it will be used for the other, otherwise the authenticated user will be used)
@@ -40,19 +43,22 @@ type ChangeFileOperation struct {
 //
 //	opts := ChangeFilesOptions{Files: {}}
 type ChangeFilesOptions struct {
-	Author *Identity `json:"author,omitempty"`
-	BranchName string `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
-	Committer *Identity `json:"committer,omitempty"`
-	Dates *CommitDateOptions `json:"dates,omitempty"`
-	Files []*ChangeFileOperation `json:"files"` // list of file operations
-	Message string `json:"message,omitempty"` // message (optional) for the commit of this file. if not supplied, a default message will be used
-	NewBranchName string `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
-	Signoff bool `json:"signoff,omitempty"` // Add a Signed-off-by trailer by the committer at the end of the commit log message.
+	Author        *Identity              `json:"author,omitempty"`
+	BranchName    string                 `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
+	Committer     *Identity              `json:"committer,omitempty"`
+	Dates         *CommitDateOptions     `json:"dates,omitempty"`
+	Files         []*ChangeFileOperation `json:"files"`                // list of file operations
+	Message       string                 `json:"message,omitempty"`    // message (optional) for the commit of this file. if not supplied, a default message will be used
+	NewBranchName string                 `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
+	Signoff       bool                   `json:"signoff,omitempty"`    // Add a Signed-off-by trailer by the committer at the end of the commit log message.
 }
 
+// Usage:
+//
+//	opts := Compare{TotalCommits: 1}
 type Compare struct {
-	Commits []*Commit `json:"commits,omitempty"`
-	TotalCommits int64 `json:"total_commits,omitempty"`
+	Commits      []*Commit `json:"commits,omitempty"`
+	TotalCommits int64     `json:"total_commits,omitempty"`
 }
 
 // CreateForkOption — CreateForkOption options for creating a fork
@@ -61,7 +67,7 @@ type Compare struct {
 //
 //	opts := CreateForkOption{Name: "example"}
 type CreateForkOption struct {
-	Name string `json:"name,omitempty"` // name of the forked repository
+	Name         string `json:"name,omitempty"`         // name of the forked repository
 	Organization string `json:"organization,omitempty"` // organization name, if forking into an organization
 }
 
@@ -81,10 +87,15 @@ type CreateOrUpdateSecretOption struct {
 //	opts := DismissPullReviewOptions{Message: "example"}
 type DismissPullReviewOptions struct {
 	Message string `json:"message,omitempty"`
-	Priors bool `json:"priors,omitempty"`
+	Priors  bool   `json:"priors,omitempty"`
 }
 
 // ForgeLike — ForgeLike activity data type
+//
+// Usage:
+//
+//	opts := ForgeLike{}
+//
 // ForgeLike has no fields in the swagger spec.
 type ForgeLike struct{}
 
@@ -94,46 +105,62 @@ type ForgeLike struct{}
 //
 //	opts := GenerateRepoOption{Name: "example"}
 type GenerateRepoOption struct {
-	Avatar bool `json:"avatar,omitempty"` // include avatar of the template repo
-	DefaultBranch string `json:"default_branch,omitempty"` // Default branch of the new repository
-	Description string `json:"description,omitempty"` // Description of the repository to create
-	GitContent bool `json:"git_content,omitempty"` // include git content of default branch in template repo
-	GitHooks bool `json:"git_hooks,omitempty"` // include git hooks in template repo
-	Labels bool `json:"labels,omitempty"` // include labels in template repo
-	Name string `json:"name"` // Name of the repository to create
-	Owner string `json:"owner"` // The organization or person who will own the new repository
-	Private bool `json:"private,omitempty"` // Whether the repository is private
-	ProtectedBranch bool `json:"protected_branch,omitempty"` // include protected branches in template repo
-	Topics bool `json:"topics,omitempty"` // include topics in template repo
-	Webhooks bool `json:"webhooks,omitempty"` // include webhooks in template repo
+	Avatar          bool   `json:"avatar,omitempty"`           // include avatar of the template repo
+	DefaultBranch   string `json:"default_branch,omitempty"`   // Default branch of the new repository
+	Description     string `json:"description,omitempty"`      // Description of the repository to create
+	GitContent      bool   `json:"git_content,omitempty"`      // include git content of default branch in template repo
+	GitHooks        bool   `json:"git_hooks,omitempty"`        // include git hooks in template repo
+	Labels          bool   `json:"labels,omitempty"`           // include labels in template repo
+	Name            string `json:"name"`                       // Name of the repository to create
+	Owner           string `json:"owner"`                      // The organization or person who will own the new repository
+	Private         bool   `json:"private,omitempty"`          // Whether the repository is private
+	ProtectedBranch bool   `json:"protected_branch,omitempty"` // include protected branches in template repo
+	Topics          bool   `json:"topics,omitempty"`           // include topics in template repo
+	Webhooks        bool   `json:"webhooks,omitempty"`         // include webhooks in template repo
 }
 
 // GitignoreTemplateInfo — GitignoreTemplateInfo name and text of a gitignore template
+//
+// Usage:
+//
+//	opts := GitignoreTemplateInfo{Name: "example"}
 type GitignoreTemplateInfo struct {
-	Name string `json:"name,omitempty"`
+	Name   string `json:"name,omitempty"`
 	Source string `json:"source,omitempty"`
 }
 
 // Identity — Identity for a person's identity like an author or committer
+//
+// Usage:
+//
+//	opts := Identity{Name: "example"}
 type Identity struct {
 	Email string `json:"email,omitempty"`
-	Name string `json:"name,omitempty"`
+	Name  string `json:"name,omitempty"`
 }
 
 // LicenseTemplateInfo — LicensesInfo contains information about a License
+//
+// Usage:
+//
+//	opts := LicenseTemplateInfo{Body: "example"}
 type LicenseTemplateInfo struct {
-	Body string `json:"body,omitempty"`
+	Body           string `json:"body,omitempty"`
 	Implementation string `json:"implementation,omitempty"`
-	Key string `json:"key,omitempty"`
-	Name string `json:"name,omitempty"`
-	URL string `json:"url,omitempty"`
+	Key            string `json:"key,omitempty"`
+	Name           string `json:"name,omitempty"`
+	URL            string `json:"url,omitempty"`
 }
 
 // LicensesTemplateListEntry — LicensesListEntry is used for the API
+//
+// Usage:
+//
+//	opts := LicensesTemplateListEntry{Name: "example"}
 type LicensesTemplateListEntry struct {
-	Key string `json:"key,omitempty"`
+	Key  string `json:"key,omitempty"`
 	Name string `json:"name,omitempty"`
-	URL string `json:"url,omitempty"`
+	URL  string `json:"url,omitempty"`
 }
 
 // MarkdownOption — MarkdownOption markdown options
@@ -143,9 +170,9 @@ type LicensesTemplateListEntry struct {
 //	opts := MarkdownOption{Context: "example"}
 type MarkdownOption struct {
 	Context string `json:"Context,omitempty"` // Context to render in: body
-	Mode string `json:"Mode,omitempty"` // Mode to render (comment, gfm, markdown) in: body
-	Text string `json:"Text,omitempty"` // Text markdown to render in: body
-	Wiki bool `json:"Wiki,omitempty"` // Is it a wiki page ? in: body
+	Mode    string `json:"Mode,omitempty"`    // Mode to render (comment, gfm, markdown) in: body
+	Text    string `json:"Text,omitempty"`    // Text markdown to render in: body
+	Wiki    bool   `json:"Wiki,omitempty"`    // Is it a wiki page ? in: body
 }
 
 // MarkupOption — MarkupOption markup options
@@ -155,11 +182,11 @@ type MarkdownOption struct {
 //	opts := MarkupOption{BranchPath: "main"}
 type MarkupOption struct {
 	BranchPath string `json:"BranchPath,omitempty"` // The current branch path where the form gets posted in: body
-	Context string `json:"Context,omitempty"` // Context to render in: body
-	FilePath string `json:"FilePath,omitempty"` // File path for detecting extension in file mode in: body
-	Mode string `json:"Mode,omitempty"` // Mode to render (comment, gfm, markdown, file) in: body
-	Text string `json:"Text,omitempty"` // Text markup to render in: body
-	Wiki bool `json:"Wiki,omitempty"` // Is it a wiki page ? in: body
+	Context    string `json:"Context,omitempty"`    // Context to render in: body
+	FilePath   string `json:"FilePath,omitempty"`   // File path for detecting extension in file mode in: body
+	Mode       string `json:"Mode,omitempty"`       // Mode to render (comment, gfm, markdown, file) in: body
+	Text       string `json:"Text,omitempty"`       // Text markup to render in: body
+	Wiki       bool   `json:"Wiki,omitempty"`       // Is it a wiki page ? in: body
 }
 
 // MergePullRequestOption — MergePullRequestForm form for merging Pull Request
@@ -168,14 +195,14 @@ type MarkupOption struct {
 //
 //	opts := MergePullRequestOption{Do: "example"}
 type MergePullRequestOption struct {
-	DeleteBranchAfterMerge bool `json:"delete_branch_after_merge,omitempty"`
-	Do string `json:"Do"`
-	ForceMerge bool `json:"force_merge,omitempty"`
-	HeadCommitID string `json:"head_commit_id,omitempty"`
-	MergeCommitID string `json:"MergeCommitID,omitempty"`
-	MergeMessageField string `json:"MergeMessageField,omitempty"`
-	MergeTitleField string `json:"MergeTitleField,omitempty"`
-	MergeWhenChecksSucceed bool `json:"merge_when_checks_succeed,omitempty"`
+	DeleteBranchAfterMerge bool   `json:"delete_branch_after_merge,omitempty"`
+	Do                     string `json:"Do"`
+	ForceMerge             bool   `json:"force_merge,omitempty"`
+	HeadCommitID           string `json:"head_commit_id,omitempty"`
+	MergeCommitID          string `json:"MergeCommitID,omitempty"`
+	MergeMessageField      string `json:"MergeMessageField,omitempty"`
+	MergeTitleField        string `json:"MergeTitleField,omitempty"`
+	MergeWhenChecksSucceed bool   `json:"merge_when_checks_succeed,omitempty"`
 }
 
 // MigrateRepoOptions — MigrateRepoOptions options for migrating repository's this is used to interact with api v1
@@ -184,57 +211,76 @@ type MergePullRequestOption struct {
 //
 //	opts := MigrateRepoOptions{RepoName: "example"}
 type MigrateRepoOptions struct {
-	AuthPassword string `json:"auth_password,omitempty"`
-	AuthToken string `json:"auth_token,omitempty"`
-	AuthUsername string `json:"auth_username,omitempty"`
-	CloneAddr string `json:"clone_addr"`
-	Description string `json:"description,omitempty"`
-	Issues bool `json:"issues,omitempty"`
-	LFS bool `json:"lfs,omitempty"`
-	LFSEndpoint string `json:"lfs_endpoint,omitempty"`
-	Labels bool `json:"labels,omitempty"`
-	Milestones bool `json:"milestones,omitempty"`
-	Mirror bool `json:"mirror,omitempty"`
+	AuthPassword   string `json:"auth_password,omitempty"`
+	AuthToken      string `json:"auth_token,omitempty"`
+	AuthUsername   string `json:"auth_username,omitempty"`
+	CloneAddr      string `json:"clone_addr"`
+	Description    string `json:"description,omitempty"`
+	Issues         bool   `json:"issues,omitempty"`
+	LFS            bool   `json:"lfs,omitempty"`
+	LFSEndpoint    string `json:"lfs_endpoint,omitempty"`
+	Labels         bool   `json:"labels,omitempty"`
+	Milestones     bool   `json:"milestones,omitempty"`
+	Mirror         bool   `json:"mirror,omitempty"`
 	MirrorInterval string `json:"mirror_interval,omitempty"`
-	Private bool `json:"private,omitempty"`
-	PullRequests bool `json:"pull_requests,omitempty"`
-	Releases bool `json:"releases,omitempty"`
-	RepoName string `json:"repo_name"`
-	RepoOwner string `json:"repo_owner,omitempty"` // Name of User or Organisation who will own Repo after migration
-	RepoOwnerID int64 `json:"uid,omitempty"` // deprecated (only for backwards compatibility)
-	Service string `json:"service,omitempty"`
-	Wiki bool `json:"wiki,omitempty"`
+	Private        bool   `json:"private,omitempty"`
+	PullRequests   bool   `json:"pull_requests,omitempty"`
+	Releases       bool   `json:"releases,omitempty"`
+	RepoName       string `json:"repo_name"`
+	RepoOwner      string `json:"repo_owner,omitempty"` // Name of User or Organisation who will own Repo after migration
+	RepoOwnerID    int64  `json:"uid,omitempty"`        // deprecated (only for backwards compatibility)
+	Service        string `json:"service,omitempty"`
+	Wiki           bool   `json:"wiki,omitempty"`
 }
 
 // NewIssuePinsAllowed — NewIssuePinsAllowed represents an API response that says if new Issue Pins are allowed
+//
+// Usage:
+//
+//	opts := NewIssuePinsAllowed{Issues: true}
 type NewIssuePinsAllowed struct {
-	Issues bool `json:"issues,omitempty"`
+	Issues       bool `json:"issues,omitempty"`
 	PullRequests bool `json:"pull_requests,omitempty"`
 }
 
 // NotifySubjectType — NotifySubjectType represent type of notification subject
+//
+// Usage:
+//
+//	opts := NotifySubjectType("example")
 type NotifySubjectType string
 
 // PRBranchInfo — PRBranchInfo information about a branch
+//
+// Usage:
+//
+//	opts := PRBranchInfo{Name: "example"}
 type PRBranchInfo struct {
-	Name string `json:"label,omitempty"`
-	Ref string `json:"ref,omitempty"`
-	Repo *Repository `json:"repo,omitempty"`
-	RepoID int64 `json:"repo_id,omitempty"`
-	Sha string `json:"sha,omitempty"`
+	Name   string      `json:"label,omitempty"`
+	Ref    string      `json:"ref,omitempty"`
+	Repo   *Repository `json:"repo,omitempty"`
+	RepoID int64       `json:"repo_id,omitempty"`
+	Sha    string      `json:"sha,omitempty"`
 }
 
 // PayloadUser — PayloadUser represents the author or committer of a commit
+//
+// Usage:
+//
+//	opts := PayloadUser{Name: "example"}
 type PayloadUser struct {
-	Email string `json:"email,omitempty"`
-	Name string `json:"name,omitempty"` // Full name of the commit author
+	Email    string `json:"email,omitempty"`
+	Name     string `json:"name,omitempty"` // Full name of the commit author
 	UserName string `json:"username,omitempty"`
 }
 
+// Usage:
+//
+//	opts := Reference{Ref: "main"}
 type Reference struct {
 	Object *GitObject `json:"object,omitempty"`
-	Ref string `json:"ref,omitempty"`
-	URL string `json:"url,omitempty"`
+	Ref    string     `json:"ref,omitempty"`
+	URL    string     `json:"url,omitempty"`
 }
 
 // ReplaceFlagsOption — ReplaceFlagsOption options when replacing the flags of a repository
@@ -247,55 +293,71 @@ type ReplaceFlagsOption struct {
 }
 
 // SearchResults — SearchResults results of a successful search
+//
+// Usage:
+//
+//	opts := SearchResults{OK: true}
 type SearchResults struct {
 	Data []*Repository `json:"data,omitempty"`
-	OK bool `json:"ok,omitempty"`
+	OK   bool          `json:"ok,omitempty"`
 }
 
 // ServerVersion — ServerVersion wraps the version of the server
+//
+// Usage:
+//
+//	opts := ServerVersion{Version: "example"}
 type ServerVersion struct {
 	Version string `json:"version,omitempty"`
 }
 
 // TimelineComment — TimelineComment represents a timeline comment (comment of any type) on a commit or issue
+//
+// Usage:
+//
+//	opts := TimelineComment{Body: "example"}
 type TimelineComment struct {
-	Assignee *User `json:"assignee,omitempty"`
-	AssigneeTeam *Team `json:"assignee_team,omitempty"`
-	Body string `json:"body,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	DependentIssue *Issue `json:"dependent_issue,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	IssueURL string `json:"issue_url,omitempty"`
-	Label *Label `json:"label,omitempty"`
-	Milestone *Milestone `json:"milestone,omitempty"`
-	NewRef string `json:"new_ref,omitempty"`
-	NewTitle string `json:"new_title,omitempty"`
-	OldMilestone *Milestone `json:"old_milestone,omitempty"`
-	OldProjectID int64 `json:"old_project_id,omitempty"`
-	OldRef string `json:"old_ref,omitempty"`
-	OldTitle string `json:"old_title,omitempty"`
-	PRURL string `json:"pull_request_url,omitempty"`
-	ProjectID int64 `json:"project_id,omitempty"`
-	RefAction string `json:"ref_action,omitempty"`
-	RefComment *Comment `json:"ref_comment,omitempty"`
-	RefCommitSHA string `json:"ref_commit_sha,omitempty"` // commit SHA where issue/PR was referenced
-	RefIssue *Issue `json:"ref_issue,omitempty"`
-	RemovedAssignee bool `json:"removed_assignee,omitempty"` // whether the assignees were removed or added
-	ResolveDoer *User `json:"resolve_doer,omitempty"`
-	ReviewID int64 `json:"review_id,omitempty"`
-	TrackedTime *TrackedTime `json:"tracked_time,omitempty"`
-	Type string `json:"type,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
-	User *User `json:"user,omitempty"`
+	Assignee        *User        `json:"assignee,omitempty"`
+	AssigneeTeam    *Team        `json:"assignee_team,omitempty"`
+	Body            string       `json:"body,omitempty"`
+	Created         time.Time    `json:"created_at,omitempty"`
+	DependentIssue  *Issue       `json:"dependent_issue,omitempty"`
+	HTMLURL         string       `json:"html_url,omitempty"`
+	ID              int64        `json:"id,omitempty"`
+	IssueURL        string       `json:"issue_url,omitempty"`
+	Label           *Label       `json:"label,omitempty"`
+	Milestone       *Milestone   `json:"milestone,omitempty"`
+	NewRef          string       `json:"new_ref,omitempty"`
+	NewTitle        string       `json:"new_title,omitempty"`
+	OldMilestone    *Milestone   `json:"old_milestone,omitempty"`
+	OldProjectID    int64        `json:"old_project_id,omitempty"`
+	OldRef          string       `json:"old_ref,omitempty"`
+	OldTitle        string       `json:"old_title,omitempty"`
+	PRURL           string       `json:"pull_request_url,omitempty"`
+	ProjectID       int64        `json:"project_id,omitempty"`
+	RefAction       string       `json:"ref_action,omitempty"`
+	RefComment      *Comment     `json:"ref_comment,omitempty"`
+	RefCommitSHA    string       `json:"ref_commit_sha,omitempty"` // commit SHA where issue/PR was referenced
+	RefIssue        *Issue       `json:"ref_issue,omitempty"`
+	RemovedAssignee bool         `json:"removed_assignee,omitempty"` // whether the assignees were removed or added
+	ResolveDoer     *User        `json:"resolve_doer,omitempty"`
+	ReviewID        int64        `json:"review_id,omitempty"`
+	TrackedTime     *TrackedTime `json:"tracked_time,omitempty"`
+	Type            string       `json:"type,omitempty"`
+	Updated         time.Time    `json:"updated_at,omitempty"`
+	User            *User        `json:"user,omitempty"`
 }
 
 // WatchInfo — WatchInfo represents an API watch status of one repository
+//
+// Usage:
+//
+//	opts := WatchInfo{RepositoryURL: "https://example.com"}
 type WatchInfo struct {
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	Ignored bool `json:"ignored,omitempty"`
-	Reason any `json:"reason,omitempty"`
-	RepositoryURL string `json:"repository_url,omitempty"`
-	Subscribed bool `json:"subscribed,omitempty"`
-	URL string `json:"url,omitempty"`
+	CreatedAt     time.Time `json:"created_at,omitempty"`
+	Ignored       bool      `json:"ignored,omitempty"`
+	Reason        any       `json:"reason,omitempty"`
+	RepositoryURL string    `json:"repository_url,omitempty"`
+	Subscribed    bool      `json:"subscribed,omitempty"`
+	URL           string    `json:"url,omitempty"`
 }

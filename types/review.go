@@ -2,6 +2,9 @@
 
 package types
 
-
 // ReviewStateType — ReviewStateType review state type
+//
+// Usage:
+//
+//	opts := ReviewStateType("example")
 type ReviewStateType string

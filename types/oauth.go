@@ -4,13 +4,15 @@ package types
 
 import "time"
 
-
+// Usage:
+//
+//	opts := AccessToken{Name: "example"}
 type AccessToken struct {
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Scopes []string `json:"scopes,omitempty"`
-	Token string `json:"sha1,omitempty"`
-	TokenLastEight string `json:"token_last_eight,omitempty"`
+	ID             int64    `json:"id,omitempty"`
+	Name           string   `json:"name,omitempty"`
+	Scopes         []string `json:"scopes,omitempty"`
+	Token          string   `json:"sha1,omitempty"`
+	TokenLastEight string   `json:"token_last_eight,omitempty"`
 }
 
 // CreateAccessTokenOption — CreateAccessTokenOption options when create access token
@@ -19,7 +21,7 @@ type AccessToken struct {
 //
 //	opts := CreateAccessTokenOption{Name: "example"}
 type CreateAccessTokenOption struct {
-	Name string `json:"name"`
+	Name   string   `json:"name"`
 	Scopes []string `json:"scopes,omitempty"`
 }
 
@@ -29,17 +31,20 @@ type CreateAccessTokenOption struct {
 //
 //	opts := CreateOAuth2ApplicationOptions{Name: "example"}
 type CreateOAuth2ApplicationOptions struct {
-	ConfidentialClient bool `json:"confidential_client,omitempty"`
-	Name string `json:"name,omitempty"`
-	RedirectURIs []string `json:"redirect_uris,omitempty"`
+	ConfidentialClient bool     `json:"confidential_client,omitempty"`
+	Name               string   `json:"name,omitempty"`
+	RedirectURIs       []string `json:"redirect_uris,omitempty"`
 }
 
+// Usage:
+//
+//	opts := OAuth2Application{Name: "example"}
 type OAuth2Application struct {
-	ClientID string `json:"client_id,omitempty"`
-	ClientSecret string `json:"client_secret,omitempty"`
-	ConfidentialClient bool `json:"confidential_client,omitempty"`
-	Created time.Time `json:"created,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	RedirectURIs []string `json:"redirect_uris,omitempty"`
+	ClientID           string    `json:"client_id,omitempty"`
+	ClientSecret       string    `json:"client_secret,omitempty"`
+	ConfidentialClient bool      `json:"confidential_client,omitempty"`
+	Created            time.Time `json:"created,omitempty"`
+	ID                 int64     `json:"id,omitempty"`
+	Name               string    `json:"name,omitempty"`
+	RedirectURIs       []string  `json:"redirect_uris,omitempty"`
 }

@@ -204,3 +204,52 @@ func TestGenerate_UsageExamples_Good(t *testing.T) {
 		t.Fatalf("generated usage example is missing assignment syntax:\n%s", content)
 	}
 }
+
+func TestGenerate_UsageExamples_AllKinds_Good(t *testing.T) {
+	spec, err := LoadSpec("../../testdata/swagger.v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	types := ExtractTypes(spec)
+	pairs := DetectCRUDPairs(spec)
+
+	outDir := t.TempDir()
+	if err := Generate(types, pairs, outDir); err != nil {
+		t.Fatal(err)
+	}
+
+	entries, _ := coreio.Local.List(outDir)
+	var content string
+	for _, e := range entries {
+		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
+		if core.Contains(data, "type CommitStatusState string") {
+			content = data
+			break
+		}
+	}
+	if content == "" {
+		t.Fatal("CommitStatusState type not found in any generated file")
+	}
+	if !core.Contains(content, "type CommitStatusState string") {
+		t.Fatalf("CommitStatusState type not generated:\n%s", content)
+	}
+	if !core.Contains(content, "// Usage:") {
+		t.Fatalf("generated enum type is missing usage documentation:\n%s", content)
+	}
+
+	content = ""
+	for _, e := range entries {
+		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
+		if core.Contains(data, "type CreateHookOptionConfig map[string]any") {
+			content = data
+			break
+		}
+	}
+	if content == "" {
+		t.Fatal("CreateHookOptionConfig type not found in any generated file")
+	}
+	if !core.Contains(content, "CreateHookOptionConfig(map[string]any{\"key\": \"value\"})") {
+		t.Fatalf("generated alias type is missing a valid usage example:\n%s", content)
+	}
+}

@@ -2,37 +2,52 @@
 
 package types
 
-
 // GeneralAPISettings — GeneralAPISettings contains global api settings exposed by it
+//
+// Usage:
+//
+//	opts := GeneralAPISettings{DefaultGitTreesPerPage: 1}
 type GeneralAPISettings struct {
 	DefaultGitTreesPerPage int64 `json:"default_git_trees_per_page,omitempty"`
-	DefaultMaxBlobSize int64 `json:"default_max_blob_size,omitempty"`
-	DefaultPagingNum int64 `json:"default_paging_num,omitempty"`
-	MaxResponseItems int64 `json:"max_response_items,omitempty"`
+	DefaultMaxBlobSize     int64 `json:"default_max_blob_size,omitempty"`
+	DefaultPagingNum       int64 `json:"default_paging_num,omitempty"`
+	MaxResponseItems       int64 `json:"max_response_items,omitempty"`
 }
 
 // GeneralAttachmentSettings — GeneralAttachmentSettings contains global Attachment settings exposed by API
+//
+// Usage:
+//
+//	opts := GeneralAttachmentSettings{AllowedTypes: "example"}
 type GeneralAttachmentSettings struct {
 	AllowedTypes string `json:"allowed_types,omitempty"`
-	Enabled bool `json:"enabled,omitempty"`
-	MaxFiles int64 `json:"max_files,omitempty"`
-	MaxSize int64 `json:"max_size,omitempty"`
+	Enabled      bool   `json:"enabled,omitempty"`
+	MaxFiles     int64  `json:"max_files,omitempty"`
+	MaxSize      int64  `json:"max_size,omitempty"`
 }
 
 // GeneralRepoSettings — GeneralRepoSettings contains global repository settings exposed by API
+//
+// Usage:
+//
+//	opts := GeneralRepoSettings{ForksDisabled: true}
 type GeneralRepoSettings struct {
-	ForksDisabled bool `json:"forks_disabled,omitempty"`
-	HTTPGitDisabled bool `json:"http_git_disabled,omitempty"`
-	LFSDisabled bool `json:"lfs_disabled,omitempty"`
-	MigrationsDisabled bool `json:"migrations_disabled,omitempty"`
-	MirrorsDisabled bool `json:"mirrors_disabled,omitempty"`
-	StarsDisabled bool `json:"stars_disabled,omitempty"`
+	ForksDisabled        bool `json:"forks_disabled,omitempty"`
+	HTTPGitDisabled      bool `json:"http_git_disabled,omitempty"`
+	LFSDisabled          bool `json:"lfs_disabled,omitempty"`
+	MigrationsDisabled   bool `json:"migrations_disabled,omitempty"`
+	MirrorsDisabled      bool `json:"mirrors_disabled,omitempty"`
+	StarsDisabled        bool `json:"stars_disabled,omitempty"`
 	TimeTrackingDisabled bool `json:"time_tracking_disabled,omitempty"`
 }
 
 // GeneralUISettings — GeneralUISettings contains global ui settings exposed by API
+//
+// Usage:
+//
+//	opts := GeneralUISettings{AllowedReactions: []string{"example"}}
 type GeneralUISettings struct {
 	AllowedReactions []string `json:"allowed_reactions,omitempty"`
-	CustomEmojis []string `json:"custom_emojis,omitempty"`
-	DefaultTheme string `json:"default_theme,omitempty"`
+	CustomEmojis     []string `json:"custom_emojis,omitempty"`
+	DefaultTheme     string   `json:"default_theme,omitempty"`
 }

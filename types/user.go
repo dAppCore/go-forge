@@ -4,9 +4,11 @@ package types
 
 import "time"
 
-
+// Usage:
+//
+//	opts := BlockedUser{Created: time.Now()}
 type BlockedUser struct {
-	BlockID int64 `json:"block_id,omitempty"`
+	BlockID int64     `json:"block_id,omitempty"`
 	Created time.Time `json:"created_at,omitempty"`
 }
 
@@ -25,17 +27,17 @@ type CreateEmailOption struct {
 //
 //	opts := CreateUserOption{Email: "alice@example.com"}
 type CreateUserOption struct {
-	Created time.Time `json:"created_at,omitempty"` // For explicitly setting the user creation timestamp. Useful when users are migrated from other systems. When omitted, the user's creation timestamp will be set to "now".
-	Email string `json:"email"`
-	FullName string `json:"full_name,omitempty"`
-	LoginName string `json:"login_name,omitempty"`
-	MustChangePassword bool `json:"must_change_password,omitempty"`
-	Password string `json:"password,omitempty"`
-	Restricted bool `json:"restricted,omitempty"`
-	SendNotify bool `json:"send_notify,omitempty"`
-	SourceID int64 `json:"source_id,omitempty"`
-	Username string `json:"username"`
-	Visibility string `json:"visibility,omitempty"`
+	Created            time.Time `json:"created_at,omitempty"` // For explicitly setting the user creation timestamp. Useful when users are migrated from other systems. When omitted, the user's creation timestamp will be set to "now".
+	Email              string    `json:"email"`
+	FullName           string    `json:"full_name,omitempty"`
+	LoginName          string    `json:"login_name,omitempty"`
+	MustChangePassword bool      `json:"must_change_password,omitempty"`
+	Password           string    `json:"password,omitempty"`
+	Restricted         bool      `json:"restricted,omitempty"`
+	SendNotify         bool      `json:"send_notify,omitempty"`
+	SourceID           int64     `json:"source_id,omitempty"`
+	Username           string    `json:"username"`
+	Visibility         string    `json:"visibility,omitempty"`
 }
 
 // DeleteEmailOption — DeleteEmailOption options when deleting email addresses
@@ -53,34 +55,38 @@ type DeleteEmailOption struct {
 //
 //	opts := EditUserOption{Description: "example"}
 type EditUserOption struct {
-	Active bool `json:"active,omitempty"`
-	Admin bool `json:"admin,omitempty"`
-	AllowCreateOrganization bool `json:"allow_create_organization,omitempty"`
-	AllowGitHook bool `json:"allow_git_hook,omitempty"`
-	AllowImportLocal bool `json:"allow_import_local,omitempty"`
-	Description string `json:"description,omitempty"`
-	Email string `json:"email,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	Location string `json:"location,omitempty"`
-	LoginName string `json:"login_name,omitempty"`
-	MaxRepoCreation int64 `json:"max_repo_creation,omitempty"`
-	MustChangePassword bool `json:"must_change_password,omitempty"`
-	Password string `json:"password,omitempty"`
-	ProhibitLogin bool `json:"prohibit_login,omitempty"`
-	Pronouns string `json:"pronouns,omitempty"`
-	Restricted bool `json:"restricted,omitempty"`
-	SourceID int64 `json:"source_id,omitempty"`
-	Visibility string `json:"visibility,omitempty"`
-	Website string `json:"website,omitempty"`
+	Active                  bool   `json:"active,omitempty"`
+	Admin                   bool   `json:"admin,omitempty"`
+	AllowCreateOrganization bool   `json:"allow_create_organization,omitempty"`
+	AllowGitHook            bool   `json:"allow_git_hook,omitempty"`
+	AllowImportLocal        bool   `json:"allow_import_local,omitempty"`
+	Description             string `json:"description,omitempty"`
+	Email                   string `json:"email,omitempty"`
+	FullName                string `json:"full_name,omitempty"`
+	Location                string `json:"location,omitempty"`
+	LoginName               string `json:"login_name,omitempty"`
+	MaxRepoCreation         int64  `json:"max_repo_creation,omitempty"`
+	MustChangePassword      bool   `json:"must_change_password,omitempty"`
+	Password                string `json:"password,omitempty"`
+	ProhibitLogin           bool   `json:"prohibit_login,omitempty"`
+	Pronouns                string `json:"pronouns,omitempty"`
+	Restricted              bool   `json:"restricted,omitempty"`
+	SourceID                int64  `json:"source_id,omitempty"`
+	Visibility              string `json:"visibility,omitempty"`
+	Website                 string `json:"website,omitempty"`
 }
 
 // Email — Email an email address belonging to a user
+//
+// Usage:
+//
+//	opts := Email{UserName: "example"}
 type Email struct {
-	Email string `json:"email,omitempty"`
-	Primary bool `json:"primary,omitempty"`
-	UserID int64 `json:"user_id,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Primary  bool   `json:"primary,omitempty"`
+	UserID   int64  `json:"user_id,omitempty"`
 	UserName string `json:"username,omitempty"`
-	Verified bool `json:"verified,omitempty"`
+	Verified bool   `json:"verified,omitempty"`
 }
 
 // SetUserQuotaGroupsOptions — SetUserQuotaGroupsOptions represents the quota groups of a user
@@ -102,51 +108,63 @@ type UpdateUserAvatarOption struct {
 }
 
 // User — User represents a user
+//
+// Usage:
+//
+//	opts := User{Description: "example"}
 type User struct {
-	AvatarURL string `json:"avatar_url,omitempty"` // URL to the user's avatar
-	Created time.Time `json:"created,omitempty"`
-	Description string `json:"description,omitempty"` // the user's description
-	Email string `json:"email,omitempty"`
-	Followers int64 `json:"followers_count,omitempty"` // user counts
-	Following int64 `json:"following_count,omitempty"`
-	FullName string `json:"full_name,omitempty"` // the user's full name
-	HTMLURL string `json:"html_url,omitempty"` // URL to the user's gitea page
-	ID int64 `json:"id,omitempty"` // the user's id
-	IsActive bool `json:"active,omitempty"` // Is user active
-	IsAdmin bool `json:"is_admin,omitempty"` // Is the user an administrator
-	Language string `json:"language,omitempty"` // User locale
-	LastLogin time.Time `json:"last_login,omitempty"`
-	Location string `json:"location,omitempty"` // the user's location
-	LoginName string `json:"login_name,omitempty"` // the user's authentication sign-in name.
-	ProhibitLogin bool `json:"prohibit_login,omitempty"` // Is user login prohibited
-	Pronouns string `json:"pronouns,omitempty"` // the user's pronouns
-	Restricted bool `json:"restricted,omitempty"` // Is user restricted
-	SourceID int64 `json:"source_id,omitempty"` // The ID of the user's Authentication Source
-	StarredRepos int64 `json:"starred_repos_count,omitempty"`
-	UserName string `json:"login,omitempty"` // the user's username
-	Visibility string `json:"visibility,omitempty"` // User visibility level option: public, limited, private
-	Website string `json:"website,omitempty"` // the user's website
+	AvatarURL     string    `json:"avatar_url,omitempty"` // URL to the user's avatar
+	Created       time.Time `json:"created,omitempty"`
+	Description   string    `json:"description,omitempty"` // the user's description
+	Email         string    `json:"email,omitempty"`
+	Followers     int64     `json:"followers_count,omitempty"` // user counts
+	Following     int64     `json:"following_count,omitempty"`
+	FullName      string    `json:"full_name,omitempty"` // the user's full name
+	HTMLURL       string    `json:"html_url,omitempty"`  // URL to the user's gitea page
+	ID            int64     `json:"id,omitempty"`        // the user's id
+	IsActive      bool      `json:"active,omitempty"`    // Is user active
+	IsAdmin       bool      `json:"is_admin,omitempty"`  // Is the user an administrator
+	Language      string    `json:"language,omitempty"`  // User locale
+	LastLogin     time.Time `json:"last_login,omitempty"`
+	Location      string    `json:"location,omitempty"`       // the user's location
+	LoginName     string    `json:"login_name,omitempty"`     // the user's authentication sign-in name.
+	ProhibitLogin bool      `json:"prohibit_login,omitempty"` // Is user login prohibited
+	Pronouns      string    `json:"pronouns,omitempty"`       // the user's pronouns
+	Restricted    bool      `json:"restricted,omitempty"`     // Is user restricted
+	SourceID      int64     `json:"source_id,omitempty"`      // The ID of the user's Authentication Source
+	StarredRepos  int64     `json:"starred_repos_count,omitempty"`
+	UserName      string    `json:"login,omitempty"`      // the user's username
+	Visibility    string    `json:"visibility,omitempty"` // User visibility level option: public, limited, private
+	Website       string    `json:"website,omitempty"`    // the user's website
 }
 
 // UserHeatmapData — UserHeatmapData represents the data needed to create a heatmap
+//
+// Usage:
+//
+//	opts := UserHeatmapData{Contributions: 1}
 type UserHeatmapData struct {
-	Contributions int64 `json:"contributions,omitempty"`
-	Timestamp TimeStamp `json:"timestamp,omitempty"`
+	Contributions int64     `json:"contributions,omitempty"`
+	Timestamp     TimeStamp `json:"timestamp,omitempty"`
 }
 
 // UserSettings — UserSettings represents user settings
+//
+// Usage:
+//
+//	opts := UserSettings{Description: "example"}
 type UserSettings struct {
-	Description string `json:"description,omitempty"`
-	DiffViewStyle string `json:"diff_view_style,omitempty"`
-	EnableRepoUnitHints bool `json:"enable_repo_unit_hints,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	HideActivity bool `json:"hide_activity,omitempty"`
-	HideEmail bool `json:"hide_email,omitempty"` // Privacy
-	Language string `json:"language,omitempty"`
-	Location string `json:"location,omitempty"`
-	Pronouns string `json:"pronouns,omitempty"`
-	Theme string `json:"theme,omitempty"`
-	Website string `json:"website,omitempty"`
+	Description         string `json:"description,omitempty"`
+	DiffViewStyle       string `json:"diff_view_style,omitempty"`
+	EnableRepoUnitHints bool   `json:"enable_repo_unit_hints,omitempty"`
+	FullName            string `json:"full_name,omitempty"`
+	HideActivity        bool   `json:"hide_activity,omitempty"`
+	HideEmail           bool   `json:"hide_email,omitempty"` // Privacy
+	Language            string `json:"language,omitempty"`
+	Location            string `json:"location,omitempty"`
+	Pronouns            string `json:"pronouns,omitempty"`
+	Theme               string `json:"theme,omitempty"`
+	Website             string `json:"website,omitempty"`
 }
 
 // UserSettingsOptions — UserSettingsOptions represents options to change user settings
@@ -155,15 +173,15 @@ type UserSettings struct {
 //
 //	opts := UserSettingsOptions{Description: "example"}
 type UserSettingsOptions struct {
-	Description string `json:"description,omitempty"`
-	DiffViewStyle string `json:"diff_view_style,omitempty"`
-	EnableRepoUnitHints bool `json:"enable_repo_unit_hints,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	HideActivity bool `json:"hide_activity,omitempty"`
-	HideEmail bool `json:"hide_email,omitempty"` // Privacy
-	Language string `json:"language,omitempty"`
-	Location string `json:"location,omitempty"`
-	Pronouns string `json:"pronouns,omitempty"`
-	Theme string `json:"theme,omitempty"`
-	Website string `json:"website,omitempty"`
+	Description         string `json:"description,omitempty"`
+	DiffViewStyle       string `json:"diff_view_style,omitempty"`
+	EnableRepoUnitHints bool   `json:"enable_repo_unit_hints,omitempty"`
+	FullName            string `json:"full_name,omitempty"`
+	HideActivity        bool   `json:"hide_activity,omitempty"`
+	HideEmail           bool   `json:"hide_email,omitempty"` // Privacy
+	Language            string `json:"language,omitempty"`
+	Location            string `json:"location,omitempty"`
+	Pronouns            string `json:"pronouns,omitempty"`
+	Theme               string `json:"theme,omitempty"`
+	Website             string `json:"website,omitempty"`
 }

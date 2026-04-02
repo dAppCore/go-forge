@@ -2,21 +2,20 @@
 
 package types
 
-
 // CreateOrgOption — CreateOrgOption options for creating an organization
 //
 // Usage:
 //
 //	opts := CreateOrgOption{UserName: "example"}
 type CreateOrgOption struct {
-	Description string `json:"description,omitempty"`
-	Email string `json:"email,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	Location string `json:"location,omitempty"`
-	RepoAdminChangeTeamAccess bool `json:"repo_admin_change_team_access,omitempty"`
-	UserName string `json:"username"`
-	Visibility string `json:"visibility,omitempty"` // possible values are `public` (default), `limited` or `private`
-	Website string `json:"website,omitempty"`
+	Description               string `json:"description,omitempty"`
+	Email                     string `json:"email,omitempty"`
+	FullName                  string `json:"full_name,omitempty"`
+	Location                  string `json:"location,omitempty"`
+	RepoAdminChangeTeamAccess bool   `json:"repo_admin_change_team_access,omitempty"`
+	UserName                  string `json:"username"`
+	Visibility                string `json:"visibility,omitempty"` // possible values are `public` (default), `limited` or `private`
+	Website                   string `json:"website,omitempty"`
 }
 
 // EditOrgOption — EditOrgOption options for editing an organization
@@ -25,35 +24,43 @@ type CreateOrgOption struct {
 //
 //	opts := EditOrgOption{Description: "example"}
 type EditOrgOption struct {
-	Description string `json:"description,omitempty"`
-	Email string `json:"email,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	Location string `json:"location,omitempty"`
-	RepoAdminChangeTeamAccess bool `json:"repo_admin_change_team_access,omitempty"`
-	Visibility string `json:"visibility,omitempty"` // possible values are `public`, `limited` or `private`
-	Website string `json:"website,omitempty"`
+	Description               string `json:"description,omitempty"`
+	Email                     string `json:"email,omitempty"`
+	FullName                  string `json:"full_name,omitempty"`
+	Location                  string `json:"location,omitempty"`
+	RepoAdminChangeTeamAccess bool   `json:"repo_admin_change_team_access,omitempty"`
+	Visibility                string `json:"visibility,omitempty"` // possible values are `public`, `limited` or `private`
+	Website                   string `json:"website,omitempty"`
 }
 
 // Organization — Organization represents an organization
+//
+// Usage:
+//
+//	opts := Organization{Description: "example"}
 type Organization struct {
-	AvatarURL string `json:"avatar_url,omitempty"`
-	Description string `json:"description,omitempty"`
-	Email string `json:"email,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Location string `json:"location,omitempty"`
-	Name string `json:"name,omitempty"`
-	RepoAdminChangeTeamAccess bool `json:"repo_admin_change_team_access,omitempty"`
-	UserName string `json:"username,omitempty"` // deprecated
-	Visibility string `json:"visibility,omitempty"`
-	Website string `json:"website,omitempty"`
+	AvatarURL                 string `json:"avatar_url,omitempty"`
+	Description               string `json:"description,omitempty"`
+	Email                     string `json:"email,omitempty"`
+	FullName                  string `json:"full_name,omitempty"`
+	ID                        int64  `json:"id,omitempty"`
+	Location                  string `json:"location,omitempty"`
+	Name                      string `json:"name,omitempty"`
+	RepoAdminChangeTeamAccess bool   `json:"repo_admin_change_team_access,omitempty"`
+	UserName                  string `json:"username,omitempty"` // deprecated
+	Visibility                string `json:"visibility,omitempty"`
+	Website                   string `json:"website,omitempty"`
 }
 
 // OrganizationPermissions — OrganizationPermissions list different users permissions on an organization
+//
+// Usage:
+//
+//	opts := OrganizationPermissions{CanCreateRepository: true}
 type OrganizationPermissions struct {
 	CanCreateRepository bool `json:"can_create_repository,omitempty"`
-	CanRead bool `json:"can_read,omitempty"`
-	CanWrite bool `json:"can_write,omitempty"`
-	IsAdmin bool `json:"is_admin,omitempty"`
-	IsOwner bool `json:"is_owner,omitempty"`
+	CanRead             bool `json:"can_read,omitempty"`
+	CanWrite            bool `json:"can_write,omitempty"`
+	IsAdmin             bool `json:"is_admin,omitempty"`
+	IsOwner             bool `json:"is_owner,omitempty"`
 }

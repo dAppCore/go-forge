@@ -4,24 +4,30 @@ package types
 
 import "time"
 
-
+// Usage:
+//
+//	opts := Commit{HTMLURL: "https://example.com"}
 type Commit struct {
-	Author *User `json:"author,omitempty"`
-	Commit *RepoCommit `json:"commit,omitempty"`
-	Committer *User `json:"committer,omitempty"`
-	Created time.Time `json:"created,omitempty"`
-	Files []*CommitAffectedFiles `json:"files,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	Parents []*CommitMeta `json:"parents,omitempty"`
-	SHA string `json:"sha,omitempty"`
-	Stats *CommitStats `json:"stats,omitempty"`
-	URL string `json:"url,omitempty"`
+	Author    *User                  `json:"author,omitempty"`
+	Commit    *RepoCommit            `json:"commit,omitempty"`
+	Committer *User                  `json:"committer,omitempty"`
+	Created   time.Time              `json:"created,omitempty"`
+	Files     []*CommitAffectedFiles `json:"files,omitempty"`
+	HTMLURL   string                 `json:"html_url,omitempty"`
+	Parents   []*CommitMeta          `json:"parents,omitempty"`
+	SHA       string                 `json:"sha,omitempty"`
+	Stats     *CommitStats           `json:"stats,omitempty"`
+	URL       string                 `json:"url,omitempty"`
 }
 
 // CommitAffectedFiles — CommitAffectedFiles store information about files affected by the commit
+//
+// Usage:
+//
+//	opts := CommitAffectedFiles{Filename: "example"}
 type CommitAffectedFiles struct {
 	Filename string `json:"filename,omitempty"`
-	Status string `json:"status,omitempty"`
+	Status   string `json:"status,omitempty"`
 }
 
 // CommitDateOptions — CommitDateOptions store dates for GIT_AUTHOR_DATE and GIT_COMMITTER_DATE
@@ -30,41 +36,59 @@ type CommitAffectedFiles struct {
 //
 //	opts := CommitDateOptions{Author: time.Now()}
 type CommitDateOptions struct {
-	Author time.Time `json:"author,omitempty"`
+	Author    time.Time `json:"author,omitempty"`
 	Committer time.Time `json:"committer,omitempty"`
 }
 
+// Usage:
+//
+//	opts := CommitMeta{SHA: "example"}
 type CommitMeta struct {
 	Created time.Time `json:"created,omitempty"`
-	SHA string `json:"sha,omitempty"`
-	URL string `json:"url,omitempty"`
+	SHA     string    `json:"sha,omitempty"`
+	URL     string    `json:"url,omitempty"`
 }
 
 // CommitStats — CommitStats is statistics for a RepoCommit
+//
+// Usage:
+//
+//	opts := CommitStats{Additions: 1}
 type CommitStats struct {
 	Additions int64 `json:"additions,omitempty"`
 	Deletions int64 `json:"deletions,omitempty"`
-	Total int64 `json:"total,omitempty"`
+	Total     int64 `json:"total,omitempty"`
 }
 
 // CommitStatus — CommitStatus holds a single status of a single Commit
+//
+// Usage:
+//
+//	opts := CommitStatus{Description: "example"}
 type CommitStatus struct {
-	Context string `json:"context,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	Creator *User `json:"creator,omitempty"`
-	Description string `json:"description,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Status CommitStatusState `json:"status,omitempty"`
-	TargetURL string `json:"target_url,omitempty"`
-	URL string `json:"url,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
+	Context     string            `json:"context,omitempty"`
+	Created     time.Time         `json:"created_at,omitempty"`
+	Creator     *User             `json:"creator,omitempty"`
+	Description string            `json:"description,omitempty"`
+	ID          int64             `json:"id,omitempty"`
+	Status      CommitStatusState `json:"status,omitempty"`
+	TargetURL   string            `json:"target_url,omitempty"`
+	URL         string            `json:"url,omitempty"`
+	Updated     time.Time         `json:"updated_at,omitempty"`
 }
 
 // CommitStatusState — CommitStatusState holds the state of a CommitStatus It can be "pending", "success", "error" and "failure"
+//
+// Usage:
+//
+//	opts := CommitStatusState("example")
 type CommitStatusState string
 
+// Usage:
+//
+//	opts := CommitUser{Name: "example"}
 type CommitUser struct {
-	Date string `json:"date,omitempty"`
+	Date  string `json:"date,omitempty"`
 	Email string `json:"email,omitempty"`
-	Name string `json:"name,omitempty"`
+	Name  string `json:"name,omitempty"`
 }

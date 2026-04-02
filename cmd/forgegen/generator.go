@@ -5,6 +5,7 @@ import (
 	"cmp"
 	"maps"
 	"slices"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -254,34 +255,23 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 
 func populateUsageExamples(types map[string]*GoType) {
 	for _, gt := range types {
-		if !shouldHaveUsage(gt.Name) {
-			continue
-		}
 		gt.Usage = usageExample(gt)
 	}
 }
 
-func shouldHaveUsage(name string) bool {
-	if core.HasSuffix(name, "Option") || core.HasSuffix(name, "Options") {
-		return true
-	}
-	for _, prefix := range []string{
-		"Create", "Edit", "Update", "Delete", "Add", "Set",
-		"Dispatch", "Migrate", "Generate", "Replace", "Submit", "Transfer",
-	} {
-		if core.HasPrefix(name, prefix) {
-			return true
-		}
-	}
-	return false
-}
-
 func usageExample(gt *GoType) string {
-	example := exampleTypeLiteral(gt)
-	if example == "" {
-		example = gt.Name + "{}"
+	switch {
+	case gt.IsEnum && len(gt.EnumValues) > 0:
+		return enumConstName(gt.Name, gt.EnumValues[0])
+	case gt.IsAlias:
+		return gt.Name + "(" + exampleTypeExpression(gt.AliasType) + ")"
+	default:
+		example := exampleTypeLiteral(gt)
+		if example == "" {
+			example = gt.Name + "{}"
+		}
+		return example
 	}
-	return example
 }
 
 func exampleTypeLiteral(gt *GoType) string {
@@ -295,6 +285,31 @@ func exampleTypeLiteral(gt *GoType) string {
 	}
 
 	return gt.Name + "{" + field.GoName + ": " + exampleValue(field) + "}"
+}
+
+func exampleTypeExpression(typeName string) string {
+	switch {
+	case typeName == "string":
+		return strconv.Quote("example")
+	case typeName == "bool":
+		return "true"
+	case typeName == "int", typeName == "int32", typeName == "int64", typeName == "uint", typeName == "uint32", typeName == "uint64":
+		return "1"
+	case typeName == "float32", typeName == "float64":
+		return "1.0"
+	case typeName == "time.Time":
+		return "time.Now()"
+	case core.HasPrefix(typeName, "[]string"):
+		return "[]string{\"example\"}"
+	case core.HasPrefix(typeName, "[]int64"):
+		return "[]int64{1}"
+	case core.HasPrefix(typeName, "[]int"):
+		return "[]int{1}"
+	case core.HasPrefix(typeName, "map["):
+		return typeName + "{\"key\": \"value\"}"
+	default:
+		return typeName + "{}"
+	}
 }
 
 func chooseUsageField(fields []GoField) GoField {
@@ -352,7 +367,7 @@ func exampleValue(field GoField) string {
 	case core.HasPrefix(field.GoType, "[]int"):
 		return "[]int{1}"
 	case core.HasPrefix(field.GoType, "map["):
-		return "map[string]string{\"key\": \"value\"}"
+		return field.GoType + "{\"key\": \"value\"}"
 	default:
 		return "{}"
 	}

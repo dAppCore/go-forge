@@ -2,16 +2,19 @@
 
 package types
 
-
 // CombinedStatus — CombinedStatus holds the combined state of several statuses for a single commit
+//
+// Usage:
+//
+//	opts := CombinedStatus{CommitURL: "https://example.com"}
 type CombinedStatus struct {
-	CommitURL string `json:"commit_url,omitempty"`
-	Repository *Repository `json:"repository,omitempty"`
-	SHA string `json:"sha,omitempty"`
-	State CommitStatusState `json:"state,omitempty"`
-	Statuses []*CommitStatus `json:"statuses,omitempty"`
-	TotalCount int64 `json:"total_count,omitempty"`
-	URL string `json:"url,omitempty"`
+	CommitURL  string            `json:"commit_url,omitempty"`
+	Repository *Repository       `json:"repository,omitempty"`
+	SHA        string            `json:"sha,omitempty"`
+	State      CommitStatusState `json:"state,omitempty"`
+	Statuses   []*CommitStatus   `json:"statuses,omitempty"`
+	TotalCount int64             `json:"total_count,omitempty"`
+	URL        string            `json:"url,omitempty"`
 }
 
 // CreateStatusOption — CreateStatusOption holds the information needed to create a new CommitStatus for a Commit
@@ -20,8 +23,8 @@ type CombinedStatus struct {
 //
 //	opts := CreateStatusOption{Description: "example"}
 type CreateStatusOption struct {
-	Context string `json:"context,omitempty"`
-	Description string `json:"description,omitempty"`
-	State CommitStatusState `json:"state,omitempty"`
-	TargetURL string `json:"target_url,omitempty"`
+	Context     string            `json:"context,omitempty"`
+	Description string            `json:"description,omitempty"`
+	State       CommitStatusState `json:"state,omitempty"`
+	TargetURL   string            `json:"target_url,omitempty"`
 }

@@ -4,7 +4,6 @@ package types
 
 import "time"
 
-
 // CreateGPGKeyOption — CreateGPGKeyOption options create user GPG key
 //
 // Usage:
@@ -12,7 +11,7 @@ import "time"
 //	opts := CreateGPGKeyOption{ArmoredKey: "example"}
 type CreateGPGKeyOption struct {
 	ArmoredKey string `json:"armored_public_key"` // An armored GPG key to add
-	Signature string `json:"armored_signature,omitempty"`
+	Signature  string `json:"armored_signature,omitempty"`
 }
 
 // CreateKeyOption — CreateKeyOption options when creating a key
@@ -21,56 +20,72 @@ type CreateGPGKeyOption struct {
 //
 //	opts := CreateKeyOption{Title: "example"}
 type CreateKeyOption struct {
-	Key string `json:"key"` // An armored SSH key to add
-	ReadOnly bool `json:"read_only,omitempty"` // Describe if the key has only read access or read/write
-	Title string `json:"title"` // Title of the key to add
+	Key      string `json:"key"`                 // An armored SSH key to add
+	ReadOnly bool   `json:"read_only,omitempty"` // Describe if the key has only read access or read/write
+	Title    string `json:"title"`               // Title of the key to add
 }
 
 // DeployKey — DeployKey a deploy key
+//
+// Usage:
+//
+//	opts := DeployKey{Title: "example"}
 type DeployKey struct {
-	Created time.Time `json:"created_at,omitempty"`
-	Fingerprint string `json:"fingerprint,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Key string `json:"key,omitempty"`
-	KeyID int64 `json:"key_id,omitempty"`
-	ReadOnly bool `json:"read_only,omitempty"`
-	Repository *Repository `json:"repository,omitempty"`
-	Title string `json:"title,omitempty"`
-	URL string `json:"url,omitempty"`
+	Created     time.Time   `json:"created_at,omitempty"`
+	Fingerprint string      `json:"fingerprint,omitempty"`
+	ID          int64       `json:"id,omitempty"`
+	Key         string      `json:"key,omitempty"`
+	KeyID       int64       `json:"key_id,omitempty"`
+	ReadOnly    bool        `json:"read_only,omitempty"`
+	Repository  *Repository `json:"repository,omitempty"`
+	Title       string      `json:"title,omitempty"`
+	URL         string      `json:"url,omitempty"`
 }
 
 // GPGKey — GPGKey a user GPG key to sign commit and tag in repository
+//
+// Usage:
+//
+//	opts := GPGKey{KeyID: "example"}
 type GPGKey struct {
-	CanCertify bool `json:"can_certify,omitempty"`
-	CanEncryptComms bool `json:"can_encrypt_comms,omitempty"`
-	CanEncryptStorage bool `json:"can_encrypt_storage,omitempty"`
-	CanSign bool `json:"can_sign,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	Emails []*GPGKeyEmail `json:"emails,omitempty"`
-	Expires time.Time `json:"expires_at,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	KeyID string `json:"key_id,omitempty"`
-	PrimaryKeyID string `json:"primary_key_id,omitempty"`
-	PublicKey string `json:"public_key,omitempty"`
-	SubsKey []*GPGKey `json:"subkeys,omitempty"`
-	Verified bool `json:"verified,omitempty"`
+	CanCertify        bool           `json:"can_certify,omitempty"`
+	CanEncryptComms   bool           `json:"can_encrypt_comms,omitempty"`
+	CanEncryptStorage bool           `json:"can_encrypt_storage,omitempty"`
+	CanSign           bool           `json:"can_sign,omitempty"`
+	Created           time.Time      `json:"created_at,omitempty"`
+	Emails            []*GPGKeyEmail `json:"emails,omitempty"`
+	Expires           time.Time      `json:"expires_at,omitempty"`
+	ID                int64          `json:"id,omitempty"`
+	KeyID             string         `json:"key_id,omitempty"`
+	PrimaryKeyID      string         `json:"primary_key_id,omitempty"`
+	PublicKey         string         `json:"public_key,omitempty"`
+	SubsKey           []*GPGKey      `json:"subkeys,omitempty"`
+	Verified          bool           `json:"verified,omitempty"`
 }
 
 // GPGKeyEmail — GPGKeyEmail an email attached to a GPGKey
+//
+// Usage:
+//
+//	opts := GPGKeyEmail{Email: "alice@example.com"}
 type GPGKeyEmail struct {
-	Email string `json:"email,omitempty"`
-	Verified bool `json:"verified,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Verified bool   `json:"verified,omitempty"`
 }
 
 // PublicKey — PublicKey publickey is a user key to push code to repository
+//
+// Usage:
+//
+//	opts := PublicKey{Title: "example"}
 type PublicKey struct {
-	Created time.Time `json:"created_at,omitempty"`
-	Fingerprint string `json:"fingerprint,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Key string `json:"key,omitempty"`
-	KeyType string `json:"key_type,omitempty"`
-	ReadOnly bool `json:"read_only,omitempty"`
-	Title string `json:"title,omitempty"`
-	URL string `json:"url,omitempty"`
-	User *User `json:"user,omitempty"`
+	Created     time.Time `json:"created_at,omitempty"`
+	Fingerprint string    `json:"fingerprint,omitempty"`
+	ID          int64     `json:"id,omitempty"`
+	Key         string    `json:"key,omitempty"`
+	KeyType     string    `json:"key_type,omitempty"`
+	ReadOnly    bool      `json:"read_only,omitempty"`
+	Title       string    `json:"title,omitempty"`
+	URL         string    `json:"url,omitempty"`
+	User        *User     `json:"user,omitempty"`
 }
