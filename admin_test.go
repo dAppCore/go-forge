@@ -513,6 +513,70 @@ func TestAdminService_DeleteQuotaGroup_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_ListQuotaGroupUsers_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups/default/users" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.User{
+			{ID: 1, UserName: "alice"},
+			{ID: 2, UserName: "bob"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	users, err := f.Admin.ListQuotaGroupUsers(context.Background(), "default")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(users) != 2 {
+		t.Fatalf("got %d users, want 2", len(users))
+	}
+	if users[0].UserName != "alice" {
+		t.Errorf("got username=%q, want %q", users[0].UserName, "alice")
+	}
+}
+
+func TestAdminService_AddQuotaGroupUser_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups/default/users/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Admin.AddQuotaGroupUser(context.Background(), "default", "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestAdminService_RemoveQuotaGroupUser_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups/default/users/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Admin.RemoveQuotaGroupUser(context.Background(), "default", "alice"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestAdminService_ListQuotaRules_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

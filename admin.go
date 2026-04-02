@@ -155,6 +155,30 @@ func (s *AdminService) DeleteQuotaGroup(ctx context.Context, quotagroup string) 
 	return s.client.Delete(ctx, path)
 }
 
+// ListQuotaGroupUsers returns all users in a quota group.
+func (s *AdminService) ListQuotaGroupUsers(ctx context.Context, quotagroup string) ([]types.User, error) {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}/users", Params{"quotagroup": quotagroup})
+	return ListAll[types.User](ctx, s.client, path, nil)
+}
+
+// IterQuotaGroupUsers returns an iterator over all users in a quota group.
+func (s *AdminService) IterQuotaGroupUsers(ctx context.Context, quotagroup string) iter.Seq2[types.User, error] {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}/users", Params{"quotagroup": quotagroup})
+	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// AddQuotaGroupUser adds a user to a quota group.
+func (s *AdminService) AddQuotaGroupUser(ctx context.Context, quotagroup, username string) error {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}/users/{username}", Params{"quotagroup": quotagroup, "username": username})
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// RemoveQuotaGroupUser removes a user from a quota group.
+func (s *AdminService) RemoveQuotaGroupUser(ctx context.Context, quotagroup, username string) error {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}/users/{username}", Params{"quotagroup": quotagroup, "username": username})
+	return s.client.Delete(ctx, path)
+}
+
 // ListQuotaRules returns all available quota rules.
 func (s *AdminService) ListQuotaRules(ctx context.Context) ([]types.QuotaRuleInfo, error) {
 	return ListAll[types.QuotaRuleInfo](ctx, s.client, "/api/v1/admin/quota/rules", nil)
