@@ -85,7 +85,7 @@ func TestForge_HasToken_Bad(t *testing.T) {
 func TestForge_String_Good(t *testing.T) {
 	f := NewForge("https://forge.lthn.ai", "tok", WithUserAgent("go-forge/1.0"))
 	got := fmt.Sprint(f)
-	want := `forge.Forge{forge.Client{baseURL="https://forge.lthn.ai", token=set, userAgent="go-forge/1.0"}}`
+	want := `forge.Forge{client=forge.Client{baseURL="https://forge.lthn.ai", token=set, userAgent="go-forge/1.0"}}`
 	if got != want {
 		t.Fatalf("got %q, want %q", got, want)
 	}

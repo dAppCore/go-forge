@@ -123,7 +123,7 @@ func (f *Forge) String() string {
 	if f.client == nil {
 		return "forge.Forge{client=<nil>}"
 	}
-	return "forge.Forge{" + f.client.String() + "}"
+	return "forge.Forge{client=" + f.client.String() + "}"
 }
 
 // GoString returns a safe Go-syntax summary of the Forge client.
