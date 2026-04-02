@@ -56,6 +56,7 @@ func readConfigFile() (url, token string, err error) {
 }
 
 // SaveConfig persists the Forgejo URL and API token to the default config file.
+// It creates the parent directory if it does not already exist.
 //
 // Usage:
 //
@@ -64,6 +65,9 @@ func SaveConfig(url, token string) error {
 	path, err := configPath()
 	if err != nil {
 		return err
+	}
+	if err := coreio.Local.EnsureDir(filepath.Dir(path)); err != nil {
+		return core.E("SaveConfig", "forge: create config directory", err)
 	}
 	payload, err := json.MarshalIndent(configFile{URL: url, Token: token}, "", "  ")
 	if err != nil {
