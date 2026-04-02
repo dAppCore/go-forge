@@ -36,7 +36,7 @@ func (s *PackageService) Iter(ctx context.Context, owner string) iter.Seq2[types
 
 // Get returns a single package by owner, type, name, and version.
 func (s *PackageService) Get(ctx context.Context, owner, pkgType, name, version string) (*types.Package, error) {
-	path := ResolvePath("/api/v1/packages/{owner}/{pkgType}/{name}/{version}", pathParams("owner", owner, "pkgType", pkgType, "name", name, "version", version))
+	path := ResolvePath("/api/v1/packages/{owner}/{type}/{name}/{version}", pathParams("owner", owner, "type", pkgType, "name", name, "version", version))
 	var out types.Package
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -46,18 +46,18 @@ func (s *PackageService) Get(ctx context.Context, owner, pkgType, name, version 
 
 // Delete removes a package by owner, type, name, and version.
 func (s *PackageService) Delete(ctx context.Context, owner, pkgType, name, version string) error {
-	path := ResolvePath("/api/v1/packages/{owner}/{pkgType}/{name}/{version}", pathParams("owner", owner, "pkgType", pkgType, "name", name, "version", version))
+	path := ResolvePath("/api/v1/packages/{owner}/{type}/{name}/{version}", pathParams("owner", owner, "type", pkgType, "name", name, "version", version))
 	return s.client.Delete(ctx, path)
 }
 
 // ListFiles returns all files for a specific package version.
 func (s *PackageService) ListFiles(ctx context.Context, owner, pkgType, name, version string) ([]types.PackageFile, error) {
-	path := ResolvePath("/api/v1/packages/{owner}/{pkgType}/{name}/{version}/files", pathParams("owner", owner, "pkgType", pkgType, "name", name, "version", version))
+	path := ResolvePath("/api/v1/packages/{owner}/{type}/{name}/{version}/files", pathParams("owner", owner, "type", pkgType, "name", name, "version", version))
 	return ListAll[types.PackageFile](ctx, s.client, path, nil)
 }
 
 // IterFiles returns an iterator over all files for a specific package version.
 func (s *PackageService) IterFiles(ctx context.Context, owner, pkgType, name, version string) iter.Seq2[types.PackageFile, error] {
-	path := ResolvePath("/api/v1/packages/{owner}/{pkgType}/{name}/{version}/files", pathParams("owner", owner, "pkgType", pkgType, "name", name, "version", version))
+	path := ResolvePath("/api/v1/packages/{owner}/{type}/{name}/{version}/files", pathParams("owner", owner, "type", pkgType, "name", name, "version", version))
 	return ListIter[types.PackageFile](ctx, s.client, path, nil)
 }

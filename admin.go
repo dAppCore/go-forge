@@ -77,6 +77,58 @@ func (s *AdminService) CreateUser(ctx context.Context, opts *types.CreateUserOpt
 	return &out, nil
 }
 
+// CreateUserKey adds a public key on behalf of a user.
+func (s *AdminService) CreateUserKey(ctx context.Context, username string, opts *types.CreateKeyOption) (*types.PublicKey, error) {
+	path := ResolvePath("/api/v1/admin/users/{username}/keys", Params{"username": username})
+	var out types.PublicKey
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteUserKey deletes a user's public key.
+func (s *AdminService) DeleteUserKey(ctx context.Context, username string, id int64) error {
+	path := ResolvePath("/api/v1/admin/users/{username}/keys/{id}", Params{"username": username, "id": int64String(id)})
+	return s.client.Delete(ctx, path)
+}
+
+// CreateUserOrg creates an organisation on behalf of a user.
+func (s *AdminService) CreateUserOrg(ctx context.Context, username string, opts *types.CreateOrgOption) (*types.Organization, error) {
+	path := ResolvePath("/api/v1/admin/users/{username}/orgs", Params{"username": username})
+	var out types.Organization
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetUserQuota returns a user's quota information.
+func (s *AdminService) GetUserQuota(ctx context.Context, username string) (*types.QuotaInfo, error) {
+	path := ResolvePath("/api/v1/admin/users/{username}/quota", Params{"username": username})
+	var out types.QuotaInfo
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// SetUserQuotaGroups sets the user's quota groups to a given list.
+func (s *AdminService) SetUserQuotaGroups(ctx context.Context, username string, opts *types.SetUserQuotaGroupsOptions) error {
+	path := ResolvePath("/api/v1/admin/users/{username}/quota/groups", Params{"username": username})
+	return s.client.Post(ctx, path, opts, nil)
+}
+
+// CreateUserRepo creates a repository on behalf of a user.
+func (s *AdminService) CreateUserRepo(ctx context.Context, username string, opts *types.CreateRepoOption) (*types.Repository, error) {
+	path := ResolvePath("/api/v1/admin/users/{username}/repos", Params{"username": username})
+	var out types.Repository
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // EditUser edits an existing user (admin only).
 func (s *AdminService) EditUser(ctx context.Context, username string, opts map[string]any) error {
 	path := ResolvePath("/api/v1/admin/users/{username}", Params{"username": username})
@@ -187,6 +239,18 @@ func (s *AdminService) GetQuotaGroup(ctx context.Context, quotagroup string) (*t
 // DeleteQuotaGroup deletes a quota group.
 func (s *AdminService) DeleteQuotaGroup(ctx context.Context, quotagroup string) error {
 	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}", Params{"quotagroup": quotagroup})
+	return s.client.Delete(ctx, path)
+}
+
+// AddQuotaGroupRule adds a quota rule to a quota group.
+func (s *AdminService) AddQuotaGroupRule(ctx context.Context, quotagroup, quotarule string) error {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}/rules/{quotarule}", Params{"quotagroup": quotagroup, "quotarule": quotarule})
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// RemoveQuotaGroupRule removes a quota rule from a quota group.
+func (s *AdminService) RemoveQuotaGroupRule(ctx context.Context, quotagroup, quotarule string) error {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}/rules/{quotarule}", Params{"quotagroup": quotagroup, "quotarule": quotarule})
 	return s.client.Delete(ctx, path)
 }
 

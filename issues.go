@@ -245,7 +245,7 @@ func (s *IssueService) AddLabels(ctx context.Context, owner, repo string, index 
 
 // RemoveLabel removes a single label from an issue.
 func (s *IssueService) RemoveLabel(ctx context.Context, owner, repo string, index int64, labelID int64) error {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/labels/{labelID}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "labelID", int64String(labelID)))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/labels/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(labelID)))
 	return s.client.Delete(ctx, path)
 }
 
@@ -270,6 +270,22 @@ func (s *IssueService) CreateComment(ctx context.Context, owner, repo string, in
 		return nil, err
 	}
 	return &out, nil
+}
+
+// EditComment updates an issue comment.
+func (s *IssueService) EditComment(ctx context.Context, owner, repo string, index, id int64, opts *types.EditIssueCommentOption) (*types.Comment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/comments/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(id)))
+	var out types.Comment
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteComment deletes an issue comment.
+func (s *IssueService) DeleteComment(ctx context.Context, owner, repo string, index, id int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/comments/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(id)))
+	return s.client.Delete(ctx, path)
 }
 
 // ListCommentReactions returns all reactions on an issue comment.

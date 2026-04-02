@@ -203,7 +203,7 @@ func (s *ActionsService) DeleteUserSecret(ctx context.Context, name string) erro
 
 // DispatchWorkflow triggers a workflow run.
 func (s *ActionsService) DispatchWorkflow(ctx context.Context, owner, repo, workflow string, opts map[string]any) error {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/workflows/{workflow}/dispatches", pathParams("owner", owner, "repo", repo, "workflow", workflow))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/workflows/{workflowname}/dispatches", pathParams("owner", owner, "repo", repo, "workflowname", workflow))
 	return s.client.Post(ctx, path, opts, nil)
 }
 

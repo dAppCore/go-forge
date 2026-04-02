@@ -55,6 +55,30 @@ func (o ActivityFeedListOptions) queryParams() map[string]string {
 	}
 }
 
+// RepoTimeListOptions controls filtering for repository tracked times.
+type RepoTimeListOptions struct {
+	User   string
+	Since  *time.Time
+	Before *time.Time
+}
+
+func (o RepoTimeListOptions) queryParams() map[string]string {
+	query := make(map[string]string, 3)
+	if o.User != "" {
+		query["user"] = o.User
+	}
+	if o.Since != nil {
+		query["since"] = o.Since.Format(time.RFC3339)
+	}
+	if o.Before != nil {
+		query["before"] = o.Before.Format(time.RFC3339)
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
 func newRepoService(c *Client) *RepoService {
 	return &RepoService{
 		Resource: *NewResource[types.Repository, types.CreateRepoOption, types.EditRepoOption](
@@ -67,6 +91,16 @@ func newRepoService(c *Client) *RepoService {
 func (s *RepoService) Migrate(ctx context.Context, opts *types.MigrateRepoOptions) (*types.Repository, error) {
 	var out types.Repository
 	if err := s.client.Post(ctx, "/api/v1/repos/migrate", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateOrgRepo creates a repository in an organisation.
+func (s *RepoService) CreateOrgRepo(ctx context.Context, org string, opts *types.CreateRepoOption) (*types.Repository, error) {
+	path := ResolvePath("/api/v1/org/{org}/repos", pathParams("org", org))
+	var out types.Repository
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
 		return nil, err
 	}
 	return &out, nil
@@ -635,6 +669,31 @@ func (s *RepoService) DeleteTopic(ctx context.Context, owner, repo, topic string
 	return s.client.Delete(ctx, path)
 }
 
+// AddFlag adds a flag to a repository.
+func (s *RepoService) AddFlag(ctx context.Context, owner, repo, flag string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags/{flag}", pathParams("owner", owner, "repo", repo, "flag", flag))
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// HasFlag reports whether a repository has a given flag.
+func (s *RepoService) HasFlag(ctx context.Context, owner, repo, flag string) (bool, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags/{flag}", pathParams("owner", owner, "repo", repo, "flag", flag))
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, nil)
+	if err != nil {
+		if IsNotFound(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return resp.StatusCode == http.StatusNoContent, nil
+}
+
+// RemoveFlag removes a flag from a repository.
+func (s *RepoService) RemoveFlag(ctx context.Context, owner, repo, flag string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags/{flag}", pathParams("owner", owner, "repo", repo, "flag", flag))
+	return s.client.Delete(ctx, path)
+}
+
 // GetNewPinAllowed returns whether new issue pins are allowed for a repository.
 func (s *RepoService) GetNewPinAllowed(ctx context.Context, owner, repo string) (*types.NewIssuePinsAllowed, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/new_pin_allowed", pathParams("owner", owner, "repo", repo))
@@ -812,6 +871,84 @@ func (s *RepoService) SyncPushMirrors(ctx context.Context, owner, repo string) e
 	return s.client.Post(ctx, path, nil, nil)
 }
 
+// GetBlob returns the blob content for a repository object.
+func (s *RepoService) GetBlob(ctx context.Context, owner, repo, sha string) (*types.GitBlobResponse, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/blobs/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
+	var out types.GitBlobResponse
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListGitRefs returns all git references for a repository.
+func (s *RepoService) ListGitRefs(ctx context.Context, owner, repo string) ([]types.Reference, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/refs", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Reference](ctx, s.client, path, nil)
+}
+
+// IterGitRefs returns an iterator over all git references for a repository.
+func (s *RepoService) IterGitRefs(ctx context.Context, owner, repo string) iter.Seq2[types.Reference, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/refs", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Reference](ctx, s.client, path, nil)
+}
+
+// ListGitRefsByRef returns all git references matching a ref prefix.
+func (s *RepoService) ListGitRefsByRef(ctx context.Context, owner, repo, ref string) ([]types.Reference, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/refs/{ref}", pathParams("owner", owner, "repo", repo, "ref", ref))
+	return ListAll[types.Reference](ctx, s.client, path, nil)
+}
+
+// IterGitRefsByRef returns an iterator over all git references matching a ref prefix.
+func (s *RepoService) IterGitRefsByRef(ctx context.Context, owner, repo, ref string) iter.Seq2[types.Reference, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/refs/{ref}", pathParams("owner", owner, "repo", repo, "ref", ref))
+	return ListIter[types.Reference](ctx, s.client, path, nil)
+}
+
+// GetAnnotatedTag returns the annotated tag object for a tag SHA.
+func (s *RepoService) GetAnnotatedTag(ctx context.Context, owner, repo, sha string) (*types.AnnotatedTag, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/tags/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
+	var out types.AnnotatedTag
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetTree returns the git tree for a repository object.
+func (s *RepoService) GetTree(ctx context.Context, owner, repo, sha string) (*types.GitTreeResponse, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/trees/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
+	var out types.GitTreeResponse
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListTimes returns all tracked times for a repository.
+func (s *RepoService) ListTimes(ctx context.Context, owner, repo string, filters ...RepoTimeListOptions) ([]types.TrackedTime, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/times", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.TrackedTime](ctx, s.client, path, repoTimeQuery(filters...))
+}
+
+// IterTimes returns an iterator over all tracked times for a repository.
+func (s *RepoService) IterTimes(ctx context.Context, owner, repo string, filters ...RepoTimeListOptions) iter.Seq2[types.TrackedTime, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/times", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.TrackedTime](ctx, s.client, path, repoTimeQuery(filters...))
+}
+
+// ListUserTimes returns all tracked times for a user in a repository.
+func (s *RepoService) ListUserTimes(ctx context.Context, owner, repo, username string) ([]types.TrackedTime, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/times/{user}", pathParams("owner", owner, "repo", repo, "user", username))
+	return ListAll[types.TrackedTime](ctx, s.client, path, nil)
+}
+
+// IterUserTimes returns an iterator over all tracked times for a user in a repository.
+func (s *RepoService) IterUserTimes(ctx context.Context, owner, repo, username string) iter.Seq2[types.TrackedTime, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/times/{user}", pathParams("owner", owner, "repo", repo, "user", username))
+	return ListIter[types.TrackedTime](ctx, s.client, path, nil)
+}
+
 func repoKeyQuery(filters ...RepoKeyListOptions) map[string]string {
 	if len(filters) == 0 {
 		return nil
@@ -824,6 +961,23 @@ func repoKeyQuery(filters ...RepoKeyListOptions) map[string]string {
 		}
 		if filter.Fingerprint != "" {
 			query["fingerprint"] = filter.Fingerprint
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
+func repoTimeQuery(filters ...RepoTimeListOptions) map[string]string {
+	if len(filters) == 0 {
+		return nil
+	}
+
+	query := make(map[string]string, 3)
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
 		}
 	}
 	if len(query) == 0 {

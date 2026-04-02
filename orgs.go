@@ -79,20 +79,20 @@ func (s *OrgService) IsMember(ctx context.Context, org, username string) (bool, 
 }
 
 // ListBlockedUsers returns all users blocked by an organisation.
-func (s *OrgService) ListBlockedUsers(ctx context.Context, org string) ([]types.User, error) {
-	path := ResolvePath("/api/v1/orgs/{org}/blocks", pathParams("org", org))
-	return ListAll[types.User](ctx, s.client, path, nil)
+func (s *OrgService) ListBlockedUsers(ctx context.Context, org string) ([]types.BlockedUser, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/list_blocked", pathParams("org", org))
+	return ListAll[types.BlockedUser](ctx, s.client, path, nil)
 }
 
 // IterBlockedUsers returns an iterator over all users blocked by an organisation.
-func (s *OrgService) IterBlockedUsers(ctx context.Context, org string) iter.Seq2[types.User, error] {
-	path := ResolvePath("/api/v1/orgs/{org}/blocks", pathParams("org", org))
-	return ListIter[types.User](ctx, s.client, path, nil)
+func (s *OrgService) IterBlockedUsers(ctx context.Context, org string) iter.Seq2[types.BlockedUser, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/list_blocked", pathParams("org", org))
+	return ListIter[types.BlockedUser](ctx, s.client, path, nil)
 }
 
 // IsBlocked reports whether a user is blocked by an organisation.
 func (s *OrgService) IsBlocked(ctx context.Context, org, username string) (bool, error) {
-	path := ResolvePath("/api/v1/orgs/{org}/blocks/{username}", pathParams("org", org, "username", username))
+	path := ResolvePath("/api/v1/orgs/{org}/block/{username}", pathParams("org", org, "username", username))
 	resp, err := s.client.doJSON(ctx, "GET", path, nil, nil)
 	if err != nil {
 		if IsNotFound(err) {
@@ -142,14 +142,114 @@ func (s *OrgService) ConcealMember(ctx context.Context, org, username string) er
 
 // Block blocks a user within an organisation.
 func (s *OrgService) Block(ctx context.Context, org, username string) error {
-	path := ResolvePath("/api/v1/orgs/{org}/blocks/{username}", pathParams("org", org, "username", username))
+	path := ResolvePath("/api/v1/orgs/{org}/block/{username}", pathParams("org", org, "username", username))
 	return s.client.Put(ctx, path, nil, nil)
 }
 
 // Unblock unblocks a user within an organisation.
 func (s *OrgService) Unblock(ctx context.Context, org, username string) error {
-	path := ResolvePath("/api/v1/orgs/{org}/blocks/{username}", pathParams("org", org, "username", username))
+	path := ResolvePath("/api/v1/orgs/{org}/unblock/{username}", pathParams("org", org, "username", username))
 	return s.client.Delete(ctx, path)
+}
+
+// GetQuota returns the quota information for an organisation.
+func (s *OrgService) GetQuota(ctx context.Context, org string) (*types.QuotaInfo, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/quota", pathParams("org", org))
+	var out types.QuotaInfo
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CheckQuota reports whether an organisation is over quota for the current subject.
+func (s *OrgService) CheckQuota(ctx context.Context, org string) (bool, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/quota/check", pathParams("org", org))
+	var out bool
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return false, err
+	}
+	return out, nil
+}
+
+// ListQuotaArtifacts returns all artefacts counting towards an organisation's quota.
+func (s *OrgService) ListQuotaArtifacts(ctx context.Context, org string) ([]types.QuotaUsedArtifact, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/quota/artifacts", pathParams("org", org))
+	return ListAll[types.QuotaUsedArtifact](ctx, s.client, path, nil)
+}
+
+// IterQuotaArtifacts returns an iterator over all artefacts counting towards an organisation's quota.
+func (s *OrgService) IterQuotaArtifacts(ctx context.Context, org string) iter.Seq2[types.QuotaUsedArtifact, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/quota/artifacts", pathParams("org", org))
+	return ListIter[types.QuotaUsedArtifact](ctx, s.client, path, nil)
+}
+
+// ListQuotaAttachments returns all attachments counting towards an organisation's quota.
+func (s *OrgService) ListQuotaAttachments(ctx context.Context, org string) ([]types.QuotaUsedAttachment, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/quota/attachments", pathParams("org", org))
+	return ListAll[types.QuotaUsedAttachment](ctx, s.client, path, nil)
+}
+
+// IterQuotaAttachments returns an iterator over all attachments counting towards an organisation's quota.
+func (s *OrgService) IterQuotaAttachments(ctx context.Context, org string) iter.Seq2[types.QuotaUsedAttachment, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/quota/attachments", pathParams("org", org))
+	return ListIter[types.QuotaUsedAttachment](ctx, s.client, path, nil)
+}
+
+// ListQuotaPackages returns all packages counting towards an organisation's quota.
+func (s *OrgService) ListQuotaPackages(ctx context.Context, org string) ([]types.QuotaUsedPackage, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/quota/packages", pathParams("org", org))
+	return ListAll[types.QuotaUsedPackage](ctx, s.client, path, nil)
+}
+
+// IterQuotaPackages returns an iterator over all packages counting towards an organisation's quota.
+func (s *OrgService) IterQuotaPackages(ctx context.Context, org string) iter.Seq2[types.QuotaUsedPackage, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/quota/packages", pathParams("org", org))
+	return ListIter[types.QuotaUsedPackage](ctx, s.client, path, nil)
+}
+
+// GetRunnerRegistrationToken returns an organisation actions runner registration token.
+func (s *OrgService) GetRunnerRegistrationToken(ctx context.Context, org string) (string, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/actions/runners/registration-token", pathParams("org", org))
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, nil)
+	if err != nil {
+		return "", err
+	}
+	return resp.Header.Get("token"), nil
+}
+
+// UpdateAvatar updates an organisation avatar.
+func (s *OrgService) UpdateAvatar(ctx context.Context, org string, opts *types.UpdateUserAvatarOption) error {
+	path := ResolvePath("/api/v1/orgs/{org}/avatar", pathParams("org", org))
+	return s.client.Post(ctx, path, opts, nil)
+}
+
+// DeleteAvatar deletes an organisation avatar.
+func (s *OrgService) DeleteAvatar(ctx context.Context, org string) error {
+	path := ResolvePath("/api/v1/orgs/{org}/avatar", pathParams("org", org))
+	return s.client.Delete(ctx, path)
+}
+
+// SearchTeams searches for teams within an organisation.
+func (s *OrgService) SearchTeams(ctx context.Context, org, q string) ([]types.Team, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/teams/search", pathParams("org", org))
+	return ListAll[types.Team](ctx, s.client, path, map[string]string{"q": q})
+}
+
+// IterSearchTeams returns an iterator over teams within an organisation.
+func (s *OrgService) IterSearchTeams(ctx context.Context, org, q string) iter.Seq2[types.Team, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/teams/search", pathParams("org", org))
+	return ListIter[types.Team](ctx, s.client, path, map[string]string{"q": q})
+}
+
+// GetUserPermissions returns a user's permissions in an organisation.
+func (s *OrgService) GetUserPermissions(ctx context.Context, username, org string) (*types.OrganizationPermissions, error) {
+	path := ResolvePath("/api/v1/users/{username}/orgs/{org}/permissions", pathParams("username", username, "org", org))
+	var out types.OrganizationPermissions
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 // ListActivityFeeds returns the organisation's activity feed entries.

@@ -525,6 +525,55 @@ func (s *UserService) IterMyStarred(ctx context.Context) iter.Seq2[types.Reposit
 	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/starred", nil)
 }
 
+// ListMyFollowers returns all followers of the authenticated user.
+func (s *UserService) ListMyFollowers(ctx context.Context) ([]types.User, error) {
+	return ListAll[types.User](ctx, s.client, "/api/v1/user/followers", nil)
+}
+
+// IterMyFollowers returns an iterator over all followers of the authenticated user.
+func (s *UserService) IterMyFollowers(ctx context.Context) iter.Seq2[types.User, error] {
+	return ListIter[types.User](ctx, s.client, "/api/v1/user/followers", nil)
+}
+
+// ListMyTeams returns all teams the authenticated user belongs to.
+func (s *UserService) ListMyTeams(ctx context.Context) ([]types.Team, error) {
+	return ListAll[types.Team](ctx, s.client, "/api/v1/user/teams", nil)
+}
+
+// IterMyTeams returns an iterator over all teams the authenticated user belongs to.
+func (s *UserService) IterMyTeams(ctx context.Context) iter.Seq2[types.Team, error] {
+	return ListIter[types.Team](ctx, s.client, "/api/v1/user/teams", nil)
+}
+
+// ListMyTrackedTimes returns all tracked times logged by the authenticated user.
+func (s *UserService) ListMyTrackedTimes(ctx context.Context) ([]types.TrackedTime, error) {
+	return ListAll[types.TrackedTime](ctx, s.client, "/api/v1/user/times", nil)
+}
+
+// IterMyTrackedTimes returns an iterator over all tracked times logged by the authenticated user.
+func (s *UserService) IterMyTrackedTimes(ctx context.Context) iter.Seq2[types.TrackedTime, error] {
+	return ListIter[types.TrackedTime](ctx, s.client, "/api/v1/user/times", nil)
+}
+
+// CheckQuota reports whether the authenticated user is over quota.
+func (s *UserService) CheckQuota(ctx context.Context) (bool, error) {
+	var out bool
+	if err := s.client.Get(ctx, "/api/v1/user/quota/check", &out); err != nil {
+		return false, err
+	}
+	return out, nil
+}
+
+// GetRunnerRegistrationToken returns the authenticated user's actions runner registration token.
+func (s *UserService) GetRunnerRegistrationToken(ctx context.Context) (string, error) {
+	path := "/api/v1/user/actions/runners/registration-token"
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, nil)
+	if err != nil {
+		return "", err
+	}
+	return resp.Header.Get("token"), nil
+}
+
 // ListFollowers returns all followers of a user.
 func (s *UserService) ListFollowers(ctx context.Context, username string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/users/{username}/followers", pathParams("username", username))
@@ -559,6 +608,30 @@ func (s *UserService) ListFollowing(ctx context.Context, username string) ([]typ
 func (s *UserService) IterFollowing(ctx context.Context, username string) iter.Seq2[types.User, error] {
 	path := ResolvePath("/api/v1/users/{username}/following", pathParams("username", username))
 	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// ListActivityFeeds returns a user's activity feed entries.
+func (s *UserService) ListActivityFeeds(ctx context.Context, username string) ([]types.Activity, error) {
+	path := ResolvePath("/api/v1/users/{username}/activities/feeds", pathParams("username", username))
+	return ListAll[types.Activity](ctx, s.client, path, nil)
+}
+
+// IterActivityFeeds returns an iterator over a user's activity feed entries.
+func (s *UserService) IterActivityFeeds(ctx context.Context, username string) iter.Seq2[types.Activity, error] {
+	path := ResolvePath("/api/v1/users/{username}/activities/feeds", pathParams("username", username))
+	return ListIter[types.Activity](ctx, s.client, path, nil)
+}
+
+// ListRepos returns all repositories owned by a user.
+func (s *UserService) ListRepos(ctx context.Context, username string) ([]types.Repository, error) {
+	path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username))
+	return ListAll[types.Repository](ctx, s.client, path, nil)
+}
+
+// IterRepos returns an iterator over all repositories owned by a user.
+func (s *UserService) IterRepos(ctx context.Context, username string) iter.Seq2[types.Repository, error] {
+	path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username))
+	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
 // Follow follows a user as the authenticated user.

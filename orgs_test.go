@@ -144,13 +144,13 @@ func TestOrgService_ListBlockedUsers_Good(t *testing.T) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
 		}
-		if r.URL.Path != "/api/v1/orgs/core/blocks" {
+		if r.URL.Path != "/api/v1/orgs/core/list_blocked" {
 			t.Errorf("wrong path: %s", r.URL.Path)
 		}
 		w.Header().Set("X-Total-Count", "2")
-		json.NewEncoder(w).Encode([]types.User{
-			{ID: 1, UserName: "alice"},
-			{ID: 2, UserName: "bob"},
+		json.NewEncoder(w).Encode([]types.BlockedUser{
+			{BlockID: 1},
+			{BlockID: 2},
 		})
 	}))
 	defer srv.Close()
@@ -163,8 +163,8 @@ func TestOrgService_ListBlockedUsers_Good(t *testing.T) {
 	if len(blocked) != 2 {
 		t.Fatalf("got %d blocked users, want 2", len(blocked))
 	}
-	if blocked[0].UserName != "alice" {
-		t.Errorf("got username=%q, want %q", blocked[0].UserName, "alice")
+	if blocked[0].BlockID != 1 {
+		t.Errorf("got block_id=%d, want %d", blocked[0].BlockID, 1)
 	}
 }
 
@@ -209,7 +209,7 @@ func TestOrgService_Block_Good(t *testing.T) {
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
 		}
-		if r.URL.Path != "/api/v1/orgs/core/blocks/alice" {
+		if r.URL.Path != "/api/v1/orgs/core/block/alice" {
 			t.Errorf("wrong path: %s", r.URL.Path)
 		}
 		w.WriteHeader(http.StatusNoContent)
@@ -227,7 +227,7 @@ func TestOrgService_Unblock_Good(t *testing.T) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
 		}
-		if r.URL.Path != "/api/v1/orgs/core/blocks/alice" {
+		if r.URL.Path != "/api/v1/orgs/core/unblock/alice" {
 			t.Errorf("wrong path: %s", r.URL.Path)
 		}
 		w.WriteHeader(http.StatusNoContent)
@@ -311,7 +311,7 @@ func TestOrgService_IsBlocked_Good(t *testing.T) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
 		}
-		if r.URL.Path != "/api/v1/orgs/core/blocks/alice" {
+		if r.URL.Path != "/api/v1/orgs/core/block/alice" {
 			t.Errorf("wrong path: %s", r.URL.Path)
 		}
 		w.WriteHeader(http.StatusNoContent)

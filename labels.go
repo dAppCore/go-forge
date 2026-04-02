@@ -91,3 +91,64 @@ func (s *LabelService) CreateOrgLabel(ctx context.Context, org string, opts *typ
 	}
 	return &out, nil
 }
+
+// GetOrgLabel returns a single label for an organisation.
+func (s *LabelService) GetOrgLabel(ctx context.Context, org string, id int64) (*types.Label, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/labels/{id}", pathParams("org", org, "id", int64String(id)))
+	var out types.Label
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditOrgLabel updates an existing label in an organisation.
+func (s *LabelService) EditOrgLabel(ctx context.Context, org string, id int64, opts *types.EditLabelOption) (*types.Label, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/labels/{id}", pathParams("org", org, "id", int64String(id)))
+	var out types.Label
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteOrgLabel deletes a label from an organisation.
+func (s *LabelService) DeleteOrgLabel(ctx context.Context, org string, id int64) error {
+	path := ResolvePath("/api/v1/orgs/{org}/labels/{id}", pathParams("org", org, "id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
+// ListLabelTemplates returns all available label template names.
+func (s *LabelService) ListLabelTemplates(ctx context.Context) ([]string, error) {
+	var out []string
+	if err := s.client.Get(ctx, "/api/v1/label/templates", &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// IterLabelTemplates returns an iterator over all available label template names.
+func (s *LabelService) IterLabelTemplates(ctx context.Context) iter.Seq2[string, error] {
+	return func(yield func(string, error) bool) {
+		items, err := s.ListLabelTemplates(ctx)
+		if err != nil {
+			yield("", err)
+			return
+		}
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
+}
+
+// GetLabelTemplate returns all labels for a label template.
+func (s *LabelService) GetLabelTemplate(ctx context.Context, name string) ([]types.LabelTemplate, error) {
+	path := ResolvePath("/api/v1/label/templates/{name}", pathParams("name", name))
+	var out []types.LabelTemplate
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
