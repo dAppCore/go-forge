@@ -383,6 +383,22 @@ func (s *RepoService) GetRawFileOrLFS(ctx context.Context, owner, repo, filepath
 	return s.client.GetRaw(ctx, path)
 }
 
+// GetEditorConfig returns the EditorConfig definitions for a repository file.
+func (s *RepoService) GetEditorConfig(ctx context.Context, owner, repo, filepath, ref string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/editorconfig/{filepath}", pathParams("owner", owner, "repo", repo, "filepath", filepath))
+	if ref != "" {
+		u, err := url.Parse(path)
+		if err != nil {
+			return err
+		}
+		q := u.Query()
+		q.Set("ref", ref)
+		u.RawQuery = q.Encode()
+		path = u.String()
+	}
+	return s.client.Get(ctx, path, nil)
+}
+
 // ApplyDiffPatch applies a diff patch to a repository.
 func (s *RepoService) ApplyDiffPatch(ctx context.Context, owner, repo string, opts *types.UpdateFileOptions) (*types.FileResponse, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/diffpatch", pathParams("owner", owner, "repo", repo))

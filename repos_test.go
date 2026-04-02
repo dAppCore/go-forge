@@ -573,6 +573,42 @@ func TestRepoService_GetRawFileOrLFS_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetEditorConfig_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/editorconfig/README.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("ref"); got != "main" {
+			t.Errorf("wrong ref: %s", got)
+		}
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.GetEditorConfig(context.Background(), "core", "go-forge", "README.md", "main"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_GetEditorConfig_Bad_NotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{"message": "not found"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.GetEditorConfig(context.Background(), "core", "go-forge", "README.md", "main"); !IsNotFound(err) {
+		t.Fatalf("expected not found, got %v", err)
+	}
+}
+
 func TestRepoService_ApplyDiffPatch_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
