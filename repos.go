@@ -374,6 +374,26 @@ func (s *RepoService) ListIssueTemplates(ctx context.Context, owner, repo string
 	return ListAll[types.IssueTemplate](ctx, s.client, path, nil)
 }
 
+// GetIssueConfig returns the issue config for a repository.
+func (s *RepoService) GetIssueConfig(ctx context.Context, owner, repo string) (*types.IssueConfig, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issue_config", pathParams("owner", owner, "repo", repo))
+	var out types.IssueConfig
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ValidateIssueConfig returns the validation information for a repository's issue config.
+func (s *RepoService) ValidateIssueConfig(ctx context.Context, owner, repo string) (*types.IssueConfigValidation, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issue_config/validate", pathParams("owner", owner, "repo", repo))
+	var out types.IssueConfigValidation
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListActivityFeeds returns the repository's activity feed entries.
 func (s *RepoService) ListActivityFeeds(ctx context.Context, owner, repo string, filters ...ActivityFeedListOptions) ([]types.Activity, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/activities/feeds", pathParams("owner", owner, "repo", repo))

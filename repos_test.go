@@ -837,6 +837,67 @@ func TestRepoService_ListIssueTemplates_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetIssueConfig_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issue_config" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.IssueConfig{
+			BlankIssuesEnabled: true,
+			ContactLinks: []*types.IssueConfigContactLink{{
+				Name:  "Security",
+				URL:   "https://example.com/security",
+				About: "Report a vulnerability",
+			}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	cfg, err := f.Repos.GetIssueConfig(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !cfg.BlankIssuesEnabled {
+		t.Fatalf("expected blank issues to be enabled, got %#v", cfg)
+	}
+	if len(cfg.ContactLinks) != 1 || cfg.ContactLinks[0].Name != "Security" {
+		t.Fatalf("got %#v", cfg.ContactLinks)
+	}
+}
+
+func TestRepoService_ValidateIssueConfig_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issue_config/validate" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.IssueConfigValidation{
+			Valid:   false,
+			Message: "invalid contact link URL",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Repos.ValidateIssueConfig(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.Valid || result.Message != "invalid contact link URL" {
+		t.Fatalf("got %#v", result)
+	}
+}
+
 func TestRepoService_GetNewPinAllowed_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
