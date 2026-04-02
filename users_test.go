@@ -735,6 +735,161 @@ func TestUserService_DeleteAvatar_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_ListOAuth2Applications_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/applications/oauth2" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.OAuth2Application{
+			{ID: 1, Name: "CLI", ClientID: "cli", RedirectURIs: []string{"http://localhost:3000/callback"}},
+			{ID: 2, Name: "Desktop", ClientID: "desktop"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	apps, err := f.Users.ListOAuth2Applications(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(apps) != 2 {
+		t.Fatalf("got %d applications, want 2", len(apps))
+	}
+	if apps[0].ID != 1 || apps[0].Name != "CLI" {
+		t.Errorf("unexpected first application: %+v", apps[0])
+	}
+}
+
+func TestUserService_CreateOAuth2Application_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/applications/oauth2" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateOAuth2ApplicationOptions
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Name != "CLI" || !body.ConfidentialClient || len(body.RedirectURIs) != 1 || body.RedirectURIs[0] != "http://localhost:3000/callback" {
+			t.Fatalf("unexpected body: %+v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.OAuth2Application{
+			ID:                 1,
+			Name:               body.Name,
+			ClientID:           "cli",
+			ClientSecret:       "secret",
+			ConfidentialClient: body.ConfidentialClient,
+			RedirectURIs:       body.RedirectURIs,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	app, err := f.Users.CreateOAuth2Application(context.Background(), &types.CreateOAuth2ApplicationOptions{
+		Name:               "CLI",
+		ConfidentialClient: true,
+		RedirectURIs:       []string{"http://localhost:3000/callback"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if app.ID != 1 || app.ClientSecret != "secret" {
+		t.Errorf("unexpected application: %+v", app)
+	}
+}
+
+func TestUserService_GetOAuth2Application_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/applications/oauth2/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.OAuth2Application{
+			ID:                 7,
+			Name:               "CLI",
+			ClientID:           "cli",
+			ConfidentialClient: true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	app, err := f.Users.GetOAuth2Application(context.Background(), 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if app.ID != 7 || app.ClientID != "cli" {
+		t.Errorf("unexpected application: %+v", app)
+	}
+}
+
+func TestUserService_UpdateOAuth2Application_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/applications/oauth2/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateOAuth2ApplicationOptions
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Name != "CLI v2" || len(body.RedirectURIs) != 2 {
+			t.Fatalf("unexpected body: %+v", body)
+		}
+		json.NewEncoder(w).Encode(types.OAuth2Application{
+			ID:                 7,
+			Name:               body.Name,
+			ClientID:           "cli",
+			ClientSecret:       "new-secret",
+			ConfidentialClient: body.ConfidentialClient,
+			RedirectURIs:       body.RedirectURIs,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	app, err := f.Users.UpdateOAuth2Application(context.Background(), 7, &types.CreateOAuth2ApplicationOptions{
+		Name:               "CLI v2",
+		RedirectURIs:       []string{"http://localhost:3000/callback", "http://localhost:3000/alt"},
+		ConfidentialClient: false,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if app.Name != "CLI v2" || app.ClientSecret != "new-secret" {
+		t.Errorf("unexpected application: %+v", app)
+	}
+}
+
+func TestUserService_DeleteOAuth2Application_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/applications/oauth2/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Users.DeleteOAuth2Application(context.Background(), 7); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestUserService_ListFollowers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

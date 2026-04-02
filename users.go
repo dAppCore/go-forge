@@ -126,6 +126,51 @@ func (s *UserService) DeleteAvatar(ctx context.Context) error {
 	return s.client.Delete(ctx, "/api/v1/user/avatar")
 }
 
+// ListOAuth2Applications returns all OAuth2 applications owned by the authenticated user.
+func (s *UserService) ListOAuth2Applications(ctx context.Context) ([]types.OAuth2Application, error) {
+	return ListAll[types.OAuth2Application](ctx, s.client, "/api/v1/user/applications/oauth2", nil)
+}
+
+// IterOAuth2Applications returns an iterator over all OAuth2 applications owned by the authenticated user.
+func (s *UserService) IterOAuth2Applications(ctx context.Context) iter.Seq2[types.OAuth2Application, error] {
+	return ListIter[types.OAuth2Application](ctx, s.client, "/api/v1/user/applications/oauth2", nil)
+}
+
+// CreateOAuth2Application creates a new OAuth2 application for the authenticated user.
+func (s *UserService) CreateOAuth2Application(ctx context.Context, opts *types.CreateOAuth2ApplicationOptions) (*types.OAuth2Application, error) {
+	var out types.OAuth2Application
+	if err := s.client.Post(ctx, "/api/v1/user/applications/oauth2", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetOAuth2Application returns a single OAuth2 application owned by the authenticated user.
+func (s *UserService) GetOAuth2Application(ctx context.Context, id int64) (*types.OAuth2Application, error) {
+	path := ResolvePath("/api/v1/user/applications/oauth2/{id}", pathParams("id", int64String(id)))
+	var out types.OAuth2Application
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UpdateOAuth2Application updates an OAuth2 application owned by the authenticated user.
+func (s *UserService) UpdateOAuth2Application(ctx context.Context, id int64, opts *types.CreateOAuth2ApplicationOptions) (*types.OAuth2Application, error) {
+	path := ResolvePath("/api/v1/user/applications/oauth2/{id}", pathParams("id", int64String(id)))
+	var out types.OAuth2Application
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteOAuth2Application deletes an OAuth2 application owned by the authenticated user.
+func (s *UserService) DeleteOAuth2Application(ctx context.Context, id int64) error {
+	path := ResolvePath("/api/v1/user/applications/oauth2/{id}", pathParams("id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
 // ListStopwatches returns all existing stopwatches for the authenticated user.
 func (s *UserService) ListStopwatches(ctx context.Context) ([]types.StopWatch, error) {
 	return ListAll[types.StopWatch](ctx, s.client, "/api/v1/user/stopwatches", nil)
