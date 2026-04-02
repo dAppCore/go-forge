@@ -1670,6 +1670,94 @@ func TestRepoService_GetCollaboratorPermission_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListRepoTeams_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/teams" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode([]types.Team{{ID: 7, Name: "platform"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	teams, err := f.Repos.ListRepoTeams(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(teams) != 1 || teams[0].ID != 7 || teams[0].Name != "platform" {
+		t.Fatalf("got %#v", teams)
+	}
+}
+
+func TestRepoService_GetRepoTeam_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/teams/platform" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.Team{ID: 7, Name: "platform"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	team, err := f.Repos.GetRepoTeam(context.Background(), "core", "go-forge", "platform")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if team.ID != 7 || team.Name != "platform" {
+		t.Fatalf("got %#v", team)
+	}
+}
+
+func TestRepoService_AddRepoTeam_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/teams/platform" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.AddRepoTeam(context.Background(), "core", "go-forge", "platform"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestRepoService_DeleteRepoTeam_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/teams/platform" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteRepoTeam(context.Background(), "core", "go-forge", "platform"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_Watch_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {

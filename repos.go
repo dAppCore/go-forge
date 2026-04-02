@@ -257,6 +257,40 @@ func (s *RepoService) IterCollaborators(ctx context.Context, owner, repo string)
 	return ListIter[types.User](ctx, s.client, path, nil)
 }
 
+// ListRepoTeams returns all teams assigned to a repository.
+func (s *RepoService) ListRepoTeams(ctx context.Context, owner, repo string) ([]types.Team, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/teams", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Team](ctx, s.client, path, nil)
+}
+
+// IterRepoTeams returns an iterator over all teams assigned to a repository.
+func (s *RepoService) IterRepoTeams(ctx context.Context, owner, repo string) iter.Seq2[types.Team, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/teams", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Team](ctx, s.client, path, nil)
+}
+
+// GetRepoTeam returns a team assigned to a repository by name.
+func (s *RepoService) GetRepoTeam(ctx context.Context, owner, repo, team string) (*types.Team, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/teams/{team}", pathParams("owner", owner, "repo", repo, "team", team))
+	var out types.Team
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// AddRepoTeam assigns a team to a repository.
+func (s *RepoService) AddRepoTeam(ctx context.Context, owner, repo, team string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/teams/{team}", pathParams("owner", owner, "repo", repo, "team", team))
+	return s.client.Put(ctx, path, nil, nil)
+}
+
+// DeleteRepoTeam removes a team from a repository.
+func (s *RepoService) DeleteRepoTeam(ctx context.Context, owner, repo, team string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/teams/{team}", pathParams("owner", owner, "repo", repo, "team", team))
+	return s.client.Delete(ctx, path)
+}
+
 // CheckCollaborator reports whether a user is a collaborator on a repository.
 func (s *RepoService) CheckCollaborator(ctx context.Context, owner, repo, collaborator string) (bool, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators/{collaborator}", pathParams("owner", owner, "repo", repo, "collaborator", collaborator))
