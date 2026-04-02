@@ -171,6 +171,9 @@ type Client struct {
 //
 //	baseURL := client.BaseURL()
 func (c *Client) BaseURL() string {
+	if c == nil {
+		return ""
+	}
 	return c.baseURL
 }
 
@@ -180,6 +183,9 @@ func (c *Client) BaseURL() string {
 //
 //	rl := client.RateLimit()
 func (c *Client) RateLimit() RateLimit {
+	if c == nil {
+		return RateLimit{}
+	}
 	return c.rateLimit
 }
 
@@ -189,6 +195,9 @@ func (c *Client) RateLimit() RateLimit {
 //
 //	ua := client.UserAgent()
 func (c *Client) UserAgent() string {
+	if c == nil {
+		return ""
+	}
 	return c.userAgent
 }
 
@@ -198,6 +207,9 @@ func (c *Client) UserAgent() string {
 //
 //	hc := client.HTTPClient()
 func (c *Client) HTTPClient() *http.Client {
+	if c == nil {
+		return nil
+	}
 	return c.httpClient
 }
 
@@ -232,6 +244,9 @@ func (c *Client) GoString() string { return c.String() }
 //	    _ = "authenticated"
 //	}
 func (c *Client) HasToken() bool {
+	if c == nil {
+		return false
+	}
 	return c.token != ""
 }
 

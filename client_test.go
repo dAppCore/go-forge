@@ -215,6 +215,25 @@ func TestClient_HasToken_Bad(t *testing.T) {
 	}
 }
 
+func TestClient_NilSafeAccessors(t *testing.T) {
+	var c *Client
+	if got := c.BaseURL(); got != "" {
+		t.Fatalf("got BaseURL()=%q, want empty string", got)
+	}
+	if got := c.RateLimit(); got != (RateLimit{}) {
+		t.Fatalf("got RateLimit()=%#v, want zero value", got)
+	}
+	if got := c.UserAgent(); got != "" {
+		t.Fatalf("got UserAgent()=%q, want empty string", got)
+	}
+	if got := c.HTTPClient(); got != nil {
+		t.Fatal("expected HTTPClient() to return nil")
+	}
+	if got := c.HasToken(); got {
+		t.Fatal("expected HasToken() to report false")
+	}
+}
+
 func TestClient_WithHTTPClient_Good(t *testing.T) {
 	custom := &http.Client{}
 	c := NewClient("https://forge.lthn.ai", "tok", WithHTTPClient(custom))

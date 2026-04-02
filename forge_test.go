@@ -82,6 +82,28 @@ func TestForge_HasToken_Bad(t *testing.T) {
 	}
 }
 
+func TestForge_NilSafeAccessors(t *testing.T) {
+	var f *Forge
+	if got := f.Client(); got != nil {
+		t.Fatal("expected Client() to return nil")
+	}
+	if got := f.BaseURL(); got != "" {
+		t.Fatalf("got BaseURL()=%q, want empty string", got)
+	}
+	if got := f.RateLimit(); got != (RateLimit{}) {
+		t.Fatalf("got RateLimit()=%#v, want zero value", got)
+	}
+	if got := f.UserAgent(); got != "" {
+		t.Fatalf("got UserAgent()=%q, want empty string", got)
+	}
+	if got := f.HTTPClient(); got != nil {
+		t.Fatal("expected HTTPClient() to return nil")
+	}
+	if got := f.HasToken(); got {
+		t.Fatal("expected HasToken() to report false")
+	}
+}
+
 func TestForge_String_Good(t *testing.T) {
 	f := NewForge("https://forge.lthn.ai", "tok", WithUserAgent("go-forge/1.0"))
 	got := fmt.Sprint(f)

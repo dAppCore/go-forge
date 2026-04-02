@@ -72,35 +72,60 @@ func NewForge(url, token string, opts ...Option) *Forge {
 // Usage:
 //
 //	client := f.Client()
-func (f *Forge) Client() *Client { return f.client }
+func (f *Forge) Client() *Client {
+	if f == nil {
+		return nil
+	}
+	return f.client
+}
 
 // BaseURL returns the configured Forgejo base URL.
 //
 // Usage:
 //
 //	baseURL := f.BaseURL()
-func (f *Forge) BaseURL() string { return f.client.BaseURL() }
+func (f *Forge) BaseURL() string {
+	if f == nil || f.client == nil {
+		return ""
+	}
+	return f.client.BaseURL()
+}
 
 // RateLimit returns the last known rate limit information.
 //
 // Usage:
 //
 //	rl := f.RateLimit()
-func (f *Forge) RateLimit() RateLimit { return f.client.RateLimit() }
+func (f *Forge) RateLimit() RateLimit {
+	if f == nil || f.client == nil {
+		return RateLimit{}
+	}
+	return f.client.RateLimit()
+}
 
 // UserAgent returns the configured User-Agent header value.
 //
 // Usage:
 //
 //	ua := f.UserAgent()
-func (f *Forge) UserAgent() string { return f.client.UserAgent() }
+func (f *Forge) UserAgent() string {
+	if f == nil || f.client == nil {
+		return ""
+	}
+	return f.client.UserAgent()
+}
 
 // HTTPClient returns the configured underlying HTTP client.
 //
 // Usage:
 //
 //	hc := f.HTTPClient()
-func (f *Forge) HTTPClient() *http.Client { return f.client.HTTPClient() }
+func (f *Forge) HTTPClient() *http.Client {
+	if f == nil || f.client == nil {
+		return nil
+	}
+	return f.client.HTTPClient()
+}
 
 // HasToken reports whether the Forge client was configured with an API token.
 //
@@ -109,7 +134,12 @@ func (f *Forge) HTTPClient() *http.Client { return f.client.HTTPClient() }
 //	if f.HasToken() {
 //	    _ = "authenticated"
 //	}
-func (f *Forge) HasToken() bool { return f.client.HasToken() }
+func (f *Forge) HasToken() bool {
+	if f == nil || f.client == nil {
+		return false
+	}
+	return f.client.HasToken()
+}
 
 // String returns a safe summary of the Forge client.
 //
