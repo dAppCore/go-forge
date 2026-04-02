@@ -27,6 +27,11 @@ type APIError struct {
 	URL        string
 }
 
+// Error returns the formatted Forge API error string.
+//
+// Usage:
+//
+//	err := (&forge.APIError{StatusCode: 404, Message: "not found", URL: "/api/v1/repos/x/y"}).Error()
 func (e *APIError) Error() string {
 	return core.Concat("forge: ", e.URL, " ", strconv.Itoa(e.StatusCode), ": ", e.Message)
 }
@@ -119,11 +124,19 @@ type Client struct {
 }
 
 // BaseURL returns the configured Forgejo base URL.
+//
+// Usage:
+//
+//	baseURL := client.BaseURL()
 func (c *Client) BaseURL() string {
 	return c.baseURL
 }
 
 // RateLimit returns the last known rate limit information.
+//
+// Usage:
+//
+//	rl := client.RateLimit()
 func (c *Client) RateLimit() RateLimit {
 	return c.rateLimit
 }
@@ -152,36 +165,64 @@ func NewClient(url, token string, opts ...Option) *Client {
 }
 
 // Get performs a GET request.
+//
+// Usage:
+//
+//	var out map[string]string
+//	err := client.Get(ctx, "/api/v1/user", &out)
 func (c *Client) Get(ctx context.Context, path string, out any) error {
 	_, err := c.doJSON(ctx, http.MethodGet, path, nil, out)
 	return err
 }
 
 // Post performs a POST request.
+//
+// Usage:
+//
+//	var out map[string]any
+//	err := client.Post(ctx, "/api/v1/orgs/core/repos", body, &out)
 func (c *Client) Post(ctx context.Context, path string, body, out any) error {
 	_, err := c.doJSON(ctx, http.MethodPost, path, body, out)
 	return err
 }
 
 // Patch performs a PATCH request.
+//
+// Usage:
+//
+//	var out map[string]any
+//	err := client.Patch(ctx, "/api/v1/repos/core/go-forge", body, &out)
 func (c *Client) Patch(ctx context.Context, path string, body, out any) error {
 	_, err := c.doJSON(ctx, http.MethodPatch, path, body, out)
 	return err
 }
 
 // Put performs a PUT request.
+//
+// Usage:
+//
+//	var out map[string]any
+//	err := client.Put(ctx, "/api/v1/repos/core/go-forge", body, &out)
 func (c *Client) Put(ctx context.Context, path string, body, out any) error {
 	_, err := c.doJSON(ctx, http.MethodPut, path, body, out)
 	return err
 }
 
 // Delete performs a DELETE request.
+//
+// Usage:
+//
+//	err := client.Delete(ctx, "/api/v1/repos/core/go-forge")
 func (c *Client) Delete(ctx context.Context, path string) error {
 	_, err := c.doJSON(ctx, http.MethodDelete, path, nil, nil)
 	return err
 }
 
 // DeleteWithBody performs a DELETE request with a JSON body.
+//
+// Usage:
+//
+//	err := client.DeleteWithBody(ctx, "/api/v1/repos/core/go-forge/labels", body)
 func (c *Client) DeleteWithBody(ctx context.Context, path string, body any) error {
 	_, err := c.doJSON(ctx, http.MethodDelete, path, body, nil)
 	return err
@@ -190,6 +231,10 @@ func (c *Client) DeleteWithBody(ctx context.Context, path string, body any) erro
 // PostRaw performs a POST request with a JSON body and returns the raw
 // response body as bytes instead of JSON-decoding. Useful for endpoints
 // such as /markdown that return raw HTML text.
+//
+// Usage:
+//
+//	body, err := client.PostRaw(ctx, "/api/v1/markdown", payload)
 func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, error) {
 	return c.postRawJSON(ctx, path, body)
 }
@@ -339,6 +384,10 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 
 // GetRaw performs a GET request and returns the raw response body as bytes
 // instead of JSON-decoding. Useful for endpoints that return raw file content.
+//
+// Usage:
+//
+//	body, err := client.GetRaw(ctx, "/api/v1/signing-key.gpg")
 func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 	url := c.baseURL + path
 

@@ -64,4 +64,8 @@ func NewForge(url, token string, opts ...Option) *Forge {
 }
 
 // Client returns the underlying HTTP client.
+//
+// Usage:
+//
+//	client := f.Client()
 func (f *Forge) Client() *Client { return f.client }
