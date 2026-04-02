@@ -282,6 +282,16 @@ func (s *RepoService) GetCollaboratorPermission(ctx context.Context, owner, repo
 	return &out, nil
 }
 
+// GetRepoPermissions returns repository permissions for a user.
+func (s *RepoService) GetRepoPermissions(ctx context.Context, owner, repo, collaborator string) (*types.RepoCollaboratorPermission, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/collaborators/{collaborator}/permission", pathParams("owner", owner, "repo", repo, "collaborator", collaborator))
+	var out types.RepoCollaboratorPermission
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetArchive returns a repository archive as raw bytes.
 func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive string) ([]byte, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/archive/{archive}", pathParams("owner", owner, "repo", repo, "archive", archive))

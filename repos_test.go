@@ -1607,6 +1607,14 @@ func TestRepoService_GetCollaboratorPermission_Good(t *testing.T) {
 	if perm.Permission != "write" || perm.User == nil || perm.User.UserName != "alice" {
 		t.Fatalf("got %#v", perm)
 	}
+
+	perm, err = f.Repos.GetRepoPermissions(context.Background(), "core", "go-forge", "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if perm.Permission != "write" || perm.User == nil || perm.User.UserName != "alice" {
+		t.Fatalf("got %#v", perm)
+	}
 }
 
 func TestRepoService_Watch_Good(t *testing.T) {
