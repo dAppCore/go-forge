@@ -100,6 +100,10 @@ func formatOptionValue(v any) string {
 	}
 }
 
+func serviceString(typeName, fieldName string, value any) string {
+	return typeName + "{" + fieldName + "=" + fmt.Sprint(value) + "}"
+}
+
 func lastIndexByte(s string, b byte) int {
 	for i := len(s) - 1; i >= 0; i-- {
 		if s[i] == b {

@@ -173,3 +173,62 @@ func TestOption_Stringers_Empty(t *testing.T) {
 		})
 	}
 }
+
+func TestService_Stringers_Good(t *testing.T) {
+	client := NewClient("https://forge.example", "token")
+
+	cases := []struct {
+		name string
+		got  fmt.Stringer
+		want string
+	}{
+		{
+			name: "RepoService",
+			got:  newRepoService(client),
+			want: `forge.RepoService{resource=forge.Resource{path="/api/v1/repos/{owner}/{repo}", collection="/api/v1/repos/{owner}"}}`,
+		},
+		{
+			name: "AdminService",
+			got:  newAdminService(client),
+			want: `forge.AdminService{client=forge.Client{baseURL="https://forge.example", token=set, userAgent="go-forge/0.1"}}`,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := tc.got.String(); got != tc.want {
+				t.Fatalf("got String()=%q, want %q", got, tc.want)
+			}
+			if got := fmt.Sprint(tc.got); got != tc.want {
+				t.Fatalf("got fmt.Sprint=%q, want %q", got, tc.want)
+			}
+			if got := fmt.Sprintf("%#v", tc.got); got != tc.want {
+				t.Fatalf("got GoString=%q, want %q", got, tc.want)
+			}
+		})
+	}
+}
+
+func TestService_Stringers_NilSafe(t *testing.T) {
+	var repo *RepoService
+	if got, want := repo.String(), "forge.RepoService{<nil>}"; got != want {
+		t.Fatalf("got String()=%q, want %q", got, want)
+	}
+	if got, want := fmt.Sprint(repo), "forge.RepoService{<nil>}"; got != want {
+		t.Fatalf("got fmt.Sprint=%q, want %q", got, want)
+	}
+	if got, want := fmt.Sprintf("%#v", repo), "forge.RepoService{<nil>}"; got != want {
+		t.Fatalf("got GoString=%q, want %q", got, want)
+	}
+
+	var admin *AdminService
+	if got, want := admin.String(), "forge.AdminService{<nil>}"; got != want {
+		t.Fatalf("got String()=%q, want %q", got, want)
+	}
+	if got, want := fmt.Sprint(admin), "forge.AdminService{<nil>}"; got != want {
+		t.Fatalf("got fmt.Sprint=%q, want %q", got, want)
+	}
+	if got, want := fmt.Sprintf("%#v", admin), "forge.AdminService{<nil>}"; got != want {
+		t.Fatalf("got GoString=%q, want %q", got, want)
+	}
+}
