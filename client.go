@@ -172,6 +172,13 @@ func (c *Client) String() string {
 	return core.Concat("forge.Client{baseURL=", strconv.Quote(c.baseURL), ", token=", tokenState, ", userAgent=", strconv.Quote(c.userAgent), "}")
 }
 
+// GoString returns a safe Go-syntax summary of the client configuration.
+//
+// Usage:
+//
+//	s := fmt.Sprintf("%#v", client)
+func (c *Client) GoString() string { return c.String() }
+
 // HasToken reports whether the client was configured with an API token.
 //
 // Usage:

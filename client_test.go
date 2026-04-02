@@ -236,6 +236,9 @@ func TestClient_String_Good(t *testing.T) {
 	if got := c.String(); got != want {
 		t.Fatalf("got String()=%q, want %q", got, want)
 	}
+	if got := fmt.Sprintf("%#v", c); got != want {
+		t.Fatalf("got GoString=%q, want %q", got, want)
+	}
 }
 
 func TestAPIError_Error_Good(t *testing.T) {

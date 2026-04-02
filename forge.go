@@ -119,3 +119,10 @@ func (f *Forge) HasToken() bool { return f.client.HasToken() }
 func (f *Forge) String() string {
 	return "forge.Forge{" + f.client.String() + "}"
 }
+
+// GoString returns a safe Go-syntax summary of the Forge client.
+//
+// Usage:
+//
+//	s := fmt.Sprintf("%#v", f)
+func (f *Forge) GoString() string { return f.String() }

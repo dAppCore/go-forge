@@ -92,6 +92,9 @@ func TestForge_String_Good(t *testing.T) {
 	if got := f.String(); got != want {
 		t.Fatalf("got String()=%q, want %q", got, want)
 	}
+	if got := fmt.Sprintf("%#v", f); got != want {
+		t.Fatalf("got GoString=%q, want %q", got, want)
+	}
 }
 
 func TestRepoService_ListOrgRepos_Good(t *testing.T) {
