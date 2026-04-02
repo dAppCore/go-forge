@@ -28,6 +28,7 @@ type Forge struct {
 	Misc          *MiscService
 	Commits       *CommitService
 	Milestones    *MilestoneService
+	ActivityPub   *ActivityPubService
 }
 
 // NewForge creates a new Forge client.
@@ -58,6 +59,7 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	f.Misc = newMiscService(c)
 	f.Commits = newCommitService(c)
 	f.Milestones = newMilestoneService(c)
+	f.ActivityPub = newActivityPubService(c)
 	return f
 }
 

@@ -19,6 +19,9 @@ func TestForge_NewForge_Good(t *testing.T) {
 	if f.Issues == nil {
 		t.Fatal("Issues service is nil")
 	}
+	if f.ActivityPub == nil {
+		t.Fatal("ActivityPub service is nil")
+	}
 }
 
 func TestForge_Client_Good(t *testing.T) {
