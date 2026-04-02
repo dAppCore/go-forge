@@ -5,6 +5,7 @@ import (
 	"cmp"
 	"maps"
 	"slices"
+	"strings"
 	"text/template"
 
 	core "dappco.re/go/core"
@@ -175,6 +176,12 @@ import "time"
 {{- if .Description}}
 // {{.Name}} — {{sanitise .Description}}
 {{- end}}
+{{- if .Usage}}
+//
+// Usage:
+//
+//	opts := {{.Usage}}
+{{- end}}
 {{- if .IsEnum}}
 type {{.Name}} string
 
@@ -215,6 +222,8 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 		return core.E("Generate", "create output directory", err)
 	}
 
+	populateUsageExamples(types)
+
 	// Group types by output file.
 	groups := make(map[string][]*GoType)
 	for _, gt := range types {
@@ -243,6 +252,127 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	return nil
 }
 
+func populateUsageExamples(types map[string]*GoType) {
+	for _, gt := range types {
+		if !shouldHaveUsage(gt.Name) {
+			continue
+		}
+		gt.Usage = usageExample(gt)
+	}
+}
+
+func shouldHaveUsage(name string) bool {
+	if core.HasSuffix(name, "Option") || core.HasSuffix(name, "Options") {
+		return true
+	}
+	for _, prefix := range []string{
+		"Create", "Edit", "Update", "Delete", "Add", "Set",
+		"Dispatch", "Migrate", "Generate", "Replace", "Submit", "Transfer",
+	} {
+		if core.HasPrefix(name, prefix) {
+			return true
+		}
+	}
+	return false
+}
+
+func usageExample(gt *GoType) string {
+	example := exampleTypeLiteral(gt)
+	if example == "" {
+		example = gt.Name + "{}"
+	}
+	return example
+}
+
+func exampleTypeLiteral(gt *GoType) string {
+	if len(gt.Fields) == 0 {
+		return gt.Name + "{}"
+	}
+
+	field := chooseUsageField(gt.Fields)
+	if field.GoName == "" {
+		return gt.Name + "{}"
+	}
+
+	return gt.Name + "{" + field.GoName + ": " + exampleValue(field) + "}"
+}
+
+func chooseUsageField(fields []GoField) GoField {
+	best := fields[0]
+	bestScore := usageFieldScore(best)
+	for _, field := range fields[1:] {
+		score := usageFieldScore(field)
+		if score < bestScore || (score == bestScore && field.GoName < best.GoName) {
+			best = field
+			bestScore = score
+		}
+	}
+	return best
+}
+
+func usageFieldScore(field GoField) int {
+	score := 100
+	if field.Required {
+		score -= 50
+	}
+	switch {
+	case core.HasSuffix(field.GoType, "string"):
+		score -= 30
+	case core.Contains(field.GoType, "time.Time"):
+		score -= 25
+	case core.HasSuffix(field.GoType, "bool"):
+		score -= 20
+	case core.Contains(field.GoType, "int"):
+		score -= 15
+	case core.HasPrefix(field.GoType, "[]"):
+		score -= 10
+	}
+	if core.Contains(field.GoName, "Name") || core.Contains(field.GoName, "Title") || core.Contains(field.GoName, "Body") || core.Contains(field.GoName, "Description") {
+		score -= 10
+	}
+	return score
+}
+
+func exampleValue(field GoField) string {
+	switch {
+	case core.HasPrefix(field.GoType, "*"):
+		return "&" + core.TrimPrefix(field.GoType, "*") + "{}"
+	case field.GoType == "string":
+		return exampleStringValue(field.GoName)
+	case field.GoType == "time.Time":
+		return "time.Now()"
+	case field.GoType == "bool":
+		return "true"
+	case core.HasSuffix(field.GoType, "int64"), core.HasSuffix(field.GoType, "int"), core.HasSuffix(field.GoType, "uint64"), core.HasSuffix(field.GoType, "uint"):
+		return "1"
+	case core.HasPrefix(field.GoType, "[]string"):
+		return "[]string{\"example\"}"
+	case core.HasPrefix(field.GoType, "[]int64"):
+		return "[]int64{1}"
+	case core.HasPrefix(field.GoType, "[]int"):
+		return "[]int{1}"
+	case core.HasPrefix(field.GoType, "map["):
+		return "map[string]string{\"key\": \"value\"}"
+	default:
+		return "{}"
+	}
+}
+
+func exampleStringValue(fieldName string) string {
+	switch {
+	case core.Contains(fieldName, "URL"):
+		return "\"https://example.com\""
+	case core.Contains(fieldName, "Email"):
+		return "\"alice@example.com\""
+	case core.Contains(fieldName, "Tag"):
+		return "\"v1.0.0\""
+	case core.Contains(fieldName, "Branch"), core.Contains(fieldName, "Ref"):
+		return "\"main\""
+	default:
+		return "\"example\""
+	}
+}
+
 // writeFile renders and writes a single Go source file for the given types.
 func writeFile(path string, types []*GoType) error {
 	needTime := slices.ContainsFunc(types, func(gt *GoType) bool {
@@ -264,7 +394,8 @@ func writeFile(path string, types []*GoType) error {
 		return core.E("writeFile", "execute template", err)
 	}
 
-	if err := coreio.Local.Write(path, buf.String()); err != nil {
+	content := strings.TrimRight(buf.String(), "\n") + "\n"
+	if err := coreio.Local.Write(path, content); err != nil {
 		return core.E("writeFile", "write file", err)
 	}
 

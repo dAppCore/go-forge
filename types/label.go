@@ -4,44 +4,57 @@ package types
 
 import "time"
 
+
 // CreateLabelOption — CreateLabelOption options for creating a label
+//
+// Usage:
+//
+//	opts := CreateLabelOption{Name: "example"}
 type CreateLabelOption struct {
-	Color       string `json:"color"`
+	Color string `json:"color"`
 	Description string `json:"description,omitempty"`
-	Exclusive   bool   `json:"exclusive,omitempty"`
-	IsArchived  bool   `json:"is_archived,omitempty"`
-	Name        string `json:"name"`
+	Exclusive bool `json:"exclusive,omitempty"`
+	IsArchived bool `json:"is_archived,omitempty"`
+	Name string `json:"name"`
 }
 
 // DeleteLabelsOption — DeleteLabelOption options for deleting a label
+//
+// Usage:
+//
+//	opts := DeleteLabelsOption{Updated: time.Now()}
 type DeleteLabelsOption struct {
 	Updated time.Time `json:"updated_at,omitempty"`
 }
 
 // EditLabelOption — EditLabelOption options for editing a label
+//
+// Usage:
+//
+//	opts := EditLabelOption{Description: "example"}
 type EditLabelOption struct {
-	Color       string `json:"color,omitempty"`
+	Color string `json:"color,omitempty"`
 	Description string `json:"description,omitempty"`
-	Exclusive   bool   `json:"exclusive,omitempty"`
-	IsArchived  bool   `json:"is_archived,omitempty"`
-	Name        string `json:"name,omitempty"`
+	Exclusive bool `json:"exclusive,omitempty"`
+	IsArchived bool `json:"is_archived,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
 // Label — Label a label to an issue or a pr
 type Label struct {
-	Color       string `json:"color,omitempty"`
+	Color string `json:"color,omitempty"`
 	Description string `json:"description,omitempty"`
-	Exclusive   bool   `json:"exclusive,omitempty"`
-	ID          int64  `json:"id,omitempty"`
-	IsArchived  bool   `json:"is_archived,omitempty"`
-	Name        string `json:"name,omitempty"`
-	URL         string `json:"url,omitempty"`
+	Exclusive bool `json:"exclusive,omitempty"`
+	ID int64 `json:"id,omitempty"`
+	IsArchived bool `json:"is_archived,omitempty"`
+	Name string `json:"name,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 // LabelTemplate — LabelTemplate info of a Label template
 type LabelTemplate struct {
-	Color       string `json:"color,omitempty"`
+	Color string `json:"color,omitempty"`
 	Description string `json:"description,omitempty"`
-	Exclusive   bool   `json:"exclusive,omitempty"`
-	Name        string `json:"name,omitempty"`
+	Exclusive bool `json:"exclusive,omitempty"`
+	Name string `json:"name,omitempty"`
 }

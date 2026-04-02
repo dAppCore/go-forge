@@ -2,28 +2,41 @@
 
 package types
 
+
 // CreateQuotaGroupOptions — CreateQutaGroupOptions represents the options for creating a quota group
+//
+// Usage:
+//
+//	opts := CreateQuotaGroupOptions{Name: "example"}
 type CreateQuotaGroupOptions struct {
-	Name  string                    `json:"name,omitempty"`  // Name of the quota group to create
+	Name string `json:"name,omitempty"` // Name of the quota group to create
 	Rules []*CreateQuotaRuleOptions `json:"rules,omitempty"` // Rules to add to the newly created group. If a rule does not exist, it will be created.
 }
 
 // CreateQuotaRuleOptions — CreateQuotaRuleOptions represents the options for creating a quota rule
+//
+// Usage:
+//
+//	opts := CreateQuotaRuleOptions{Name: "example"}
 type CreateQuotaRuleOptions struct {
-	Limit    int64    `json:"limit,omitempty"`    // The limit set by the rule
-	Name     string   `json:"name,omitempty"`     // Name of the rule to create
+	Limit int64 `json:"limit,omitempty"` // The limit set by the rule
+	Name string `json:"name,omitempty"` // Name of the rule to create
 	Subjects []string `json:"subjects,omitempty"` // The subjects affected by the rule
 }
 
 // EditQuotaRuleOptions — EditQuotaRuleOptions represents the options for editing a quota rule
+//
+// Usage:
+//
+//	opts := EditQuotaRuleOptions{Subjects: []string{"example"}}
 type EditQuotaRuleOptions struct {
-	Limit    int64    `json:"limit,omitempty"`    // The limit set by the rule
+	Limit int64 `json:"limit,omitempty"` // The limit set by the rule
 	Subjects []string `json:"subjects,omitempty"` // The subjects affected by the rule
 }
 
 // QuotaGroup — QuotaGroup represents a quota group
 type QuotaGroup struct {
-	Name  string           `json:"name,omitempty"`  // Name of the group
+	Name string `json:"name,omitempty"` // Name of the group
 	Rules []*QuotaRuleInfo `json:"rules,omitempty"` // Rules associated with the group
 }
 
@@ -34,13 +47,13 @@ type QuotaGroupList struct{}
 // QuotaInfo — QuotaInfo represents information about a user's quota
 type QuotaInfo struct {
 	Groups *QuotaGroupList `json:"groups,omitempty"`
-	Used   *QuotaUsed      `json:"used,omitempty"`
+	Used *QuotaUsed `json:"used,omitempty"`
 }
 
 // QuotaRuleInfo — QuotaRuleInfo contains information about a quota rule
 type QuotaRuleInfo struct {
-	Limit    int64    `json:"limit,omitempty"`    // The limit set by the rule
-	Name     string   `json:"name,omitempty"`     // Name of the rule (only shown to admins)
+	Limit int64 `json:"limit,omitempty"` // The limit set by the rule
+	Name string `json:"name,omitempty"` // Name of the rule (only shown to admins)
 	Subjects []string `json:"subjects,omitempty"` // Subjects the rule affects
 }
 
@@ -52,8 +65,8 @@ type QuotaUsed struct {
 // QuotaUsedArtifact — QuotaUsedArtifact represents an artifact counting towards a user's quota
 type QuotaUsedArtifact struct {
 	HTMLURL string `json:"html_url,omitempty"` // HTML URL to the action run containing the artifact
-	Name    string `json:"name,omitempty"`     // Name of the artifact
-	Size    int64  `json:"size,omitempty"`     // Size of the artifact (compressed)
+	Name string `json:"name,omitempty"` // Name of the artifact
+	Size int64 `json:"size,omitempty"` // Size of the artifact (compressed)
 }
 
 // QuotaUsedArtifactList — QuotaUsedArtifactList represents a list of artifacts counting towards a user's quota
@@ -62,10 +75,10 @@ type QuotaUsedArtifactList struct{}
 
 // QuotaUsedAttachment — QuotaUsedAttachment represents an attachment counting towards a user's quota
 type QuotaUsedAttachment struct {
-	APIURL      string         `json:"api_url,omitempty"`      // API URL for the attachment
+	APIURL string `json:"api_url,omitempty"` // API URL for the attachment
 	ContainedIn map[string]any `json:"contained_in,omitempty"` // Context for the attachment: URLs to the containing object
-	Name        string         `json:"name,omitempty"`         // Filename of the attachment
-	Size        int64          `json:"size,omitempty"`         // Size of the attachment (in bytes)
+	Name string `json:"name,omitempty"` // Filename of the attachment
+	Size int64 `json:"size,omitempty"` // Size of the attachment (in bytes)
 }
 
 // QuotaUsedAttachmentList — QuotaUsedAttachmentList represents a list of attachment counting towards a user's quota
@@ -75,10 +88,10 @@ type QuotaUsedAttachmentList struct{}
 // QuotaUsedPackage — QuotaUsedPackage represents a package counting towards a user's quota
 type QuotaUsedPackage struct {
 	HTMLURL string `json:"html_url,omitempty"` // HTML URL to the package version
-	Name    string `json:"name,omitempty"`     // Name of the package
-	Size    int64  `json:"size,omitempty"`     // Size of the package version
-	Type    string `json:"type,omitempty"`     // Type of the package
-	Version string `json:"version,omitempty"`  // Version of the package
+	Name string `json:"name,omitempty"` // Name of the package
+	Size int64 `json:"size,omitempty"` // Size of the package version
+	Type string `json:"type,omitempty"` // Type of the package
+	Version string `json:"version,omitempty"` // Version of the package
 }
 
 // QuotaUsedPackageList — QuotaUsedPackageList represents a list of packages counting towards a user's quota
@@ -88,20 +101,20 @@ type QuotaUsedPackageList struct{}
 // QuotaUsedSize — QuotaUsedSize represents the size-based quota usage of a user
 type QuotaUsedSize struct {
 	Assets *QuotaUsedSizeAssets `json:"assets,omitempty"`
-	Git    *QuotaUsedSizeGit    `json:"git,omitempty"`
-	Repos  *QuotaUsedSizeRepos  `json:"repos,omitempty"`
+	Git *QuotaUsedSizeGit `json:"git,omitempty"`
+	Repos *QuotaUsedSizeRepos `json:"repos,omitempty"`
 }
 
 // QuotaUsedSizeAssets — QuotaUsedSizeAssets represents the size-based asset usage of a user
 type QuotaUsedSizeAssets struct {
-	Artifacts   int64                           `json:"artifacts,omitempty"` // Storage size used for the user's artifacts
+	Artifacts int64 `json:"artifacts,omitempty"` // Storage size used for the user's artifacts
 	Attachments *QuotaUsedSizeAssetsAttachments `json:"attachments,omitempty"`
-	Packages    *QuotaUsedSizeAssetsPackages    `json:"packages,omitempty"`
+	Packages *QuotaUsedSizeAssetsPackages `json:"packages,omitempty"`
 }
 
 // QuotaUsedSizeAssetsAttachments — QuotaUsedSizeAssetsAttachments represents the size-based attachment quota usage of a user
 type QuotaUsedSizeAssetsAttachments struct {
-	Issues   int64 `json:"issues,omitempty"`   // Storage size used for the user's issue & comment attachments
+	Issues int64 `json:"issues,omitempty"` // Storage size used for the user's issue & comment attachments
 	Releases int64 `json:"releases,omitempty"` // Storage size used for the user's release attachments
 }
 
@@ -118,5 +131,5 @@ type QuotaUsedSizeGit struct {
 // QuotaUsedSizeRepos — QuotaUsedSizeRepos represents the size-based repository quota usage of a user
 type QuotaUsedSizeRepos struct {
 	Private int64 `json:"private,omitempty"` // Storage size of the user's private repositories
-	Public  int64 `json:"public,omitempty"`  // Storage size of the user's public repositories
+	Public int64 `json:"public,omitempty"` // Storage size of the user's public repositories
 }

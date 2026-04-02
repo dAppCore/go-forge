@@ -2,91 +2,100 @@
 
 package types
 
+
 // AnnotatedTag — AnnotatedTag represents an annotated tag
 type AnnotatedTag struct {
-	ArchiveDownloadCount *TagArchiveDownloadCount   `json:"archive_download_count,omitempty"`
-	Message              string                     `json:"message,omitempty"`
-	Object               *AnnotatedTagObject        `json:"object,omitempty"`
-	SHA                  string                     `json:"sha,omitempty"`
-	Tag                  string                     `json:"tag,omitempty"`
-	Tagger               *CommitUser                `json:"tagger,omitempty"`
-	URL                  string                     `json:"url,omitempty"`
-	Verification         *PayloadCommitVerification `json:"verification,omitempty"`
+	ArchiveDownloadCount *TagArchiveDownloadCount `json:"archive_download_count,omitempty"`
+	Message string `json:"message,omitempty"`
+	Object *AnnotatedTagObject `json:"object,omitempty"`
+	SHA string `json:"sha,omitempty"`
+	Tag string `json:"tag,omitempty"`
+	Tagger *CommitUser `json:"tagger,omitempty"`
+	URL string `json:"url,omitempty"`
+	Verification *PayloadCommitVerification `json:"verification,omitempty"`
 }
 
 // AnnotatedTagObject — AnnotatedTagObject contains meta information of the tag object
 type AnnotatedTagObject struct {
-	SHA  string `json:"sha,omitempty"`
+	SHA string `json:"sha,omitempty"`
 	Type string `json:"type,omitempty"`
-	URL  string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 // ChangedFile — ChangedFile store information about files affected by the pull request
 type ChangedFile struct {
-	Additions        int64  `json:"additions,omitempty"`
-	Changes          int64  `json:"changes,omitempty"`
-	ContentsURL      string `json:"contents_url,omitempty"`
-	Deletions        int64  `json:"deletions,omitempty"`
-	Filename         string `json:"filename,omitempty"`
-	HTMLURL          string `json:"html_url,omitempty"`
+	Additions int64 `json:"additions,omitempty"`
+	Changes int64 `json:"changes,omitempty"`
+	ContentsURL string `json:"contents_url,omitempty"`
+	Deletions int64 `json:"deletions,omitempty"`
+	Filename string `json:"filename,omitempty"`
+	HTMLURL string `json:"html_url,omitempty"`
 	PreviousFilename string `json:"previous_filename,omitempty"`
-	RawURL           string `json:"raw_url,omitempty"`
-	Status           string `json:"status,omitempty"`
+	RawURL string `json:"raw_url,omitempty"`
+	Status string `json:"status,omitempty"`
 }
 
 // EditGitHookOption — EditGitHookOption options when modifying one Git hook
+//
+// Usage:
+//
+//	opts := EditGitHookOption{Content: "example"}
 type EditGitHookOption struct {
 	Content string `json:"content,omitempty"`
 }
 
 // GitBlobResponse — GitBlobResponse represents a git blob
 type GitBlobResponse struct {
-	Content  string `json:"content,omitempty"`
+	Content string `json:"content,omitempty"`
 	Encoding string `json:"encoding,omitempty"`
-	SHA      string `json:"sha,omitempty"`
-	Size     int64  `json:"size,omitempty"`
-	URL      string `json:"url,omitempty"`
+	SHA string `json:"sha,omitempty"`
+	Size int64 `json:"size,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 // GitEntry — GitEntry represents a git tree
 type GitEntry struct {
 	Mode string `json:"mode,omitempty"`
 	Path string `json:"path,omitempty"`
-	SHA  string `json:"sha,omitempty"`
-	Size int64  `json:"size,omitempty"`
+	SHA string `json:"sha,omitempty"`
+	Size int64 `json:"size,omitempty"`
 	Type string `json:"type,omitempty"`
-	URL  string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 // GitHook — GitHook represents a Git repository hook
 type GitHook struct {
-	Content  string `json:"content,omitempty"`
-	IsActive bool   `json:"is_active,omitempty"`
-	Name     string `json:"name,omitempty"`
+	Content string `json:"content,omitempty"`
+	IsActive bool `json:"is_active,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
 type GitObject struct {
-	SHA  string `json:"sha,omitempty"`
+	SHA string `json:"sha,omitempty"`
 	Type string `json:"type,omitempty"`
-	URL  string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 // GitTreeResponse — GitTreeResponse returns a git tree
 type GitTreeResponse struct {
-	Entries    []*GitEntry `json:"tree,omitempty"`
-	Page       int64       `json:"page,omitempty"`
-	SHA        string      `json:"sha,omitempty"`
-	TotalCount int64       `json:"total_count,omitempty"`
-	Truncated  bool        `json:"truncated,omitempty"`
-	URL        string      `json:"url,omitempty"`
+	Entries []*GitEntry `json:"tree,omitempty"`
+	Page int64 `json:"page,omitempty"`
+	SHA string `json:"sha,omitempty"`
+	TotalCount int64 `json:"total_count,omitempty"`
+	Truncated bool `json:"truncated,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 // Note — Note contains information related to a git note
 type Note struct {
-	Commit  *Commit `json:"commit,omitempty"`
-	Message string  `json:"message,omitempty"`
+	Commit *Commit `json:"commit,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
+//
+// Usage:
+//
+//	opts := NoteOptions{Message: "example"}
 type NoteOptions struct {
 	Message string `json:"message,omitempty"`
 }

@@ -170,3 +170,37 @@ func TestGenerate_AdditionalProperties_Good(t *testing.T) {
 		t.Fatal("typed units_map field not found in any generated file")
 	}
 }
+
+func TestGenerate_UsageExamples_Good(t *testing.T) {
+	spec, err := LoadSpec("../../testdata/swagger.v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	types := ExtractTypes(spec)
+	pairs := DetectCRUDPairs(spec)
+
+	outDir := t.TempDir()
+	if err := Generate(types, pairs, outDir); err != nil {
+		t.Fatal(err)
+	}
+
+	entries, _ := coreio.Local.List(outDir)
+	var content string
+	for _, e := range entries {
+		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
+		if core.Contains(data, "type CreateIssueOption struct") {
+			content = data
+			break
+		}
+	}
+	if content == "" {
+		t.Fatal("CreateIssueOption type not found in any generated file")
+	}
+	if !core.Contains(content, "// Usage:") {
+		t.Fatalf("generated option type is missing usage documentation:\n%s", content)
+	}
+	if !core.Contains(content, "opts :=") {
+		t.Fatalf("generated usage example is missing assignment syntax:\n%s", content)
+	}
+}

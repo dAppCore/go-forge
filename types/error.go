@@ -2,39 +2,40 @@
 
 package types
 
+
 // APIError — APIError is an api error with a message
 type APIError struct {
 	Message string `json:"message,omitempty"`
-	URL     string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 type APIForbiddenError struct {
 	Message string `json:"message,omitempty"`
-	URL     string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 type APIInvalidTopicsError struct {
 	InvalidTopics []string `json:"invalidTopics,omitempty"`
-	Message       string   `json:"message,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 type APINotFound struct {
-	Errors  []string `json:"errors,omitempty"`
-	Message string   `json:"message,omitempty"`
-	URL     string   `json:"url,omitempty"`
+	Errors []string `json:"errors,omitempty"`
+	Message string `json:"message,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 type APIRepoArchivedError struct {
 	Message string `json:"message,omitempty"`
-	URL     string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 type APIUnauthorizedError struct {
 	Message string `json:"message,omitempty"`
-	URL     string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 type APIValidationError struct {
 	Message string `json:"message,omitempty"`
-	URL     string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 }

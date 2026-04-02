@@ -71,6 +71,7 @@ type SchemaProperty struct {
 type GoType struct {
 	Name        string
 	Description string
+	Usage       string
 	Fields      []GoField
 	IsEnum      bool
 	EnumValues  []string

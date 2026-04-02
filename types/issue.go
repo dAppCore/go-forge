@@ -4,93 +4,114 @@ package types
 
 import "time"
 
+
 // CreateIssueCommentOption — CreateIssueCommentOption options for creating a comment on an issue
+//
+// Usage:
+//
+//	opts := CreateIssueCommentOption{Body: "example"}
 type CreateIssueCommentOption struct {
-	Body    string    `json:"body"`
-	Updated *time.Time `json:"updated_at,omitempty"`
+	Body string `json:"body"`
+	Updated time.Time `json:"updated_at,omitempty"`
 }
 
 // CreateIssueOption — CreateIssueOption options to create one issue
+//
+// Usage:
+//
+//	opts := CreateIssueOption{Title: "example"}
 type CreateIssueOption struct {
-	Assignee  string    `json:"assignee,omitempty"` // deprecated
-	Assignees []string  `json:"assignees,omitempty"`
-	Body      string    `json:"body,omitempty"`
-	Closed    bool      `json:"closed,omitempty"`
-	Deadline  time.Time `json:"due_date,omitempty"`
-	Labels    []int64   `json:"labels,omitempty"`    // list of label ids
-	Milestone int64     `json:"milestone,omitempty"` // milestone id
-	Ref       string    `json:"ref,omitempty"`
-	Title     string    `json:"title"`
+	Assignee string `json:"assignee,omitempty"` // deprecated
+	Assignees []string `json:"assignees,omitempty"`
+	Body string `json:"body,omitempty"`
+	Closed bool `json:"closed,omitempty"`
+	Deadline time.Time `json:"due_date,omitempty"`
+	Labels []int64 `json:"labels,omitempty"` // list of label ids
+	Milestone int64 `json:"milestone,omitempty"` // milestone id
+	Ref string `json:"ref,omitempty"`
+	Title string `json:"title"`
 }
 
 // EditDeadlineOption — EditDeadlineOption options for creating a deadline
+//
+// Usage:
+//
+//	opts := EditDeadlineOption{Deadline: time.Now()}
 type EditDeadlineOption struct {
 	Deadline time.Time `json:"due_date"`
 }
 
 // EditIssueCommentOption — EditIssueCommentOption options for editing a comment
+//
+// Usage:
+//
+//	opts := EditIssueCommentOption{Body: "example"}
 type EditIssueCommentOption struct {
-	Body    string    `json:"body"`
+	Body string `json:"body"`
 	Updated time.Time `json:"updated_at,omitempty"`
 }
 
 // EditIssueOption — EditIssueOption options for editing an issue
+//
+// Usage:
+//
+//	opts := EditIssueOption{Body: "example"}
 type EditIssueOption struct {
-	Assignee       string    `json:"assignee,omitempty"` // deprecated
-	Assignees      []string  `json:"assignees,omitempty"`
-	Body           string    `json:"body,omitempty"`
-	Deadline       time.Time `json:"due_date,omitempty"`
-	Milestone      int64     `json:"milestone,omitempty"`
-	Ref            string    `json:"ref,omitempty"`
-	RemoveDeadline bool      `json:"unset_due_date,omitempty"`
-	State          string    `json:"state,omitempty"`
-	Title          string    `json:"title,omitempty"`
-	Updated        time.Time `json:"updated_at,omitempty"`
+	Assignee string `json:"assignee,omitempty"` // deprecated
+	Assignees []string `json:"assignees,omitempty"`
+	Body string `json:"body,omitempty"`
+	Deadline time.Time `json:"due_date,omitempty"`
+	Milestone int64 `json:"milestone,omitempty"`
+	Ref string `json:"ref,omitempty"`
+	RemoveDeadline bool `json:"unset_due_date,omitempty"`
+	State string `json:"state,omitempty"`
+	Title string `json:"title,omitempty"`
+	Updated time.Time `json:"updated_at,omitempty"`
 }
 
 // Issue — Issue represents an issue in a repository
 type Issue struct {
-	Assignee         *User            `json:"assignee,omitempty"`
-	Assignees        []*User          `json:"assignees,omitempty"`
-	Attachments      []*Attachment    `json:"assets,omitempty"`
-	Body             string           `json:"body,omitempty"`
-	Closed           time.Time        `json:"closed_at,omitempty"`
-	Comments         int64            `json:"comments,omitempty"`
-	Created          time.Time        `json:"created_at,omitempty"`
-	Deadline         time.Time        `json:"due_date,omitempty"`
-	HTMLURL          string           `json:"html_url,omitempty"`
-	ID               int64            `json:"id,omitempty"`
-	Index            int64            `json:"number,omitempty"`
-	IsLocked         bool             `json:"is_locked,omitempty"`
-	Labels           []*Label         `json:"labels,omitempty"`
-	Milestone        *Milestone       `json:"milestone,omitempty"`
-	OriginalAuthor   string           `json:"original_author,omitempty"`
-	OriginalAuthorID int64            `json:"original_author_id,omitempty"`
-	PinOrder         int64            `json:"pin_order,omitempty"`
-	PullRequest      *PullRequestMeta `json:"pull_request,omitempty"`
-	Ref              string           `json:"ref,omitempty"`
-	Repository       *RepositoryMeta  `json:"repository,omitempty"`
-	State            StateType        `json:"state,omitempty"`
-	Title            string           `json:"title,omitempty"`
-	URL              string           `json:"url,omitempty"`
-	Updated          time.Time        `json:"updated_at,omitempty"`
-	User             *User            `json:"user,omitempty"`
+	Assignee *User `json:"assignee,omitempty"`
+	Assignees []*User `json:"assignees,omitempty"`
+	Attachments []*Attachment `json:"assets,omitempty"`
+	Body string `json:"body,omitempty"`
+	Closed time.Time `json:"closed_at,omitempty"`
+	Comments int64 `json:"comments,omitempty"`
+	Created time.Time `json:"created_at,omitempty"`
+	Deadline time.Time `json:"due_date,omitempty"`
+	HTMLURL string `json:"html_url,omitempty"`
+	ID int64 `json:"id,omitempty"`
+	Index int64 `json:"number,omitempty"`
+	IsLocked bool `json:"is_locked,omitempty"`
+	Labels []*Label `json:"labels,omitempty"`
+	Milestone *Milestone `json:"milestone,omitempty"`
+	OriginalAuthor string `json:"original_author,omitempty"`
+	OriginalAuthorID int64 `json:"original_author_id,omitempty"`
+	PinOrder int64 `json:"pin_order,omitempty"`
+	PullRequest *PullRequestMeta `json:"pull_request,omitempty"`
+	Ref string `json:"ref,omitempty"`
+	Repository *RepositoryMeta `json:"repository,omitempty"`
+	State *StateType `json:"state,omitempty"`
+	Title string `json:"title,omitempty"`
+	URL string `json:"url,omitempty"`
+	Updated time.Time `json:"updated_at,omitempty"`
+	User *User `json:"user,omitempty"`
 }
 
 type IssueConfig struct {
-	BlankIssuesEnabled bool                      `json:"blank_issues_enabled,omitempty"`
-	ContactLinks       []*IssueConfigContactLink `json:"contact_links,omitempty"`
+	BlankIssuesEnabled bool `json:"blank_issues_enabled,omitempty"`
+	ContactLinks []*IssueConfigContactLink `json:"contact_links,omitempty"`
 }
 
 type IssueConfigContactLink struct {
 	About string `json:"about,omitempty"`
-	Name  string `json:"name,omitempty"`
-	URL   string `json:"url,omitempty"`
+	Name string `json:"name,omitempty"`
+	URL string `json:"url,omitempty"`
 }
 
 type IssueConfigValidation struct {
 	Message string `json:"message,omitempty"`
-	Valid   bool   `json:"valid,omitempty"`
+	Valid bool `json:"valid,omitempty"`
 }
 
 // IssueDeadline — IssueDeadline represents an issue deadline
@@ -100,11 +121,11 @@ type IssueDeadline struct {
 
 // IssueFormField — IssueFormField represents a form field
 type IssueFormField struct {
-	Attributes  map[string]any           `json:"attributes,omitempty"`
-	ID          string                   `json:"id,omitempty"`
-	Type        *IssueFormFieldType      `json:"type,omitempty"`
-	Validations map[string]any           `json:"validations,omitempty"`
-	Visible     []*IssueFormFieldVisible `json:"visible,omitempty"`
+	Attributes map[string]any `json:"attributes,omitempty"`
+	ID string `json:"id,omitempty"`
+	Type *IssueFormFieldType `json:"type,omitempty"`
+	Validations map[string]any `json:"validations,omitempty"`
+	Visible []*IssueFormFieldVisible `json:"visible,omitempty"`
 }
 
 // IssueFormFieldType has no fields in the swagger spec.
@@ -115,28 +136,32 @@ type IssueFormFieldType struct{}
 type IssueFormFieldVisible struct{}
 
 // IssueLabelsOption — IssueLabelsOption a collection of labels
+//
+// Usage:
+//
+//	opts := IssueLabelsOption{Updated: time.Now()}
 type IssueLabelsOption struct {
-	Labels  []any     `json:"labels,omitempty"` // Labels can be a list of integers representing label IDs or a list of strings representing label names
+	Labels []any `json:"labels,omitempty"` // Labels can be a list of integers representing label IDs or a list of strings representing label names
 	Updated time.Time `json:"updated_at,omitempty"`
 }
 
 // IssueMeta — IssueMeta basic issue information
 type IssueMeta struct {
-	Index int64  `json:"index,omitempty"`
-	Name  string `json:"repo,omitempty"`
+	Index int64 `json:"index,omitempty"`
+	Name string `json:"repo,omitempty"`
 	Owner string `json:"owner,omitempty"`
 }
 
 // IssueTemplate — IssueTemplate represents an issue template for a repository
 type IssueTemplate struct {
-	About    string               `json:"about,omitempty"`
-	Content  string               `json:"content,omitempty"`
-	Fields   []*IssueFormField    `json:"body,omitempty"`
-	FileName string               `json:"file_name,omitempty"`
-	Labels   *IssueTemplateLabels `json:"labels,omitempty"`
-	Name     string               `json:"name,omitempty"`
-	Ref      string               `json:"ref,omitempty"`
-	Title    string               `json:"title,omitempty"`
+	About string `json:"about,omitempty"`
+	Content string `json:"content,omitempty"`
+	Fields []*IssueFormField `json:"body,omitempty"`
+	FileName string `json:"file_name,omitempty"`
+	Labels *IssueTemplateLabels `json:"labels,omitempty"`
+	Name string `json:"name,omitempty"`
+	Ref string `json:"ref,omitempty"`
+	Title string `json:"title,omitempty"`
 }
 
 // IssueTemplateLabels has no fields in the swagger spec.
