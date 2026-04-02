@@ -54,6 +54,80 @@ func TestUserService_GetCurrent_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_GetSettings_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/settings" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.UserSettings{
+			FullName:    "Alice",
+			Language:    "en-US",
+			Theme:       "forgejo-auto",
+			HideEmail:   true,
+			Pronouns:    "she/her",
+			Website:     "https://example.com",
+			Location:    "Earth",
+			Description: "maintainer",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	settings, err := f.Users.GetSettings(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if settings.FullName != "Alice" {
+		t.Errorf("got full name=%q, want %q", settings.FullName, "Alice")
+	}
+	if !settings.HideEmail {
+		t.Errorf("got hide_email=%v, want true", settings.HideEmail)
+	}
+}
+
+func TestUserService_UpdateSettings_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/settings" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.UserSettingsOptions
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.FullName != "Alice" || !body.HideEmail || body.Theme != "forgejo-auto" {
+			t.Fatalf("unexpected body: %+v", body)
+		}
+		json.NewEncoder(w).Encode(types.UserSettings{
+			FullName:  body.FullName,
+			HideEmail: body.HideEmail,
+			Theme:     body.Theme,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	settings, err := f.Users.UpdateSettings(context.Background(), &types.UserSettingsOptions{
+		FullName:  "Alice",
+		HideEmail: true,
+		Theme:     "forgejo-auto",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if settings.FullName != "Alice" {
+		t.Errorf("got full name=%q, want %q", settings.FullName, "Alice")
+	}
+	if !settings.HideEmail {
+		t.Errorf("got hide_email=%v, want true", settings.HideEmail)
+	}
+}
+
 func TestUserService_ListEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

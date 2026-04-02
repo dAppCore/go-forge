@@ -34,6 +34,24 @@ func (s *UserService) GetCurrent(ctx context.Context) (*types.User, error) {
 	return &out, nil
 }
 
+// GetSettings returns the authenticated user's settings.
+func (s *UserService) GetSettings(ctx context.Context) (*types.UserSettings, error) {
+	var out types.UserSettings
+	if err := s.client.Get(ctx, "/api/v1/user/settings", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UpdateSettings updates the authenticated user's settings.
+func (s *UserService) UpdateSettings(ctx context.Context, opts *types.UserSettingsOptions) (*types.UserSettings, error) {
+	var out types.UserSettings
+	if err := s.client.Patch(ctx, "/api/v1/user/settings", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListEmails returns all email addresses for the authenticated user.
 func (s *UserService) ListEmails(ctx context.Context) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/user/emails", nil)
