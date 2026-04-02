@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	json "github.com/goccy/go-json"
-	"io"
 	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	goio "io"
 
 	core "dappco.re/go/core"
 )
@@ -196,7 +197,7 @@ func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, er
 func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte, error) {
 	url := c.baseURL + path
 
-	var bodyReader io.Reader
+	var bodyReader goio.Reader
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
@@ -226,7 +227,7 @@ func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte
 		return nil, c.parseError(resp, path)
 	}
 
-	data, err := io.ReadAll(resp.Body)
+	data, err := goio.ReadAll(resp.Body)
 	if err != nil {
 		return nil, core.E("Client.PostRaw", "forge: read response body", err)
 	}
@@ -259,7 +260,7 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 		return nil, c.parseError(resp, path)
 	}
 
-	data, err := io.ReadAll(resp.Body)
+	data, err := goio.ReadAll(resp.Body)
 	if err != nil {
 		return nil, core.E("Client.PostText", "forge: read response body", err)
 	}
@@ -267,7 +268,7 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 	return data, nil
 }
 
-func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[string]string, fields map[string]string, fieldName, fileName string, content io.Reader, out any) error {
+func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[string]string, fields map[string]string, fieldName, fileName string, content goio.Reader, out any) error {
 	target, err := url.Parse(c.baseURL + path)
 	if err != nil {
 		return core.E("Client.PostMultipart", "forge: parse url", err)
@@ -293,7 +294,7 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 			return core.E("Client.PostMultipart", "forge: create multipart form file", err)
 		}
 		if content != nil {
-			if _, err := io.Copy(part, content); err != nil {
+			if _, err := goio.Copy(part, content); err != nil {
 				return core.E("Client.PostMultipart", "forge: write multipart form file", err)
 			}
 		}
@@ -357,7 +358,7 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 		return nil, c.parseError(resp, path)
 	}
 
-	data, err := io.ReadAll(resp.Body)
+	data, err := goio.ReadAll(resp.Body)
 	if err != nil {
 		return nil, core.E("Client.GetRaw", "forge: read response body", err)
 	}
@@ -373,7 +374,7 @@ func (c *Client) do(ctx context.Context, method, path string, body, out any) err
 func (c *Client) doJSON(ctx context.Context, method, path string, body, out any) (*http.Response, error) {
 	url := c.baseURL + path
 
-	var bodyReader io.Reader
+	var bodyReader goio.Reader
 	if body != nil {
 		data, err := json.Marshal(body)
 		if err != nil {
@@ -423,7 +424,7 @@ func (c *Client) parseError(resp *http.Response, path string) error {
 	}
 
 	// Read a bit of the body to see if we can get a message
-	data, _ := io.ReadAll(io.LimitReader(resp.Body, 1024))
+	data, _ := goio.ReadAll(goio.LimitReader(resp.Body, 1024))
 	_ = json.Unmarshal(data, &errBody)
 
 	msg := errBody.Message

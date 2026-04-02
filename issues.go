@@ -2,10 +2,11 @@ package forge
 
 import (
 	"context"
-	"io"
 	"iter"
 	"strconv"
 	"time"
+
+	goio "io"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -391,7 +392,7 @@ func attachmentUploadQuery(opts *AttachmentUploadOptions) map[string]string {
 	return query
 }
 
-func (s *IssueService) createAttachment(ctx context.Context, path string, opts *AttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
+func (s *IssueService) createAttachment(ctx context.Context, path string, opts *AttachmentUploadOptions, filename string, content goio.Reader) (*types.Attachment, error) {
 	var out types.Attachment
 	if err := s.client.postMultipartJSON(ctx, path, attachmentUploadQuery(opts), nil, "attachment", filename, content, &out); err != nil {
 		return nil, err
@@ -400,7 +401,7 @@ func (s *IssueService) createAttachment(ctx context.Context, path string, opts *
 }
 
 // CreateAttachment uploads a new attachment to an issue.
-func (s *IssueService) CreateAttachment(ctx context.Context, owner, repo string, index int64, opts *AttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
+func (s *IssueService) CreateAttachment(ctx context.Context, owner, repo string, index int64, opts *AttachmentUploadOptions, filename string, content goio.Reader) (*types.Attachment, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/assets", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	return s.createAttachment(ctx, path, opts, filename, content)
 }
@@ -466,7 +467,7 @@ func (s *IssueService) GetCommentAttachment(ctx context.Context, owner, repo str
 }
 
 // CreateCommentAttachment uploads a new attachment to an issue comment.
-func (s *IssueService) CreateCommentAttachment(ctx context.Context, owner, repo string, id int64, opts *AttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
+func (s *IssueService) CreateCommentAttachment(ctx context.Context, owner, repo string, id int64, opts *AttachmentUploadOptions, filename string, content goio.Reader) (*types.Attachment, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}/assets", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 	return s.createAttachment(ctx, path, opts, filename, content)
 }

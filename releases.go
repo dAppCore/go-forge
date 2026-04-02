@@ -2,8 +2,9 @@ package forge
 
 import (
 	"context"
-	"io"
 	"iter"
+
+	goio "io"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -79,7 +80,7 @@ func (s *ReleaseService) ListAssets(ctx context.Context, owner, repo string, rel
 //
 // If opts.ExternalURL is set, the upload uses the external_url form field and
 // ignores filename/content.
-func (s *ReleaseService) CreateAttachment(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
+func (s *ReleaseService) CreateAttachment(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content goio.Reader) (*types.Attachment, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{releaseID}/assets", pathParams("owner", owner, "repo", repo, "releaseID", int64String(releaseID)))
 	fields := make(map[string]string, 1)
 	fieldName := "attachment"
@@ -107,7 +108,7 @@ func (s *ReleaseService) EditAttachment(ctx context.Context, owner, repo string,
 }
 
 // CreateAsset uploads a new asset to a release.
-func (s *ReleaseService) CreateAsset(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
+func (s *ReleaseService) CreateAsset(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content goio.Reader) (*types.Attachment, error) {
 	return s.CreateAttachment(ctx, owner, repo, releaseID, opts, filename, content)
 }
 
