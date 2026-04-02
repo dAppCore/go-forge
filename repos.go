@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -38,6 +39,20 @@ func (o RepoKeyListOptions) queryParams() map[string]string {
 		return nil
 	}
 	return query
+}
+
+// ActivityFeedListOptions controls filtering for repository activity feeds.
+type ActivityFeedListOptions struct {
+	Date *time.Time
+}
+
+func (o ActivityFeedListOptions) queryParams() map[string]string {
+	if o.Date == nil {
+		return nil
+	}
+	return map[string]string{
+		"date": o.Date.Format("2006-01-02"),
+	}
 }
 
 func newRepoService(c *Client) *RepoService {
@@ -359,6 +374,18 @@ func (s *RepoService) ListIssueTemplates(ctx context.Context, owner, repo string
 	return ListAll[types.IssueTemplate](ctx, s.client, path, nil)
 }
 
+// ListActivityFeeds returns the repository's activity feed entries.
+func (s *RepoService) ListActivityFeeds(ctx context.Context, owner, repo string, filters ...ActivityFeedListOptions) ([]types.Activity, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/activities/feeds", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.Activity](ctx, s.client, path, activityFeedQuery(filters...))
+}
+
+// IterActivityFeeds returns an iterator over the repository's activity feed entries.
+func (s *RepoService) IterActivityFeeds(ctx context.Context, owner, repo string, filters ...ActivityFeedListOptions) iter.Seq2[types.Activity, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/activities/feeds", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.Activity](ctx, s.client, path, activityFeedQuery(filters...))
+}
+
 // ListTopics returns the topics assigned to a repository.
 func (s *RepoService) ListTopics(ctx context.Context, owner, repo string) ([]string, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/topics", pathParams("owner", owner, "repo", repo))
@@ -666,6 +693,23 @@ func repoKeyQuery(filters ...RepoKeyListOptions) map[string]string {
 		}
 		if filter.Fingerprint != "" {
 			query["fingerprint"] = filter.Fingerprint
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
+func activityFeedQuery(filters ...ActivityFeedListOptions) map[string]string {
+	if len(filters) == 0 {
+		return nil
+	}
+
+	query := make(map[string]string, 1)
+	for _, filter := range filters {
+		if filter.Date != nil {
+			query["date"] = filter.Date.Format("2006-01-02")
 		}
 	}
 	if len(query) == 0 {

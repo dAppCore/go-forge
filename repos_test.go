@@ -8,9 +8,43 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
+	"time"
 
 	"dappco.re/go/core/forge/types"
 )
+
+func TestRepoService_ListActivityFeeds_Good(t *testing.T) {
+	date := time.Date(2026, time.April, 2, 15, 4, 5, 0, time.UTC)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/activities/feeds" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("date"); got != "2026-04-02" {
+			t.Errorf("wrong date: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Activity{{
+			ID:      7,
+			OpType:  "create_repo",
+			Content: "created repository",
+		}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	activities, err := f.Repos.ListActivityFeeds(context.Background(), "core", "go-forge", ActivityFeedListOptions{Date: &date})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(activities) != 1 || activities[0].ID != 7 || activities[0].OpType != "create_repo" {
+		t.Fatalf("got %#v", activities)
+	}
+}
 
 func TestRepoService_ListTopics_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
