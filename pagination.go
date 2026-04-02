@@ -23,7 +23,7 @@ type ListOptions struct {
 	Limit int // items per page (default 50)
 }
 
-// DefaultList returns sensible default pagination.
+// DefaultList provides sensible default pagination.
 //
 // Usage:
 //

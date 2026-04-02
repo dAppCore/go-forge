@@ -4,8 +4,9 @@ package forge
 //
 // Usage:
 //
+//	ctx := context.Background()
 //	f := forge.NewForge("https://forge.lthn.ai", "token")
-//	_ = f.Repos
+//	repo, err := f.Repos.Get(ctx, forge.Params{"owner": "core", "repo": "go-forge"})
 type Forge struct {
 	client *Client
 
@@ -35,8 +36,9 @@ type Forge struct {
 //
 // Usage:
 //
+//	ctx := context.Background()
 //	f := forge.NewForge("https://forge.lthn.ai", "token")
-//	_ = f
+//	repos, err := f.Repos.ListOrgRepos(ctx, "core")
 func NewForge(url, token string, opts ...Option) *Forge {
 	c := NewClient(url, token, opts...)
 	f := &Forge{client: c}
