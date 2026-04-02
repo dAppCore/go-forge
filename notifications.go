@@ -61,27 +61,43 @@ type NotificationRepoMarkOptions struct {
 	LastReadAt  *time.Time
 }
 
+// NotificationMarkOptions controls how authenticated-user notifications are marked.
+type NotificationMarkOptions struct {
+	All         bool
+	StatusTypes []string
+	ToStatus    string
+	LastReadAt  *time.Time
+}
+
 func newNotificationService(c *Client) *NotificationService {
 	return &NotificationService{client: c}
 }
 
-func (o NotificationRepoMarkOptions) queryString() string {
+func notificationMarkQueryString(all bool, statusTypes []string, toStatus string, lastReadAt *time.Time) string {
 	values := url.Values{}
-	if o.All {
+	if all {
 		values.Set("all", "true")
 	}
-	for _, status := range o.StatusTypes {
+	for _, status := range statusTypes {
 		if status != "" {
 			values.Add("status-types", status)
 		}
 	}
-	if o.ToStatus != "" {
-		values.Set("to-status", o.ToStatus)
+	if toStatus != "" {
+		values.Set("to-status", toStatus)
 	}
-	if o.LastReadAt != nil {
-		values.Set("last_read_at", o.LastReadAt.Format(time.RFC3339))
+	if lastReadAt != nil {
+		values.Set("last_read_at", lastReadAt.Format(time.RFC3339))
 	}
 	return values.Encode()
+}
+
+func (o NotificationRepoMarkOptions) queryString() string {
+	return notificationMarkQueryString(o.All, o.StatusTypes, o.ToStatus, o.LastReadAt)
+}
+
+func (o NotificationMarkOptions) queryString() string {
+	return notificationMarkQueryString(o.All, o.StatusTypes, o.ToStatus, o.LastReadAt)
 }
 
 // List returns all notifications for the authenticated user.
@@ -113,6 +129,21 @@ func (s *NotificationService) ListRepo(ctx context.Context, owner, repo string, 
 func (s *NotificationService) IterRepo(ctx context.Context, owner, repo string, filters ...NotificationListOptions) iter.Seq2[types.NotificationThread, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/notifications", pathParams("owner", owner, "repo", repo))
 	return s.listIter(ctx, path, filters...)
+}
+
+// MarkNotifications marks authenticated-user notification threads as read, pinned, or unread.
+func (s *NotificationService) MarkNotifications(ctx context.Context, opts *NotificationMarkOptions) ([]types.NotificationThread, error) {
+	path := "/api/v1/notifications"
+	if opts != nil {
+		if query := opts.queryString(); query != "" {
+			path += "?" + query
+		}
+	}
+	var out []types.NotificationThread
+	if err := s.client.Put(ctx, path, nil, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // MarkRepoNotifications marks repository notification threads as read, unread, or pinned.
