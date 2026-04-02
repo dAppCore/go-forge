@@ -35,6 +35,38 @@ func TestRepoService_ListTopics_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_IterTopics_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/topics" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.TopicName{TopicNames: []string{"go", "forge"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for topic, err := range f.Repos.IterTopics(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, topic)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if !reflect.DeepEqual(got, []string{"go", "forge"}) {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestRepoService_SearchTopics_Good(t *testing.T) {
 	var requests int
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

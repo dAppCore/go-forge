@@ -269,6 +269,22 @@ func (s *RepoService) ListTopics(ctx context.Context, owner, repo string) ([]str
 	return out.TopicNames, nil
 }
 
+// IterTopics returns an iterator over the topics assigned to a repository.
+func (s *RepoService) IterTopics(ctx context.Context, owner, repo string) iter.Seq2[string, error] {
+	return func(yield func(string, error) bool) {
+		topics, err := s.ListTopics(ctx, owner, repo)
+		if err != nil {
+			yield("", err)
+			return
+		}
+		for _, topic := range topics {
+			if !yield(topic, nil) {
+				return
+			}
+		}
+	}
+}
+
 // SearchTopics searches topics by keyword.
 func (s *RepoService) SearchTopics(ctx context.Context, query string) ([]types.TopicResponse, error) {
 	return ListAll[types.TopicResponse](ctx, s.client, "/api/v1/topics/search", map[string]string{"q": query})
