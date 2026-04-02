@@ -224,6 +224,98 @@ func TestAdminService_ListEmails_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_ListQuotaGroups_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.QuotaGroup{
+			{
+				Name: "default",
+				Rules: []*types.QuotaRuleInfo{
+					{Name: "git", Limit: 200000000, Subjects: []string{"size:repos:all"}},
+				},
+			},
+			{
+				Name: "premium",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	groups, err := f.Admin.ListQuotaGroups(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(groups) != 2 {
+		t.Fatalf("got %d groups, want 2", len(groups))
+	}
+	if groups[0].Name != "default" {
+		t.Errorf("got name=%q, want %q", groups[0].Name, "default")
+	}
+	if len(groups[0].Rules) != 1 || groups[0].Rules[0].Name != "git" {
+		t.Errorf("unexpected rules: %+v", groups[0].Rules)
+	}
+}
+
+func TestAdminService_CreateQuotaGroup_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateQuotaGroupOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Name != "newgroup" {
+			t.Errorf("got name=%q, want %q", opts.Name, "newgroup")
+		}
+		if len(opts.Rules) != 1 || opts.Rules[0].Name != "git" {
+			t.Fatalf("unexpected rules: %+v", opts.Rules)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.QuotaGroup{
+			Name: opts.Name,
+			Rules: []*types.QuotaRuleInfo{
+				{
+					Name:     opts.Rules[0].Name,
+					Limit:    opts.Rules[0].Limit,
+					Subjects: opts.Rules[0].Subjects,
+				},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	group, err := f.Admin.CreateQuotaGroup(context.Background(), &types.CreateQuotaGroupOptions{
+		Name: "newgroup",
+		Rules: []*types.CreateQuotaRuleOptions{
+			{
+				Name:     "git",
+				Limit:    200000000,
+				Subjects: []string{"size:repos:all"},
+			},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if group.Name != "newgroup" {
+		t.Errorf("got name=%q, want %q", group.Name, "newgroup")
+	}
+	if len(group.Rules) != 1 || group.Rules[0].Limit != 200000000 {
+		t.Errorf("unexpected rules: %+v", group.Rules)
+	}
+}
+
 func TestAdminService_SearchEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

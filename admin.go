@@ -80,6 +80,20 @@ func (s *AdminService) IterEmails(ctx context.Context) iter.Seq2[types.Email, er
 	return ListIter[types.Email](ctx, s.client, "/api/v1/admin/emails", nil)
 }
 
+// ListQuotaGroups returns all available quota groups.
+func (s *AdminService) ListQuotaGroups(ctx context.Context) ([]types.QuotaGroup, error) {
+	return ListAll[types.QuotaGroup](ctx, s.client, "/api/v1/admin/quota/groups", nil)
+}
+
+// CreateQuotaGroup creates a new quota group.
+func (s *AdminService) CreateQuotaGroup(ctx context.Context, opts *types.CreateQuotaGroupOptions) (*types.QuotaGroup, error) {
+	var out types.QuotaGroup
+	if err := s.client.Post(ctx, "/api/v1/admin/quota/groups", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // SearchEmails searches all email addresses by keyword (admin only).
 func (s *AdminService) SearchEmails(ctx context.Context, q string) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/admin/emails/search", map[string]string{"q": q})
