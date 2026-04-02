@@ -88,6 +88,28 @@ func TestOrgService_ListMembers_Good(t *testing.T) {
 	}
 }
 
+func TestOrgService_IsMember_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/members/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	member, err := f.Orgs.IsMember(context.Background(), "core", "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !member {
+		t.Fatal("got member=false, want true")
+	}
+}
+
 func TestOrgService_ListPublicMembers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

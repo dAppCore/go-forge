@@ -65,6 +65,19 @@ func (s *OrgService) RemoveMember(ctx context.Context, org, username string) err
 	return s.client.Delete(ctx, path)
 }
 
+// IsMember reports whether a user is a member of an organisation.
+func (s *OrgService) IsMember(ctx context.Context, org, username string) (bool, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/members/{username}", pathParams("org", org, "username", username))
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, nil)
+	if err != nil {
+		if IsNotFound(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return resp.StatusCode == http.StatusNoContent, nil
+}
+
 // ListBlockedUsers returns all users blocked by an organisation.
 func (s *OrgService) ListBlockedUsers(ctx context.Context, org string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/blocks", pathParams("org", org))
