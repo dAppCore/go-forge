@@ -325,6 +325,12 @@ func (s *RepoService) ListFlags(ctx context.Context, owner, repo string) ([]stri
 	return out, nil
 }
 
+// IterFlags returns an iterator over all flags for a repository.
+func (s *RepoService) IterFlags(ctx context.Context, owner, repo string) iter.Seq2[string, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags", pathParams("owner", owner, "repo", repo))
+	return ListIter[string](ctx, s.client, path, nil)
+}
+
 // ReplaceFlags replaces all flags for a repository.
 func (s *RepoService) ReplaceFlags(ctx context.Context, owner, repo string, opts *types.ReplaceFlagsOption) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags", pathParams("owner", owner, "repo", repo))

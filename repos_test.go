@@ -1176,6 +1176,45 @@ func TestRepoService_ListFlags_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_IterFlags_Good(t *testing.T) {
+	requests := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/flags" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("got page=%q, want %q", got, "1")
+		}
+		if got := r.URL.Query().Get("limit"); got != "50" {
+			t.Errorf("got limit=%q, want %q", got, "50")
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]string{"alpha", "beta"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for flag, err := range f.Repos.IterFlags(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, flag)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if !reflect.DeepEqual(got, []string{"alpha", "beta"}) {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestRepoService_ReplaceFlags_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
