@@ -305,6 +305,36 @@ func (s *UserService) DeleteKey(ctx context.Context, id int64) error {
 	return s.client.Delete(ctx, path)
 }
 
+// ListUserKeys returns all public keys for a user.
+func (s *UserService) ListUserKeys(ctx context.Context, username string, filters ...UserKeyListOptions) ([]types.PublicKey, error) {
+	path := ResolvePath("/api/v1/users/{username}/keys", pathParams("username", username))
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		query = nil
+	}
+	return ListAll[types.PublicKey](ctx, s.client, path, query)
+}
+
+// IterUserKeys returns an iterator over all public keys for a user.
+func (s *UserService) IterUserKeys(ctx context.Context, username string, filters ...UserKeyListOptions) iter.Seq2[types.PublicKey, error] {
+	path := ResolvePath("/api/v1/users/{username}/keys", pathParams("username", username))
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		query = nil
+	}
+	return ListIter[types.PublicKey](ctx, s.client, path, query)
+}
+
 // ListGPGKeys returns all GPG keys owned by the authenticated user.
 func (s *UserService) ListGPGKeys(ctx context.Context) ([]types.GPGKey, error) {
 	return ListAll[types.GPGKey](ctx, s.client, "/api/v1/user/gpg_keys", nil)
@@ -337,6 +367,64 @@ func (s *UserService) GetGPGKey(ctx context.Context, id int64) (*types.GPGKey, e
 // DeleteGPGKey removes a GPG key owned by the authenticated user.
 func (s *UserService) DeleteGPGKey(ctx context.Context, id int64) error {
 	path := ResolvePath("/api/v1/user/gpg_keys/{id}", pathParams("id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
+// ListUserGPGKeys returns all GPG keys for a user.
+func (s *UserService) ListUserGPGKeys(ctx context.Context, username string) ([]types.GPGKey, error) {
+	path := ResolvePath("/api/v1/users/{username}/gpg_keys", pathParams("username", username))
+	return ListAll[types.GPGKey](ctx, s.client, path, nil)
+}
+
+// IterUserGPGKeys returns an iterator over all GPG keys for a user.
+func (s *UserService) IterUserGPGKeys(ctx context.Context, username string) iter.Seq2[types.GPGKey, error] {
+	path := ResolvePath("/api/v1/users/{username}/gpg_keys", pathParams("username", username))
+	return ListIter[types.GPGKey](ctx, s.client, path, nil)
+}
+
+// GetGPGKeyVerificationToken returns the token used to verify a GPG key.
+func (s *UserService) GetGPGKeyVerificationToken(ctx context.Context) (string, error) {
+	data, err := s.client.GetRaw(ctx, "/api/v1/user/gpg_key_token")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// VerifyGPGKey verifies a GPG key for the authenticated user.
+func (s *UserService) VerifyGPGKey(ctx context.Context) (*types.GPGKey, error) {
+	var out types.GPGKey
+	if err := s.client.Post(ctx, "/api/v1/user/gpg_key_verify", nil, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListTokens returns all access tokens for a user.
+func (s *UserService) ListTokens(ctx context.Context, username string) ([]types.AccessToken, error) {
+	path := ResolvePath("/api/v1/users/{username}/tokens", pathParams("username", username))
+	return ListAll[types.AccessToken](ctx, s.client, path, nil)
+}
+
+// IterTokens returns an iterator over all access tokens for a user.
+func (s *UserService) IterTokens(ctx context.Context, username string) iter.Seq2[types.AccessToken, error] {
+	path := ResolvePath("/api/v1/users/{username}/tokens", pathParams("username", username))
+	return ListIter[types.AccessToken](ctx, s.client, path, nil)
+}
+
+// CreateToken creates an access token for a user.
+func (s *UserService) CreateToken(ctx context.Context, username string, opts *types.CreateAccessTokenOption) (*types.AccessToken, error) {
+	path := ResolvePath("/api/v1/users/{username}/tokens", pathParams("username", username))
+	var out types.AccessToken
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteToken deletes an access token for a user.
+func (s *UserService) DeleteToken(ctx context.Context, username, token string) error {
+	path := ResolvePath("/api/v1/users/{username}/tokens/{token}", pathParams("username", username, "token", token))
 	return s.client.Delete(ctx, path)
 }
 

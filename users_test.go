@@ -1128,6 +1128,194 @@ func TestUserService_DeleteGPGKey_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_GetGPGKeyVerificationToken_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/gpg_key_token" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Write([]byte("verification-token"))
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	token, err := f.Users.GetGPGKeyVerificationToken(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if token != "verification-token" {
+		t.Errorf("got token=%q, want %q", token, "verification-token")
+	}
+}
+
+func TestUserService_VerifyGPGKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/gpg_key_verify" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.Header.Get("Content-Type"); got != "" {
+			t.Errorf("unexpected content type: %q", got)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.GPGKey{
+			ID:       12,
+			KeyID:    "QRST7890",
+			Verified: true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Users.VerifyGPGKey(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key.ID != 12 || key.KeyID != "QRST7890" || !key.Verified {
+		t.Errorf("unexpected key: %+v", key)
+	}
+}
+
+func TestUserService_ListTokens_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/tokens" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.AccessToken{
+			{ID: 1, Name: "ci", Scopes: []string{"repo"}},
+			{ID: 2, Name: "deploy", Scopes: []string{"read:packages"}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	tokens, err := f.Users.ListTokens(context.Background(), "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tokens) != 2 || tokens[0].Name != "ci" || tokens[1].Name != "deploy" {
+		t.Fatalf("unexpected tokens: %+v", tokens)
+	}
+}
+
+func TestUserService_CreateToken_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/tokens" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateAccessTokenOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Name != "ci" || len(body.Scopes) != 1 || body.Scopes[0] != "repo" {
+			t.Fatalf("unexpected body: %+v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.AccessToken{
+			ID:             7,
+			Name:           body.Name,
+			Scopes:         body.Scopes,
+			Token:          "abcdef0123456789",
+			TokenLastEight: "456789",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	token, err := f.Users.CreateToken(context.Background(), "alice", &types.CreateAccessTokenOption{
+		Name:   "ci",
+		Scopes: []string{"repo"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if token.ID != 7 || token.Name != "ci" || token.Token != "abcdef0123456789" {
+		t.Fatalf("unexpected token: %+v", token)
+	}
+}
+
+func TestUserService_DeleteToken_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/tokens/ci" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Users.DeleteToken(context.Background(), "alice", "ci"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestUserService_ListUserKeys_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("fingerprint"); got != "abc123" {
+			t.Errorf("wrong fingerprint: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.PublicKey{
+			{ID: 4, Title: "laptop", Fingerprint: "abc123"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	keys, err := f.Users.ListUserKeys(context.Background(), "alice", UserKeyListOptions{Fingerprint: "abc123"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(keys) != 1 || keys[0].Title != "laptop" {
+		t.Fatalf("unexpected keys: %+v", keys)
+	}
+}
+
+func TestUserService_ListUserGPGKeys_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/gpg_keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.GPGKey{
+			{ID: 8, KeyID: "ABCD1234"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	keys, err := f.Users.ListUserGPGKeys(context.Background(), "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(keys) != 1 || keys[0].KeyID != "ABCD1234" {
+		t.Fatalf("unexpected gpg keys: %+v", keys)
+	}
+}
+
 func TestUserService_ListOAuth2Applications_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
