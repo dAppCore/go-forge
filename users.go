@@ -232,3 +232,16 @@ func (s *UserService) Unstar(ctx context.Context, owner, repo string) error {
 	path := ResolvePath("/api/v1/user/starred/{owner}/{repo}", pathParams("owner", owner, "repo", repo))
 	return s.client.Delete(ctx, path)
 }
+
+// CheckStarring reports whether the authenticated user is starring a repository.
+func (s *UserService) CheckStarring(ctx context.Context, owner, repo string) (bool, error) {
+	path := ResolvePath("/api/v1/user/starred/{owner}/{repo}", pathParams("owner", owner, "repo", repo))
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, nil)
+	if err != nil {
+		if IsNotFound(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return resp.StatusCode == http.StatusNoContent, nil
+}

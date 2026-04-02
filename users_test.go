@@ -643,6 +643,50 @@ func TestUserService_IterSubscriptions_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_CheckStarring_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/starred/core/go-forge" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	starring, err := f.Users.CheckStarring(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !starring {
+		t.Fatal("got starring=false, want true")
+	}
+}
+
+func TestUserService_CheckStarring_Bad_NotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/starred/core/go-forge" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		http.NotFound(w, r)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	starring, err := f.Users.CheckStarring(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if starring {
+		t.Fatal("got starring=true, want false")
+	}
+}
+
 func TestUserService_GetHeatmap_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
