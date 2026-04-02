@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"strconv"
 
 	core "dappco.re/go/core"
 )
@@ -19,6 +20,28 @@ type Resource[T any, C any, U any] struct {
 	path       string // item path: /api/v1/repos/{owner}/{repo}/issues/{index}
 	collection string // collection path: /api/v1/repos/{owner}/{repo}/issues
 }
+
+// String returns a safe summary of the resource configuration.
+//
+// Usage:
+//
+//	s := res.String()
+func (r *Resource[T, C, U]) String() string {
+	return core.Concat(
+		"forge.Resource{path=",
+		strconv.Quote(r.path),
+		", collection=",
+		strconv.Quote(r.collection),
+		"}",
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the resource configuration.
+//
+// Usage:
+//
+//	s := fmt.Sprintf("%#v", res)
+func (r *Resource[T, C, U]) GoString() string { return r.String() }
 
 // NewResource creates a new Resource for the given path pattern.
 // The path should be the item path (e.g., /repos/{owner}/{repo}/issues/{index}).
