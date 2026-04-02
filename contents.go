@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"iter"
 	"net/url"
 
 	"dappco.re/go/core/forge/types"
@@ -42,6 +43,23 @@ func (s *ContentService) ListContents(ctx context.Context, owner, repo, ref stri
 		return nil, err
 	}
 	return out, nil
+}
+
+// IterContents returns an iterator over the entries in a repository directory.
+// If ref is non-empty, the listing is resolved against that branch, tag, or commit.
+func (s *ContentService) IterContents(ctx context.Context, owner, repo, ref string) iter.Seq2[types.ContentsResponse, error] {
+	return func(yield func(types.ContentsResponse, error) bool) {
+		items, err := s.ListContents(ctx, owner, repo, ref)
+		if err != nil {
+			yield(*new(types.ContentsResponse), err)
+			return
+		}
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
 }
 
 // GetFile returns metadata and content for a file in a repository.

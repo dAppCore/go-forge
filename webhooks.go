@@ -59,6 +59,12 @@ func (s *WebhookService) ListGitHooks(ctx context.Context, owner, repo string) (
 	return ListAll[types.GitHook](ctx, s.client, path, nil)
 }
 
+// IterGitHooks returns an iterator over all Git hooks for a repository.
+func (s *WebhookService) IterGitHooks(ctx context.Context, owner, repo string) iter.Seq2[types.GitHook, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks/git", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.GitHook](ctx, s.client, path, nil)
+}
+
 // GetGitHook returns a single Git hook for a repository.
 func (s *WebhookService) GetGitHook(ctx context.Context, owner, repo, id string) (*types.GitHook, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks/git/{id}", pathParams("owner", owner, "repo", repo, "id", id))

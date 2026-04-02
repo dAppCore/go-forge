@@ -155,6 +155,37 @@ func TestWebhookService_ListGitHooks_Good(t *testing.T) {
 	}
 }
 
+func TestWebhookService_IterGitHooks_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/hooks/git" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.GitHook{
+			{Name: "pre-receive", Content: "#!/bin/sh\nexit 0", IsActive: true},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for hook, err := range f.Webhooks.IterGitHooks(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, hook.Name)
+	}
+	if len(got) != 1 {
+		t.Fatalf("got %d hooks, want 1", len(got))
+	}
+	if got[0] != "pre-receive" {
+		t.Errorf("got name=%q, want %q", got[0], "pre-receive")
+	}
+}
+
 func TestWebhookService_GetGitHook_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

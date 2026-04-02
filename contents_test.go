@@ -41,6 +41,38 @@ func TestContentService_ListContents_Good(t *testing.T) {
 	}
 }
 
+func TestContentService_IterContents_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.ContentsResponse{
+			{Name: "README.md", Path: "README.md", Type: "file"},
+			{Name: "docs", Path: "docs", Type: "dir"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for item, err := range f.Contents.IterContents(context.Background(), "core", "go-forge", "") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, item.Name)
+	}
+	if len(got) != 2 {
+		t.Fatalf("got %d items, want 2", len(got))
+	}
+	if got[0] != "README.md" || got[1] != "docs" {
+		t.Fatalf("unexpected items: %+v", got)
+	}
+}
+
 func TestContentService_GetFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
