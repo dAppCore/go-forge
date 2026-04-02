@@ -573,6 +573,50 @@ func TestRepoService_GetRawFileOrLFS_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ApplyDiffPatch_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/diffpatch" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.UpdateFileOptions
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if body.SHA != "abc123" || body.Message != "apply patch" || body.ContentBase64 != "ZGlmZiBjb250ZW50" {
+			t.Fatalf("got %#v", body)
+		}
+		json.NewEncoder(w).Encode(types.FileResponse{
+			Commit: &types.FileCommitResponse{SHA: "commit-1"},
+			Content: &types.ContentsResponse{
+				Path: "README.md",
+				SHA:  "file-1",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	resp, err := f.Repos.ApplyDiffPatch(context.Background(), "core", "go-forge", &types.UpdateFileOptions{
+		SHA:           "abc123",
+		Message:       "apply patch",
+		ContentBase64: "ZGlmZiBjb250ZW50",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Commit == nil || resp.Commit.SHA != "commit-1" {
+		t.Fatalf("got %#v", resp)
+	}
+	if resp.Content == nil || resp.Content.Path != "README.md" || resp.Content.SHA != "file-1" {
+		t.Fatalf("got %#v", resp)
+	}
+}
+
 func TestRepoService_ListForks_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

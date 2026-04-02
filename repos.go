@@ -383,6 +383,16 @@ func (s *RepoService) GetRawFileOrLFS(ctx context.Context, owner, repo, filepath
 	return s.client.GetRaw(ctx, path)
 }
 
+// ApplyDiffPatch applies a diff patch to a repository.
+func (s *RepoService) ApplyDiffPatch(ctx context.Context, owner, repo string, opts *types.UpdateFileOptions) (*types.FileResponse, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/diffpatch", pathParams("owner", owner, "repo", repo))
+	var out types.FileResponse
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetLanguages returns the byte counts per language for a repository.
 func (s *RepoService) GetLanguages(ctx context.Context, owner, repo string) (map[string]int64, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/languages", pathParams("owner", owner, "repo", repo))
