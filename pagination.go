@@ -23,6 +23,28 @@ type ListOptions struct {
 	Limit int // items per page (default 50)
 }
 
+// String returns a safe summary of the pagination options.
+//
+// Usage:
+//
+//	_ = forge.DefaultList.String()
+func (o ListOptions) String() string {
+	return core.Concat(
+		"forge.ListOptions{page=",
+		strconv.Itoa(o.Page),
+		", limit=",
+		strconv.Itoa(o.Limit),
+		"}",
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the pagination options.
+//
+// Usage:
+//
+//	_ = fmt.Sprintf("%#v", forge.DefaultList)
+func (o ListOptions) GoString() string { return o.String() }
+
 // DefaultList provides sensible default pagination.
 //
 // Usage:
@@ -43,6 +65,37 @@ type PagedResult[T any] struct {
 	Page       int
 	HasMore    bool
 }
+
+// String returns a safe summary of a page of results.
+//
+// Usage:
+//
+//	page, _ := forge.ListPage[types.Repository](...)
+//	_ = page.String()
+func (r PagedResult[T]) String() string {
+	items := 0
+	if r.Items != nil {
+		items = len(r.Items)
+	}
+	return core.Concat(
+		"forge.PagedResult{items=",
+		strconv.Itoa(items),
+		", totalCount=",
+		strconv.Itoa(r.TotalCount),
+		", page=",
+		strconv.Itoa(r.Page),
+		", hasMore=",
+		strconv.FormatBool(r.HasMore),
+		"}",
+	)
+}
+
+// GoString returns a safe Go-syntax summary of a page of results.
+//
+// Usage:
+//
+//	_ = fmt.Sprintf("%#v", page)
+func (r PagedResult[T]) GoString() string { return r.String() }
 
 // ListPage fetches a single page of results.
 // Extra query params can be passed via the query map.

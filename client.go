@@ -109,6 +109,31 @@ type RateLimit struct {
 	Reset     int64
 }
 
+// String returns a safe summary of the rate limit state.
+//
+// Usage:
+//
+//	rl := client.RateLimit()
+//	_ = rl.String()
+func (r RateLimit) String() string {
+	return core.Concat(
+		"forge.RateLimit{limit=",
+		strconv.Itoa(r.Limit),
+		", remaining=",
+		strconv.Itoa(r.Remaining),
+		", reset=",
+		strconv.FormatInt(r.Reset, 10),
+		"}",
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the rate limit state.
+//
+// Usage:
+//
+//	_ = fmt.Sprintf("%#v", client.RateLimit())
+func (r RateLimit) GoString() string { return r.String() }
+
 // Client is a low-level HTTP client for the Forgejo API.
 //
 // Usage:
