@@ -189,3 +189,17 @@ func TestSaveConfig_Good(t *testing.T) {
 		t.Errorf("got token=%q", cfg["token"])
 	}
 }
+
+func TestConfigPath_Good(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	got, err := ConfigPath()
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := filepath.Join(home, ".config", "forge", "config.json")
+	if got != want {
+		t.Fatalf("got path=%q, want %q", got, want)
+	}
+}

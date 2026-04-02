@@ -26,16 +26,23 @@ type configFile struct {
 	Token string `json:"token"`
 }
 
-func configPath() (string, error) {
+// ConfigPath returns the default config file path used by SaveConfig and
+// ResolveConfig.
+//
+// Usage:
+//
+//	path, err := forge.ConfigPath()
+//	_ = path
+func ConfigPath() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return "", core.E("configPath", "forge: resolve home directory", err)
+		return "", core.E("ConfigPath", "forge: resolve home directory", err)
 	}
 	return filepath.Join(home, defaultConfigPath), nil
 }
 
 func readConfigFile() (url, token string, err error) {
-	path, err := configPath()
+	path, err := ConfigPath()
 	if err != nil {
 		return "", "", err
 	}
@@ -62,7 +69,7 @@ func readConfigFile() (url, token string, err error) {
 //
 //	_ = forge.SaveConfig("https://forge.example.com", "token")
 func SaveConfig(url, token string) error {
-	path, err := configPath()
+	path, err := ConfigPath()
 	if err != nil {
 		return err
 	}
@@ -132,7 +139,8 @@ func NewFromConfig(flagURL, flagToken string, opts ...Option) (*Forge, error) {
 }
 
 // NewForgeFromConfig creates a new Forge client using resolved configuration.
-// It returns an error if no API token is available from flags or environment.
+// It returns an error if no API token is available from flags, environment,
+// or the saved config file.
 //
 // Usage:
 //

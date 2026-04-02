@@ -67,7 +67,7 @@ func NewForge(url, token string, opts ...Option) *Forge {
 	return f
 }
 
-// Client returns the underlying HTTP client.
+// Client returns the underlying Forge client.
 //
 // Usage:
 //
