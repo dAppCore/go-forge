@@ -248,6 +248,187 @@ func TestActionsService_ListOrgVariables_Good(t *testing.T) {
 	}
 }
 
+func TestActionsService_GetOrgVariable_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/lethean/actions/variables/ORG_VAR" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.ActionVariable{Name: "ORG_VAR", Data: "org-value"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	variable, err := f.Actions.GetOrgVariable(context.Background(), "lethean", "ORG_VAR")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if variable.Name != "ORG_VAR" || variable.Data != "org-value" {
+		t.Fatalf("unexpected variable: %#v", variable)
+	}
+}
+
+func TestActionsService_CreateUserVariable_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/actions/variables/CI_ENV" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateVariableOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Value != "production" {
+			t.Errorf("got value=%q, want %q", body.Value, "production")
+		}
+		w.WriteHeader(http.StatusCreated)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Actions.CreateUserVariable(context.Background(), "CI_ENV", "production"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestActionsService_ListUserVariables_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/actions/variables" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.ActionVariable{{Name: "CI_ENV", Data: "production"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	vars, err := f.Actions.ListUserVariables(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(vars) != 1 || vars[0].Name != "CI_ENV" {
+		t.Fatalf("unexpected variables: %#v", vars)
+	}
+}
+
+func TestActionsService_GetUserVariable_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/actions/variables/CI_ENV" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.ActionVariable{Name: "CI_ENV", Data: "production"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	variable, err := f.Actions.GetUserVariable(context.Background(), "CI_ENV")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if variable.Name != "CI_ENV" || variable.Data != "production" {
+		t.Fatalf("unexpected variable: %#v", variable)
+	}
+}
+
+func TestActionsService_UpdateUserVariable_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/actions/variables/CI_ENV" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.UpdateVariableOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Name != "CI_ENV_NEW" || body.Value != "staging" {
+			t.Fatalf("unexpected body: %#v", body)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Actions.UpdateUserVariable(context.Background(), "CI_ENV", &types.UpdateVariableOption{
+		Name:  "CI_ENV_NEW",
+		Value: "staging",
+	}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestActionsService_DeleteUserVariable_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/actions/variables/OLD_VAR" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Actions.DeleteUserVariable(context.Background(), "OLD_VAR"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestActionsService_CreateUserSecret_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/actions/secrets/DEPLOY_KEY" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body map[string]string
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body["data"] != "secret-value" {
+			t.Errorf("got data=%q, want %q", body["data"], "secret-value")
+		}
+		w.WriteHeader(http.StatusCreated)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Actions.CreateUserSecret(context.Background(), "DEPLOY_KEY", "secret-value"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestActionsService_DeleteUserSecret_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/actions/secrets/OLD_KEY" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Actions.DeleteUserSecret(context.Background(), "OLD_KEY"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestActionsService_DispatchWorkflow_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

@@ -40,14 +40,14 @@ func (s *ActionsService) IterRepoSecrets(ctx context.Context, owner, repo string
 // CreateRepoSecret creates or updates a secret in a repository.
 // Forgejo expects a PUT with {"data": "secret-value"} body.
 func (s *ActionsService) CreateRepoSecret(ctx context.Context, owner, repo, name string, data string) error {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/secrets/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/secrets/{secretname}", pathParams("owner", owner, "repo", repo, "secretname", name))
 	body := map[string]string{"data": data}
 	return s.client.Put(ctx, path, body, nil)
 }
 
 // DeleteRepoSecret removes a secret from a repository.
 func (s *ActionsService) DeleteRepoSecret(ctx context.Context, owner, repo, name string) error {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/secrets/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/secrets/{secretname}", pathParams("owner", owner, "repo", repo, "secretname", name))
 	return s.client.Delete(ctx, path)
 }
 
@@ -66,20 +66,20 @@ func (s *ActionsService) IterRepoVariables(ctx context.Context, owner, repo stri
 // CreateRepoVariable creates a new action variable in a repository.
 // Forgejo expects a POST with {"value": "var-value"} body.
 func (s *ActionsService) CreateRepoVariable(ctx context.Context, owner, repo, name, value string) error {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{variablename}", pathParams("owner", owner, "repo", repo, "variablename", name))
 	body := types.CreateVariableOption{Value: value}
 	return s.client.Post(ctx, path, body, nil)
 }
 
 // UpdateRepoVariable updates an existing action variable in a repository.
 func (s *ActionsService) UpdateRepoVariable(ctx context.Context, owner, repo, name string, opts *types.UpdateVariableOption) error {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{variablename}", pathParams("owner", owner, "repo", repo, "variablename", name))
 	return s.client.Put(ctx, path, opts, nil)
 }
 
 // DeleteRepoVariable removes an action variable from a repository.
 func (s *ActionsService) DeleteRepoVariable(ctx context.Context, owner, repo, name string) error {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{variablename}", pathParams("owner", owner, "repo", repo, "variablename", name))
 	return s.client.Delete(ctx, path)
 }
 
@@ -105,6 +105,100 @@ func (s *ActionsService) ListOrgVariables(ctx context.Context, org string) ([]ty
 func (s *ActionsService) IterOrgVariables(ctx context.Context, org string) iter.Seq2[types.ActionVariable, error] {
 	path := ResolvePath("/api/v1/orgs/{org}/actions/variables", pathParams("org", org))
 	return ListIter[types.ActionVariable](ctx, s.client, path, nil)
+}
+
+// GetOrgVariable returns a single action variable for an organisation.
+func (s *ActionsService) GetOrgVariable(ctx context.Context, org, name string) (*types.ActionVariable, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/actions/variables/{variablename}", pathParams("org", org, "variablename", name))
+	var out types.ActionVariable
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateOrgVariable creates a new action variable in an organisation.
+func (s *ActionsService) CreateOrgVariable(ctx context.Context, org, name, value string) error {
+	path := ResolvePath("/api/v1/orgs/{org}/actions/variables/{variablename}", pathParams("org", org, "variablename", name))
+	body := types.CreateVariableOption{Value: value}
+	return s.client.Post(ctx, path, body, nil)
+}
+
+// UpdateOrgVariable updates an existing action variable in an organisation.
+func (s *ActionsService) UpdateOrgVariable(ctx context.Context, org, name string, opts *types.UpdateVariableOption) error {
+	path := ResolvePath("/api/v1/orgs/{org}/actions/variables/{variablename}", pathParams("org", org, "variablename", name))
+	return s.client.Put(ctx, path, opts, nil)
+}
+
+// DeleteOrgVariable removes an action variable from an organisation.
+func (s *ActionsService) DeleteOrgVariable(ctx context.Context, org, name string) error {
+	path := ResolvePath("/api/v1/orgs/{org}/actions/variables/{variablename}", pathParams("org", org, "variablename", name))
+	return s.client.Delete(ctx, path)
+}
+
+// CreateOrgSecret creates or updates a secret in an organisation.
+func (s *ActionsService) CreateOrgSecret(ctx context.Context, org, name, data string) error {
+	path := ResolvePath("/api/v1/orgs/{org}/actions/secrets/{secretname}", pathParams("org", org, "secretname", name))
+	body := map[string]string{"data": data}
+	return s.client.Put(ctx, path, body, nil)
+}
+
+// DeleteOrgSecret removes a secret from an organisation.
+func (s *ActionsService) DeleteOrgSecret(ctx context.Context, org, name string) error {
+	path := ResolvePath("/api/v1/orgs/{org}/actions/secrets/{secretname}", pathParams("org", org, "secretname", name))
+	return s.client.Delete(ctx, path)
+}
+
+// ListUserVariables returns all action variables for the authenticated user.
+func (s *ActionsService) ListUserVariables(ctx context.Context) ([]types.ActionVariable, error) {
+	return ListAll[types.ActionVariable](ctx, s.client, "/api/v1/user/actions/variables", nil)
+}
+
+// IterUserVariables returns an iterator over all action variables for the authenticated user.
+func (s *ActionsService) IterUserVariables(ctx context.Context) iter.Seq2[types.ActionVariable, error] {
+	return ListIter[types.ActionVariable](ctx, s.client, "/api/v1/user/actions/variables", nil)
+}
+
+// GetUserVariable returns a single action variable for the authenticated user.
+func (s *ActionsService) GetUserVariable(ctx context.Context, name string) (*types.ActionVariable, error) {
+	path := ResolvePath("/api/v1/user/actions/variables/{variablename}", pathParams("variablename", name))
+	var out types.ActionVariable
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateUserVariable creates a new action variable for the authenticated user.
+func (s *ActionsService) CreateUserVariable(ctx context.Context, name, value string) error {
+	path := ResolvePath("/api/v1/user/actions/variables/{variablename}", pathParams("variablename", name))
+	body := types.CreateVariableOption{Value: value}
+	return s.client.Post(ctx, path, body, nil)
+}
+
+// UpdateUserVariable updates an existing action variable for the authenticated user.
+func (s *ActionsService) UpdateUserVariable(ctx context.Context, name string, opts *types.UpdateVariableOption) error {
+	path := ResolvePath("/api/v1/user/actions/variables/{variablename}", pathParams("variablename", name))
+	return s.client.Put(ctx, path, opts, nil)
+}
+
+// DeleteUserVariable removes an action variable for the authenticated user.
+func (s *ActionsService) DeleteUserVariable(ctx context.Context, name string) error {
+	path := ResolvePath("/api/v1/user/actions/variables/{variablename}", pathParams("variablename", name))
+	return s.client.Delete(ctx, path)
+}
+
+// CreateUserSecret creates or updates a secret for the authenticated user.
+func (s *ActionsService) CreateUserSecret(ctx context.Context, name, data string) error {
+	path := ResolvePath("/api/v1/user/actions/secrets/{secretname}", pathParams("secretname", name))
+	body := map[string]string{"data": data}
+	return s.client.Put(ctx, path, body, nil)
+}
+
+// DeleteUserSecret removes a secret for the authenticated user.
+func (s *ActionsService) DeleteUserSecret(ctx context.Context, name string) error {
+	path := ResolvePath("/api/v1/user/actions/secrets/{secretname}", pathParams("secretname", name))
+	return s.client.Delete(ctx, path)
 }
 
 // DispatchWorkflow triggers a workflow run.
