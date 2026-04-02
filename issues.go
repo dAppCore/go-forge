@@ -161,14 +161,26 @@ func (s *IssueService) SetDeadline(ctx context.Context, owner, repo string, inde
 // AddReaction adds a reaction to an issue.
 func (s *IssueService) AddReaction(ctx context.Context, owner, repo string, index int64, reaction string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/reactions", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
-	body := map[string]string{"content": reaction}
+	body := types.EditReactionOption{Reaction: reaction}
 	return s.client.Post(ctx, path, body, nil)
+}
+
+// ListReactions returns all reactions on an issue.
+func (s *IssueService) ListReactions(ctx context.Context, owner, repo string, index int64) ([]types.Reaction, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/reactions", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListAll[types.Reaction](ctx, s.client, path, nil)
+}
+
+// IterReactions returns an iterator over all reactions on an issue.
+func (s *IssueService) IterReactions(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.Reaction, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/reactions", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+	return ListIter[types.Reaction](ctx, s.client, path, nil)
 }
 
 // DeleteReaction removes a reaction from an issue.
 func (s *IssueService) DeleteReaction(ctx context.Context, owner, repo string, index int64, reaction string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/reactions", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
-	body := map[string]string{"content": reaction}
+	body := types.EditReactionOption{Reaction: reaction}
 	return s.client.DeleteWithBody(ctx, path, body)
 }
 
@@ -258,6 +270,34 @@ func (s *IssueService) CreateComment(ctx context.Context, owner, repo string, in
 		return nil, err
 	}
 	return &out, nil
+}
+
+// ListCommentReactions returns all reactions on an issue comment.
+func (s *IssueService) ListCommentReactions(ctx context.Context, owner, repo string, id int64) ([]types.Reaction, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}/reactions", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	return ListAll[types.Reaction](ctx, s.client, path, nil)
+}
+
+// IterCommentReactions returns an iterator over all reactions on an issue comment.
+func (s *IssueService) IterCommentReactions(ctx context.Context, owner, repo string, id int64) iter.Seq2[types.Reaction, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}/reactions", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	return ListIter[types.Reaction](ctx, s.client, path, nil)
+}
+
+// AddCommentReaction adds a reaction to an issue comment.
+func (s *IssueService) AddCommentReaction(ctx context.Context, owner, repo string, id int64, reaction string) (*types.Reaction, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}/reactions", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	var out types.Reaction
+	if err := s.client.Post(ctx, path, types.EditReactionOption{Reaction: reaction}, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteCommentReaction removes a reaction from an issue comment.
+func (s *IssueService) DeleteCommentReaction(ctx context.Context, owner, repo string, id int64, reaction string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}/reactions", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	return s.client.DeleteWithBody(ctx, path, types.EditReactionOption{Reaction: reaction})
 }
 
 func attachmentUploadQuery(opts *AttachmentUploadOptions) map[string]string {

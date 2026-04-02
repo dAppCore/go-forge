@@ -353,6 +353,151 @@ func TestIssueService_CreateComment_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_ListReactions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/reactions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.Reaction{
+			{Reaction: "+1", User: &types.User{ID: 1, UserName: "alice"}},
+			{Reaction: "heart", User: &types.User{ID: 2, UserName: "bob"}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	reactions, err := f.Issues.ListReactions(context.Background(), "core", "go-forge", 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(reactions, []types.Reaction{
+		{Reaction: "+1", User: &types.User{ID: 1, UserName: "alice"}},
+		{Reaction: "heart", User: &types.User{ID: 2, UserName: "bob"}},
+	}) {
+		t.Fatalf("got %#v", reactions)
+	}
+}
+
+func TestIssueService_IterReactions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/1/reactions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Reaction{
+			{Reaction: "+1", User: &types.User{ID: 1, UserName: "alice"}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var seen []types.Reaction
+	for reaction, err := range f.Issues.IterReactions(context.Background(), "core", "go-forge", 1) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		seen = append(seen, reaction)
+	}
+	if !reflect.DeepEqual(seen, []types.Reaction{{Reaction: "+1", User: &types.User{ID: 1, UserName: "alice"}}}) {
+		t.Fatalf("got %#v", seen)
+	}
+}
+
+func TestIssueService_ListCommentReactions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments/7/reactions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Reaction{
+			{Reaction: "eyes", User: &types.User{ID: 3, UserName: "carol"}},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	reactions, err := f.Issues.ListCommentReactions(context.Background(), "core", "go-forge", 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(reactions, []types.Reaction{
+		{Reaction: "eyes", User: &types.User{ID: 3, UserName: "carol"}},
+	}) {
+		t.Fatalf("got %#v", reactions)
+	}
+}
+
+func TestIssueService_AddCommentReaction_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments/7/reactions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.EditReactionOption
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Reaction != "heart" {
+			t.Fatalf("got body=%#v", body)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.Reaction{Reaction: body.Reaction, User: &types.User{ID: 4, UserName: "dave"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	reaction, err := f.Issues.AddCommentReaction(context.Background(), "core", "go-forge", 7, "heart")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if reaction.Reaction != "heart" || reaction.User.UserName != "dave" {
+		t.Fatalf("got %#v", reaction)
+	}
+}
+
+func TestIssueService_DeleteCommentReaction_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues/comments/7/reactions" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.EditReactionOption
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Reaction != "heart" {
+			t.Fatalf("got body=%#v", body)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Issues.DeleteCommentReaction(context.Background(), "core", "go-forge", 7, "heart"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestIssueService_ListAttachments_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
