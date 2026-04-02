@@ -71,6 +71,12 @@ func (s *ActionsService) CreateRepoVariable(ctx context.Context, owner, repo, na
 	return s.client.Post(ctx, path, body, nil)
 }
 
+// UpdateRepoVariable updates an existing action variable in a repository.
+func (s *ActionsService) UpdateRepoVariable(ctx context.Context, owner, repo, name string, opts *types.UpdateVariableOption) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{name}", pathParams("owner", owner, "repo", repo, "name", name))
+	return s.client.Put(ctx, path, opts, nil)
+}
+
 // DeleteRepoVariable removes an action variable from a repository.
 func (s *ActionsService) DeleteRepoVariable(ctx context.Context, owner, repo, name string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/variables/{name}", pathParams("owner", owner, "repo", repo, "name", name))

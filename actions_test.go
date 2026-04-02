@@ -141,6 +141,38 @@ func TestActionsService_CreateRepoVariable_Good(t *testing.T) {
 	}
 }
 
+func TestActionsService_UpdateRepoVariable_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/actions/variables/CI_ENV" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.UpdateVariableOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Name != "CI_ENV_NEW" {
+			t.Errorf("got name=%q, want %q", body.Name, "CI_ENV_NEW")
+		}
+		if body.Value != "production" {
+			t.Errorf("got value=%q, want %q", body.Value, "production")
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	err := f.Actions.UpdateRepoVariable(context.Background(), "core", "go-forge", "CI_ENV", &types.UpdateVariableOption{
+		Name:  "CI_ENV_NEW",
+		Value: "production",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestActionsService_DeleteRepoVariable_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
