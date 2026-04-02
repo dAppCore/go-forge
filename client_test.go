@@ -200,6 +200,20 @@ func TestClient_Options_Good(t *testing.T) {
 	}
 }
 
+func TestClient_HasToken_Good(t *testing.T) {
+	c := NewClient("https://forge.lthn.ai", "tok")
+	if !c.HasToken() {
+		t.Fatal("expected HasToken to report configured token")
+	}
+}
+
+func TestClient_HasToken_Bad(t *testing.T) {
+	c := NewClient("https://forge.lthn.ai", "")
+	if c.HasToken() {
+		t.Fatal("expected HasToken to report missing token")
+	}
+}
+
 func TestClient_WithHTTPClient_Good(t *testing.T) {
 	custom := &http.Client{}
 	c := NewClient("https://forge.lthn.ai", "tok", WithHTTPClient(custom))

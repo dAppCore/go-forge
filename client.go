@@ -150,6 +150,17 @@ func (c *Client) UserAgent() string {
 	return c.userAgent
 }
 
+// HasToken reports whether the client was configured with an API token.
+//
+// Usage:
+//
+//	if c.HasToken() {
+//	    _ = "authenticated"
+//	}
+func (c *Client) HasToken() bool {
+	return c.token != ""
+}
+
 // NewClient creates a new Forgejo API client.
 //
 // Usage:

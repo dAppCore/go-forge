@@ -92,3 +92,12 @@ func (f *Forge) RateLimit() RateLimit { return f.client.RateLimit() }
 //
 //	ua := f.UserAgent()
 func (f *Forge) UserAgent() string { return f.client.UserAgent() }
+
+// HasToken reports whether the Forge client was configured with an API token.
+//
+// Usage:
+//
+//	if f.HasToken() {
+//	    _ = "authenticated"
+//	}
+func (f *Forge) HasToken() bool { return f.client.HasToken() }

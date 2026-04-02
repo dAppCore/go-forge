@@ -59,6 +59,20 @@ func TestForge_UserAgent_Good(t *testing.T) {
 	}
 }
 
+func TestForge_HasToken_Good(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "tok")
+	if !f.HasToken() {
+		t.Fatal("expected HasToken to report configured token")
+	}
+}
+
+func TestForge_HasToken_Bad(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "")
+	if f.HasToken() {
+		t.Fatal("expected HasToken to report missing token")
+	}
+}
+
 func TestRepoService_ListOrgRepos_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
