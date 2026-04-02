@@ -59,6 +59,14 @@ func TestForge_UserAgent_Good(t *testing.T) {
 	}
 }
 
+func TestForge_HTTPClient_Good(t *testing.T) {
+	custom := &http.Client{}
+	f := NewForge("https://forge.lthn.ai", "tok", WithHTTPClient(custom))
+	if got := f.HTTPClient(); got != custom {
+		t.Fatal("expected HTTPClient() to return the configured HTTP client")
+	}
+}
+
 func TestForge_HasToken_Good(t *testing.T) {
 	f := NewForge("https://forge.lthn.ai", "tok")
 	if !f.HasToken() {

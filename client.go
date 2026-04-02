@@ -150,6 +150,15 @@ func (c *Client) UserAgent() string {
 	return c.userAgent
 }
 
+// HTTPClient returns the configured underlying HTTP client.
+//
+// Usage:
+//
+//	hc := client.HTTPClient()
+func (c *Client) HTTPClient() *http.Client {
+	return c.httpClient
+}
+
 // HasToken reports whether the client was configured with an API token.
 //
 // Usage:

@@ -94,6 +94,7 @@ Coverage notes: rows list direct tests when a symbol is named in test names or r
 | method | Client.Get | `func (c *Client) Get(ctx context.Context, path string, out any) error` | Get performs a GET request. | `TestClient_Bad_Forbidden`, `TestClient_Bad_NotFound`, `TestClient_Bad_ServerError` (+3 more) |
 | method | Client.GetRaw | `func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error)` | GetRaw performs a GET request and returns the raw response body as bytes instead of JSON-decoding. Useful for endpoints that return raw file content. | No direct tests. |
 | method | Client.HasToken | `func (c *Client) HasToken() bool` | HasToken reports whether the client was configured with an API token. | `TestClient_HasToken_Bad`, `TestClient_HasToken_Good` |
+| method | Client.HTTPClient | `func (c *Client) HTTPClient() *http.Client` | HTTPClient returns the configured underlying HTTP client. | `TestClient_Good_WithHTTPClient` |
 | method | Client.Patch | `func (c *Client) Patch(ctx context.Context, path string, body, out any) error` | Patch performs a PATCH request. | No direct tests. |
 | method | Client.Post | `func (c *Client) Post(ctx context.Context, path string, body, out any) error` | Post performs a POST request. | `TestClient_Bad_Conflict`, `TestClient_Good_Post` |
 | method | Client.PostRaw | `func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, error)` | PostRaw performs a POST request with a JSON body and returns the raw response body as bytes instead of JSON-decoding. Useful for endpoints such as /markdown that return raw HTML text. | No direct tests. |
@@ -115,6 +116,7 @@ Coverage notes: rows list direct tests when a symbol is named in test names or r
 | method | ContentService.UpdateFile | `func (s *ContentService) UpdateFile(ctx context.Context, owner, repo, filepath string, opts *types.UpdateFileOptions) (*types.FileResponse, error)` | UpdateFile updates an existing file in a repository. | `TestContentService_Good_UpdateFile` |
 | method | Forge.Client | `func (f *Forge) Client() *Client` | Client returns the underlying HTTP client. | `TestForge_Good_Client` |
 | method | Forge.HasToken | `func (f *Forge) HasToken() bool` | HasToken reports whether the Forge client was configured with an API token. | `TestForge_HasToken_Bad`, `TestForge_HasToken_Good` |
+| method | Forge.HTTPClient | `func (f *Forge) HTTPClient() *http.Client` | HTTPClient returns the configured underlying HTTP client. | `TestForge_HTTPClient_Good` |
 | method | Forge.RateLimit | `func (f *Forge) RateLimit() RateLimit` | RateLimit returns the last known rate limit information. | `TestForge_Good_RateLimit` |
 | method | Forge.UserAgent | `func (f *Forge) UserAgent() string` | UserAgent returns the configured User-Agent header value. | `TestForge_Good_UserAgent` |
 | method | IssueService.AddLabels | `func (s *IssueService) AddLabels(ctx context.Context, owner, repo string, index int64, labelIDs []int64) error` | AddLabels adds labels to an issue. | No direct tests. |

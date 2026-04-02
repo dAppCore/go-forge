@@ -220,6 +220,9 @@ func TestClient_WithHTTPClient_Good(t *testing.T) {
 	if c.httpClient != custom {
 		t.Error("expected custom HTTP client to be set")
 	}
+	if got := c.HTTPClient(); got != custom {
+		t.Error("expected HTTPClient() to return the configured HTTP client")
+	}
 }
 
 func TestAPIError_Error_Good(t *testing.T) {

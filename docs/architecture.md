@@ -49,6 +49,7 @@ func (c *Client) Delete(ctx context.Context, path string) error
 func (c *Client) DeleteWithBody(ctx context.Context, path string, body any) error
 func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error)
 func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, error)
+func (c *Client) HTTPClient() *http.Client
 ```
 
 The `Raw` variants return the response body as `[]byte` instead of decoding JSON. This is used by endpoints that return non-JSON content (e.g. the markdown rendering endpoint returns raw HTML).

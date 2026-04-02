@@ -1,5 +1,7 @@
 package forge
 
+import "net/http"
+
 // Forge is the top-level client for the Forgejo API.
 //
 // Usage:
@@ -92,6 +94,13 @@ func (f *Forge) RateLimit() RateLimit { return f.client.RateLimit() }
 //
 //	ua := f.UserAgent()
 func (f *Forge) UserAgent() string { return f.client.UserAgent() }
+
+// HTTPClient returns the configured underlying HTTP client.
+//
+// Usage:
+//
+//	hc := f.HTTPClient()
+func (f *Forge) HTTPClient() *http.Client { return f.client.HTTPClient() }
 
 // HasToken reports whether the Forge client was configured with an API token.
 //
