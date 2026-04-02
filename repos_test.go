@@ -390,6 +390,33 @@ func TestRepoService_DeleteTag_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetLanguages_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/languages" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(map[string]int64{
+			"go":    1200,
+			"shell": 300,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	languages, err := f.Repos.GetLanguages(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(languages, map[string]int64{"go": 1200, "shell": 300}) {
+		t.Fatalf("got %#v", languages)
+	}
+}
+
 func TestRepoService_ListForks_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

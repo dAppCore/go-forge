@@ -221,6 +221,16 @@ func (s *RepoService) GetRawFile(ctx context.Context, owner, repo, filepath stri
 	return s.client.GetRaw(ctx, path)
 }
 
+// GetLanguages returns the byte counts per language for a repository.
+func (s *RepoService) GetLanguages(ctx context.Context, owner, repo string) (map[string]int64, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/languages", pathParams("owner", owner, "repo", repo))
+	var out map[string]int64
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ListFlags returns all flags for a repository.
 func (s *RepoService) ListFlags(ctx context.Context, owner, repo string) ([]string, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/flags", pathParams("owner", owner, "repo", repo))
