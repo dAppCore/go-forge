@@ -135,6 +135,42 @@ func (s *MiscService) GetNodeInfo(ctx context.Context) (*types.NodeInfo, error) 
 	return &out, nil
 }
 
+// GetAPISettings returns the instance's global API settings.
+func (s *MiscService) GetAPISettings(ctx context.Context) (*types.GeneralAPISettings, error) {
+	var out types.GeneralAPISettings
+	if err := s.client.Get(ctx, "/api/v1/settings/api", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetAttachmentSettings returns the instance's global attachment settings.
+func (s *MiscService) GetAttachmentSettings(ctx context.Context) (*types.GeneralAttachmentSettings, error) {
+	var out types.GeneralAttachmentSettings
+	if err := s.client.Get(ctx, "/api/v1/settings/attachment", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetRepositorySettings returns the instance's global repository settings.
+func (s *MiscService) GetRepositorySettings(ctx context.Context) (*types.GeneralRepoSettings, error) {
+	var out types.GeneralRepoSettings
+	if err := s.client.Get(ctx, "/api/v1/settings/repository", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetUISettings returns the instance's global UI settings.
+func (s *MiscService) GetUISettings(ctx context.Context) (*types.GeneralUISettings, error) {
+	var out types.GeneralUISettings
+	if err := s.client.Get(ctx, "/api/v1/settings/ui", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetVersion returns the server version.
 func (s *MiscService) GetVersion(ctx context.Context) (*types.ServerVersion, error) {
 	var out types.ServerVersion

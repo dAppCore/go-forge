@@ -141,6 +141,116 @@ func TestMiscService_GetVersion_Good(t *testing.T) {
 	}
 }
 
+func TestMiscService_GetAPISettings_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/settings/api" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.GeneralAPISettings{
+			DefaultGitTreesPerPage: 25,
+			DefaultMaxBlobSize:     4096,
+			DefaultPagingNum:       1,
+			MaxResponseItems:       500,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	settings, err := f.Misc.GetAPISettings(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if settings.DefaultPagingNum != 1 || settings.MaxResponseItems != 500 {
+		t.Fatalf("unexpected api settings: %+v", settings)
+	}
+}
+
+func TestMiscService_GetAttachmentSettings_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/settings/attachment" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.GeneralAttachmentSettings{
+			AllowedTypes: "image/*",
+			Enabled:      true,
+			MaxFiles:     10,
+			MaxSize:      1048576,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	settings, err := f.Misc.GetAttachmentSettings(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !settings.Enabled || settings.MaxFiles != 10 {
+		t.Fatalf("unexpected attachment settings: %+v", settings)
+	}
+}
+
+func TestMiscService_GetRepositorySettings_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/settings/repository" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.GeneralRepoSettings{
+			ForksDisabled:        true,
+			HTTPGitDisabled:      true,
+			LFSDisabled:          true,
+			MigrationsDisabled:   true,
+			MirrorsDisabled:      false,
+			StarsDisabled:        true,
+			TimeTrackingDisabled: false,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	settings, err := f.Misc.GetRepositorySettings(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !settings.ForksDisabled || !settings.HTTPGitDisabled {
+		t.Fatalf("unexpected repository settings: %+v", settings)
+	}
+}
+
+func TestMiscService_GetUISettings_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/settings/ui" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.GeneralUISettings{
+			AllowedReactions: []string{"+1", "-1"},
+			CustomEmojis:     []string{":forgejo:"},
+			DefaultTheme:     "forgejo-auto",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	settings, err := f.Misc.GetUISettings(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if settings.DefaultTheme != "forgejo-auto" || len(settings.AllowedReactions) != 2 {
+		t.Fatalf("unexpected ui settings: %+v", settings)
+	}
+}
+
 func TestMiscService_ListLicenses_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
