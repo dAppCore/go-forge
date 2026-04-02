@@ -556,6 +556,18 @@ func (s *RepoService) GetNewPinAllowed(ctx context.Context, owner, repo string) 
 	return &out, nil
 }
 
+// ListPinnedPullRequests returns all pinned pull requests in a repository.
+func (s *RepoService) ListPinnedPullRequests(ctx context.Context, owner, repo string) ([]types.PullRequest, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/pinned", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.PullRequest](ctx, s.client, path, nil)
+}
+
+// IterPinnedPullRequests returns an iterator over all pinned pull requests in a repository.
+func (s *RepoService) IterPinnedPullRequests(ctx context.Context, owner, repo string) iter.Seq2[types.PullRequest, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/pinned", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.PullRequest](ctx, s.client, path, nil)
+}
+
 // UpdateAvatar updates a repository avatar.
 func (s *RepoService) UpdateAvatar(ctx context.Context, owner, repo string, opts *types.UpdateRepoAvatarOption) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/avatar", pathParams("owner", owner, "repo", repo))

@@ -1138,6 +1138,81 @@ func TestRepoService_GetSubscription_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListPinnedPullRequests_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/pinned" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.PullRequest{
+			{ID: 7, Title: "pin me"},
+			{ID: 8, Title: "keep me"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	pulls, err := f.Repos.ListPinnedPullRequests(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := len(pulls), 2; got != want {
+		t.Fatalf("got %d pull requests, want %d", got, want)
+	}
+	if pulls[0].Title != "pin me" {
+		t.Fatalf("got first title %q", pulls[0].Title)
+	}
+}
+
+func TestRepoService_IterPinnedPullRequests_Good(t *testing.T) {
+	requests := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/pinned" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		switch requests {
+		case 1:
+			if got := r.URL.Query().Get("page"); got != "1" {
+				t.Errorf("got page=%q, want %q", got, "1")
+			}
+			w.Header().Set("X-Total-Count", "2")
+			json.NewEncoder(w).Encode([]types.PullRequest{{ID: 7, Title: "pin me"}})
+		case 2:
+			if got := r.URL.Query().Get("page"); got != "2" {
+				t.Errorf("got page=%q, want %q", got, "2")
+			}
+			w.Header().Set("X-Total-Count", "2")
+			json.NewEncoder(w).Encode([]types.PullRequest{{ID: 8, Title: "keep me"}})
+		default:
+			t.Fatalf("unexpected request %d", requests)
+		}
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for pr, err := range f.Repos.IterPinnedPullRequests(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, pr.Title)
+	}
+	if len(got) != 2 || got[0] != "pin me" || got[1] != "keep me" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestRepoService_ListStargazers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
