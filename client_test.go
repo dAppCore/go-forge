@@ -195,6 +195,9 @@ func TestClient_Options_Good(t *testing.T) {
 	if c.userAgent != "go-forge/1.0" {
 		t.Errorf("got user agent=%q", c.userAgent)
 	}
+	if got := c.UserAgent(); got != "go-forge/1.0" {
+		t.Errorf("got UserAgent()=%q", got)
+	}
 }
 
 func TestClient_WithHTTPClient_Good(t *testing.T) {

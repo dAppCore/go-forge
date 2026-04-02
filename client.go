@@ -141,6 +141,15 @@ func (c *Client) RateLimit() RateLimit {
 	return c.rateLimit
 }
 
+// UserAgent returns the configured User-Agent header value.
+//
+// Usage:
+//
+//	ua := client.UserAgent()
+func (c *Client) UserAgent() string {
+	return c.userAgent
+}
+
 // NewClient creates a new Forgejo API client.
 //
 // Usage:

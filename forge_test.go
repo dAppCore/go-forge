@@ -52,6 +52,13 @@ func TestForge_RateLimit_Good(t *testing.T) {
 	}
 }
 
+func TestForge_UserAgent_Good(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "tok", WithUserAgent("go-forge/1.0"))
+	if got := f.UserAgent(); got != "go-forge/1.0" {
+		t.Fatalf("got user agent %q", got)
+	}
+}
+
 func TestRepoService_ListOrgRepos_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

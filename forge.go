@@ -85,3 +85,10 @@ func (f *Forge) BaseURL() string { return f.client.BaseURL() }
 //
 //	rl := f.RateLimit()
 func (f *Forge) RateLimit() RateLimit { return f.client.RateLimit() }
+
+// UserAgent returns the configured User-Agent header value.
+//
+// Usage:
+//
+//	ua := f.UserAgent()
+func (f *Forge) UserAgent() string { return f.client.UserAgent() }
