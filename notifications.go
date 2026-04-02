@@ -187,7 +187,7 @@ func (s *NotificationService) listAll(ctx context.Context, path string, filters 
 	page := 1
 
 	for {
-		result, err := s.listPage(ctx, path, ListOptions{Page: page, Limit: 50}, filters...)
+		result, err := s.listPage(ctx, path, ListOptions{Page: page, Limit: defaultPageLimit}, filters...)
 		if err != nil {
 			return nil, err
 		}
@@ -205,7 +205,7 @@ func (s *NotificationService) listIter(ctx context.Context, path string, filters
 	return func(yield func(types.NotificationThread, error) bool) {
 		page := 1
 		for {
-			result, err := s.listPage(ctx, path, ListOptions{Page: page, Limit: 50}, filters...)
+			result, err := s.listPage(ctx, path, ListOptions{Page: page, Limit: defaultPageLimit}, filters...)
 			if err != nil {
 				yield(*new(types.NotificationThread), err)
 				return
@@ -228,7 +228,7 @@ func (s *NotificationService) listPage(ctx context.Context, path string, opts Li
 		opts.Page = 1
 	}
 	if opts.Limit < 1 {
-		opts.Limit = 50
+		opts.Limit = defaultPageLimit
 	}
 
 	u, err := url.Parse(path)

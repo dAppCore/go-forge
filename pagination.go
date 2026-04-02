@@ -10,6 +10,8 @@ import (
 	core "dappco.re/go/core"
 )
 
+const defaultPageLimit = 50
+
 // ListOptions controls pagination.
 //
 // Usage:
@@ -54,7 +56,7 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 		opts.Page = 1
 	}
 	if opts.Limit < 1 {
-		opts.Limit = 50
+		opts.Limit = defaultPageLimit
 	}
 
 	u, err := url.Parse(path)
@@ -100,7 +102,7 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 	page := 1
 
 	for {
-		result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: 50})
+		result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: defaultPageLimit})
 		if err != nil {
 			return nil, err
 		}
@@ -125,7 +127,7 @@ func ListIter[T any](ctx context.Context, c *Client, path string, query map[stri
 	return func(yield func(T, error) bool) {
 		page := 1
 		for {
-			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: 50})
+			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: defaultPageLimit})
 			if err != nil {
 				yield(*new(T), err)
 				return
