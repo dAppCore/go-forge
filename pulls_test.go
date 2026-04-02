@@ -151,6 +151,30 @@ func TestPullService_ListFiles_Good(t *testing.T) {
 	}
 }
 
+func TestPullService_GetByBaseHead_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/main/feature" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.PullRequest{Index: 7, Title: "Add feature"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	pr, err := f.Pulls.GetByBaseHead(context.Background(), "core", "go-forge", "main", "feature")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if pr.Index != 7 || pr.Title != "Add feature" {
+		t.Fatalf("got %+v", pr)
+	}
+}
+
 func TestPullService_IterFiles_Good(t *testing.T) {
 	requests := 0
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

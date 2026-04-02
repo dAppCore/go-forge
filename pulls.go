@@ -68,6 +68,21 @@ func (s *PullService) IterFiles(ctx context.Context, owner, repo string, index i
 	return ListIter[types.ChangedFile](ctx, s.client, path, nil)
 }
 
+// GetByBaseHead returns a pull request for a given base and head branch pair.
+func (s *PullService) GetByBaseHead(ctx context.Context, owner, repo, base, head string) (*types.PullRequest, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{base}/{head}", pathParams(
+		"owner", owner,
+		"repo", repo,
+		"base", base,
+		"head", head,
+	))
+	var out types.PullRequest
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListReviewers returns all users who can be requested to review a pull request.
 func (s *PullService) ListReviewers(ctx context.Context, owner, repo string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/reviewers", pathParams("owner", owner, "repo", repo))
