@@ -35,6 +35,20 @@ type AdminActionsRunListOptions struct {
 	HeadSHA string
 }
 
+// String returns a safe summary of the admin Actions run filters.
+func (o AdminActionsRunListOptions) String() string {
+	return optionString("forge.AdminActionsRunListOptions",
+		"event", o.Event,
+		"branch", o.Branch,
+		"status", o.Status,
+		"actor", o.Actor,
+		"head_sha", o.HeadSHA,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the admin Actions run filters.
+func (o AdminActionsRunListOptions) GoString() string { return o.String() }
+
 func (o AdminActionsRunListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 5)
 	if o.Event != "" {
@@ -66,6 +80,14 @@ func (o AdminActionsRunListOptions) queryParams() map[string]string {
 type AdminUnadoptedListOptions struct {
 	Pattern string
 }
+
+// String returns a safe summary of the unadopted repository filters.
+func (o AdminUnadoptedListOptions) String() string {
+	return optionString("forge.AdminUnadoptedListOptions", "pattern", o.Pattern)
+}
+
+// GoString returns a safe Go-syntax summary of the unadopted repository filters.
+func (o AdminUnadoptedListOptions) GoString() string { return o.String() }
 
 func (o AdminUnadoptedListOptions) queryParams() map[string]string {
 	if o.Pattern == "" {

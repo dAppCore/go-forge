@@ -3,6 +3,7 @@ package forge
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestParams_String_Good(t *testing.T) {
@@ -77,5 +78,98 @@ func TestPagedResult_String_Good(t *testing.T) {
 	}
 	if got := fmt.Sprintf("%#v", page); got != want {
 		t.Fatalf("got GoString=%q, want %q", got, want)
+	}
+}
+
+func TestOption_Stringers_Good(t *testing.T) {
+	when := time.Date(2026, time.April, 2, 8, 3, 4, 0, time.UTC)
+
+	cases := []struct {
+		name string
+		got  fmt.Stringer
+		want string
+	}{
+		{
+			name: "AdminActionsRunListOptions",
+			got:  AdminActionsRunListOptions{Event: "push", Status: "success"},
+			want: `forge.AdminActionsRunListOptions{event="push", status="success"}`,
+		},
+		{
+			name: "AttachmentUploadOptions",
+			got:  AttachmentUploadOptions{Name: "screenshot.png", UpdatedAt: &when},
+			want: `forge.AttachmentUploadOptions{name="screenshot.png", updated_at="2026-04-02T08:03:04Z"}`,
+		},
+		{
+			name: "NotificationListOptions",
+			got:  NotificationListOptions{All: true, StatusTypes: []string{"unread"}, SubjectTypes: []string{"issue"}},
+			want: `forge.NotificationListOptions{all=true, status_types=[]string{"unread"}, subject_types=[]string{"issue"}}`,
+		},
+		{
+			name: "SearchIssuesOptions",
+			got:  SearchIssuesOptions{State: "open", PriorityRepoID: 99, Assigned: true, Query: "build"},
+			want: `forge.SearchIssuesOptions{state="open", q="build", priority_repo_id=99, assigned=true}`,
+		},
+		{
+			name: "ReleaseAttachmentUploadOptions",
+			got:  ReleaseAttachmentUploadOptions{Name: "release.zip"},
+			want: `forge.ReleaseAttachmentUploadOptions{name="release.zip"}`,
+		},
+		{
+			name: "UserSearchOptions",
+			got:  UserSearchOptions{UID: 1001},
+			want: `forge.UserSearchOptions{uid=1001}`,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := tc.got.String(); got != tc.want {
+				t.Fatalf("got String()=%q, want %q", got, tc.want)
+			}
+			if got := fmt.Sprint(tc.got); got != tc.want {
+				t.Fatalf("got fmt.Sprint=%q, want %q", got, tc.want)
+			}
+			if got := fmt.Sprintf("%#v", tc.got); got != tc.want {
+				t.Fatalf("got GoString=%q, want %q", got, tc.want)
+			}
+		})
+	}
+}
+
+func TestOption_Stringers_Empty(t *testing.T) {
+	cases := []struct {
+		name string
+		got  fmt.Stringer
+		want string
+	}{
+		{
+			name: "AdminUnadoptedListOptions",
+			got:  AdminUnadoptedListOptions{},
+			want: `forge.AdminUnadoptedListOptions{}`,
+		},
+		{
+			name: "MilestoneListOptions",
+			got:  MilestoneListOptions{},
+			want: `forge.MilestoneListOptions{}`,
+		},
+		{
+			name: "UserKeyListOptions",
+			got:  UserKeyListOptions{},
+			want: `forge.UserKeyListOptions{}`,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := tc.got.String(); got != tc.want {
+				t.Fatalf("got String()=%q, want %q", got, tc.want)
+			}
+			if got := fmt.Sprint(tc.got); got != tc.want {
+				t.Fatalf("got fmt.Sprint=%q, want %q", got, tc.want)
+			}
+			if got := fmt.Sprintf("%#v", tc.got); got != tc.want {
+				t.Fatalf("got GoString=%q, want %q", got, tc.want)
+			}
+		})
 	}
 }

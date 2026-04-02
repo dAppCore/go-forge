@@ -31,6 +31,14 @@ type RepoKeyListOptions struct {
 	Fingerprint string
 }
 
+// String returns a safe summary of the repository key filters.
+func (o RepoKeyListOptions) String() string {
+	return optionString("forge.RepoKeyListOptions", "key_id", o.KeyID, "fingerprint", o.Fingerprint)
+}
+
+// GoString returns a safe Go-syntax summary of the repository key filters.
+func (o RepoKeyListOptions) GoString() string { return o.String() }
+
 func (o RepoKeyListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 2)
 	if o.KeyID != 0 {
@@ -54,6 +62,14 @@ type ActivityFeedListOptions struct {
 	Date *time.Time
 }
 
+// String returns a safe summary of the activity feed filters.
+func (o ActivityFeedListOptions) String() string {
+	return optionString("forge.ActivityFeedListOptions", "date", o.Date)
+}
+
+// GoString returns a safe Go-syntax summary of the activity feed filters.
+func (o ActivityFeedListOptions) GoString() string { return o.String() }
+
 func (o ActivityFeedListOptions) queryParams() map[string]string {
 	if o.Date == nil {
 		return nil
@@ -73,6 +89,18 @@ type RepoTimeListOptions struct {
 	Since  *time.Time
 	Before *time.Time
 }
+
+// String returns a safe summary of the tracked time filters.
+func (o RepoTimeListOptions) String() string {
+	return optionString("forge.RepoTimeListOptions",
+		"user", o.User,
+		"since", o.Since,
+		"before", o.Before,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the tracked time filters.
+func (o RepoTimeListOptions) GoString() string { return o.String() }
 
 func (o RepoTimeListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 3)

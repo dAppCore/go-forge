@@ -17,6 +17,14 @@ type MilestoneListOptions struct {
 	Name  string
 }
 
+// String returns a safe summary of the milestone filters.
+func (o MilestoneListOptions) String() string {
+	return optionString("forge.MilestoneListOptions", "state", o.State, "name", o.Name)
+}
+
+// GoString returns a safe Go-syntax summary of the milestone filters.
+func (o MilestoneListOptions) GoString() string { return o.String() }
+
 func (o MilestoneListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 2)
 	if o.State != "" {

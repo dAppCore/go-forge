@@ -29,6 +29,14 @@ type UserSearchOptions struct {
 	UID int64
 }
 
+// String returns a safe summary of the user search filters.
+func (o UserSearchOptions) String() string {
+	return optionString("forge.UserSearchOptions", "uid", o.UID)
+}
+
+// GoString returns a safe Go-syntax summary of the user search filters.
+func (o UserSearchOptions) GoString() string { return o.String() }
+
 func (o UserSearchOptions) queryParams() map[string]string {
 	if o.UID == 0 {
 		return nil
@@ -46,6 +54,14 @@ func (o UserSearchOptions) queryParams() map[string]string {
 type UserKeyListOptions struct {
 	Fingerprint string
 }
+
+// String returns a safe summary of the user key filters.
+func (o UserKeyListOptions) String() string {
+	return optionString("forge.UserKeyListOptions", "fingerprint", o.Fingerprint)
+}
+
+// GoString returns a safe Go-syntax summary of the user key filters.
+func (o UserKeyListOptions) GoString() string { return o.String() }
 
 func (o UserKeyListOptions) queryParams() map[string]string {
 	if o.Fingerprint == "" {

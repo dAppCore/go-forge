@@ -29,6 +29,17 @@ type ReleaseAttachmentUploadOptions struct {
 	ExternalURL string
 }
 
+// String returns a safe summary of the release attachment upload metadata.
+func (o ReleaseAttachmentUploadOptions) String() string {
+	return optionString("forge.ReleaseAttachmentUploadOptions",
+		"name", o.Name,
+		"external_url", o.ExternalURL,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the release attachment upload metadata.
+func (o ReleaseAttachmentUploadOptions) GoString() string { return o.String() }
+
 func releaseAttachmentUploadQuery(opts *ReleaseAttachmentUploadOptions) map[string]string {
 	if opts == nil || opts.Name == "" {
 		return nil

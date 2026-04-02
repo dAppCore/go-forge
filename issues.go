@@ -31,6 +31,17 @@ type AttachmentUploadOptions struct {
 	UpdatedAt *time.Time
 }
 
+// String returns a safe summary of the attachment upload metadata.
+func (o AttachmentUploadOptions) String() string {
+	return optionString("forge.AttachmentUploadOptions",
+		"name", o.Name,
+		"updated_at", o.UpdatedAt,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the attachment upload metadata.
+func (o AttachmentUploadOptions) GoString() string { return o.String() }
+
 // RepoCommentListOptions controls filtering for repository-wide issue comment listings.
 //
 // Usage:
@@ -40,6 +51,17 @@ type RepoCommentListOptions struct {
 	Since  *time.Time
 	Before *time.Time
 }
+
+// String returns a safe summary of the repository comment filters.
+func (o RepoCommentListOptions) String() string {
+	return optionString("forge.RepoCommentListOptions",
+		"since", o.Since,
+		"before", o.Before,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the repository comment filters.
+func (o RepoCommentListOptions) GoString() string { return o.String() }
 
 func (o RepoCommentListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 2)
@@ -85,6 +107,30 @@ type SearchIssuesOptions struct {
 	Owner           string
 	Team            string
 }
+
+// String returns a safe summary of the issue search filters.
+func (o SearchIssuesOptions) String() string {
+	return optionString("forge.SearchIssuesOptions",
+		"state", o.State,
+		"labels", o.Labels,
+		"milestones", o.Milestones,
+		"q", o.Query,
+		"priority_repo_id", o.PriorityRepoID,
+		"type", o.Type,
+		"since", o.Since,
+		"before", o.Before,
+		"assigned", o.Assigned,
+		"created", o.Created,
+		"mentioned", o.Mentioned,
+		"review_requested", o.ReviewRequested,
+		"reviewed", o.Reviewed,
+		"owner", o.Owner,
+		"team", o.Team,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the issue search filters.
+func (o SearchIssuesOptions) GoString() string { return o.String() }
 
 func (o SearchIssuesOptions) queryParams() map[string]string {
 	query := make(map[string]string, 12)

@@ -24,6 +24,20 @@ type NotificationListOptions struct {
 	Before       *time.Time
 }
 
+// String returns a safe summary of the notification filters.
+func (o NotificationListOptions) String() string {
+	return optionString("forge.NotificationListOptions",
+		"all", o.All,
+		"status_types", o.StatusTypes,
+		"subject_types", o.SubjectTypes,
+		"since", o.Since,
+		"before", o.Before,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the notification filters.
+func (o NotificationListOptions) GoString() string { return o.String() }
+
 func (o NotificationListOptions) addQuery(values url.Values) {
 	if o.All {
 		values.Set("all", "true")
@@ -69,6 +83,19 @@ type NotificationRepoMarkOptions struct {
 	LastReadAt  *time.Time
 }
 
+// String returns a safe summary of the repository notification mark options.
+func (o NotificationRepoMarkOptions) String() string {
+	return optionString("forge.NotificationRepoMarkOptions",
+		"all", o.All,
+		"status_types", o.StatusTypes,
+		"to_status", o.ToStatus,
+		"last_read_at", o.LastReadAt,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the repository notification mark options.
+func (o NotificationRepoMarkOptions) GoString() string { return o.String() }
+
 // NotificationMarkOptions controls how authenticated-user notifications are marked.
 //
 // Usage:
@@ -80,6 +107,19 @@ type NotificationMarkOptions struct {
 	ToStatus    string
 	LastReadAt  *time.Time
 }
+
+// String returns a safe summary of the authenticated-user notification mark options.
+func (o NotificationMarkOptions) String() string {
+	return optionString("forge.NotificationMarkOptions",
+		"all", o.All,
+		"status_types", o.StatusTypes,
+		"to_status", o.ToStatus,
+		"last_read_at", o.LastReadAt,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the authenticated-user notification mark options.
+func (o NotificationMarkOptions) GoString() string { return o.String() }
 
 func newNotificationService(c *Client) *NotificationService {
 	return &NotificationService{client: c}

@@ -28,6 +28,14 @@ type OrgActivityFeedListOptions struct {
 	Date *time.Time
 }
 
+// String returns a safe summary of the organisation activity feed filters.
+func (o OrgActivityFeedListOptions) String() string {
+	return optionString("forge.OrgActivityFeedListOptions", "date", o.Date)
+}
+
+// GoString returns a safe Go-syntax summary of the organisation activity feed filters.
+func (o OrgActivityFeedListOptions) GoString() string { return o.String() }
+
 func (o OrgActivityFeedListOptions) queryParams() map[string]string {
 	if o.Date == nil {
 		return nil
