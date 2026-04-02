@@ -139,6 +139,22 @@ func (s *AdminService) CreateQuotaGroup(ctx context.Context, opts *types.CreateQ
 	return &out, nil
 }
 
+// GetQuotaGroup returns information about a quota group.
+func (s *AdminService) GetQuotaGroup(ctx context.Context, quotagroup string) (*types.QuotaGroup, error) {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}", Params{"quotagroup": quotagroup})
+	var out types.QuotaGroup
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteQuotaGroup deletes a quota group.
+func (s *AdminService) DeleteQuotaGroup(ctx context.Context, quotagroup string) error {
+	path := ResolvePath("/api/v1/admin/quota/groups/{quotagroup}", Params{"quotagroup": quotagroup})
+	return s.client.Delete(ctx, path)
+}
+
 // SearchEmails searches all email addresses by keyword (admin only).
 func (s *AdminService) SearchEmails(ctx context.Context, q string) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/admin/emails/search", map[string]string{"q": q})

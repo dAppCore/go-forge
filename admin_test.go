@@ -465,6 +465,54 @@ func TestAdminService_CreateQuotaGroup_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_GetQuotaGroup_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups/default" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.QuotaGroup{
+			Name: "default",
+			Rules: []*types.QuotaRuleInfo{
+				{Name: "git", Limit: 200000000, Subjects: []string{"size:repos:all"}},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	group, err := f.Admin.GetQuotaGroup(context.Background(), "default")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if group.Name != "default" {
+		t.Errorf("got name=%q, want %q", group.Name, "default")
+	}
+	if len(group.Rules) != 1 || group.Rules[0].Name != "git" {
+		t.Fatalf("unexpected rules: %+v", group.Rules)
+	}
+}
+
+func TestAdminService_DeleteQuotaGroup_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/quota/groups/default" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Admin.DeleteQuotaGroup(context.Background(), "default"); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestAdminService_SearchEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
