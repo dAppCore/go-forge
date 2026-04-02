@@ -53,6 +53,16 @@ func (s *ReleaseService) GetByTag(ctx context.Context, owner, repo, tag string) 
 	return &out, nil
 }
 
+// GetLatest returns the most recent non-prerelease, non-draft release.
+func (s *ReleaseService) GetLatest(ctx context.Context, owner, repo string) (*types.Release, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/latest", pathParams("owner", owner, "repo", repo))
+	var out types.Release
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // DeleteByTag deletes a release by its tag name.
 func (s *ReleaseService) DeleteByTag(ctx context.Context, owner, repo, tag string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/tags/{tag}", pathParams("owner", owner, "repo", repo, "tag", tag))
