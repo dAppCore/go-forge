@@ -165,6 +165,9 @@ func (c *Client) HTTPClient() *http.Client {
 //
 //	s := client.String()
 func (c *Client) String() string {
+	if c == nil {
+		return "forge.Client{<nil>}"
+	}
 	tokenState := "unset"
 	if c.HasToken() {
 		tokenState = "set"

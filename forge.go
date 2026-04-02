@@ -117,6 +117,12 @@ func (f *Forge) HasToken() bool { return f.client.HasToken() }
 //
 //	s := f.String()
 func (f *Forge) String() string {
+	if f == nil {
+		return "forge.Forge{<nil>}"
+	}
+	if f.client == nil {
+		return "forge.Forge{client=<nil>}"
+	}
 	return "forge.Forge{" + f.client.String() + "}"
 }
 

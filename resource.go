@@ -27,6 +27,9 @@ type Resource[T any, C any, U any] struct {
 //
 //	s := res.String()
 func (r *Resource[T, C, U]) String() string {
+	if r == nil {
+		return "forge.Resource{<nil>}"
+	}
 	return core.Concat(
 		"forge.Resource{path=",
 		strconv.Quote(r.path),
