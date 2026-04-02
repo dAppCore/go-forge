@@ -91,7 +91,7 @@ type Issue struct {
 	PullRequest *PullRequestMeta `json:"pull_request,omitempty"`
 	Ref string `json:"ref,omitempty"`
 	Repository *RepositoryMeta `json:"repository,omitempty"`
-	State *StateType `json:"state,omitempty"`
+	State StateType `json:"state,omitempty"`
 	Title string `json:"title,omitempty"`
 	URL string `json:"url,omitempty"`
 	Updated time.Time `json:"updated_at,omitempty"`
@@ -123,17 +123,15 @@ type IssueDeadline struct {
 type IssueFormField struct {
 	Attributes map[string]any `json:"attributes,omitempty"`
 	ID string `json:"id,omitempty"`
-	Type *IssueFormFieldType `json:"type,omitempty"`
+	Type IssueFormFieldType `json:"type,omitempty"`
 	Validations map[string]any `json:"validations,omitempty"`
-	Visible []*IssueFormFieldVisible `json:"visible,omitempty"`
+	Visible []IssueFormFieldVisible `json:"visible,omitempty"`
 }
 
-// IssueFormFieldType has no fields in the swagger spec.
-type IssueFormFieldType struct{}
+type IssueFormFieldType string
 
 // IssueFormFieldVisible — IssueFormFieldVisible defines issue form field visible
-// IssueFormFieldVisible has no fields in the swagger spec.
-type IssueFormFieldVisible struct{}
+type IssueFormFieldVisible string
 
 // IssueLabelsOption — IssueLabelsOption a collection of labels
 //
@@ -158,11 +156,10 @@ type IssueTemplate struct {
 	Content string `json:"content,omitempty"`
 	Fields []*IssueFormField `json:"body,omitempty"`
 	FileName string `json:"file_name,omitempty"`
-	Labels *IssueTemplateLabels `json:"labels,omitempty"`
+	Labels IssueTemplateLabels `json:"labels,omitempty"`
 	Name string `json:"name,omitempty"`
 	Ref string `json:"ref,omitempty"`
 	Title string `json:"title,omitempty"`
 }
 
-// IssueTemplateLabels has no fields in the swagger spec.
-type IssueTemplateLabels struct{}
+type IssueTemplateLabels []string

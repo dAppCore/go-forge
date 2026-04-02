@@ -15,9 +15,9 @@ type NotificationSubject struct {
 	HTMLURL string `json:"html_url,omitempty"`
 	LatestCommentHTMLURL string `json:"latest_comment_html_url,omitempty"`
 	LatestCommentURL string `json:"latest_comment_url,omitempty"`
-	State *StateType `json:"state,omitempty"`
+	State StateType `json:"state,omitempty"`
 	Title string `json:"title,omitempty"`
-	Type *NotifySubjectType `json:"type,omitempty"`
+	Type NotifySubjectType `json:"type,omitempty"`
 	URL string `json:"url,omitempty"`
 }
 

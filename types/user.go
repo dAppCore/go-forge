@@ -131,7 +131,7 @@ type User struct {
 // UserHeatmapData — UserHeatmapData represents the data needed to create a heatmap
 type UserHeatmapData struct {
 	Contributions int64 `json:"contributions,omitempty"`
-	Timestamp *TimeStamp `json:"timestamp,omitempty"`
+	Timestamp TimeStamp `json:"timestamp,omitempty"`
 }
 
 // UserSettings — UserSettings represents user settings

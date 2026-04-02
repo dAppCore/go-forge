@@ -213,8 +213,7 @@ type NewIssuePinsAllowed struct {
 }
 
 // NotifySubjectType — NotifySubjectType represent type of notification subject
-// NotifySubjectType has no fields in the swagger spec.
-type NotifySubjectType struct{}
+type NotifySubjectType string
 
 // PRBranchInfo — PRBranchInfo information about a branch
 type PRBranchInfo struct {

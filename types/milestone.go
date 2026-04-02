@@ -38,7 +38,7 @@ type Milestone struct {
 	Description string `json:"description,omitempty"`
 	ID int64 `json:"id,omitempty"`
 	OpenIssues int64 `json:"open_issues,omitempty"`
-	State *StateType `json:"state,omitempty"`
+	State StateType `json:"state,omitempty"`
 	Title string `json:"title,omitempty"`
 	Updated time.Time `json:"updated_at,omitempty"`
 }

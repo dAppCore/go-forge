@@ -54,15 +54,14 @@ type CommitStatus struct {
 	Creator *User `json:"creator,omitempty"`
 	Description string `json:"description,omitempty"`
 	ID int64 `json:"id,omitempty"`
-	Status *CommitStatusState `json:"status,omitempty"`
+	Status CommitStatusState `json:"status,omitempty"`
 	TargetURL string `json:"target_url,omitempty"`
 	URL string `json:"url,omitempty"`
 	Updated time.Time `json:"updated_at,omitempty"`
 }
 
 // CommitStatusState — CommitStatusState holds the state of a CommitStatus It can be "pending", "success", "error" and "failure"
-// CommitStatusState has no fields in the swagger spec.
-type CommitStatusState struct{}
+type CommitStatusState string
 
 type CommitUser struct {
 	Date string `json:"date,omitempty"`

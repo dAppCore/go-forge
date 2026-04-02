@@ -4,5 +4,4 @@ package types
 
 
 // ReviewStateType — ReviewStateType review state type
-// ReviewStateType has no fields in the swagger spec.
-type ReviewStateType struct{}
+type ReviewStateType string

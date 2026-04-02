@@ -39,8 +39,7 @@ type CreatePullReviewComment struct {
 // Usage:
 //
 //	opts := CreatePullReviewCommentOptions{}
-// CreatePullReviewCommentOptions has no fields in the swagger spec.
-type CreatePullReviewCommentOptions struct{}
+type CreatePullReviewCommentOptions CreatePullReviewComment
 
 // CreatePullReviewOptions — CreatePullReviewOptions are options to create a pull review
 //
@@ -51,7 +50,7 @@ type CreatePullReviewOptions struct {
 	Body string `json:"body,omitempty"`
 	Comments []*CreatePullReviewComment `json:"comments,omitempty"`
 	CommitID string `json:"commit_id,omitempty"`
-	Event *ReviewStateType `json:"event,omitempty"`
+	Event ReviewStateType `json:"event,omitempty"`
 }
 
 // EditPullRequestOption — EditPullRequestOption options when modify pull request
@@ -107,7 +106,7 @@ type PullRequest struct {
 	RequestedReviewers []*User `json:"requested_reviewers,omitempty"`
 	RequestedReviewersTeams []*Team `json:"requested_reviewers_teams,omitempty"`
 	ReviewComments int64 `json:"review_comments,omitempty"` // number of review comments made on the diff of a PR review (not including comments on commits or issues in a PR)
-	State *StateType `json:"state,omitempty"`
+	State StateType `json:"state,omitempty"`
 	Title string `json:"title,omitempty"`
 	URL string `json:"url,omitempty"`
 	Updated time.Time `json:"updated_at,omitempty"`
@@ -133,7 +132,7 @@ type PullReview struct {
 	ID int64 `json:"id,omitempty"`
 	Official bool `json:"official,omitempty"`
 	Stale bool `json:"stale,omitempty"`
-	State *ReviewStateType `json:"state,omitempty"`
+	State ReviewStateType `json:"state,omitempty"`
 	Submitted time.Time `json:"submitted_at,omitempty"`
 	Team *Team `json:"team,omitempty"`
 	Updated time.Time `json:"updated_at,omitempty"`
@@ -176,5 +175,5 @@ type PullReviewRequestOptions struct {
 //	opts := SubmitPullReviewOptions{Body: "example"}
 type SubmitPullReviewOptions struct {
 	Body string `json:"body,omitempty"`
-	Event *ReviewStateType `json:"event,omitempty"`
+	Event ReviewStateType `json:"event,omitempty"`
 }

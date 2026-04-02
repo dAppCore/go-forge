@@ -39,6 +39,9 @@ type SpecInfo struct {
 //	_ = SchemaDefinition{Type: "object"}
 type SchemaDefinition struct {
 	Description          string                    `json:"description"`
+	Format               string                    `json:"format"`
+	Ref                  string                    `json:"$ref"`
+	Items                *SchemaProperty           `json:"items"`
 	Type                 string                    `json:"type"`
 	Properties           map[string]SchemaProperty `json:"properties"`
 	Required             []string                  `json:"required"`
@@ -140,9 +143,10 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 			result[name] = gt
 			continue
 		}
-		if len(def.Properties) == 0 && def.AdditionalProperties != nil {
+
+		if aliasType, ok := definitionAliasType(def, spec.Definitions); ok {
 			gt.IsAlias = true
-			gt.AliasType = resolveMapType(*def.AdditionalProperties)
+			gt.AliasType = aliasType
 			result[name] = gt
 			continue
 		}
@@ -157,7 +161,7 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 			}
 			gf := GoField{
 				GoName:   goName,
-				GoType:   resolveGoType(prop),
+				GoType:   resolveGoType(prop, spec.Definitions),
 				JSONName: fieldName,
 				Comment:  prop.Description,
 				Required: required[fieldName],
@@ -170,6 +174,46 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 		result[name] = gt
 	}
 	return result
+}
+
+func definitionAliasType(def SchemaDefinition, defs map[string]SchemaDefinition) (string, bool) {
+	if def.Ref != "" {
+		return refName(def.Ref), true
+	}
+
+	switch def.Type {
+	case "string":
+		return "string", true
+	case "integer":
+		switch def.Format {
+		case "int64":
+			return "int64", true
+		case "int32":
+			return "int32", true
+		default:
+			return "int", true
+		}
+	case "number":
+		switch def.Format {
+		case "float":
+			return "float32", true
+		default:
+			return "float64", true
+		}
+	case "boolean":
+		return "bool", true
+	case "array":
+		if def.Items != nil {
+			return "[]" + resolveGoType(*def.Items, defs), true
+		}
+		return "[]any", true
+	case "object":
+		if def.AdditionalProperties != nil {
+			return resolveMapType(*def.AdditionalProperties, defs), true
+		}
+	}
+
+	return "", false
 }
 
 // DetectCRUDPairs finds Create*Option / Edit*Option pairs in the swagger definitions
@@ -201,10 +245,9 @@ func DetectCRUDPairs(spec *Spec) []CRUDPair {
 }
 
 // resolveGoType maps a swagger schema property to a Go type string.
-func resolveGoType(prop SchemaProperty) string {
+func resolveGoType(prop SchemaProperty, defs map[string]SchemaDefinition) string {
 	if prop.Ref != "" {
-		parts := core.Split(prop.Ref, "/")
-		return "*" + parts[len(parts)-1]
+		return refGoType(prop.Ref, defs)
 	}
 	switch prop.Type {
 	case "string":
@@ -236,23 +279,57 @@ func resolveGoType(prop SchemaProperty) string {
 		return "bool"
 	case "array":
 		if prop.Items != nil {
-			return "[]" + resolveGoType(*prop.Items)
+			return "[]" + resolveGoType(*prop.Items, defs)
 		}
 		return "[]any"
 	case "object":
-		return resolveMapType(prop)
+		return resolveMapType(prop, defs)
 	default:
 		return "any"
 	}
 }
 
 // resolveMapType maps a swagger object with additionalProperties to a Go map type.
-func resolveMapType(prop SchemaProperty) string {
+func resolveMapType(prop SchemaProperty, defs map[string]SchemaDefinition) string {
 	valueType := "any"
 	if prop.AdditionalProperties != nil {
-		valueType = resolveGoType(*prop.AdditionalProperties)
+		valueType = resolveGoType(*prop.AdditionalProperties, defs)
 	}
 	return "map[string]" + valueType
+}
+
+func refName(ref string) string {
+	parts := core.Split(ref, "/")
+	return parts[len(parts)-1]
+}
+
+func refGoType(ref string, defs map[string]SchemaDefinition) string {
+	name := refName(ref)
+	def, ok := defs[name]
+	if !ok {
+		return "*" + name
+	}
+	if definitionNeedsPointer(def) {
+		return "*" + name
+	}
+	return name
+}
+
+func definitionNeedsPointer(def SchemaDefinition) bool {
+	if len(def.Enum) > 0 {
+		return false
+	}
+	if def.Ref != "" {
+		return false
+	}
+	switch def.Type {
+	case "string", "integer", "number", "boolean", "array":
+		return false
+	case "object":
+		return true
+	default:
+		return false
+	}
 }
 
 // pascalCase converts a snake_case or kebab-case string to PascalCase,

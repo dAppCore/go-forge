@@ -138,7 +138,7 @@ func TestUserService_GetQuota_Good(t *testing.T) {
 			t.Errorf("wrong path: %s", r.URL.Path)
 		}
 		json.NewEncoder(w).Encode(types.QuotaInfo{
-			Groups: &types.QuotaGroupList{},
+			Groups: types.QuotaGroupList{},
 			Used: &types.QuotaUsed{
 				Size: &types.QuotaUsedSize{
 					Repos: &types.QuotaUsedSizeRepos{

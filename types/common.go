@@ -35,9 +35,7 @@ type Permission struct {
 }
 
 // StateType — StateType issue state type
-// StateType has no fields in the swagger spec.
-type StateType struct{}
+type StateType string
 
 // TimeStamp — TimeStamp defines a timestamp
-// TimeStamp has no fields in the swagger spec.
-type TimeStamp struct{}
+type TimeStamp int64

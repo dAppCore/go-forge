@@ -41,12 +41,11 @@ type QuotaGroup struct {
 }
 
 // QuotaGroupList — QuotaGroupList represents a list of quota groups
-// QuotaGroupList has no fields in the swagger spec.
-type QuotaGroupList struct{}
+type QuotaGroupList []*QuotaGroup
 
 // QuotaInfo — QuotaInfo represents information about a user's quota
 type QuotaInfo struct {
-	Groups *QuotaGroupList `json:"groups,omitempty"`
+	Groups QuotaGroupList `json:"groups,omitempty"`
 	Used *QuotaUsed `json:"used,omitempty"`
 }
 
@@ -70,8 +69,7 @@ type QuotaUsedArtifact struct {
 }
 
 // QuotaUsedArtifactList — QuotaUsedArtifactList represents a list of artifacts counting towards a user's quota
-// QuotaUsedArtifactList has no fields in the swagger spec.
-type QuotaUsedArtifactList struct{}
+type QuotaUsedArtifactList []*QuotaUsedArtifact
 
 // QuotaUsedAttachment — QuotaUsedAttachment represents an attachment counting towards a user's quota
 type QuotaUsedAttachment struct {
@@ -82,8 +80,7 @@ type QuotaUsedAttachment struct {
 }
 
 // QuotaUsedAttachmentList — QuotaUsedAttachmentList represents a list of attachment counting towards a user's quota
-// QuotaUsedAttachmentList has no fields in the swagger spec.
-type QuotaUsedAttachmentList struct{}
+type QuotaUsedAttachmentList []*QuotaUsedAttachment
 
 // QuotaUsedPackage — QuotaUsedPackage represents a package counting towards a user's quota
 type QuotaUsedPackage struct {
@@ -95,8 +92,7 @@ type QuotaUsedPackage struct {
 }
 
 // QuotaUsedPackageList — QuotaUsedPackageList represents a list of packages counting towards a user's quota
-// QuotaUsedPackageList has no fields in the swagger spec.
-type QuotaUsedPackageList struct{}
+type QuotaUsedPackageList []*QuotaUsedPackage
 
 // QuotaUsedSize — QuotaUsedSize represents the size-based quota usage of a user
 type QuotaUsedSize struct {
