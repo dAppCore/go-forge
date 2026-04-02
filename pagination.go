@@ -29,7 +29,7 @@ type ListOptions struct {
 //
 //	page, err := forge.ListPage[types.Repository](ctx, client, path, nil, forge.DefaultList)
 //	_ = page
-var DefaultList = ListOptions{Page: 1, Limit: 50}
+var DefaultList = ListOptions{Page: 1, Limit: defaultPageLimit}
 
 // PagedResult holds a single page of results with metadata.
 //
