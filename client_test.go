@@ -63,6 +63,36 @@ func TestClient_Post_Good(t *testing.T) {
 	}
 }
 
+func TestClient_PostRaw_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if got := r.URL.Path; got != "/api/v1/markdown" {
+			t.Errorf("wrong path: %s", got)
+		}
+		w.Header().Set("X-RateLimit-Limit", "100")
+		w.Header().Set("X-RateLimit-Remaining", "98")
+		w.Header().Set("X-RateLimit-Reset", "1700000001")
+		w.Write([]byte("<p>Hello</p>"))
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "test-token")
+	body := map[string]string{"text": "Hello"}
+	got, err := c.PostRaw(context.Background(), "/api/v1/markdown", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != "<p>Hello</p>" {
+		t.Errorf("got body=%q", string(got))
+	}
+	rl := c.RateLimit()
+	if rl.Limit != 100 || rl.Remaining != 98 || rl.Reset != 1700000001 {
+		t.Fatalf("unexpected rate limit: %+v", rl)
+	}
+}
+
 func TestClient_Delete_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
@@ -76,6 +106,35 @@ func TestClient_Delete_Good(t *testing.T) {
 	err := c.Delete(context.Background(), "/api/v1/repos/core/test")
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestClient_GetRaw_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if got := r.URL.Path; got != "/api/v1/signing-key.gpg" {
+			t.Errorf("wrong path: %s", got)
+		}
+		w.Header().Set("X-RateLimit-Limit", "60")
+		w.Header().Set("X-RateLimit-Remaining", "59")
+		w.Header().Set("X-RateLimit-Reset", "1700000002")
+		w.Write([]byte("key-data"))
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "test-token")
+	got, err := c.GetRaw(context.Background(), "/api/v1/signing-key.gpg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != "key-data" {
+		t.Errorf("got body=%q", string(got))
+	}
+	rl := c.RateLimit()
+	if rl.Limit != 60 || rl.Remaining != 59 || rl.Reset != 1700000002 {
+		t.Fatalf("unexpected rate limit: %+v", rl)
 	}
 }
 

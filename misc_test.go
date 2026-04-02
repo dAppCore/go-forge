@@ -101,6 +101,9 @@ func TestMiscService_RenderMarkdownRaw_Good(t *testing.T) {
 		if string(data) != "# Hello" {
 			t.Errorf("got body=%q, want %q", string(data), "# Hello")
 		}
+		w.Header().Set("X-RateLimit-Limit", "80")
+		w.Header().Set("X-RateLimit-Remaining", "79")
+		w.Header().Set("X-RateLimit-Reset", "1700000003")
 		w.Header().Set("Content-Type", "text/html")
 		w.Write([]byte("<h1>Hello</h1>\n"))
 	}))
@@ -114,6 +117,10 @@ func TestMiscService_RenderMarkdownRaw_Good(t *testing.T) {
 	want := "<h1>Hello</h1>\n"
 	if html != want {
 		t.Errorf("got %q, want %q", html, want)
+	}
+	rl := f.Client().RateLimit()
+	if rl.Limit != 80 || rl.Remaining != 79 || rl.Reset != 1700000003 {
+		t.Fatalf("unexpected rate limit: %+v", rl)
 	}
 }
 

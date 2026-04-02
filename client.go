@@ -223,6 +223,8 @@ func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte
 	}
 	defer resp.Body.Close()
 
+	c.updateRateLimit(resp)
+
 	if resp.StatusCode >= 400 {
 		return nil, c.parseError(resp, path)
 	}
@@ -255,6 +257,8 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 		return nil, core.E("Client.PostText", "forge: request POST "+path, err)
 	}
 	defer resp.Body.Close()
+
+	c.updateRateLimit(resp)
 
 	if resp.StatusCode >= 400 {
 		return nil, c.parseError(resp, path)
@@ -353,6 +357,8 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 		return nil, core.E("Client.GetRaw", "forge: request GET "+path, err)
 	}
 	defer resp.Body.Close()
+
+	c.updateRateLimit(resp)
 
 	if resp.StatusCode >= 400 {
 		return nil, c.parseError(resp, path)
