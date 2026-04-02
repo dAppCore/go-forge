@@ -1295,6 +1295,43 @@ func TestRepoService_Unwatch_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ForkWithOptions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/forks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var opts types.CreateForkOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if opts.Name != "go-forge-fork" || opts.Organization != "core-team" {
+			t.Fatalf("got %#v", opts)
+		}
+		json.NewEncoder(w).Encode(types.Repository{
+			Name:     opts.Name,
+			FullName: opts.Organization + "/" + opts.Name,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repo, err := f.Repos.ForkWithOptions(context.Background(), "core", "go-forge", &types.CreateForkOption{
+		Name:         "go-forge-fork",
+		Organization: "core-team",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if repo.Name != "go-forge-fork" || repo.FullName != "core-team/go-forge-fork" {
+		t.Fatalf("got %#v", repo)
+	}
+}
+
 func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 	owner := "acme org"
 	repo := "my/repo"
@@ -1325,6 +1362,13 @@ func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 				t.Errorf("got path %q, want %q", r.URL.EscapedPath(), want)
 				http.NotFound(w, r)
 				return
+			}
+			var opts types.CreateForkOption
+			if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+				t.Fatalf("decode body: %v", err)
+			}
+			if opts.Organization != "" {
+				t.Fatalf("got organisation %q, want empty", opts.Organization)
 			}
 			json.NewEncoder(w).Encode(types.Repository{Name: repo})
 		}))

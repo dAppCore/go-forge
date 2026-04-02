@@ -511,16 +511,18 @@ func (s *RepoService) Unwatch(ctx context.Context, owner, repo string) error {
 	return s.client.Delete(ctx, path)
 }
 
-// Fork forks a repository. If org is non-empty, forks into that organisation.
+// Fork forks a repository into the authenticated user's namespace or the
+// optional organisation.
 func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types.Repository, error) {
-	body := map[string]string{}
-	if org != "" {
-		body["organization"] = org
-	}
+	opts := &types.CreateForkOption{Organization: org}
+	return s.ForkWithOptions(ctx, owner, repo, opts)
+}
+
+// ForkWithOptions forks a repository with full control over the fork target.
+func (s *RepoService) ForkWithOptions(ctx context.Context, owner, repo string, opts *types.CreateForkOption) (*types.Repository, error) {
 	var out types.Repository
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/forks", pathParams("owner", owner, "repo", repo))
-	err := s.client.Post(ctx, path, body, &out)
-	if err != nil {
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
 		return nil, err
 	}
 	return &out, nil
