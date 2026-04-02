@@ -71,3 +71,17 @@ func NewForge(url, token string, opts ...Option) *Forge {
 //
 //	client := f.Client()
 func (f *Forge) Client() *Client { return f.client }
+
+// BaseURL returns the configured Forgejo base URL.
+//
+// Usage:
+//
+//	baseURL := f.BaseURL()
+func (f *Forge) BaseURL() string { return f.client.BaseURL() }
+
+// RateLimit returns the last known rate limit information.
+//
+// Usage:
+//
+//	rl := f.RateLimit()
+func (f *Forge) RateLimit() RateLimit { return f.client.RateLimit() }

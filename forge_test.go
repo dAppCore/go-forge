@@ -38,6 +38,20 @@ func TestForge_Client_Good(t *testing.T) {
 	}
 }
 
+func TestForge_BaseURL_Good(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "tok")
+	if got := f.BaseURL(); got != "https://forge.lthn.ai" {
+		t.Fatalf("got base URL %q", got)
+	}
+}
+
+func TestForge_RateLimit_Good(t *testing.T) {
+	f := NewForge("https://forge.lthn.ai", "tok")
+	if got := f.RateLimit(); got != (RateLimit{}) {
+		t.Fatalf("got rate limit %#v", got)
+	}
+}
+
 func TestRepoService_ListOrgRepos_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
