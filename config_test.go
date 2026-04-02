@@ -111,6 +111,32 @@ func TestResolveConfig_EnvOverridesConfig_Good(t *testing.T) {
 	}
 }
 
+func TestResolveConfig_FlagOverridesBrokenConfig_Good(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("FORGE_URL", "")
+	t.Setenv("FORGE_TOKEN", "")
+
+	cfgPath := filepath.Join(home, ".config", "forge", "config.json")
+	if err := coreio.Local.EnsureDir(filepath.Dir(cfgPath)); err != nil {
+		t.Fatal(err)
+	}
+	if err := coreio.Local.WriteMode(cfgPath, "{not-json", 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	url, token, err := ResolveConfig("https://flag.example.com", "flag-token")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if url != "https://flag.example.com" {
+		t.Errorf("got url=%q", url)
+	}
+	if token != "flag-token" {
+		t.Errorf("got token=%q", token)
+	}
+}
+
 func TestNewForgeFromConfig_NoToken_Bad(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("FORGE_URL", "")

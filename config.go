@@ -90,13 +90,6 @@ func SaveConfig(url, token string) error {
 //	_ = url
 //	_ = token
 func ResolveConfig(flagURL, flagToken string) (url, token string, err error) {
-	if fileURL, fileToken, fileErr := readConfigFile(); fileErr != nil {
-		return "", "", fileErr
-	} else {
-		url = fileURL
-		token = fileToken
-	}
-
 	if envURL, ok := os.LookupEnv("FORGE_URL"); ok && envURL != "" {
 		url = envURL
 	}
@@ -109,6 +102,18 @@ func ResolveConfig(flagURL, flagToken string) (url, token string, err error) {
 	}
 	if flagToken != "" {
 		token = flagToken
+	}
+	if url == "" || token == "" {
+		fileURL, fileToken, fileErr := readConfigFile()
+		if fileErr != nil {
+			return "", "", fileErr
+		}
+		if url == "" {
+			url = fileURL
+		}
+		if token == "" {
+			token = fileToken
+		}
 	}
 	if url == "" {
 		url = DefaultURL
