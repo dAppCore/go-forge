@@ -98,7 +98,7 @@ func (s *RepoService) Migrate(ctx context.Context, opts *types.MigrateRepoOption
 
 // CreateOrgRepo creates a repository in an organisation.
 func (s *RepoService) CreateOrgRepo(ctx context.Context, org string, opts *types.CreateRepoOption) (*types.Repository, error) {
-	path := ResolvePath("/api/v1/org/{org}/repos", pathParams("org", org))
+	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
 	var out types.Repository
 	if err := s.client.Post(ctx, path, opts, &out); err != nil {
 		return nil, err

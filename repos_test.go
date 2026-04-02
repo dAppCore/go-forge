@@ -2127,6 +2127,34 @@ func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 		}
 	})
 
+	t.Run("CreateOrgRepo", func(t *testing.T) {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			want := "/api/v1/orgs/team%20alpha/repos"
+			if r.URL.EscapedPath() != want {
+				t.Errorf("got path %q, want %q", r.URL.EscapedPath(), want)
+				http.NotFound(w, r)
+				return
+			}
+			var opts types.CreateRepoOption
+			if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+				t.Fatalf("decode body: %v", err)
+			}
+			if opts.Name != "go-forge" || !opts.Private {
+				t.Fatalf("got %#v", opts)
+			}
+			json.NewEncoder(w).Encode(types.Repository{Name: opts.Name})
+		}))
+		defer srv.Close()
+
+		f := NewForge(srv.URL, "tok")
+		if _, err := f.Repos.CreateOrgRepo(context.Background(), org, &types.CreateRepoOption{
+			Name:    "go-forge",
+			Private: true,
+		}); err != nil {
+			t.Fatal(err)
+		}
+	})
+
 	t.Run("Fork", func(t *testing.T) {
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			want := "/api/v1/repos/acme%20org/my%2Frepo/forks"
