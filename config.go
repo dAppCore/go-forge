@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
-	"syscall"
 
 	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
@@ -94,10 +93,10 @@ func ResolveConfig(flagURL, flagToken string) (url, token string, err error) {
 		token = fileToken
 	}
 
-	if envURL, ok := syscall.Getenv("FORGE_URL"); ok && envURL != "" {
+	if envURL, ok := os.LookupEnv("FORGE_URL"); ok && envURL != "" {
 		url = envURL
 	}
-	if envToken, ok := syscall.Getenv("FORGE_TOKEN"); ok && envToken != "" {
+	if envToken, ok := os.LookupEnv("FORGE_TOKEN"); ok && envToken != "" {
 		token = envToken
 	}
 
