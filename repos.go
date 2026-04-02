@@ -727,6 +727,16 @@ func (s *RepoService) MirrorSync(ctx context.Context, owner, repo string) error 
 	return s.client.Post(ctx, path, nil, nil)
 }
 
+// GetRunnerRegistrationToken returns a repository actions runner registration token.
+func (s *RepoService) GetRunnerRegistrationToken(ctx context.Context, owner, repo string) (string, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/runners/registration-token", pathParams("owner", owner, "repo", repo))
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, nil)
+	if err != nil {
+		return "", err
+	}
+	return resp.Header.Get("token"), nil
+}
+
 // SyncPushMirrors triggers a sync across all push mirrors configured for a repository.
 func (s *RepoService) SyncPushMirrors(ctx context.Context, owner, repo string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors-sync", pathParams("owner", owner, "repo", repo))

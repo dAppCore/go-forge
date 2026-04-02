@@ -74,6 +74,31 @@ func TestRepoService_GetByID_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetRunnerRegistrationToken_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/actions/runners/registration-token" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("token", "runner-token")
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	token, err := f.Repos.GetRunnerRegistrationToken(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if token != "runner-token" {
+		t.Fatalf("got token=%q, want %q", token, "runner-token")
+	}
+}
+
 func TestRepoService_ListTopics_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
