@@ -63,6 +63,15 @@ func newRepoService(c *Client) *RepoService {
 	}
 }
 
+// Migrate imports a remote git repository into Forgejo.
+func (s *RepoService) Migrate(ctx context.Context, opts *types.MigrateRepoOptions) (*types.Repository, error) {
+	var out types.Repository
+	if err := s.client.Post(ctx, "/api/v1/repos/migrate", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListOrgRepos returns all repositories for an organisation.
 func (s *RepoService) ListOrgRepos(ctx context.Context, org string) ([]types.Repository, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))

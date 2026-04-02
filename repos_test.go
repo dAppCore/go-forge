@@ -99,6 +99,45 @@ func TestRepoService_GetRunnerRegistrationToken_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_Migrate_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/migrate" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var opts types.MigrateRepoOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if opts.CloneAddr != "https://example.com/source.git" || opts.RepoName != "go-forge" || opts.RepoOwner != "core" {
+			t.Fatalf("got %#v", opts)
+		}
+		json.NewEncoder(w).Encode(types.Repository{
+			ID:       99,
+			Name:     opts.RepoName,
+			FullName: opts.RepoOwner + "/" + opts.RepoName,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repo, err := f.Repos.Migrate(context.Background(), &types.MigrateRepoOptions{
+		CloneAddr: "https://example.com/source.git",
+		RepoName:  "go-forge",
+		RepoOwner: "core",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if repo.ID != 99 || repo.Name != "go-forge" || repo.FullName != "core/go-forge" {
+		t.Fatalf("got %#v", repo)
+	}
+}
+
 func TestRepoService_ListTopics_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
