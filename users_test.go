@@ -5,6 +5,7 @@ import (
 	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"dappco.re/go/core/forge/types"
@@ -160,6 +161,111 @@ func TestUserService_GetQuota_Good(t *testing.T) {
 	}
 	if quota.Used.Size.Repos.Public != 123 || quota.Used.Size.Repos.Private != 456 {
 		t.Errorf("unexpected repository quota usage: %+v", quota.Used.Size.Repos)
+	}
+}
+
+func TestUserService_SearchUsersPage_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "al" {
+			t.Errorf("wrong q: %s", got)
+		}
+		if got := r.URL.Query().Get("uid"); got != "7" {
+			t.Errorf("wrong uid: %s", got)
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("wrong page: %s", got)
+		}
+		if got := r.URL.Query().Get("limit"); got != "50" {
+			t.Errorf("wrong limit: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode(map[string]any{
+			"data": []*types.User{
+				{ID: 1, UserName: "alice"},
+				{ID: 2, UserName: "alex"},
+			},
+			"ok": true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Users.SearchUsersPage(context.Background(), "al", ListOptions{}, UserSearchOptions{UID: 7})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.TotalCount != 2 || result.Page != 1 || result.HasMore {
+		t.Fatalf("got %#v", result)
+	}
+	if len(result.Items) != 2 || result.Items[0].UserName != "alice" || result.Items[1].UserName != "alex" {
+		t.Fatalf("got %#v", result.Items)
+	}
+}
+
+func TestUserService_SearchUsers_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("q"); got != "al" {
+			t.Errorf("wrong q: %s", got)
+		}
+		if got := r.URL.Query().Get("limit"); got != strconv.Itoa(50) {
+			t.Errorf("wrong limit: %s", got)
+		}
+
+		switch r.URL.Query().Get("page") {
+		case "1":
+			w.Header().Set("X-Total-Count", "3")
+			json.NewEncoder(w).Encode(map[string]any{
+				"data": []*types.User{
+					{ID: 1, UserName: "alice"},
+					{ID: 2, UserName: "alex"},
+				},
+				"ok": true,
+			})
+		case "2":
+			w.Header().Set("X-Total-Count", "3")
+			json.NewEncoder(w).Encode(map[string]any{
+				"data": []*types.User{
+					{ID: 3, UserName: "ally"},
+				},
+				"ok": true,
+			})
+		default:
+			t.Fatalf("unexpected page %q", r.URL.Query().Get("page"))
+		}
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for user, err := range f.Users.IterSearchUsers(context.Background(), "al") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, user.UserName)
+	}
+	if requests != 2 {
+		t.Fatalf("expected 2 requests, got %d", requests)
+	}
+	if len(got) != 3 || got[0] != "alice" || got[1] != "alex" || got[2] != "ally" {
+		t.Fatalf("got %#v", got)
 	}
 }
 

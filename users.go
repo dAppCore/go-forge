@@ -4,6 +4,8 @@ import (
 	"context"
 	"iter"
 	"net/http"
+	"net/url"
+	"strconv"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -16,6 +18,25 @@ import (
 //	_, err := f.Users.GetCurrent(ctx)
 type UserService struct {
 	Resource[types.User, struct{}, struct{}]
+}
+
+// UserSearchOptions controls filtering for user searches.
+type UserSearchOptions struct {
+	UID int64
+}
+
+func (o UserSearchOptions) queryParams() map[string]string {
+	if o.UID == 0 {
+		return nil
+	}
+	return map[string]string{
+		"uid": strconv.FormatInt(o.UID, 10),
+	}
+}
+
+type userSearchResults struct {
+	Data []*types.User `json:"data,omitempty"`
+	OK   bool          `json:"ok,omitempty"`
 }
 
 func newUserService(c *Client) *UserService {
@@ -60,6 +81,97 @@ func (s *UserService) GetQuota(ctx context.Context) (*types.QuotaInfo, error) {
 		return nil, err
 	}
 	return &out, nil
+}
+
+// SearchUsersPage returns a single page of users matching the search filters.
+func (s *UserService) SearchUsersPage(ctx context.Context, query string, pageOpts ListOptions, filters ...UserSearchOptions) (*PagedResult[types.User], error) {
+	if pageOpts.Page < 1 {
+		pageOpts.Page = 1
+	}
+	if pageOpts.Limit < 1 {
+		pageOpts.Limit = 50
+	}
+
+	u, err := url.Parse("/api/v1/users/search")
+	if err != nil {
+		return nil, err
+	}
+
+	q := u.Query()
+	q.Set("q", query)
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			q.Set(key, value)
+		}
+	}
+	q.Set("page", strconv.Itoa(pageOpts.Page))
+	q.Set("limit", strconv.Itoa(pageOpts.Limit))
+	u.RawQuery = q.Encode()
+
+	var out userSearchResults
+	resp, err := s.client.doJSON(ctx, http.MethodGet, u.String(), nil, &out)
+	if err != nil {
+		return nil, err
+	}
+
+	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	items := make([]types.User, 0, len(out.Data))
+	for _, user := range out.Data {
+		if user != nil {
+			items = append(items, *user)
+		}
+	}
+
+	return &PagedResult[types.User]{
+		Items:      items,
+		TotalCount: totalCount,
+		Page:       pageOpts.Page,
+		HasMore: (totalCount > 0 && (pageOpts.Page-1)*pageOpts.Limit+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= pageOpts.Limit),
+	}, nil
+}
+
+// SearchUsers returns all users matching the search filters.
+func (s *UserService) SearchUsers(ctx context.Context, query string, filters ...UserSearchOptions) ([]types.User, error) {
+	var all []types.User
+	page := 1
+
+	for {
+		result, err := s.SearchUsersPage(ctx, query, ListOptions{Page: page, Limit: 50}, filters...)
+		if err != nil {
+			return nil, err
+		}
+		all = append(all, result.Items...)
+		if !result.HasMore {
+			break
+		}
+		page++
+	}
+
+	return all, nil
+}
+
+// IterSearchUsers returns an iterator over users matching the search filters.
+func (s *UserService) IterSearchUsers(ctx context.Context, query string, filters ...UserSearchOptions) iter.Seq2[types.User, error] {
+	return func(yield func(types.User, error) bool) {
+		page := 1
+		for {
+			result, err := s.SearchUsersPage(ctx, query, ListOptions{Page: page, Limit: 50}, filters...)
+			if err != nil {
+				yield(*new(types.User), err)
+				return
+			}
+			for _, item := range result.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+			if !result.HasMore {
+				break
+			}
+			page++
+		}
+	}
 }
 
 // ListQuotaArtifacts returns all artifacts affecting the authenticated user's quota.
