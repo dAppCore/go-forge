@@ -52,6 +52,15 @@ func (s *UserService) UpdateSettings(ctx context.Context, opts *types.UserSettin
 	return &out, nil
 }
 
+// GetQuota returns the authenticated user's quota information.
+func (s *UserService) GetQuota(ctx context.Context) (*types.QuotaInfo, error) {
+	var out types.QuotaInfo
+	if err := s.client.Get(ctx, "/api/v1/user/quota", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListEmails returns all email addresses for the authenticated user.
 func (s *UserService) ListEmails(ctx context.Context) ([]types.Email, error) {
 	return ListAll[types.Email](ctx, s.client, "/api/v1/user/emails", nil)

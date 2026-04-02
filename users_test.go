@@ -128,6 +128,41 @@ func TestUserService_UpdateSettings_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_GetQuota_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/user/quota" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.QuotaInfo{
+			Groups: &types.QuotaGroupList{},
+			Used: &types.QuotaUsed{
+				Size: &types.QuotaUsedSize{
+					Repos: &types.QuotaUsedSizeRepos{
+						Public:  123,
+						Private: 456,
+					},
+				},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	quota, err := f.Users.GetQuota(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if quota.Used == nil || quota.Used.Size == nil || quota.Used.Size.Repos == nil {
+		t.Fatalf("quota usage was not decoded: %+v", quota)
+	}
+	if quota.Used.Size.Repos.Public != 123 || quota.Used.Size.Repos.Private != 456 {
+		t.Errorf("unexpected repository quota usage: %+v", quota.Used.Size.Repos)
+	}
+}
+
 func TestUserService_ListEmails_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
