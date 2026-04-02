@@ -500,6 +500,16 @@ func (s *RepoService) Fork(ctx context.Context, owner, repo, org string) (*types
 	return &out, nil
 }
 
+// Generate creates a repository from a template repository.
+func (s *RepoService) Generate(ctx context.Context, templateOwner, templateRepo string, opts *types.GenerateRepoOption) (*types.Repository, error) {
+	path := ResolvePath("/api/v1/repos/{template_owner}/{template_repo}/generate", pathParams("template_owner", templateOwner, "template_repo", templateRepo))
+	var out types.Repository
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListForks returns all forks of a repository.
 func (s *RepoService) ListForks(ctx context.Context, owner, repo string) ([]types.Repository, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/forks", pathParams("owner", owner, "repo", repo))

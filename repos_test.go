@@ -1278,4 +1278,41 @@ func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 			t.Fatal(err)
 		}
 	})
+
+	t.Run("Generate", func(t *testing.T) {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			want := "/api/v1/repos/acme%20org/template%2Frepo/generate"
+			if r.URL.EscapedPath() != want {
+				t.Errorf("got path %q, want %q", r.URL.EscapedPath(), want)
+				http.NotFound(w, r)
+				return
+			}
+			if r.Method != http.MethodPost {
+				t.Errorf("expected POST, got %s", r.Method)
+			}
+			var body types.GenerateRepoOption
+			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+				t.Fatalf("decode body: %v", err)
+			}
+			if body.Owner != "acme org" || body.Name != "generated repo" || !body.Private || !body.Topics {
+				t.Fatalf("got %#v", body)
+			}
+			json.NewEncoder(w).Encode(types.Repository{Name: body.Name, FullName: "acme org/" + body.Name})
+		}))
+		defer srv.Close()
+
+		f := NewForge(srv.URL, "tok")
+		repo, err := f.Repos.Generate(context.Background(), owner, "template/repo", &types.GenerateRepoOption{
+			Owner:   "acme org",
+			Name:    "generated repo",
+			Private: true,
+			Topics:  true,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if repo.Name != "generated repo" || repo.FullName != "acme org/generated repo" {
+			t.Fatalf("got %#v", repo)
+		}
+	})
 }
