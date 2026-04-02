@@ -110,6 +110,38 @@ func TestOption_Stringers_Good(t *testing.T) {
 			want: `forge.SearchIssuesOptions{state="open", q="build", priority_repo_id=99, assigned=true}`,
 		},
 		{
+			name: "IssueListOptions",
+			got:  IssueListOptions{State: "open", Labels: "bug", Query: "panic", CreatedBy: "alice"},
+			want: `forge.IssueListOptions{state="open", labels="bug", q="panic", created_by="alice"}`,
+		},
+		{
+			name: "PullListOptions",
+			got:  PullListOptions{State: "open", Sort: "priority", Milestone: 7, Labels: []int64{1, 2}, Poster: "alice"},
+			want: `forge.PullListOptions{state="open", sort="priority", milestone=7, labels=[]int64{1, 2}, poster="alice"}`,
+		},
+		{
+			name: "ReleaseListOptions",
+			got:  ReleaseListOptions{Draft: true, PreRelease: true, Query: "1.0"},
+			want: `forge.ReleaseListOptions{draft=true, pre-release=true, q="1.0"}`,
+		},
+		{
+			name: "CommitListOptions",
+			got: func() CommitListOptions {
+				stat := false
+				verification := false
+				files := false
+				return CommitListOptions{
+					Sha:          "main",
+					Path:         "docs",
+					Stat:         &stat,
+					Verification: &verification,
+					Files:        &files,
+					Not:          "deadbeef",
+				}
+			}(),
+			want: `forge.CommitListOptions{sha="main", path="docs", stat=false, verification=false, files=false, not="deadbeef"}`,
+		},
+		{
 			name: "ReleaseAttachmentUploadOptions",
 			got:  ReleaseAttachmentUploadOptions{Name: "release.zip"},
 			want: `forge.ReleaseAttachmentUploadOptions{name="release.zip"}`,

@@ -78,6 +78,64 @@ func TestIssueService_List_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_ListFiltered_Good(t *testing.T) {
+	since := time.Date(2026, time.March, 1, 12, 30, 0, 0, time.UTC)
+	before := time.Date(2026, time.March, 2, 12, 30, 0, 0, time.UTC)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		want := map[string]string{
+			"state":        "open",
+			"labels":       "bug,help wanted",
+			"q":            "panic",
+			"type":         "issues",
+			"milestones":   "v1.0",
+			"since":        since.Format(time.RFC3339),
+			"before":       before.Format(time.RFC3339),
+			"created_by":   "alice",
+			"assigned_by":  "bob",
+			"mentioned_by": "carol",
+			"page":         "1",
+			"limit":        "50",
+		}
+		for key, wantValue := range want {
+			if got := r.URL.Query().Get(key); got != wantValue {
+				t.Errorf("got %s=%q, want %q", key, got, wantValue)
+			}
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Issue{{ID: 1, Title: "panic in parser"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issues, err := f.Issues.ListIssues(context.Background(), "core", "go-forge", IssueListOptions{
+		State:       "open",
+		Labels:      "bug,help wanted",
+		Query:       "panic",
+		Type:        "issues",
+		Milestones:  "v1.0",
+		Since:       &since,
+		Before:      &before,
+		CreatedBy:   "alice",
+		AssignedBy:  "bob",
+		MentionedBy: "carol",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(issues) != 1 || issues[0].Title != "panic in parser" {
+		t.Fatalf("got %#v", issues)
+	}
+}
+
 func TestIssueService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

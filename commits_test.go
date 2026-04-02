@@ -62,6 +62,55 @@ func TestCommitService_List_Good(t *testing.T) {
 	}
 }
 
+func TestCommitService_ListFiltered_Good(t *testing.T) {
+	stat := false
+	verification := false
+	files := false
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		want := map[string]string{
+			"sha":          "main",
+			"path":         "docs",
+			"stat":         "false",
+			"verification": "false",
+			"files":        "false",
+			"not":          "deadbeef",
+			"page":         "1",
+			"limit":        "50",
+		}
+		for key, wantValue := range want {
+			if got := r.URL.Query().Get(key); got != wantValue {
+				t.Errorf("got %s=%q, want %q", key, got, wantValue)
+			}
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Commit{{SHA: "abc123"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	commits, err := f.Commits.ListAll(context.Background(), Params{"owner": "core", "repo": "go-forge"}, CommitListOptions{
+		Sha:          "main",
+		Path:         "docs",
+		Stat:         &stat,
+		Verification: &verification,
+		Files:        &files,
+		Not:          "deadbeef",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(commits) != 1 || commits[0].SHA != "abc123" {
+		t.Fatalf("got %#v", commits)
+	}
+}
+
 func TestCommitService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

@@ -3,6 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
+	"net/url"
+	"strconv"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -17,6 +19,53 @@ type PullService struct {
 	Resource[types.PullRequest, types.CreatePullRequestOption, types.EditPullRequestOption]
 }
 
+// PullListOptions controls filtering for repository pull request listings.
+//
+// Usage:
+//
+//	opts := forge.PullListOptions{State: "open", Labels: []int64{1, 2}}
+type PullListOptions struct {
+	State     string
+	Sort      string
+	Milestone int64
+	Labels    []int64
+	Poster    string
+}
+
+// String returns a safe summary of the pull request list filters.
+func (o PullListOptions) String() string {
+	return optionString("forge.PullListOptions",
+		"state", o.State,
+		"sort", o.Sort,
+		"milestone", o.Milestone,
+		"labels", o.Labels,
+		"poster", o.Poster,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the pull request list filters.
+func (o PullListOptions) GoString() string { return o.String() }
+
+func (o PullListOptions) addQuery(values url.Values) {
+	if o.State != "" {
+		values.Set("state", o.State)
+	}
+	if o.Sort != "" {
+		values.Set("sort", o.Sort)
+	}
+	if o.Milestone != 0 {
+		values.Set("milestone", strconv.FormatInt(o.Milestone, 10))
+	}
+	for _, label := range o.Labels {
+		if label != 0 {
+			values.Add("labels", strconv.FormatInt(label, 10))
+		}
+	}
+	if o.Poster != "" {
+		values.Set("poster", o.Poster)
+	}
+}
+
 func newPullService(c *Client) *PullService {
 	return &PullService{
 		Resource: *NewResource[types.PullRequest, types.CreatePullRequestOption, types.EditPullRequestOption](
@@ -26,15 +75,13 @@ func newPullService(c *Client) *PullService {
 }
 
 // ListPullRequests returns all pull requests in a repository.
-func (s *PullService) ListPullRequests(ctx context.Context, owner, repo string) ([]types.PullRequest, error) {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
-	return ListAll[types.PullRequest](ctx, s.client, path, nil)
+func (s *PullService) ListPullRequests(ctx context.Context, owner, repo string, filters ...PullListOptions) ([]types.PullRequest, error) {
+	return s.listAll(ctx, owner, repo, filters...)
 }
 
 // IterPullRequests returns an iterator over all pull requests in a repository.
-func (s *PullService) IterPullRequests(ctx context.Context, owner, repo string) iter.Seq2[types.PullRequest, error] {
-	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
-	return ListIter[types.PullRequest](ctx, s.client, path, nil)
+func (s *PullService) IterPullRequests(ctx context.Context, owner, repo string, filters ...PullListOptions) iter.Seq2[types.PullRequest, error] {
+	return s.listIter(ctx, owner, repo, filters...)
 }
 
 // CreatePullRequest creates a pull request in a repository.
@@ -174,6 +221,85 @@ func (s *PullService) GetReview(ctx context.Context, owner, repo string, index, 
 func (s *PullService) DeleteReview(ctx context.Context, owner, repo string, index, reviewID int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(reviewID)))
 	return s.client.Delete(ctx, path)
+}
+
+func (s *PullService) listPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...PullListOptions) (*PagedResult[types.PullRequest], error) {
+	if opts.Page < 1 {
+		opts.Page = 1
+	}
+	if opts.Limit < 1 {
+		opts.Limit = defaultPageLimit
+	}
+
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
+	u, err := url.Parse(path)
+	if err != nil {
+		return nil, err
+	}
+
+	values := u.Query()
+	values.Set("page", strconv.Itoa(opts.Page))
+	values.Set("limit", strconv.Itoa(opts.Limit))
+	for _, filter := range filters {
+		filter.addQuery(values)
+	}
+	u.RawQuery = values.Encode()
+
+	var items []types.PullRequest
+	resp, err := s.client.doJSON(ctx, "GET", u.String(), nil, &items)
+	if err != nil {
+		return nil, err
+	}
+
+	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	return &PagedResult[types.PullRequest]{
+		Items:      items,
+		TotalCount: totalCount,
+		Page:       opts.Page,
+		HasMore: (totalCount > 0 && (opts.Page-1)*opts.Limit+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= opts.Limit),
+	}, nil
+}
+
+func (s *PullService) listAll(ctx context.Context, owner, repo string, filters ...PullListOptions) ([]types.PullRequest, error) {
+	var all []types.PullRequest
+	page := 1
+
+	for {
+		result, err := s.listPage(ctx, owner, repo, ListOptions{Page: page, Limit: defaultPageLimit}, filters...)
+		if err != nil {
+			return nil, err
+		}
+		all = append(all, result.Items...)
+		if !result.HasMore {
+			break
+		}
+		page++
+	}
+
+	return all, nil
+}
+
+func (s *PullService) listIter(ctx context.Context, owner, repo string, filters ...PullListOptions) iter.Seq2[types.PullRequest, error] {
+	return func(yield func(types.PullRequest, error) bool) {
+		page := 1
+		for {
+			result, err := s.listPage(ctx, owner, repo, ListOptions{Page: page, Limit: defaultPageLimit}, filters...)
+			if err != nil {
+				yield(*new(types.PullRequest), err)
+				return
+			}
+			for _, item := range result.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+			if !result.HasMore {
+				break
+			}
+			page++
+		}
+	}
 }
 
 // ListReviewComments returns all comments on a pull request review.

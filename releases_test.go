@@ -84,6 +84,47 @@ func TestReleaseService_List_Good(t *testing.T) {
 	}
 }
 
+func TestReleaseService_ListFiltered_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/releases" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		want := map[string]string{
+			"draft":       "true",
+			"pre-release": "true",
+			"q":           "1.0",
+			"page":        "1",
+			"limit":       "50",
+		}
+		for key, wantValue := range want {
+			if got := r.URL.Query().Get(key); got != wantValue {
+				t.Errorf("got %s=%q, want %q", key, got, wantValue)
+			}
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Release{{ID: 1, TagName: "v1.0.0", Title: "Release 1.0"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	releases, err := f.Releases.ListReleases(context.Background(), "core", "go-forge", ReleaseListOptions{
+		Draft:      true,
+		PreRelease: true,
+		Query:      "1.0",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(releases) != 1 || releases[0].TagName != "v1.0.0" {
+		t.Fatalf("got %#v", releases)
+	}
+}
+
 func TestReleaseService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

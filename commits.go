@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"strconv"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -20,6 +21,62 @@ type CommitService struct {
 	client *Client
 }
 
+// CommitListOptions controls filtering for repository commit listings.
+//
+// Usage:
+//
+//	stat := false
+//	opts := forge.CommitListOptions{Sha: "main", Stat: &stat}
+type CommitListOptions struct {
+	Sha          string
+	Path         string
+	Stat         *bool
+	Verification *bool
+	Files        *bool
+	Not          string
+}
+
+// String returns a safe summary of the commit list filters.
+func (o CommitListOptions) String() string {
+	return optionString("forge.CommitListOptions",
+		"sha", o.Sha,
+		"path", o.Path,
+		"stat", o.Stat,
+		"verification", o.Verification,
+		"files", o.Files,
+		"not", o.Not,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the commit list filters.
+func (o CommitListOptions) GoString() string { return o.String() }
+
+func (o CommitListOptions) queryParams() map[string]string {
+	query := make(map[string]string, 6)
+	if o.Sha != "" {
+		query["sha"] = o.Sha
+	}
+	if o.Path != "" {
+		query["path"] = o.Path
+	}
+	if o.Stat != nil {
+		query["stat"] = strconv.FormatBool(*o.Stat)
+	}
+	if o.Verification != nil {
+		query["verification"] = strconv.FormatBool(*o.Verification)
+	}
+	if o.Files != nil {
+		query["files"] = strconv.FormatBool(*o.Files)
+	}
+	if o.Not != "" {
+		query["not"] = o.Not
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
 const (
 	commitCollectionPath = "/api/v1/repos/{owner}/{repo}/commits"
 	commitItemPath       = "/api/v1/repos/{owner}/{repo}/git/commits/{sha}"
@@ -30,18 +87,18 @@ func newCommitService(c *Client) *CommitService {
 }
 
 // List returns a single page of commits for a repository.
-func (s *CommitService) List(ctx context.Context, params Params, opts ListOptions) (*PagedResult[types.Commit], error) {
-	return ListPage[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), nil, opts)
+func (s *CommitService) List(ctx context.Context, params Params, opts ListOptions, filters ...CommitListOptions) (*PagedResult[types.Commit], error) {
+	return ListPage[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), commitListQuery(filters...), opts)
 }
 
 // ListAll returns all commits for a repository.
-func (s *CommitService) ListAll(ctx context.Context, params Params) ([]types.Commit, error) {
-	return ListAll[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), nil)
+func (s *CommitService) ListAll(ctx context.Context, params Params, filters ...CommitListOptions) ([]types.Commit, error) {
+	return ListAll[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), commitListQuery(filters...))
 }
 
 // Iter returns an iterator over all commits for a repository.
-func (s *CommitService) Iter(ctx context.Context, params Params) iter.Seq2[types.Commit, error] {
-	return ListIter[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), nil)
+func (s *CommitService) Iter(ctx context.Context, params Params, filters ...CommitListOptions) iter.Seq2[types.Commit, error] {
+	return ListIter[types.Commit](ctx, s.client, ResolvePath(commitCollectionPath, params), commitListQuery(filters...))
 }
 
 // Get returns a single commit by SHA or ref.
@@ -154,4 +211,17 @@ func (s *CommitService) SetNote(ctx context.Context, owner, repo, sha, message s
 func (s *CommitService) DeleteNote(ctx context.Context, owner, repo, sha string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/git/notes/{sha}", pathParams("owner", owner, "repo", repo, "sha", sha))
 	return s.client.Delete(ctx, path)
+}
+
+func commitListQuery(filters ...CommitListOptions) map[string]string {
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }

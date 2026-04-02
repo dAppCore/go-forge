@@ -5,6 +5,7 @@ import (
 	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"dappco.re/go/core/forge/types"
@@ -38,6 +39,53 @@ func TestPullService_List_Good(t *testing.T) {
 	}
 	if result.Items[0].Title != "add feature" {
 		t.Errorf("got title=%q, want %q", result.Items[0].Title, "add feature")
+	}
+}
+
+func TestPullService_ListFiltered_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		want := map[string]string{
+			"state":     "open",
+			"sort":      "priority",
+			"milestone": "7",
+			"poster":    "alice",
+			"page":      "1",
+			"limit":     "50",
+		}
+		for key, wantValue := range want {
+			if got := r.URL.Query().Get(key); got != wantValue {
+				t.Errorf("got %s=%q, want %q", key, got, wantValue)
+			}
+		}
+		if got := r.URL.Query()["labels"]; !reflect.DeepEqual(got, []string{"1", "2"}) {
+			t.Errorf("got labels=%v, want %v", got, []string{"1", "2"})
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.PullRequest{{ID: 1, Title: "add feature"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	prs, err := f.Pulls.ListPullRequests(context.Background(), "core", "go-forge", PullListOptions{
+		State:     "open",
+		Sort:      "priority",
+		Milestone: 7,
+		Labels:    []int64{1, 2},
+		Poster:    "alice",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(prs) != 1 || prs[0].Title != "add feature" {
+		t.Fatalf("got %#v", prs)
 	}
 }
 

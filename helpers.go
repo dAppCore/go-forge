@@ -69,6 +69,8 @@ func isZeroOptionValue(v any) bool {
 		return len(x) == 0
 	case *time.Time:
 		return x == nil
+	case *bool:
+		return x == nil
 	case time.Time:
 		return x.IsZero()
 	default:
@@ -93,6 +95,11 @@ func formatOptionValue(v any) string {
 			return "<nil>"
 		}
 		return strconv.Quote(x.Format(time.RFC3339))
+	case *bool:
+		if x == nil {
+			return "<nil>"
+		}
+		return strconv.FormatBool(*x)
 	case time.Time:
 		return strconv.Quote(x.Format(time.RFC3339))
 	default:

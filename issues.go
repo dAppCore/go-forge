@@ -21,6 +21,81 @@ type IssueService struct {
 	Resource[types.Issue, types.CreateIssueOption, types.EditIssueOption]
 }
 
+// IssueListOptions controls filtering for repository issue listings.
+//
+// Usage:
+//
+//	opts := forge.IssueListOptions{State: "open", Labels: "bug"}
+type IssueListOptions struct {
+	State       string
+	Labels      string
+	Query       string
+	Type        string
+	Milestones  string
+	Since       *time.Time
+	Before      *time.Time
+	CreatedBy   string
+	AssignedBy  string
+	MentionedBy string
+}
+
+// String returns a safe summary of the issue list filters.
+func (o IssueListOptions) String() string {
+	return optionString("forge.IssueListOptions",
+		"state", o.State,
+		"labels", o.Labels,
+		"q", o.Query,
+		"type", o.Type,
+		"milestones", o.Milestones,
+		"since", o.Since,
+		"before", o.Before,
+		"created_by", o.CreatedBy,
+		"assigned_by", o.AssignedBy,
+		"mentioned_by", o.MentionedBy,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the issue list filters.
+func (o IssueListOptions) GoString() string { return o.String() }
+
+func (o IssueListOptions) queryParams() map[string]string {
+	query := make(map[string]string, 10)
+	if o.State != "" {
+		query["state"] = o.State
+	}
+	if o.Labels != "" {
+		query["labels"] = o.Labels
+	}
+	if o.Query != "" {
+		query["q"] = o.Query
+	}
+	if o.Type != "" {
+		query["type"] = o.Type
+	}
+	if o.Milestones != "" {
+		query["milestones"] = o.Milestones
+	}
+	if o.Since != nil {
+		query["since"] = o.Since.Format(time.RFC3339)
+	}
+	if o.Before != nil {
+		query["before"] = o.Before.Format(time.RFC3339)
+	}
+	if o.CreatedBy != "" {
+		query["created_by"] = o.CreatedBy
+	}
+	if o.AssignedBy != "" {
+		query["assigned_by"] = o.AssignedBy
+	}
+	if o.MentionedBy != "" {
+		query["mentioned_by"] = o.MentionedBy
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
 // AttachmentUploadOptions controls metadata sent when uploading an attachment.
 //
 // Usage:
@@ -201,15 +276,15 @@ func (s *IssueService) IterSearchIssues(ctx context.Context, opts SearchIssuesOp
 }
 
 // ListIssues returns all issues in a repository.
-func (s *IssueService) ListIssues(ctx context.Context, owner, repo string) ([]types.Issue, error) {
+func (s *IssueService) ListIssues(ctx context.Context, owner, repo string, filters ...IssueListOptions) ([]types.Issue, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
-	return ListAll[types.Issue](ctx, s.client, path, nil)
+	return ListAll[types.Issue](ctx, s.client, path, issueListQuery(filters...))
 }
 
 // IterIssues returns an iterator over all issues in a repository.
-func (s *IssueService) IterIssues(ctx context.Context, owner, repo string) iter.Seq2[types.Issue, error] {
+func (s *IssueService) IterIssues(ctx context.Context, owner, repo string, filters ...IssueListOptions) iter.Seq2[types.Issue, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
-	return ListIter[types.Issue](ctx, s.client, path, nil)
+	return ListIter[types.Issue](ctx, s.client, path, issueListQuery(filters...))
 }
 
 // CreateIssue creates a new issue in a repository.
@@ -452,6 +527,19 @@ func (s *IssueService) AddCommentReaction(ctx context.Context, owner, repo strin
 func (s *IssueService) DeleteCommentReaction(ctx context.Context, owner, repo string, id int64, reaction string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/comments/{id}/reactions", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 	return s.client.DeleteWithBody(ctx, path, types.EditReactionOption{Reaction: reaction})
+}
+
+func issueListQuery(filters ...IssueListOptions) map[string]string {
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
 
 func attachmentUploadQuery(opts *AttachmentUploadOptions) map[string]string {

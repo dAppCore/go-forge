@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"strconv"
 
 	goio "io"
 
@@ -17,6 +18,46 @@ import (
 //	_, err := f.Releases.ListAll(ctx, forge.Params{"owner": "core", "repo": "go-forge"})
 type ReleaseService struct {
 	Resource[types.Release, types.CreateReleaseOption, types.EditReleaseOption]
+}
+
+// ReleaseListOptions controls filtering for repository release listings.
+//
+// Usage:
+//
+//	opts := forge.ReleaseListOptions{Draft: true, Query: "1.0"}
+type ReleaseListOptions struct {
+	Draft      bool
+	PreRelease bool
+	Query      string
+}
+
+// String returns a safe summary of the release list filters.
+func (o ReleaseListOptions) String() string {
+	return optionString("forge.ReleaseListOptions",
+		"draft", o.Draft,
+		"pre-release", o.PreRelease,
+		"q", o.Query,
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the release list filters.
+func (o ReleaseListOptions) GoString() string { return o.String() }
+
+func (o ReleaseListOptions) queryParams() map[string]string {
+	query := make(map[string]string, 3)
+	if o.Draft {
+		query["draft"] = strconv.FormatBool(true)
+	}
+	if o.PreRelease {
+		query["pre-release"] = strconv.FormatBool(true)
+	}
+	if o.Query != "" {
+		query["q"] = o.Query
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
 
 // ReleaseAttachmentUploadOptions controls metadata sent when uploading a release attachment.
@@ -60,15 +101,15 @@ func newReleaseService(c *Client) *ReleaseService {
 }
 
 // ListReleases returns all releases in a repository.
-func (s *ReleaseService) ListReleases(ctx context.Context, owner, repo string) ([]types.Release, error) {
+func (s *ReleaseService) ListReleases(ctx context.Context, owner, repo string, filters ...ReleaseListOptions) ([]types.Release, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))
-	return ListAll[types.Release](ctx, s.client, path, nil)
+	return ListAll[types.Release](ctx, s.client, path, releaseListQuery(filters...))
 }
 
 // IterReleases returns an iterator over all releases in a repository.
-func (s *ReleaseService) IterReleases(ctx context.Context, owner, repo string) iter.Seq2[types.Release, error] {
+func (s *ReleaseService) IterReleases(ctx context.Context, owner, repo string, filters ...ReleaseListOptions) iter.Seq2[types.Release, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))
-	return ListIter[types.Release](ctx, s.client, path, nil)
+	return ListIter[types.Release](ctx, s.client, path, releaseListQuery(filters...))
 }
 
 // CreateRelease creates a release in a repository.
@@ -173,4 +214,17 @@ func (s *ReleaseService) GetAsset(ctx context.Context, owner, repo string, relea
 func (s *ReleaseService) DeleteAsset(ctx context.Context, owner, repo string, releaseID, assetID int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{releaseID}/assets/{assetID}", pathParams("owner", owner, "repo", repo, "releaseID", int64String(releaseID), "assetID", int64String(assetID)))
 	return s.client.Delete(ctx, path)
+}
+
+func releaseListQuery(filters ...ReleaseListOptions) map[string]string {
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		for key, value := range filter.queryParams() {
+			query[key] = value
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
