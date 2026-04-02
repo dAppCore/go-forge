@@ -33,6 +33,9 @@ func TestForge_Client_Good(t *testing.T) {
 	if c.baseURL != "https://forge.lthn.ai" {
 		t.Errorf("got baseURL=%q", c.baseURL)
 	}
+	if got := c.BaseURL(); got != "https://forge.lthn.ai" {
+		t.Errorf("got BaseURL()=%q", got)
+	}
 }
 
 func TestRepoService_ListOrgRepos_Good(t *testing.T) {

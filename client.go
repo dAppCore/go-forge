@@ -117,6 +117,11 @@ type Client struct {
 	rateLimit  RateLimit
 }
 
+// BaseURL returns the configured Forgejo base URL.
+func (c *Client) BaseURL() string {
+	return c.baseURL
+}
+
 // RateLimit returns the last known rate limit information.
 func (c *Client) RateLimit() RateLimit {
 	return c.rateLimit
