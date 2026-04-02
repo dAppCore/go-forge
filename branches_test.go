@@ -61,6 +61,33 @@ func TestBranchService_Get_Good(t *testing.T) {
 	}
 }
 
+func TestBranchService_UpdateBranch_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/branches/main" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.UpdateBranchRepoOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Name != "develop" {
+			t.Errorf("got name=%q, want %q", opts.Name, "develop")
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Branches.UpdateBranch(context.Background(), "core", "go-forge", "main", &types.UpdateBranchRepoOption{
+		Name: "develop",
+	}); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestBranchService_CreateProtection_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

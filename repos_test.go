@@ -2183,6 +2183,36 @@ func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 		}
 	})
 
+	t.Run("CreateCurrentUserRepo", func(t *testing.T) {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method != http.MethodPost {
+				t.Errorf("expected POST, got %s", r.Method)
+			}
+			if r.URL.EscapedPath() != "/api/v1/user/repos" {
+				t.Errorf("got path %q, want %q", r.URL.EscapedPath(), "/api/v1/user/repos")
+				http.NotFound(w, r)
+				return
+			}
+			var opts types.CreateRepoOption
+			if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+				t.Fatalf("decode body: %v", err)
+			}
+			if opts.Name != "go-forge" || !opts.Private {
+				t.Fatalf("got %#v", opts)
+			}
+			json.NewEncoder(w).Encode(types.Repository{Name: opts.Name})
+		}))
+		defer srv.Close()
+
+		f := NewForge(srv.URL, "tok")
+		if _, err := f.Repos.CreateCurrentUserRepo(context.Background(), &types.CreateRepoOption{
+			Name:    "go-forge",
+			Private: true,
+		}); err != nil {
+			t.Fatal(err)
+		}
+	})
+
 	t.Run("Fork", func(t *testing.T) {
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			want := "/api/v1/repos/acme%20org/my%2Frepo/forks"

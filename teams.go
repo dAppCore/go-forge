@@ -25,6 +25,16 @@ func newTeamService(c *Client) *TeamService {
 	}
 }
 
+// CreateOrgTeam creates a team within an organisation.
+func (s *TeamService) CreateOrgTeam(ctx context.Context, org string, opts *types.CreateTeamOption) (*types.Team, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/teams", pathParams("org", org))
+	var out types.Team
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListMembers returns all members of a team.
 func (s *TeamService) ListMembers(ctx context.Context, teamID int64) ([]types.User, error) {
 	path := ResolvePath("/api/v1/teams/{id}/members", pathParams("id", int64String(teamID)))

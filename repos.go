@@ -136,6 +136,15 @@ func (s *RepoService) Migrate(ctx context.Context, opts *types.MigrateRepoOption
 	return &out, nil
 }
 
+// CreateCurrentUserRepo creates a repository for the authenticated user.
+func (s *RepoService) CreateCurrentUserRepo(ctx context.Context, opts *types.CreateRepoOption) (*types.Repository, error) {
+	var out types.Repository
+	if err := s.client.Post(ctx, "/api/v1/user/repos", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // CreateOrgRepo creates a repository in an organisation.
 func (s *RepoService) CreateOrgRepo(ctx context.Context, org string, opts *types.CreateRepoOption) (*types.Repository, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))

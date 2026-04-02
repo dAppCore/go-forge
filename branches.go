@@ -14,12 +14,12 @@ import (
 //	f := forge.NewForge("https://forge.lthn.ai", "token")
 //	_, err := f.Branches.ListBranchProtections(ctx, "core", "go-forge")
 type BranchService struct {
-	Resource[types.Branch, types.CreateBranchRepoOption, struct{}]
+	Resource[types.Branch, types.CreateBranchRepoOption, types.UpdateBranchRepoOption]
 }
 
 func newBranchService(c *Client) *BranchService {
 	return &BranchService{
-		Resource: *NewResource[types.Branch, types.CreateBranchRepoOption, struct{}](
+		Resource: *NewResource[types.Branch, types.CreateBranchRepoOption, types.UpdateBranchRepoOption](
 			c, "/api/v1/repos/{owner}/{repo}/branches/{branch}",
 		),
 	}
@@ -44,6 +44,28 @@ func (s *BranchService) CreateBranch(ctx context.Context, owner, repo string, op
 		return nil, err
 	}
 	return &out, nil
+}
+
+// GetBranch returns a single branch by name.
+func (s *BranchService) GetBranch(ctx context.Context, owner, repo, branch string) (*types.Branch, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches/{branch}", pathParams("owner", owner, "repo", repo, "branch", branch))
+	var out types.Branch
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UpdateBranch renames a branch in a repository.
+func (s *BranchService) UpdateBranch(ctx context.Context, owner, repo, branch string, opts *types.UpdateBranchRepoOption) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches/{branch}", pathParams("owner", owner, "repo", repo, "branch", branch))
+	return s.client.Patch(ctx, path, opts, nil)
+}
+
+// DeleteBranch removes a branch from a repository.
+func (s *BranchService) DeleteBranch(ctx context.Context, owner, repo, branch string) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches/{branch}", pathParams("owner", owner, "repo", repo, "branch", branch))
+	return s.client.Delete(ctx, path)
 }
 
 // ListBranchProtections returns all branch protections for a repository.
