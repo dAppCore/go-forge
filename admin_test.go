@@ -224,6 +224,155 @@ func TestAdminService_ListEmails_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_ListHooks_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/hooks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Hook{
+			{ID: 7, Type: "forgejo", URL: "https://example.com/admin-hook", Active: true},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hooks, err := f.Admin.ListHooks(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hooks) != 1 {
+		t.Fatalf("got %d hooks, want 1", len(hooks))
+	}
+	if hooks[0].ID != 7 || hooks[0].URL != "https://example.com/admin-hook" {
+		t.Errorf("unexpected hook: %+v", hooks[0])
+	}
+}
+
+func TestAdminService_CreateHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/hooks" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateHookOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Type != "forgejo" {
+			t.Errorf("got type=%q, want %q", opts.Type, "forgejo")
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     12,
+			Type:   opts.Type,
+			Active: opts.Active,
+			Events: opts.Events,
+			URL:    "https://example.com/admin-hook",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Admin.CreateHook(context.Background(), &types.CreateHookOption{
+		Type:   "forgejo",
+		Active: true,
+		Events: []string{"push"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 12 {
+		t.Errorf("got id=%d, want 12", hook.ID)
+	}
+	if hook.Type != "forgejo" {
+		t.Errorf("got type=%q, want %q", hook.Type, "forgejo")
+	}
+}
+
+func TestAdminService_GetHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/hooks/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     7,
+			Type:   "forgejo",
+			Active: true,
+			URL:    "https://example.com/admin-hook",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Admin.GetHook(context.Background(), 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 7 {
+		t.Errorf("got id=%d, want 7", hook.ID)
+	}
+}
+
+func TestAdminService_EditHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/hooks/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.EditHookOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if !opts.Active {
+			t.Error("expected active=true")
+		}
+		json.NewEncoder(w).Encode(types.Hook{
+			ID:     7,
+			Type:   "forgejo",
+			Active: opts.Active,
+			URL:    "https://example.com/admin-hook",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	hook, err := f.Admin.EditHook(context.Background(), 7, &types.EditHookOption{Active: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hook.ID != 7 || !hook.Active {
+		t.Errorf("unexpected hook: %+v", hook)
+	}
+}
+
+func TestAdminService_DeleteHook_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/hooks/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Admin.DeleteHook(context.Background(), 7); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestAdminService_ListQuotaGroups_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

@@ -80,6 +80,51 @@ func (s *AdminService) IterEmails(ctx context.Context) iter.Seq2[types.Email, er
 	return ListIter[types.Email](ctx, s.client, "/api/v1/admin/emails", nil)
 }
 
+// ListHooks returns all global hooks (admin only).
+func (s *AdminService) ListHooks(ctx context.Context) ([]types.Hook, error) {
+	return ListAll[types.Hook](ctx, s.client, "/api/v1/admin/hooks", nil)
+}
+
+// IterHooks returns an iterator over all global hooks (admin only).
+func (s *AdminService) IterHooks(ctx context.Context) iter.Seq2[types.Hook, error] {
+	return ListIter[types.Hook](ctx, s.client, "/api/v1/admin/hooks", nil)
+}
+
+// GetHook returns a single global hook by ID (admin only).
+func (s *AdminService) GetHook(ctx context.Context, id int64) (*types.Hook, error) {
+	path := ResolvePath("/api/v1/admin/hooks/{id}", Params{"id": int64String(id)})
+	var out types.Hook
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateHook creates a new global hook (admin only).
+func (s *AdminService) CreateHook(ctx context.Context, opts *types.CreateHookOption) (*types.Hook, error) {
+	var out types.Hook
+	if err := s.client.Post(ctx, "/api/v1/admin/hooks", opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditHook updates an existing global hook (admin only).
+func (s *AdminService) EditHook(ctx context.Context, id int64, opts *types.EditHookOption) (*types.Hook, error) {
+	path := ResolvePath("/api/v1/admin/hooks/{id}", Params{"id": int64String(id)})
+	var out types.Hook
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteHook deletes a global hook (admin only).
+func (s *AdminService) DeleteHook(ctx context.Context, id int64) error {
+	path := ResolvePath("/api/v1/admin/hooks/{id}", Params{"id": int64String(id)})
+	return s.client.Delete(ctx, path)
+}
+
 // ListQuotaGroups returns all available quota groups.
 func (s *AdminService) ListQuotaGroups(ctx context.Context) ([]types.QuotaGroup, error) {
 	return ListAll[types.QuotaGroup](ctx, s.client, "/api/v1/admin/quota/groups", nil)
