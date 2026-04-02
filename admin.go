@@ -70,6 +70,26 @@ func (s *AdminService) IterOrgs(ctx context.Context) iter.Seq2[types.Organizatio
 	return ListIter[types.Organization](ctx, s.client, "/api/v1/admin/orgs", nil)
 }
 
+// ListEmails returns all email addresses (admin only).
+func (s *AdminService) ListEmails(ctx context.Context) ([]types.Email, error) {
+	return ListAll[types.Email](ctx, s.client, "/api/v1/admin/emails", nil)
+}
+
+// IterEmails returns an iterator over all email addresses (admin only).
+func (s *AdminService) IterEmails(ctx context.Context) iter.Seq2[types.Email, error] {
+	return ListIter[types.Email](ctx, s.client, "/api/v1/admin/emails", nil)
+}
+
+// SearchEmails searches all email addresses by keyword (admin only).
+func (s *AdminService) SearchEmails(ctx context.Context, q string) ([]types.Email, error) {
+	return ListAll[types.Email](ctx, s.client, "/api/v1/admin/emails/search", map[string]string{"q": q})
+}
+
+// IterSearchEmails returns an iterator over all email addresses matching a keyword (admin only).
+func (s *AdminService) IterSearchEmails(ctx context.Context, q string) iter.Seq2[types.Email, error] {
+	return ListIter[types.Email](ctx, s.client, "/api/v1/admin/emails/search", map[string]string{"q": q})
+}
+
 // RunCron runs a cron task by name (admin only).
 func (s *AdminService) RunCron(ctx context.Context, task string) error {
 	path := ResolvePath("/api/v1/admin/cron/{task}", Params{"task": task})

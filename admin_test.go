@@ -195,6 +195,66 @@ func TestAdminService_ListOrgs_Good(t *testing.T) {
 	}
 }
 
+func TestAdminService_ListEmails_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/emails" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.Email{
+			{Email: "alice@example.com", Primary: true},
+			{Email: "bob@example.com", Verified: true},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	emails, err := f.Admin.ListEmails(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(emails) != 2 {
+		t.Errorf("got %d emails, want 2", len(emails))
+	}
+	if emails[0].Email != "alice@example.com" || !emails[0].Primary {
+		t.Errorf("got first email=%+v, want primary alice@example.com", emails[0])
+	}
+}
+
+func TestAdminService_SearchEmails_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/admin/emails/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("q"); got != "alice" {
+			t.Errorf("got q=%q, want %q", got, "alice")
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Email{
+			{Email: "alice@example.com", Primary: true},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	emails, err := f.Admin.SearchEmails(context.Background(), "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(emails) != 1 {
+		t.Errorf("got %d emails, want 1", len(emails))
+	}
+	if emails[0].Email != "alice@example.com" {
+		t.Errorf("got email=%q, want %q", emails[0].Email, "alice@example.com")
+	}
+}
+
 func TestAdminService_ListCron_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
