@@ -221,6 +221,22 @@ func (s *RepoService) GetRawFile(ctx context.Context, owner, repo, filepath stri
 	return s.client.GetRaw(ctx, path)
 }
 
+// GetRawFileOrLFS returns the raw content or LFS object for a repository file as bytes.
+func (s *RepoService) GetRawFileOrLFS(ctx context.Context, owner, repo, filepath, ref string) ([]byte, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/media/{filepath}", pathParams("owner", owner, "repo", repo, "filepath", filepath))
+	if ref != "" {
+		u, err := url.Parse(path)
+		if err != nil {
+			return nil, err
+		}
+		q := u.Query()
+		q.Set("ref", ref)
+		u.RawQuery = q.Encode()
+		path = u.String()
+	}
+	return s.client.GetRaw(ctx, path)
+}
+
 // GetLanguages returns the byte counts per language for a repository.
 func (s *RepoService) GetLanguages(ctx context.Context, owner, repo string) (map[string]int64, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/languages", pathParams("owner", owner, "repo", repo))

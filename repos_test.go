@@ -1,6 +1,7 @@
 package forge
 
 import (
+	"bytes"
 	"context"
 	json "github.com/goccy/go-json"
 	"net/http"
@@ -414,6 +415,35 @@ func TestRepoService_GetLanguages_Good(t *testing.T) {
 	}
 	if !reflect.DeepEqual(languages, map[string]int64{"go": 1200, "shell": 300}) {
 		t.Fatalf("got %#v", languages)
+	}
+}
+
+func TestRepoService_GetRawFileOrLFS_Good(t *testing.T) {
+	want := []byte("lfs-pointer-or-content")
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/media/README.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("ref"); got != "main" {
+			t.Errorf("wrong ref: %s", got)
+		}
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(want)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	got, err := f.Repos.GetRawFileOrLFS(context.Background(), "core", "go-forge", "README.md", "main")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(got, want) {
+		t.Fatalf("got %q, want %q", got, want)
 	}
 }
 
