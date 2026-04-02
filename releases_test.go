@@ -247,3 +247,32 @@ func TestReleaseService_CreateAttachmentExternalURL_Good(t *testing.T) {
 		t.Fatalf("got name=%q", attachment.Name)
 	}
 }
+
+func TestReleaseService_EditAttachment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/releases/1/assets/4" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.EditAttachmentOptions
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Name != "release-notes.pdf" {
+			t.Fatalf("got body=%#v", body)
+		}
+		json.NewEncoder(w).Encode(types.Attachment{ID: 4, Name: body.Name})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Releases.EditAttachment(context.Background(), "core", "go-forge", 1, 4, &types.EditAttachmentOptions{Name: "release-notes.pdf"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "release-notes.pdf" {
+		t.Fatalf("got name=%q", attachment.Name)
+	}
+}

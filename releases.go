@@ -96,9 +96,24 @@ func (s *ReleaseService) CreateAttachment(ctx context.Context, owner, repo strin
 	return &out, nil
 }
 
+// EditAttachment updates a release attachment.
+func (s *ReleaseService) EditAttachment(ctx context.Context, owner, repo string, releaseID, attachmentID int64, opts *types.EditAttachmentOptions) (*types.Attachment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/{id}/assets/{attachment_id}", pathParams("owner", owner, "repo", repo, "id", int64String(releaseID), "attachment_id", int64String(attachmentID)))
+	var out types.Attachment
+	if err := s.client.Patch(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // CreateAsset uploads a new asset to a release.
 func (s *ReleaseService) CreateAsset(ctx context.Context, owner, repo string, releaseID int64, opts *ReleaseAttachmentUploadOptions, filename string, content io.Reader) (*types.Attachment, error) {
 	return s.CreateAttachment(ctx, owner, repo, releaseID, opts, filename, content)
+}
+
+// EditAsset updates a release asset.
+func (s *ReleaseService) EditAsset(ctx context.Context, owner, repo string, releaseID, attachmentID int64, opts *types.EditAttachmentOptions) (*types.Attachment, error) {
+	return s.EditAttachment(ctx, owner, repo, releaseID, attachmentID, opts)
 }
 
 // IterAssets returns an iterator over all assets for a release.
