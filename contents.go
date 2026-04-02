@@ -5,6 +5,7 @@ import (
 	"iter"
 	"net/url"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -30,7 +31,7 @@ func (s *ContentService) ListContents(ctx context.Context, owner, repo, ref stri
 	if ref != "" {
 		u, err := url.Parse(path)
 		if err != nil {
-			return nil, err
+			return nil, core.E("ContentService.ListContents", "forge: parse path", err)
 		}
 		q := u.Query()
 		q.Set("ref", ref)

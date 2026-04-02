@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -439,7 +440,7 @@ func (s *AdminService) ListActionsRuns(ctx context.Context, filters AdminActions
 
 	u, err := url.Parse("/api/v1/admin/actions/runs")
 	if err != nil {
-		return nil, err
+		return nil, core.E("AdminService.ListActionsRuns", "forge: parse path", err)
 	}
 
 	q := u.Query()

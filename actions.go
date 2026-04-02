@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strconv"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -214,7 +215,7 @@ func (s *ActionsService) ListRepoTasks(ctx context.Context, owner, repo string, 
 	if opts.Page > 0 || opts.Limit > 0 {
 		u, err := url.Parse(path)
 		if err != nil {
-			return nil, err
+			return nil, core.E("ActionsService.ListRepoTasks", "forge: parse path", err)
 		}
 		q := u.Query()
 		if opts.Page > 0 {

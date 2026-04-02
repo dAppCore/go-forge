@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -466,7 +467,7 @@ func (s *RepoService) GetRawFileOrLFS(ctx context.Context, owner, repo, filepath
 	if ref != "" {
 		u, err := url.Parse(path)
 		if err != nil {
-			return nil, err
+			return nil, core.E("RepoService.GetRawFileOrLFS", "forge: parse path", err)
 		}
 		q := u.Query()
 		q.Set("ref", ref)
@@ -482,7 +483,7 @@ func (s *RepoService) GetEditorConfig(ctx context.Context, owner, repo, filepath
 	if ref != "" {
 		u, err := url.Parse(path)
 		if err != nil {
-			return err
+			return core.E("RepoService.GetEditorConfig", "forge: parse path", err)
 		}
 		q := u.Query()
 		q.Set("ref", ref)
@@ -651,7 +652,7 @@ func (s *RepoService) SearchRepositoriesPage(ctx context.Context, query string, 
 
 	u, err := url.Parse("/api/v1/repos/search")
 	if err != nil {
-		return nil, err
+		return nil, core.E("RepoService.SearchRepositoriesPage", "forge: parse path", err)
 	}
 
 	q := u.Query()

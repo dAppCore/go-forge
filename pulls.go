@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strconv"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -234,7 +235,7 @@ func (s *PullService) listPage(ctx context.Context, owner, repo string, opts Lis
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
 	u, err := url.Parse(path)
 	if err != nil {
-		return nil, err
+		return nil, core.E("PullService.listPage", "forge: parse path", err)
 	}
 
 	values := u.Query()

@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -285,7 +286,7 @@ func (s *NotificationService) listPage(ctx context.Context, path string, opts Li
 
 	u, err := url.Parse(path)
 	if err != nil {
-		return nil, err
+		return nil, core.E("NotificationService.listPage", "forge: parse path", err)
 	}
 
 	values := u.Query()

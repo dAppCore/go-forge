@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
+	core "dappco.re/go/core"
 	"dappco.re/go/core/forge/types"
 )
 
@@ -132,7 +133,7 @@ func (s *UserService) SearchUsersPage(ctx context.Context, query string, pageOpt
 
 	u, err := url.Parse("/api/v1/users/search")
 	if err != nil {
-		return nil, err
+		return nil, core.E("UserService.SearchUsersPage", "forge: parse path", err)
 	}
 
 	q := u.Query()
