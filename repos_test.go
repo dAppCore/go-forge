@@ -974,6 +974,41 @@ func TestRepoService_ListSubscribers_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_Compare_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/compare/main...feature" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.Compare{
+			TotalCommits: 2,
+			Commits: []*types.Commit{
+				{SHA: "abc123"},
+				{SHA: "def456"},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	got, err := f.Repos.Compare(context.Background(), "core", "go-forge", "main...feature")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if got.TotalCommits != 2 || len(got.Commits) != 2 || got.Commits[0].SHA != "abc123" || got.Commits[1].SHA != "def456" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
 func TestRepoService_GetSigningKey_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

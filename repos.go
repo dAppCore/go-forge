@@ -215,6 +215,16 @@ func (s *RepoService) GetArchive(ctx context.Context, owner, repo, archive strin
 	return s.client.GetRaw(ctx, path)
 }
 
+// Compare returns commit comparison information between two branches or commits.
+func (s *RepoService) Compare(ctx context.Context, owner, repo, basehead string) (*types.Compare, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/compare/{basehead}", pathParams("owner", owner, "repo", repo, "basehead", basehead))
+	var out types.Compare
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetRawFile returns the raw content of a repository file as bytes.
 func (s *RepoService) GetRawFile(ctx context.Context, owner, repo, filepath string) ([]byte, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/raw/{filepath}", pathParams("owner", owner, "repo", repo, "filepath", filepath))
