@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"net/http"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -177,6 +178,19 @@ func (s *UserService) IterFollowing(ctx context.Context, username string) iter.S
 func (s *UserService) Follow(ctx context.Context, username string) error {
 	path := ResolvePath("/api/v1/user/following/{username}", pathParams("username", username))
 	return s.client.Put(ctx, path, nil, nil)
+}
+
+// CheckFollowing reports whether one user is following another user.
+func (s *UserService) CheckFollowing(ctx context.Context, username, target string) (bool, error) {
+	path := ResolvePath("/api/v1/users/{username}/following/{target}", pathParams("username", username, "target", target))
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, nil)
+	if err != nil {
+		if IsNotFound(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return resp.StatusCode == http.StatusNoContent, nil
 }
 
 // Unfollow unfollows a user as the authenticated user.

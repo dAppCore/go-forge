@@ -268,6 +268,50 @@ func TestUserService_Block_Good(t *testing.T) {
 	}
 }
 
+func TestUserService_CheckFollowing_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/following/bob" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	following, err := f.Users.CheckFollowing(context.Background(), "alice", "bob")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !following {
+		t.Fatal("got following=false, want true")
+	}
+}
+
+func TestUserService_CheckFollowing_Bad_NotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/alice/following/bob" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		http.Error(w, "not found", http.StatusNotFound)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	following, err := f.Users.CheckFollowing(context.Background(), "alice", "bob")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if following {
+		t.Fatal("got following=true, want false")
+	}
+}
+
 func TestUserService_Unblock_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
