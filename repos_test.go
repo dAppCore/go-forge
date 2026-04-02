@@ -46,6 +46,34 @@ func TestRepoService_ListActivityFeeds_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_GetByID_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repositories/42" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		json.NewEncoder(w).Encode(types.Repository{
+			ID:       42,
+			Name:     "go-forge",
+			FullName: "core/go-forge",
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	repo, err := f.Repos.GetByID(context.Background(), 42)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if repo.ID != 42 || repo.Name != "go-forge" || repo.FullName != "core/go-forge" {
+		t.Fatalf("got %#v", repo)
+	}
+}
+
 func TestRepoService_ListTopics_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

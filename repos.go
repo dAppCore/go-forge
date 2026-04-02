@@ -85,6 +85,16 @@ func (s *RepoService) IterUserRepos(ctx context.Context) iter.Seq2[types.Reposit
 	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/repos", nil)
 }
 
+// GetByID returns a repository by its numeric ID.
+func (s *RepoService) GetByID(ctx context.Context, id int64) (*types.Repository, error) {
+	path := ResolvePath("/api/v1/repositories/{id}", pathParams("id", int64String(id)))
+	var out types.Repository
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListTags returns all tags for a repository.
 func (s *RepoService) ListTags(ctx context.Context, owner, repo string) ([]types.Tag, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tags", pathParams("owner", owner, "repo", repo))
