@@ -12,6 +12,10 @@ import (
 )
 
 // NotificationListOptions controls filtering for notification listings.
+//
+// Usage:
+//
+//	opts := forge.NotificationListOptions{All: true, StatusTypes: []string{"unread"}}
 type NotificationListOptions struct {
 	All          bool
 	StatusTypes  []string
@@ -54,6 +58,10 @@ type NotificationService struct {
 }
 
 // NotificationRepoMarkOptions controls how repository notifications are marked.
+//
+// Usage:
+//
+//	opts := forge.NotificationRepoMarkOptions{All: true, ToStatus: "read"}
 type NotificationRepoMarkOptions struct {
 	All         bool
 	StatusTypes []string
@@ -62,6 +70,10 @@ type NotificationRepoMarkOptions struct {
 }
 
 // NotificationMarkOptions controls how authenticated-user notifications are marked.
+//
+// Usage:
+//
+//	opts := forge.NotificationMarkOptions{All: true, ToStatus: "read"}
 type NotificationMarkOptions struct {
 	All         bool
 	StatusTypes []string

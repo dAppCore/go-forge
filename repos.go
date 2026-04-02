@@ -22,6 +22,10 @@ type RepoService struct {
 }
 
 // RepoKeyListOptions controls filtering for repository key listings.
+//
+// Usage:
+//
+//	opts := forge.RepoKeyListOptions{Fingerprint: "AB:CD"}
 type RepoKeyListOptions struct {
 	KeyID       int64
 	Fingerprint string
@@ -42,6 +46,10 @@ func (o RepoKeyListOptions) queryParams() map[string]string {
 }
 
 // ActivityFeedListOptions controls filtering for repository activity feeds.
+//
+// Usage:
+//
+//	opts := forge.ActivityFeedListOptions{Date: &day}
 type ActivityFeedListOptions struct {
 	Date *time.Time
 }
@@ -56,6 +64,10 @@ func (o ActivityFeedListOptions) queryParams() map[string]string {
 }
 
 // RepoTimeListOptions controls filtering for repository tracked times.
+//
+// Usage:
+//
+//	opts := forge.RepoTimeListOptions{User: "alice"}
 type RepoTimeListOptions struct {
 	User   string
 	Since  *time.Time

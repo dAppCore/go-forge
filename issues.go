@@ -22,12 +22,20 @@ type IssueService struct {
 }
 
 // AttachmentUploadOptions controls metadata sent when uploading an attachment.
+//
+// Usage:
+//
+//	opts := forge.AttachmentUploadOptions{Name: "screenshot.png"}
 type AttachmentUploadOptions struct {
 	Name      string
 	UpdatedAt *time.Time
 }
 
 // RepoCommentListOptions controls filtering for repository-wide issue comment listings.
+//
+// Usage:
+//
+//	opts := forge.RepoCommentListOptions{Page: 1, Limit: 50}
 type RepoCommentListOptions struct {
 	Since  *time.Time
 	Before *time.Time
@@ -56,6 +64,10 @@ func newIssueService(c *Client) *IssueService {
 }
 
 // SearchIssuesOptions controls filtering for the global issue search endpoint.
+//
+// Usage:
+//
+//	opts := forge.SearchIssuesOptions{State: "open"}
 type SearchIssuesOptions struct {
 	State           string
 	Labels          string

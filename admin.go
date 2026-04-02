@@ -23,6 +23,10 @@ type AdminService struct {
 }
 
 // AdminActionsRunListOptions controls filtering for admin Actions run listings.
+//
+// Usage:
+//
+//	opts := forge.AdminActionsRunListOptions{Event: "push", Status: "success"}
 type AdminActionsRunListOptions struct {
 	Event   string
 	Branch  string
@@ -55,6 +59,10 @@ func (o AdminActionsRunListOptions) queryParams() map[string]string {
 }
 
 // AdminUnadoptedListOptions controls filtering for unadopted repository listings.
+//
+// Usage:
+//
+//	opts := forge.AdminUnadoptedListOptions{Pattern: "core/*"}
 type AdminUnadoptedListOptions struct {
 	Pattern string
 }

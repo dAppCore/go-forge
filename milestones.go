@@ -8,6 +8,10 @@ import (
 )
 
 // MilestoneListOptions controls filtering for repository milestone listings.
+//
+// Usage:
+//
+//	opts := forge.MilestoneListOptions{State: "open"}
 type MilestoneListOptions struct {
 	State string
 	Name  string

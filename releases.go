@@ -20,6 +20,10 @@ type ReleaseService struct {
 }
 
 // ReleaseAttachmentUploadOptions controls metadata sent when uploading a release attachment.
+//
+// Usage:
+//
+//	opts := forge.ReleaseAttachmentUploadOptions{Name: "release.zip"}
 type ReleaseAttachmentUploadOptions struct {
 	Name        string
 	ExternalURL string

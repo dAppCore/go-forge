@@ -21,6 +21,10 @@ type UserService struct {
 }
 
 // UserSearchOptions controls filtering for user searches.
+//
+// Usage:
+//
+//	opts := forge.UserSearchOptions{UID: 1001}
 type UserSearchOptions struct {
 	UID int64
 }
@@ -35,6 +39,10 @@ func (o UserSearchOptions) queryParams() map[string]string {
 }
 
 // UserKeyListOptions controls filtering for authenticated user public key listings.
+//
+// Usage:
+//
+//	opts := forge.UserKeyListOptions{Fingerprint: "AB:CD"}
 type UserKeyListOptions struct {
 	Fingerprint string
 }

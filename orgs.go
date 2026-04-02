@@ -20,6 +20,10 @@ type OrgService struct {
 }
 
 // OrgActivityFeedListOptions controls filtering for organisation activity feeds.
+//
+// Usage:
+//
+//	opts := forge.OrgActivityFeedListOptions{Date: &day}
 type OrgActivityFeedListOptions struct {
 	Date *time.Time
 }
