@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -149,6 +150,72 @@ func TestOrgService_Unblock_Good(t *testing.T) {
 	f := NewForge(srv.URL, "tok")
 	if err := f.Orgs.Unblock(context.Background(), "core", "alice"); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestOrgService_ListActivityFeeds_Good(t *testing.T) {
+	date := time.Date(2026, time.April, 2, 15, 4, 5, 0, time.UTC)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/activities/feeds" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("date"); got != "2026-04-02" {
+			t.Errorf("wrong date: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Activity{{
+			ID:      9,
+			OpType:  "create_org",
+			Content: "created organisation",
+		}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	activities, err := f.Orgs.ListActivityFeeds(context.Background(), "core", OrgActivityFeedListOptions{Date: &date})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(activities) != 1 || activities[0].ID != 9 || activities[0].OpType != "create_org" {
+		t.Fatalf("got %#v", activities)
+	}
+}
+
+func TestOrgService_IterActivityFeeds_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/activities/feeds" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Activity{{
+			ID:      11,
+			OpType:  "update_org",
+			Content: "updated organisation",
+		}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []int64
+	for activity, err := range f.Orgs.IterActivityFeeds(context.Background(), "core") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, activity.ID)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(got) != 1 || got[0] != 11 {
+		t.Fatalf("got %#v", got)
 	}
 }
 

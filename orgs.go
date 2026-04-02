@@ -4,6 +4,7 @@ import (
 	"context"
 	"iter"
 	"net/http"
+	"time"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -16,6 +17,20 @@ import (
 //	_, err := f.Orgs.ListMembers(ctx, "core")
 type OrgService struct {
 	Resource[types.Organization, types.CreateOrgOption, types.EditOrgOption]
+}
+
+// OrgActivityFeedListOptions controls filtering for organisation activity feeds.
+type OrgActivityFeedListOptions struct {
+	Date *time.Time
+}
+
+func (o OrgActivityFeedListOptions) queryParams() map[string]string {
+	if o.Date == nil {
+		return nil
+	}
+	return map[string]string{
+		"date": o.Date.Format("2006-01-02"),
+	}
 }
 
 func newOrgService(c *Client) *OrgService {
@@ -87,6 +102,18 @@ func (s *OrgService) Unblock(ctx context.Context, org, username string) error {
 	return s.client.Delete(ctx, path)
 }
 
+// ListActivityFeeds returns the organisation's activity feed entries.
+func (s *OrgService) ListActivityFeeds(ctx context.Context, org string, filters ...OrgActivityFeedListOptions) ([]types.Activity, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/activities/feeds", pathParams("org", org))
+	return ListAll[types.Activity](ctx, s.client, path, orgActivityFeedQuery(filters...))
+}
+
+// IterActivityFeeds returns an iterator over the organisation's activity feed entries.
+func (s *OrgService) IterActivityFeeds(ctx context.Context, org string, filters ...OrgActivityFeedListOptions) iter.Seq2[types.Activity, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/activities/feeds", pathParams("org", org))
+	return ListIter[types.Activity](ctx, s.client, path, orgActivityFeedQuery(filters...))
+}
+
 // ListUserOrgs returns all organisations for a user.
 func (s *OrgService) ListUserOrgs(ctx context.Context, username string) ([]types.Organization, error) {
 	path := ResolvePath("/api/v1/users/{username}/orgs", pathParams("username", username))
@@ -107,4 +134,21 @@ func (s *OrgService) ListMyOrgs(ctx context.Context) ([]types.Organization, erro
 // IterMyOrgs returns an iterator over all organisations for the authenticated user.
 func (s *OrgService) IterMyOrgs(ctx context.Context) iter.Seq2[types.Organization, error] {
 	return ListIter[types.Organization](ctx, s.client, "/api/v1/user/orgs", nil)
+}
+
+func orgActivityFeedQuery(filters ...OrgActivityFeedListOptions) map[string]string {
+	if len(filters) == 0 {
+		return nil
+	}
+
+	query := make(map[string]string, 1)
+	for _, filter := range filters {
+		if filter.Date != nil {
+			query["date"] = filter.Date.Format("2006-01-02")
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }
