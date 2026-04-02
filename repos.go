@@ -20,6 +20,26 @@ type RepoService struct {
 	Resource[types.Repository, types.CreateRepoOption, types.EditRepoOption]
 }
 
+// RepoKeyListOptions controls filtering for repository key listings.
+type RepoKeyListOptions struct {
+	KeyID       int64
+	Fingerprint string
+}
+
+func (o RepoKeyListOptions) queryParams() map[string]string {
+	query := make(map[string]string, 2)
+	if o.KeyID != 0 {
+		query["key_id"] = strconv.FormatInt(o.KeyID, 10)
+	}
+	if o.Fingerprint != "" {
+		query["fingerprint"] = o.Fingerprint
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
 func newRepoService(c *Client) *RepoService {
 	return &RepoService{
 		Resource: *NewResource[types.Repository, types.CreateRepoOption, types.EditRepoOption](
@@ -123,6 +143,44 @@ func (s *RepoService) EditTagProtection(ctx context.Context, owner, repo string,
 // DeleteTagProtection deletes a tag protection from a repository.
 func (s *RepoService) DeleteTagProtection(ctx context.Context, owner, repo string, id int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/tag_protections/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	return s.client.Delete(ctx, path)
+}
+
+// ListKeys returns all deploy keys for a repository.
+func (s *RepoService) ListKeys(ctx context.Context, owner, repo string, filters ...RepoKeyListOptions) ([]types.DeployKey, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/keys", pathParams("owner", owner, "repo", repo))
+	return ListAll[types.DeployKey](ctx, s.client, path, repoKeyQuery(filters...))
+}
+
+// IterKeys returns an iterator over all deploy keys for a repository.
+func (s *RepoService) IterKeys(ctx context.Context, owner, repo string, filters ...RepoKeyListOptions) iter.Seq2[types.DeployKey, error] {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/keys", pathParams("owner", owner, "repo", repo))
+	return ListIter[types.DeployKey](ctx, s.client, path, repoKeyQuery(filters...))
+}
+
+// GetKey returns a single deploy key by ID.
+func (s *RepoService) GetKey(ctx context.Context, owner, repo string, id int64) (*types.DeployKey, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/keys/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+	var out types.DeployKey
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateKey adds a deploy key to a repository.
+func (s *RepoService) CreateKey(ctx context.Context, owner, repo string, opts *types.CreateKeyOption) (*types.DeployKey, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/keys", pathParams("owner", owner, "repo", repo))
+	var out types.DeployKey
+	if err := s.client.Post(ctx, path, opts, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteKey removes a deploy key from a repository by ID.
+func (s *RepoService) DeleteKey(ctx context.Context, owner, repo string, id int64) error {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/keys/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 	return s.client.Delete(ctx, path)
 }
 
@@ -588,4 +646,24 @@ func (s *RepoService) MirrorSync(ctx context.Context, owner, repo string) error 
 func (s *RepoService) SyncPushMirrors(ctx context.Context, owner, repo string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/push_mirrors-sync", pathParams("owner", owner, "repo", repo))
 	return s.client.Post(ctx, path, nil, nil)
+}
+
+func repoKeyQuery(filters ...RepoKeyListOptions) map[string]string {
+	if len(filters) == 0 {
+		return nil
+	}
+
+	query := make(map[string]string, 2)
+	for _, filter := range filters {
+		if filter.KeyID != 0 {
+			query["key_id"] = strconv.FormatInt(filter.KeyID, 10)
+		}
+		if filter.Fingerprint != "" {
+			query["fingerprint"] = filter.Fingerprint
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
 }

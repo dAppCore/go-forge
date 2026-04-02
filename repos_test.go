@@ -628,6 +628,123 @@ func TestRepoService_DeleteTagProtection_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_ListKeysWithFilters_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("key_id"); got != "7" {
+			t.Errorf("got key_id=%q, want %q", got, "7")
+		}
+		if got := r.URL.Query().Get("fingerprint"); got != "aa:bb:cc" {
+			t.Errorf("got fingerprint=%q, want %q", got, "aa:bb:cc")
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("got page=%q, want %q", got, "1")
+		}
+		if got := r.URL.Query().Get("limit"); got != "50" {
+			t.Errorf("got limit=%q, want %q", got, "50")
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.DeployKey{{ID: 7, Title: "deploy"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	keys, err := f.Repos.ListKeys(context.Background(), "core", "go-forge", RepoKeyListOptions{
+		KeyID:       7,
+		Fingerprint: "aa:bb:cc",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(keys) != 1 {
+		t.Fatalf("got %d keys, want 1", len(keys))
+	}
+	if keys[0].ID != 7 || keys[0].Title != "deploy" {
+		t.Fatalf("got %#v", keys[0])
+	}
+}
+
+func TestRepoService_GetKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/keys/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.DeployKey{ID: 7, Title: "deploy"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Repos.GetKey(context.Background(), "core", "go-forge", 7)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key.ID != 7 || key.Title != "deploy" {
+		t.Fatalf("got %#v", key)
+	}
+}
+
+func TestRepoService_CreateKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/keys" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateKeyOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Title != "deploy" || opts.Key != "ssh-ed25519 AAAA..." || !opts.ReadOnly {
+			t.Fatalf("got %#v", opts)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.DeployKey{ID: 9, Title: opts.Title, Key: opts.Key, ReadOnly: opts.ReadOnly})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	key, err := f.Repos.CreateKey(context.Background(), "core", "go-forge", &types.CreateKeyOption{
+		Title:    "deploy",
+		Key:      "ssh-ed25519 AAAA...",
+		ReadOnly: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if key.ID != 9 || key.Title != "deploy" || !key.ReadOnly {
+		t.Fatalf("got %#v", key)
+	}
+}
+
+func TestRepoService_DeleteKey_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/keys/7" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Repos.DeleteKey(context.Background(), "core", "go-forge", 7); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestRepoService_DeleteTag_Bad_NotFound(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
