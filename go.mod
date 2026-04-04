@@ -8,4 +8,4 @@ require (
 	github.com/goccy/go-json v0.10.6
 )
 
-require forge.lthn.ai/core/go-log v0.0.4 // indirect
+require dappco.re/go/core/log v0.0.4 // indirect
