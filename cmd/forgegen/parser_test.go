@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestParser_Good_LoadSpec(t *testing.T) {
+func TestParser_LoadSpec_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -17,7 +17,7 @@ func TestParser_Good_LoadSpec(t *testing.T) {
 	}
 }
 
-func TestParser_Good_ExtractTypes(t *testing.T) {
+func TestParser_ExtractTypes_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -38,7 +38,7 @@ func TestParser_Good_ExtractTypes(t *testing.T) {
 	}
 }
 
-func TestParser_Good_FieldTypes(t *testing.T) {
+func TestParser_FieldTypes_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -70,11 +70,15 @@ func TestParser_Good_FieldTypes(t *testing.T) {
 			if f.GoType != "*User" {
 				t.Errorf("owner: got %q, want *User", f.GoType)
 			}
+		case "units_map":
+			if f.GoType != "map[string]string" {
+				t.Errorf("units_map: got %q, want map[string]string", f.GoType)
+			}
 		}
 	}
 }
 
-func TestParser_Good_DetectCreateEditPairs(t *testing.T) {
+func TestParser_DetectCreateEditPairs_Good(t *testing.T) {
 	spec, err := LoadSpec("../../testdata/swagger.v1.json")
 	if err != nil {
 		t.Fatal(err)
@@ -99,5 +103,67 @@ func TestParser_Good_DetectCreateEditPairs(t *testing.T) {
 	}
 	if !found {
 		t.Fatal("Repo pair not found")
+	}
+}
+
+func TestParser_AdditionalPropertiesAlias_Good(t *testing.T) {
+	spec, err := LoadSpec("../../testdata/swagger.v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	types := ExtractTypes(spec)
+	alias, ok := types["CreateHookOptionConfig"]
+	if !ok {
+		t.Fatal("CreateHookOptionConfig type not found")
+	}
+	if !alias.IsAlias {
+		t.Fatal("expected CreateHookOptionConfig to be emitted as an alias")
+	}
+	if alias.AliasType != "map[string]any" {
+		t.Fatalf("got alias type %q, want map[string]any", alias.AliasType)
+	}
+}
+
+func TestParser_PrimitiveAndCollectionAliases_Good(t *testing.T) {
+	spec, err := LoadSpec("../../testdata/swagger.v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	types := ExtractTypes(spec)
+
+	cases := []struct {
+		name     string
+		wantType string
+	}{
+		{name: "CommitStatusState", wantType: "string"},
+		{name: "IssueFormFieldType", wantType: "string"},
+		{name: "IssueFormFieldVisible", wantType: "string"},
+		{name: "NotifySubjectType", wantType: "string"},
+		{name: "ReviewStateType", wantType: "string"},
+		{name: "StateType", wantType: "string"},
+		{name: "TimeStamp", wantType: "int64"},
+		{name: "IssueTemplateLabels", wantType: "[]string"},
+		{name: "QuotaGroupList", wantType: "[]*QuotaGroup"},
+		{name: "QuotaUsedArtifactList", wantType: "[]*QuotaUsedArtifact"},
+		{name: "QuotaUsedAttachmentList", wantType: "[]*QuotaUsedAttachment"},
+		{name: "QuotaUsedPackageList", wantType: "[]*QuotaUsedPackage"},
+		{name: "CreatePullReviewCommentOptions", wantType: "CreatePullReviewComment"},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			gt, ok := types[tc.name]
+			if !ok {
+				t.Fatalf("type %q not found", tc.name)
+			}
+			if !gt.IsAlias {
+				t.Fatalf("type %q should be emitted as an alias", tc.name)
+			}
+			if gt.AliasType != tc.wantType {
+				t.Fatalf("type %q: got alias %q, want %q", tc.name, gt.AliasType, tc.wantType)
+			}
+		})
 	}
 }

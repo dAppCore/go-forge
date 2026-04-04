@@ -4,150 +4,191 @@ package types
 
 import "time"
 
-
 // CreatePullRequestOption — CreatePullRequestOption options when creating a pull request
+//
+// Usage:
+//
+//	opts := CreatePullRequestOption{Body: "example"}
 type CreatePullRequestOption struct {
-	Assignee string `json:"assignee,omitempty"`
-	Assignees []string `json:"assignees,omitempty"`
-	Base string `json:"base,omitempty"`
-	Body string `json:"body,omitempty"`
-	Deadline time.Time `json:"due_date,omitempty"`
-	Head string `json:"head,omitempty"`
-	Labels []int64 `json:"labels,omitempty"`
-	Milestone int64 `json:"milestone,omitempty"`
-	Title string `json:"title,omitempty"`
+	Assignee  string    `json:"assignee,omitempty"`
+	Assignees []string  `json:"assignees,omitempty"`
+	Base      string    `json:"base,omitempty"`
+	Body      string    `json:"body,omitempty"`
+	Deadline  time.Time `json:"due_date,omitempty"`
+	Head      string    `json:"head,omitempty"`
+	Labels    []int64   `json:"labels,omitempty"`
+	Milestone int64     `json:"milestone,omitempty"`
+	Title     string    `json:"title,omitempty"`
 }
 
 // CreatePullReviewComment — CreatePullReviewComment represent a review comment for creation api
+//
+// Usage:
+//
+//	opts := CreatePullReviewComment{Body: "example"}
 type CreatePullReviewComment struct {
-	Body string `json:"body,omitempty"`
-	NewLineNum int64 `json:"new_position,omitempty"` // if comment to new file line or 0
-	OldLineNum int64 `json:"old_position,omitempty"` // if comment to old file line or 0
-	Path string `json:"path,omitempty"` // the tree path
+	Body       string `json:"body,omitempty"`
+	NewLineNum int64  `json:"new_position,omitempty"` // if comment to new file line or 0
+	OldLineNum int64  `json:"old_position,omitempty"` // if comment to old file line or 0
+	Path       string `json:"path,omitempty"`         // the tree path
 }
 
 // CreatePullReviewCommentOptions — CreatePullReviewCommentOptions are options to create a pull review comment
-// CreatePullReviewCommentOptions has no fields in the swagger spec.
-type CreatePullReviewCommentOptions struct{}
+//
+// Usage:
+//
+//	opts := CreatePullReviewCommentOptions(CreatePullReviewComment{})
+type CreatePullReviewCommentOptions CreatePullReviewComment
 
 // CreatePullReviewOptions — CreatePullReviewOptions are options to create a pull review
+//
+// Usage:
+//
+//	opts := CreatePullReviewOptions{Body: "example"}
 type CreatePullReviewOptions struct {
-	Body string `json:"body,omitempty"`
+	Body     string                     `json:"body,omitempty"`
 	Comments []*CreatePullReviewComment `json:"comments,omitempty"`
-	CommitID string `json:"commit_id,omitempty"`
-	Event *ReviewStateType `json:"event,omitempty"`
+	CommitID string                     `json:"commit_id,omitempty"`
+	Event    ReviewStateType            `json:"event,omitempty"`
 }
 
 // EditPullRequestOption — EditPullRequestOption options when modify pull request
+//
+// Usage:
+//
+//	opts := EditPullRequestOption{Body: "example"}
 type EditPullRequestOption struct {
-	AllowMaintainerEdit bool `json:"allow_maintainer_edit,omitempty"`
-	Assignee string `json:"assignee,omitempty"`
-	Assignees []string `json:"assignees,omitempty"`
-	Base string `json:"base,omitempty"`
-	Body string `json:"body,omitempty"`
-	Deadline time.Time `json:"due_date,omitempty"`
-	Labels []int64 `json:"labels,omitempty"`
-	Milestone int64 `json:"milestone,omitempty"`
-	RemoveDeadline bool `json:"unset_due_date,omitempty"`
-	State string `json:"state,omitempty"`
-	Title string `json:"title,omitempty"`
+	AllowMaintainerEdit bool      `json:"allow_maintainer_edit,omitempty"`
+	Assignee            string    `json:"assignee,omitempty"`
+	Assignees           []string  `json:"assignees,omitempty"`
+	Base                string    `json:"base,omitempty"`
+	Body                string    `json:"body,omitempty"`
+	Deadline            time.Time `json:"due_date,omitempty"`
+	Labels              []int64   `json:"labels,omitempty"`
+	Milestone           int64     `json:"milestone,omitempty"`
+	RemoveDeadline      bool      `json:"unset_due_date,omitempty"`
+	State               string    `json:"state,omitempty"`
+	Title               string    `json:"title,omitempty"`
 }
 
 // PullRequest — PullRequest represents a pull request
+//
+// Usage:
+//
+//	opts := PullRequest{Body: "example"}
 type PullRequest struct {
-	Additions int64 `json:"additions,omitempty"`
-	AllowMaintainerEdit bool `json:"allow_maintainer_edit,omitempty"`
-	Assignee *User `json:"assignee,omitempty"`
-	Assignees []*User `json:"assignees,omitempty"`
-	Base *PRBranchInfo `json:"base,omitempty"`
-	Body string `json:"body,omitempty"`
-	ChangedFiles int64 `json:"changed_files,omitempty"`
-	Closed time.Time `json:"closed_at,omitempty"`
-	Comments int64 `json:"comments,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	Deadline time.Time `json:"due_date,omitempty"`
-	Deletions int64 `json:"deletions,omitempty"`
-	DiffURL string `json:"diff_url,omitempty"`
-	Draft bool `json:"draft,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	HasMerged bool `json:"merged,omitempty"`
-	Head *PRBranchInfo `json:"head,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Index int64 `json:"number,omitempty"`
-	IsLocked bool `json:"is_locked,omitempty"`
-	Labels []*Label `json:"labels,omitempty"`
-	MergeBase string `json:"merge_base,omitempty"`
-	Mergeable bool `json:"mergeable,omitempty"`
-	Merged time.Time `json:"merged_at,omitempty"`
-	MergedBy *User `json:"merged_by,omitempty"`
-	MergedCommitID string `json:"merge_commit_sha,omitempty"`
-	Milestone *Milestone `json:"milestone,omitempty"`
-	PatchURL string `json:"patch_url,omitempty"`
-	PinOrder int64 `json:"pin_order,omitempty"`
-	RequestedReviewers []*User `json:"requested_reviewers,omitempty"`
-	RequestedReviewersTeams []*Team `json:"requested_reviewers_teams,omitempty"`
-	ReviewComments int64 `json:"review_comments,omitempty"` // number of review comments made on the diff of a PR review (not including comments on commits or issues in a PR)
-	State *StateType `json:"state,omitempty"`
-	Title string `json:"title,omitempty"`
-	URL string `json:"url,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
-	User *User `json:"user,omitempty"`
+	Additions               int64         `json:"additions,omitempty"`
+	AllowMaintainerEdit     bool          `json:"allow_maintainer_edit,omitempty"`
+	Assignee                *User         `json:"assignee,omitempty"`
+	Assignees               []*User       `json:"assignees,omitempty"`
+	Base                    *PRBranchInfo `json:"base,omitempty"`
+	Body                    string        `json:"body,omitempty"`
+	ChangedFiles            int64         `json:"changed_files,omitempty"`
+	Closed                  time.Time     `json:"closed_at,omitempty"`
+	Comments                int64         `json:"comments,omitempty"`
+	Created                 time.Time     `json:"created_at,omitempty"`
+	Deadline                time.Time     `json:"due_date,omitempty"`
+	Deletions               int64         `json:"deletions,omitempty"`
+	DiffURL                 string        `json:"diff_url,omitempty"`
+	Draft                   bool          `json:"draft,omitempty"`
+	HTMLURL                 string        `json:"html_url,omitempty"`
+	HasMerged               bool          `json:"merged,omitempty"`
+	Head                    *PRBranchInfo `json:"head,omitempty"`
+	ID                      int64         `json:"id,omitempty"`
+	Index                   int64         `json:"number,omitempty"`
+	IsLocked                bool          `json:"is_locked,omitempty"`
+	Labels                  []*Label      `json:"labels,omitempty"`
+	MergeBase               string        `json:"merge_base,omitempty"`
+	Mergeable               bool          `json:"mergeable,omitempty"`
+	Merged                  time.Time     `json:"merged_at,omitempty"`
+	MergedBy                *User         `json:"merged_by,omitempty"`
+	MergedCommitID          string        `json:"merge_commit_sha,omitempty"`
+	Milestone               *Milestone    `json:"milestone,omitempty"`
+	PatchURL                string        `json:"patch_url,omitempty"`
+	PinOrder                int64         `json:"pin_order,omitempty"`
+	RequestedReviewers      []*User       `json:"requested_reviewers,omitempty"`
+	RequestedReviewersTeams []*Team       `json:"requested_reviewers_teams,omitempty"`
+	ReviewComments          int64         `json:"review_comments,omitempty"` // number of review comments made on the diff of a PR review (not including comments on commits or issues in a PR)
+	State                   StateType     `json:"state,omitempty"`
+	Title                   string        `json:"title,omitempty"`
+	URL                     string        `json:"url,omitempty"`
+	Updated                 time.Time     `json:"updated_at,omitempty"`
+	User                    *User         `json:"user,omitempty"`
 }
 
 // PullRequestMeta — PullRequestMeta PR info if an issue is a PR
+//
+// Usage:
+//
+//	opts := PullRequestMeta{HTMLURL: "https://example.com"}
 type PullRequestMeta struct {
-	HTMLURL string `json:"html_url,omitempty"`
-	HasMerged bool `json:"merged,omitempty"`
-	IsWorkInProgress bool `json:"draft,omitempty"`
-	Merged time.Time `json:"merged_at,omitempty"`
+	HTMLURL          string    `json:"html_url,omitempty"`
+	HasMerged        bool      `json:"merged,omitempty"`
+	IsWorkInProgress bool      `json:"draft,omitempty"`
+	Merged           time.Time `json:"merged_at,omitempty"`
 }
 
 // PullReview — PullReview represents a pull request review
+//
+// Usage:
+//
+//	opts := PullReview{Body: "example"}
 type PullReview struct {
-	Body string `json:"body,omitempty"`
-	CodeCommentsCount int64 `json:"comments_count,omitempty"`
-	CommitID string `json:"commit_id,omitempty"`
-	Dismissed bool `json:"dismissed,omitempty"`
-	HTMLPullURL string `json:"pull_request_url,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Official bool `json:"official,omitempty"`
-	Stale bool `json:"stale,omitempty"`
-	State *ReviewStateType `json:"state,omitempty"`
-	Submitted time.Time `json:"submitted_at,omitempty"`
-	Team *Team `json:"team,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
-	User *User `json:"user,omitempty"`
+	Body              string          `json:"body,omitempty"`
+	CodeCommentsCount int64           `json:"comments_count,omitempty"`
+	CommitID          string          `json:"commit_id,omitempty"`
+	Dismissed         bool            `json:"dismissed,omitempty"`
+	HTMLPullURL       string          `json:"pull_request_url,omitempty"`
+	HTMLURL           string          `json:"html_url,omitempty"`
+	ID                int64           `json:"id,omitempty"`
+	Official          bool            `json:"official,omitempty"`
+	Stale             bool            `json:"stale,omitempty"`
+	State             ReviewStateType `json:"state,omitempty"`
+	Submitted         time.Time       `json:"submitted_at,omitempty"`
+	Team              *Team           `json:"team,omitempty"`
+	Updated           time.Time       `json:"updated_at,omitempty"`
+	User              *User           `json:"user,omitempty"`
 }
 
 // PullReviewComment — PullReviewComment represents a comment on a pull request review
+//
+// Usage:
+//
+//	opts := PullReviewComment{Body: "example"}
 type PullReviewComment struct {
-	Body string `json:"body,omitempty"`
-	CommitID string `json:"commit_id,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	DiffHunk string `json:"diff_hunk,omitempty"`
-	HTMLPullURL string `json:"pull_request_url,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	LineNum int `json:"position,omitempty"`
-	OldLineNum int `json:"original_position,omitempty"`
-	OrigCommitID string `json:"original_commit_id,omitempty"`
-	Path string `json:"path,omitempty"`
-	Resolver *User `json:"resolver,omitempty"`
-	ReviewID int64 `json:"pull_request_review_id,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
-	User *User `json:"user,omitempty"`
+	Body         string    `json:"body,omitempty"`
+	CommitID     string    `json:"commit_id,omitempty"`
+	Created      time.Time `json:"created_at,omitempty"`
+	DiffHunk     string    `json:"diff_hunk,omitempty"`
+	HTMLPullURL  string    `json:"pull_request_url,omitempty"`
+	HTMLURL      string    `json:"html_url,omitempty"`
+	ID           int64     `json:"id,omitempty"`
+	LineNum      int       `json:"position,omitempty"`
+	OldLineNum   int       `json:"original_position,omitempty"`
+	OrigCommitID string    `json:"original_commit_id,omitempty"`
+	Path         string    `json:"path,omitempty"`
+	Resolver     *User     `json:"resolver,omitempty"`
+	ReviewID     int64     `json:"pull_request_review_id,omitempty"`
+	Updated      time.Time `json:"updated_at,omitempty"`
+	User         *User     `json:"user,omitempty"`
 }
 
 // PullReviewRequestOptions — PullReviewRequestOptions are options to add or remove pull review requests
+//
+// Usage:
+//
+//	opts := PullReviewRequestOptions{Reviewers: []string{"example"}}
 type PullReviewRequestOptions struct {
-	Reviewers []string `json:"reviewers,omitempty"`
+	Reviewers     []string `json:"reviewers,omitempty"`
 	TeamReviewers []string `json:"team_reviewers,omitempty"`
 }
 
 // SubmitPullReviewOptions — SubmitPullReviewOptions are options to submit a pending pull review
+//
+// Usage:
+//
+//	opts := SubmitPullReviewOptions{Body: "example"}
 type SubmitPullReviewOptions struct {
-	Body string `json:"body,omitempty"`
-	Event *ReviewStateType `json:"event,omitempty"`
+	Body  string          `json:"body,omitempty"`
+	Event ReviewStateType `json:"event,omitempty"`
 }
-

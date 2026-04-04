@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,7 +22,7 @@ type testUpdate struct {
 	Name *string `json:"name,omitempty"`
 }
 
-func TestResource_Good_List(t *testing.T) {
+func TestResource_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v1/orgs/core/repos" {
 			t.Errorf("wrong path: %s", r.URL.Path)
@@ -44,7 +44,7 @@ func TestResource_Good_List(t *testing.T) {
 	}
 }
 
-func TestResource_Good_Get(t *testing.T) {
+func TestResource_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v1/repos/core/go-forge" {
 			t.Errorf("wrong path: %s", r.URL.Path)
@@ -65,10 +65,15 @@ func TestResource_Good_Get(t *testing.T) {
 	}
 }
 
-func TestResource_Good_Create(t *testing.T) {
+func TestResource_Create_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/repos" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
 		}
 		var body testCreate
 		json.NewDecoder(r.Body).Decode(&body)
@@ -89,7 +94,7 @@ func TestResource_Good_Create(t *testing.T) {
 	}
 }
 
-func TestResource_Good_Update(t *testing.T) {
+func TestResource_Update_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -111,7 +116,7 @@ func TestResource_Good_Update(t *testing.T) {
 	}
 }
 
-func TestResource_Good_Delete(t *testing.T) {
+func TestResource_Delete_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -129,7 +134,7 @@ func TestResource_Good_Delete(t *testing.T) {
 	}
 }
 
-func TestResource_Good_ListAll(t *testing.T) {
+func TestResource_ListAll_Good(t *testing.T) {
 	page := 0
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		page++
@@ -154,7 +159,7 @@ func TestResource_Good_ListAll(t *testing.T) {
 	}
 }
 
-func TestResource_Good_Iter(t *testing.T) {
+func TestResource_Iter_Good(t *testing.T) {
 	page := 0
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		page++
@@ -185,7 +190,7 @@ func TestResource_Good_Iter(t *testing.T) {
 	}
 }
 
-func TestResource_Bad_IterError(t *testing.T) {
+func TestResource_IterError_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{"message": "server error"})
@@ -207,7 +212,7 @@ func TestResource_Bad_IterError(t *testing.T) {
 	}
 }
 
-func TestResource_Good_IterBreakEarly(t *testing.T) {
+func TestResource_IterBreakEarly_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Total-Count", "100")
 		json.NewEncoder(w).Encode([]testItem{{1, "a"}, {2, "b"}, {3, "c"}})

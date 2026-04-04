@@ -4,18 +4,24 @@ package types
 
 import "time"
 
-
 // TopicName — TopicName a list of repo topic names
+//
+// Usage:
+//
+//	opts := TopicName{TopicNames: []string{"example"}}
 type TopicName struct {
 	TopicNames []string `json:"topics,omitempty"`
 }
 
 // TopicResponse — TopicResponse for returning topics
+//
+// Usage:
+//
+//	opts := TopicResponse{Name: "example"}
 type TopicResponse struct {
-	Created time.Time `json:"created,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"topic_name,omitempty"`
-	RepoCount int64 `json:"repo_count,omitempty"`
-	Updated time.Time `json:"updated,omitempty"`
+	Created   time.Time `json:"created,omitempty"`
+	ID        int64     `json:"id,omitempty"`
+	Name      string    `json:"topic_name,omitempty"`
+	RepoCount int64     `json:"repo_count,omitempty"`
+	Updated   time.Time `json:"updated,omitempty"`
 }
-

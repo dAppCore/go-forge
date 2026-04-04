@@ -2,41 +2,61 @@
 
 package types
 
-
 // APIError — APIError is an api error with a message
+//
+// Usage:
+//
+//	opts := APIError{Message: "example"}
 type APIError struct {
 	Message string `json:"message,omitempty"`
-	URL string `json:"url,omitempty"`
+	URL     string `json:"url,omitempty"`
 }
 
+// Usage:
+//
+//	opts := APIForbiddenError{Message: "example"}
 type APIForbiddenError struct {
 	Message string `json:"message,omitempty"`
-	URL string `json:"url,omitempty"`
+	URL     string `json:"url,omitempty"`
 }
 
+// Usage:
+//
+//	opts := APIInvalidTopicsError{InvalidTopics: []string{"example"}}
 type APIInvalidTopicsError struct {
 	InvalidTopics []string `json:"invalidTopics,omitempty"`
-	Message string `json:"message,omitempty"`
+	Message       string   `json:"message,omitempty"`
 }
 
+// Usage:
+//
+//	opts := APINotFound{Errors: []string{"example"}}
 type APINotFound struct {
-	Errors []string `json:"errors,omitempty"`
-	Message string `json:"message,omitempty"`
-	URL string `json:"url,omitempty"`
+	Errors  []string `json:"errors,omitempty"`
+	Message string   `json:"message,omitempty"`
+	URL     string   `json:"url,omitempty"`
 }
 
+// Usage:
+//
+//	opts := APIRepoArchivedError{Message: "example"}
 type APIRepoArchivedError struct {
 	Message string `json:"message,omitempty"`
-	URL string `json:"url,omitempty"`
+	URL     string `json:"url,omitempty"`
 }
 
+// Usage:
+//
+//	opts := APIUnauthorizedError{Message: "example"}
 type APIUnauthorizedError struct {
 	Message string `json:"message,omitempty"`
-	URL string `json:"url,omitempty"`
+	URL     string `json:"url,omitempty"`
 }
 
+// Usage:
+//
+//	opts := APIValidationError{Message: "example"}
 type APIValidationError struct {
 	Message string `json:"message,omitempty"`
-	URL string `json:"url,omitempty"`
+	URL     string `json:"url,omitempty"`
 }
-

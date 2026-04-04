@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestLabelService_Good_ListRepoLabels(t *testing.T) {
+func TestLabelService_ListRepoLabels_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -42,7 +42,7 @@ func TestLabelService_Good_ListRepoLabels(t *testing.T) {
 	}
 }
 
-func TestLabelService_Good_CreateRepoLabel(t *testing.T) {
+func TestLabelService_CreateRepoLabel_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -84,7 +84,7 @@ func TestLabelService_Good_CreateRepoLabel(t *testing.T) {
 	}
 }
 
-func TestLabelService_Good_GetRepoLabel(t *testing.T) {
+func TestLabelService_GetRepoLabel_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -106,7 +106,7 @@ func TestLabelService_Good_GetRepoLabel(t *testing.T) {
 	}
 }
 
-func TestLabelService_Good_EditRepoLabel(t *testing.T) {
+func TestLabelService_EditRepoLabel_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -135,7 +135,7 @@ func TestLabelService_Good_EditRepoLabel(t *testing.T) {
 	}
 }
 
-func TestLabelService_Good_DeleteRepoLabel(t *testing.T) {
+func TestLabelService_DeleteRepoLabel_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -154,7 +154,7 @@ func TestLabelService_Good_DeleteRepoLabel(t *testing.T) {
 	}
 }
 
-func TestLabelService_Good_ListOrgLabels(t *testing.T) {
+func TestLabelService_ListOrgLabels_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -182,7 +182,7 @@ func TestLabelService_Good_ListOrgLabels(t *testing.T) {
 	}
 }
 
-func TestLabelService_Good_CreateOrgLabel(t *testing.T) {
+func TestLabelService_CreateOrgLabel_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -214,7 +214,7 @@ func TestLabelService_Good_CreateOrgLabel(t *testing.T) {
 	}
 }
 
-func TestLabelService_Bad_NotFound(t *testing.T) {
+func TestLabelService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "label not found"})

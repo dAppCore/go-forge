@@ -4,18 +4,24 @@ package types
 
 import "time"
 
-
 // Cron — Cron represents a Cron task
+//
+// Usage:
+//
+//	opts := Cron{Name: "example"}
 type Cron struct {
-	ExecTimes int64 `json:"exec_times,omitempty"`
-	Name string `json:"name,omitempty"`
-	Next time.Time `json:"next,omitempty"`
-	Prev time.Time `json:"prev,omitempty"`
-	Schedule string `json:"schedule,omitempty"`
+	ExecTimes int64     `json:"exec_times,omitempty"`
+	Name      string    `json:"name,omitempty"`
+	Next      time.Time `json:"next,omitempty"`
+	Prev      time.Time `json:"prev,omitempty"`
+	Schedule  string    `json:"schedule,omitempty"`
 }
 
 // RenameUserOption — RenameUserOption options when renaming a user
+//
+// Usage:
+//
+//	opts := RenameUserOption{NewName: "example"}
 type RenameUserOption struct {
 	NewName string `json:"new_username"` // New username for this user. This name cannot be in use yet by any other user.
 }
-

@@ -4,214 +4,270 @@ package types
 
 import "time"
 
-
+// Usage:
+//
+//	opts := CreatePushMirrorOption{Interval: "example"}
 type CreatePushMirrorOption struct {
-	Interval string `json:"interval,omitempty"`
-	RemoteAddress string `json:"remote_address,omitempty"`
+	Interval       string `json:"interval,omitempty"`
+	RemoteAddress  string `json:"remote_address,omitempty"`
 	RemotePassword string `json:"remote_password,omitempty"`
 	RemoteUsername string `json:"remote_username,omitempty"`
-	SyncOnCommit bool `json:"sync_on_commit,omitempty"`
-	UseSSH bool `json:"use_ssh,omitempty"`
+	SyncOnCommit   bool   `json:"sync_on_commit,omitempty"`
+	UseSSH         bool   `json:"use_ssh,omitempty"`
 }
 
 // CreateRepoOption — CreateRepoOption options when creating repository
+//
+// Usage:
+//
+//	opts := CreateRepoOption{Name: "example"}
 type CreateRepoOption struct {
-	AutoInit bool `json:"auto_init,omitempty"` // Whether the repository should be auto-initialized?
-	DefaultBranch string `json:"default_branch,omitempty"` // DefaultBranch of the repository (used when initializes and in template)
-	Description string `json:"description,omitempty"` // Description of the repository to create
-	Gitignores string `json:"gitignores,omitempty"` // Gitignores to use
-	IssueLabels string `json:"issue_labels,omitempty"` // Label-Set to use
-	License string `json:"license,omitempty"` // License to use
-	Name string `json:"name"` // Name of the repository to create
+	AutoInit         bool   `json:"auto_init,omitempty"`          // Whether the repository should be auto-initialized?
+	DefaultBranch    string `json:"default_branch,omitempty"`     // DefaultBranch of the repository (used when initializes and in template)
+	Description      string `json:"description,omitempty"`        // Description of the repository to create
+	Gitignores       string `json:"gitignores,omitempty"`         // Gitignores to use
+	IssueLabels      string `json:"issue_labels,omitempty"`       // Label-Set to use
+	License          string `json:"license,omitempty"`            // License to use
+	Name             string `json:"name"`                         // Name of the repository to create
 	ObjectFormatName string `json:"object_format_name,omitempty"` // ObjectFormatName of the underlying git repository
-	Private bool `json:"private,omitempty"` // Whether the repository is private
-	Readme string `json:"readme,omitempty"` // Readme of the repository to create
-	Template bool `json:"template,omitempty"` // Whether the repository is template
-	TrustModel string `json:"trust_model,omitempty"` // TrustModel of the repository
+	Private          bool   `json:"private,omitempty"`            // Whether the repository is private
+	Readme           string `json:"readme,omitempty"`             // Readme of the repository to create
+	Template         bool   `json:"template,omitempty"`           // Whether the repository is template
+	TrustModel       string `json:"trust_model,omitempty"`        // TrustModel of the repository
 }
 
 // EditRepoOption — EditRepoOption options when editing a repository's properties
+//
+// Usage:
+//
+//	opts := EditRepoOption{Description: "example"}
 type EditRepoOption struct {
-	AllowFastForwardOnly bool `json:"allow_fast_forward_only_merge,omitempty"` // either `true` to allow fast-forward-only merging pull requests, or `false` to prevent fast-forward-only merging.
-	AllowManualMerge bool `json:"allow_manual_merge,omitempty"` // either `true` to allow mark pr as merged manually, or `false` to prevent it.
-	AllowMerge bool `json:"allow_merge_commits,omitempty"` // either `true` to allow merging pull requests with a merge commit, or `false` to prevent merging pull requests with merge commits.
-	AllowRebase bool `json:"allow_rebase,omitempty"` // either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.
-	AllowRebaseMerge bool `json:"allow_rebase_explicit,omitempty"` // either `true` to allow rebase with explicit merge commits (--no-ff), or `false` to prevent rebase with explicit merge commits.
-	AllowRebaseUpdate bool `json:"allow_rebase_update,omitempty"` // either `true` to allow updating pull request branch by rebase, or `false` to prevent it.
-	AllowSquash bool `json:"allow_squash_merge,omitempty"` // either `true` to allow squash-merging pull requests, or `false` to prevent squash-merging.
-	Archived bool `json:"archived,omitempty"` // set to `true` to archive this repository.
-	AutodetectManualMerge bool `json:"autodetect_manual_merge,omitempty"` // either `true` to enable AutodetectManualMerge, or `false` to prevent it. Note: In some special cases, misjudgments can occur.
-	DefaultAllowMaintainerEdit bool `json:"default_allow_maintainer_edit,omitempty"` // set to `true` to allow edits from maintainers by default
-	DefaultBranch string `json:"default_branch,omitempty"` // sets the default branch for this repository.
-	DefaultDeleteBranchAfterMerge bool `json:"default_delete_branch_after_merge,omitempty"` // set to `true` to delete pr branch after merge by default
-	DefaultMergeStyle string `json:"default_merge_style,omitempty"` // set to a merge style to be used by this repository: "merge", "rebase", "rebase-merge", "squash", or "fast-forward-only".
-	DefaultUpdateStyle string `json:"default_update_style,omitempty"` // set to a update style to be used by this repository: "rebase" or "merge"
-	Description string `json:"description,omitempty"` // a short description of the repository.
-	EnablePrune bool `json:"enable_prune,omitempty"` // enable prune - remove obsolete remote-tracking references when mirroring
-	ExternalTracker *ExternalTracker `json:"external_tracker,omitempty"`
-	ExternalWiki *ExternalWiki `json:"external_wiki,omitempty"`
-	GloballyEditableWiki bool `json:"globally_editable_wiki,omitempty"` // set the globally editable state of the wiki
-	HasActions bool `json:"has_actions,omitempty"` // either `true` to enable actions unit, or `false` to disable them.
-	HasIssues bool `json:"has_issues,omitempty"` // either `true` to enable issues for this repository or `false` to disable them.
-	HasPackages bool `json:"has_packages,omitempty"` // either `true` to enable packages unit, or `false` to disable them.
-	HasProjects bool `json:"has_projects,omitempty"` // either `true` to enable project unit, or `false` to disable them.
-	HasPullRequests bool `json:"has_pull_requests,omitempty"` // either `true` to allow pull requests, or `false` to prevent pull request.
-	HasReleases bool `json:"has_releases,omitempty"` // either `true` to enable releases unit, or `false` to disable them.
-	HasWiki bool `json:"has_wiki,omitempty"` // either `true` to enable the wiki for this repository or `false` to disable it.
-	IgnoreWhitespaceConflicts bool `json:"ignore_whitespace_conflicts,omitempty"` // either `true` to ignore whitespace for conflicts, or `false` to not ignore whitespace.
-	InternalTracker *InternalTracker `json:"internal_tracker,omitempty"`
-	MirrorInterval string `json:"mirror_interval,omitempty"` // set to a string like `8h30m0s` to set the mirror interval time
-	Name string `json:"name,omitempty"` // name of the repository
-	Private bool `json:"private,omitempty"` // either `true` to make the repository private or `false` to make it public. Note: you will get a 422 error if the organization restricts changing repository visibility to organization owners and a non-owner tries to change the value of private.
-	Template bool `json:"template,omitempty"` // either `true` to make this repository a template or `false` to make it a normal repository
-	Website string `json:"website,omitempty"` // a URL with more information about the repository.
-	WikiBranch string `json:"wiki_branch,omitempty"` // sets the branch used for this repository's wiki.
+	AllowFastForwardOnly          bool             `json:"allow_fast_forward_only_merge,omitempty"`     // either `true` to allow fast-forward-only merging pull requests, or `false` to prevent fast-forward-only merging.
+	AllowManualMerge              bool             `json:"allow_manual_merge,omitempty"`                // either `true` to allow mark pr as merged manually, or `false` to prevent it.
+	AllowMerge                    bool             `json:"allow_merge_commits,omitempty"`               // either `true` to allow merging pull requests with a merge commit, or `false` to prevent merging pull requests with merge commits.
+	AllowRebase                   bool             `json:"allow_rebase,omitempty"`                      // either `true` to allow rebase-merging pull requests, or `false` to prevent rebase-merging.
+	AllowRebaseMerge              bool             `json:"allow_rebase_explicit,omitempty"`             // either `true` to allow rebase with explicit merge commits (--no-ff), or `false` to prevent rebase with explicit merge commits.
+	AllowRebaseUpdate             bool             `json:"allow_rebase_update,omitempty"`               // either `true` to allow updating pull request branch by rebase, or `false` to prevent it.
+	AllowSquash                   bool             `json:"allow_squash_merge,omitempty"`                // either `true` to allow squash-merging pull requests, or `false` to prevent squash-merging.
+	Archived                      bool             `json:"archived,omitempty"`                          // set to `true` to archive this repository.
+	AutodetectManualMerge         bool             `json:"autodetect_manual_merge,omitempty"`           // either `true` to enable AutodetectManualMerge, or `false` to prevent it. Note: In some special cases, misjudgments can occur.
+	DefaultAllowMaintainerEdit    bool             `json:"default_allow_maintainer_edit,omitempty"`     // set to `true` to allow edits from maintainers by default
+	DefaultBranch                 string           `json:"default_branch,omitempty"`                    // sets the default branch for this repository.
+	DefaultDeleteBranchAfterMerge bool             `json:"default_delete_branch_after_merge,omitempty"` // set to `true` to delete pr branch after merge by default
+	DefaultMergeStyle             string           `json:"default_merge_style,omitempty"`               // set to a merge style to be used by this repository: "merge", "rebase", "rebase-merge", "squash", or "fast-forward-only".
+	DefaultUpdateStyle            string           `json:"default_update_style,omitempty"`              // set to a update style to be used by this repository: "rebase" or "merge"
+	Description                   string           `json:"description,omitempty"`                       // a short description of the repository.
+	EnablePrune                   bool             `json:"enable_prune,omitempty"`                      // enable prune - remove obsolete remote-tracking references when mirroring
+	ExternalTracker               *ExternalTracker `json:"external_tracker,omitempty"`
+	ExternalWiki                  *ExternalWiki    `json:"external_wiki,omitempty"`
+	GloballyEditableWiki          bool             `json:"globally_editable_wiki,omitempty"`      // set the globally editable state of the wiki
+	HasActions                    bool             `json:"has_actions,omitempty"`                 // either `true` to enable actions unit, or `false` to disable them.
+	HasIssues                     bool             `json:"has_issues,omitempty"`                  // either `true` to enable issues for this repository or `false` to disable them.
+	HasPackages                   bool             `json:"has_packages,omitempty"`                // either `true` to enable packages unit, or `false` to disable them.
+	HasProjects                   bool             `json:"has_projects,omitempty"`                // either `true` to enable project unit, or `false` to disable them.
+	HasPullRequests               bool             `json:"has_pull_requests,omitempty"`           // either `true` to allow pull requests, or `false` to prevent pull request.
+	HasReleases                   bool             `json:"has_releases,omitempty"`                // either `true` to enable releases unit, or `false` to disable them.
+	HasWiki                       bool             `json:"has_wiki,omitempty"`                    // either `true` to enable the wiki for this repository or `false` to disable it.
+	IgnoreWhitespaceConflicts     bool             `json:"ignore_whitespace_conflicts,omitempty"` // either `true` to ignore whitespace for conflicts, or `false` to not ignore whitespace.
+	InternalTracker               *InternalTracker `json:"internal_tracker,omitempty"`
+	MirrorInterval                string           `json:"mirror_interval,omitempty"` // set to a string like `8h30m0s` to set the mirror interval time
+	Name                          string           `json:"name,omitempty"`            // name of the repository
+	Private                       bool             `json:"private,omitempty"`         // either `true` to make the repository private or `false` to make it public. Note: you will get a 422 error if the organization restricts changing repository visibility to organization owners and a non-owner tries to change the value of private.
+	Template                      bool             `json:"template,omitempty"`        // either `true` to make this repository a template or `false` to make it a normal repository
+	Website                       string           `json:"website,omitempty"`         // a URL with more information about the repository.
+	WikiBranch                    string           `json:"wiki_branch,omitempty"`     // sets the branch used for this repository's wiki.
 }
 
 // ExternalTracker — ExternalTracker represents settings for external tracker
+//
+// Usage:
+//
+//	opts := ExternalTracker{ExternalTrackerFormat: "example"}
 type ExternalTracker struct {
-	ExternalTrackerFormat string `json:"external_tracker_format,omitempty"` // External Issue Tracker URL Format. Use the placeholders {user}, {repo} and {index} for the username, repository name and issue index.
+	ExternalTrackerFormat        string `json:"external_tracker_format,omitempty"`         // External Issue Tracker URL Format. Use the placeholders {user}, {repo} and {index} for the username, repository name and issue index.
 	ExternalTrackerRegexpPattern string `json:"external_tracker_regexp_pattern,omitempty"` // External Issue Tracker issue regular expression
-	ExternalTrackerStyle string `json:"external_tracker_style,omitempty"` // External Issue Tracker Number Format, either `numeric`, `alphanumeric`, or `regexp`
-	ExternalTrackerURL string `json:"external_tracker_url,omitempty"` // URL of external issue tracker.
+	ExternalTrackerStyle         string `json:"external_tracker_style,omitempty"`          // External Issue Tracker Number Format, either `numeric`, `alphanumeric`, or `regexp`
+	ExternalTrackerURL           string `json:"external_tracker_url,omitempty"`            // URL of external issue tracker.
 }
 
 // ExternalWiki — ExternalWiki represents setting for external wiki
+//
+// Usage:
+//
+//	opts := ExternalWiki{ExternalWikiURL: "https://example.com"}
 type ExternalWiki struct {
 	ExternalWikiURL string `json:"external_wiki_url,omitempty"` // URL of external wiki.
 }
 
 // InternalTracker — InternalTracker represents settings for internal tracker
+//
+// Usage:
+//
+//	opts := InternalTracker{AllowOnlyContributorsToTrackTime: true}
 type InternalTracker struct {
 	AllowOnlyContributorsToTrackTime bool `json:"allow_only_contributors_to_track_time,omitempty"` // Let only contributors track time (Built-in issue tracker)
-	EnableIssueDependencies bool `json:"enable_issue_dependencies,omitempty"` // Enable dependencies for issues and pull requests (Built-in issue tracker)
-	EnableTimeTracker bool `json:"enable_time_tracker,omitempty"` // Enable time tracking (Built-in issue tracker)
+	EnableIssueDependencies          bool `json:"enable_issue_dependencies,omitempty"`             // Enable dependencies for issues and pull requests (Built-in issue tracker)
+	EnableTimeTracker                bool `json:"enable_time_tracker,omitempty"`                   // Enable time tracking (Built-in issue tracker)
 }
 
 // PushMirror — PushMirror represents information of a push mirror
+//
+// Usage:
+//
+//	opts := PushMirror{RemoteName: "example"}
 type PushMirror struct {
-	CreatedUnix time.Time `json:"created,omitempty"`
-	Interval string `json:"interval,omitempty"`
-	LastError string `json:"last_error,omitempty"`
+	CreatedUnix    time.Time `json:"created,omitempty"`
+	Interval       string    `json:"interval,omitempty"`
+	LastError      string    `json:"last_error,omitempty"`
 	LastUpdateUnix time.Time `json:"last_update,omitempty"`
-	PublicKey string `json:"public_key,omitempty"`
-	RemoteAddress string `json:"remote_address,omitempty"`
-	RemoteName string `json:"remote_name,omitempty"`
-	RepoName string `json:"repo_name,omitempty"`
-	SyncOnCommit bool `json:"sync_on_commit,omitempty"`
+	PublicKey      string    `json:"public_key,omitempty"`
+	RemoteAddress  string    `json:"remote_address,omitempty"`
+	RemoteName     string    `json:"remote_name,omitempty"`
+	RepoName       string    `json:"repo_name,omitempty"`
+	SyncOnCommit   bool      `json:"sync_on_commit,omitempty"`
 }
 
 // RepoCollaboratorPermission — RepoCollaboratorPermission to get repository permission for a collaborator
+//
+// Usage:
+//
+//	opts := RepoCollaboratorPermission{RoleName: "example"}
 type RepoCollaboratorPermission struct {
 	Permission string `json:"permission,omitempty"`
-	RoleName string `json:"role_name,omitempty"`
-	User *User `json:"user,omitempty"`
+	RoleName   string `json:"role_name,omitempty"`
+	User       *User  `json:"user,omitempty"`
 }
 
+// Usage:
+//
+//	opts := RepoCommit{Message: "example"}
 type RepoCommit struct {
-	Author *CommitUser `json:"author,omitempty"`
-	Committer *CommitUser `json:"committer,omitempty"`
-	Message string `json:"message,omitempty"`
-	Tree *CommitMeta `json:"tree,omitempty"`
-	URL string `json:"url,omitempty"`
+	Author       *CommitUser                `json:"author,omitempty"`
+	Committer    *CommitUser                `json:"committer,omitempty"`
+	Message      string                     `json:"message,omitempty"`
+	Tree         *CommitMeta                `json:"tree,omitempty"`
+	URL          string                     `json:"url,omitempty"`
 	Verification *PayloadCommitVerification `json:"verification,omitempty"`
 }
 
 // RepoTopicOptions — RepoTopicOptions a collection of repo topic names
+//
+// Usage:
+//
+//	opts := RepoTopicOptions{Topics: []string{"example"}}
 type RepoTopicOptions struct {
 	Topics []string `json:"topics,omitempty"` // list of topic names
 }
 
 // RepoTransfer — RepoTransfer represents a pending repo transfer
+//
+// Usage:
+//
+//	opts := RepoTransfer{Teams: {}}
 type RepoTransfer struct {
-	Doer *User `json:"doer,omitempty"`
-	Recipient *User `json:"recipient,omitempty"`
-	Teams []*Team `json:"teams,omitempty"`
+	Doer      *User   `json:"doer,omitempty"`
+	Recipient *User   `json:"recipient,omitempty"`
+	Teams     []*Team `json:"teams,omitempty"`
 }
 
 // Repository — Repository represents a repository
+//
+// Usage:
+//
+//	opts := Repository{Description: "example"}
 type Repository struct {
-	AllowFastForwardOnly bool `json:"allow_fast_forward_only_merge,omitempty"`
-	AllowMerge bool `json:"allow_merge_commits,omitempty"`
-	AllowRebase bool `json:"allow_rebase,omitempty"`
-	AllowRebaseMerge bool `json:"allow_rebase_explicit,omitempty"`
-	AllowRebaseUpdate bool `json:"allow_rebase_update,omitempty"`
-	AllowSquash bool `json:"allow_squash_merge,omitempty"`
-	Archived bool `json:"archived,omitempty"`
-	ArchivedAt time.Time `json:"archived_at,omitempty"`
-	AvatarURL string `json:"avatar_url,omitempty"`
-	CloneURL string `json:"clone_url,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	DefaultAllowMaintainerEdit bool `json:"default_allow_maintainer_edit,omitempty"`
-	DefaultBranch string `json:"default_branch,omitempty"`
-	DefaultDeleteBranchAfterMerge bool `json:"default_delete_branch_after_merge,omitempty"`
-	DefaultMergeStyle string `json:"default_merge_style,omitempty"`
-	DefaultUpdateStyle string `json:"default_update_style,omitempty"`
-	Description string `json:"description,omitempty"`
-	Empty bool `json:"empty,omitempty"`
-	ExternalTracker *ExternalTracker `json:"external_tracker,omitempty"`
-	ExternalWiki *ExternalWiki `json:"external_wiki,omitempty"`
-	Fork bool `json:"fork,omitempty"`
-	Forks int64 `json:"forks_count,omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	GloballyEditableWiki bool `json:"globally_editable_wiki,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	HasActions bool `json:"has_actions,omitempty"`
-	HasIssues bool `json:"has_issues,omitempty"`
-	HasPackages bool `json:"has_packages,omitempty"`
-	HasProjects bool `json:"has_projects,omitempty"`
-	HasPullRequests bool `json:"has_pull_requests,omitempty"`
-	HasReleases bool `json:"has_releases,omitempty"`
-	HasWiki bool `json:"has_wiki,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	IgnoreWhitespaceConflicts bool `json:"ignore_whitespace_conflicts,omitempty"`
-	Internal bool `json:"internal,omitempty"`
-	InternalTracker *InternalTracker `json:"internal_tracker,omitempty"`
-	Language string `json:"language,omitempty"`
-	LanguagesURL string `json:"languages_url,omitempty"`
-	Link string `json:"link,omitempty"`
-	Mirror bool `json:"mirror,omitempty"`
-	MirrorInterval string `json:"mirror_interval,omitempty"`
-	MirrorUpdated time.Time `json:"mirror_updated,omitempty"`
-	Name string `json:"name,omitempty"`
-	ObjectFormatName string `json:"object_format_name,omitempty"` // ObjectFormatName of the underlying git repository
-	OpenIssues int64 `json:"open_issues_count,omitempty"`
-	OpenPulls int64 `json:"open_pr_counter,omitempty"`
-	OriginalURL string `json:"original_url,omitempty"`
-	Owner *User `json:"owner,omitempty"`
-	Parent *Repository `json:"parent,omitempty"`
-	Permissions *Permission `json:"permissions,omitempty"`
-	Private bool `json:"private,omitempty"`
-	Releases int64 `json:"release_counter,omitempty"`
-	RepoTransfer *RepoTransfer `json:"repo_transfer,omitempty"`
-	SSHURL string `json:"ssh_url,omitempty"`
-	Size int64 `json:"size,omitempty"`
-	Stars int64 `json:"stars_count,omitempty"`
-	Template bool `json:"template,omitempty"`
-	Topics []string `json:"topics,omitempty"`
-	URL string `json:"url,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
-	Watchers int64 `json:"watchers_count,omitempty"`
-	Website string `json:"website,omitempty"`
-	WikiBranch string `json:"wiki_branch,omitempty"`
+	AllowFastForwardOnly          bool             `json:"allow_fast_forward_only_merge,omitempty"`
+	AllowMerge                    bool             `json:"allow_merge_commits,omitempty"`
+	AllowRebase                   bool             `json:"allow_rebase,omitempty"`
+	AllowRebaseMerge              bool             `json:"allow_rebase_explicit,omitempty"`
+	AllowRebaseUpdate             bool             `json:"allow_rebase_update,omitempty"`
+	AllowSquash                   bool             `json:"allow_squash_merge,omitempty"`
+	Archived                      bool             `json:"archived,omitempty"`
+	ArchivedAt                    time.Time        `json:"archived_at,omitempty"`
+	AvatarURL                     string           `json:"avatar_url,omitempty"`
+	CloneURL                      string           `json:"clone_url,omitempty"`
+	Created                       time.Time        `json:"created_at,omitempty"`
+	DefaultAllowMaintainerEdit    bool             `json:"default_allow_maintainer_edit,omitempty"`
+	DefaultBranch                 string           `json:"default_branch,omitempty"`
+	DefaultDeleteBranchAfterMerge bool             `json:"default_delete_branch_after_merge,omitempty"`
+	DefaultMergeStyle             string           `json:"default_merge_style,omitempty"`
+	DefaultUpdateStyle            string           `json:"default_update_style,omitempty"`
+	Description                   string           `json:"description,omitempty"`
+	Empty                         bool             `json:"empty,omitempty"`
+	ExternalTracker               *ExternalTracker `json:"external_tracker,omitempty"`
+	ExternalWiki                  *ExternalWiki    `json:"external_wiki,omitempty"`
+	Fork                          bool             `json:"fork,omitempty"`
+	Forks                         int64            `json:"forks_count,omitempty"`
+	FullName                      string           `json:"full_name,omitempty"`
+	GloballyEditableWiki          bool             `json:"globally_editable_wiki,omitempty"`
+	HTMLURL                       string           `json:"html_url,omitempty"`
+	HasActions                    bool             `json:"has_actions,omitempty"`
+	HasIssues                     bool             `json:"has_issues,omitempty"`
+	HasPackages                   bool             `json:"has_packages,omitempty"`
+	HasProjects                   bool             `json:"has_projects,omitempty"`
+	HasPullRequests               bool             `json:"has_pull_requests,omitempty"`
+	HasReleases                   bool             `json:"has_releases,omitempty"`
+	HasWiki                       bool             `json:"has_wiki,omitempty"`
+	ID                            int64            `json:"id,omitempty"`
+	IgnoreWhitespaceConflicts     bool             `json:"ignore_whitespace_conflicts,omitempty"`
+	Internal                      bool             `json:"internal,omitempty"`
+	InternalTracker               *InternalTracker `json:"internal_tracker,omitempty"`
+	Language                      string           `json:"language,omitempty"`
+	LanguagesURL                  string           `json:"languages_url,omitempty"`
+	Link                          string           `json:"link,omitempty"`
+	Mirror                        bool             `json:"mirror,omitempty"`
+	MirrorInterval                string           `json:"mirror_interval,omitempty"`
+	MirrorUpdated                 time.Time        `json:"mirror_updated,omitempty"`
+	Name                          string           `json:"name,omitempty"`
+	ObjectFormatName              string           `json:"object_format_name,omitempty"` // ObjectFormatName of the underlying git repository
+	OpenIssues                    int64            `json:"open_issues_count,omitempty"`
+	OpenPulls                     int64            `json:"open_pr_counter,omitempty"`
+	OriginalURL                   string           `json:"original_url,omitempty"`
+	Owner                         *User            `json:"owner,omitempty"`
+	Parent                        *Repository      `json:"parent,omitempty"`
+	Permissions                   *Permission      `json:"permissions,omitempty"`
+	Private                       bool             `json:"private,omitempty"`
+	Releases                      int64            `json:"release_counter,omitempty"`
+	RepoTransfer                  *RepoTransfer    `json:"repo_transfer,omitempty"`
+	SSHURL                        string           `json:"ssh_url,omitempty"`
+	Size                          int64            `json:"size,omitempty"`
+	Stars                         int64            `json:"stars_count,omitempty"`
+	Template                      bool             `json:"template,omitempty"`
+	Topics                        []string         `json:"topics,omitempty"`
+	URL                           string           `json:"url,omitempty"`
+	Updated                       time.Time        `json:"updated_at,omitempty"`
+	Watchers                      int64            `json:"watchers_count,omitempty"`
+	Website                       string           `json:"website,omitempty"`
+	WikiBranch                    string           `json:"wiki_branch,omitempty"`
 }
 
 // RepositoryMeta — RepositoryMeta basic repository information
+//
+// Usage:
+//
+//	opts := RepositoryMeta{FullName: "example"}
 type RepositoryMeta struct {
 	FullName string `json:"full_name,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Owner string `json:"owner,omitempty"`
+	ID       int64  `json:"id,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Owner    string `json:"owner,omitempty"`
 }
 
 // TransferRepoOption — TransferRepoOption options when transfer a repository's ownership
+//
+// Usage:
+//
+//	opts := TransferRepoOption{NewOwner: "example"}
 type TransferRepoOption struct {
-	NewOwner string `json:"new_owner"`
-	TeamIDs []int64 `json:"team_ids,omitempty"` // ID of the team or teams to add to the repository. Teams can only be added to organization-owned repositories.
+	NewOwner string  `json:"new_owner"`
+	TeamIDs  []int64 `json:"team_ids,omitempty"` // ID of the team or teams to add to the repository. Teams can only be added to organization-owned repositories.
 }
 
 // UpdateRepoAvatarOption — UpdateRepoAvatarUserOption options when updating the repo avatar
+//
+// Usage:
+//
+//	opts := UpdateRepoAvatarOption{Image: "example"}
 type UpdateRepoAvatarOption struct {
 	Image string `json:"image,omitempty"` // image must be base64 encoded
 }
-

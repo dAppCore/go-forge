@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestWikiService_Good_ListPages(t *testing.T) {
+func TestWikiService_ListPages_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -41,7 +41,38 @@ func TestWikiService_Good_ListPages(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_GetPage(t *testing.T) {
+func TestWikiService_IterPages_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/wiki/pages" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.WikiPageMetaData{
+			{Title: "Home", SubURL: "Home"},
+			{Title: "Setup", SubURL: "Setup"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var titles []string
+	for page, err := range f.Wiki.IterPages(context.Background(), "core", "go-forge") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		titles = append(titles, page.Title)
+	}
+	if len(titles) != 2 {
+		t.Fatalf("got %d pages, want 2", len(titles))
+	}
+	if titles[0] != "Home" || titles[1] != "Setup" {
+		t.Fatalf("unexpected titles: %+v", titles)
+	}
+}
+
+func TestWikiService_GetPage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -74,7 +105,44 @@ func TestWikiService_Good_GetPage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_CreatePage(t *testing.T) {
+func TestWikiService_GetPageRevisions_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/wiki/revisions/Home" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("page"); got != "2" {
+			t.Errorf("got page=%q, want %q", got, "2")
+		}
+		json.NewEncoder(w).Encode(types.WikiCommitList{
+			Count: 2,
+			WikiCommits: []*types.WikiCommit{
+				{ID: "abc123", Message: "Initial import"},
+				{ID: "def456", Message: "Updated home page"},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	revisions, err := f.Wiki.GetPageRevisions(context.Background(), "core", "go-forge", "Home", 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if revisions.Count != 2 {
+		t.Fatalf("got count=%d, want 2", revisions.Count)
+	}
+	if len(revisions.WikiCommits) != 2 {
+		t.Fatalf("got %d revisions, want 2", len(revisions.WikiCommits))
+	}
+	if revisions.WikiCommits[0].ID != "abc123" || revisions.WikiCommits[1].Message != "Updated home page" {
+		t.Fatalf("got %#v", revisions.WikiCommits)
+	}
+}
+
+func TestWikiService_CreatePage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -118,7 +186,7 @@ func TestWikiService_Good_CreatePage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_EditPage(t *testing.T) {
+func TestWikiService_EditPage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPatch {
 			t.Errorf("expected PATCH, got %s", r.Method)
@@ -151,7 +219,7 @@ func TestWikiService_Good_EditPage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Good_DeletePage(t *testing.T) {
+func TestWikiService_DeletePage_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -170,7 +238,7 @@ func TestWikiService_Good_DeletePage(t *testing.T) {
 	}
 }
 
-func TestWikiService_Bad_NotFound(t *testing.T) {
+func TestWikiService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "page not found"})

@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"fmt"
+	"iter"
 
 	"dappco.re/go/core/forge/types"
 )
@@ -11,6 +11,11 @@ import (
 // markdown rendering, licence templates, gitignore templates, and
 // server metadata.
 // No Resource embedding — heterogeneous read-only endpoints.
+//
+// Usage:
+//
+//	f := forge.NewForge("https://forge.lthn.ai", "token")
+//	_, err := f.Misc.GetVersion(ctx)
 type MiscService struct {
 	client *Client
 }
@@ -30,6 +35,27 @@ func (s *MiscService) RenderMarkdown(ctx context.Context, text, mode string) (st
 	return string(data), nil
 }
 
+// RenderMarkup renders markup text to HTML. The response is raw HTML text,
+// not JSON.
+func (s *MiscService) RenderMarkup(ctx context.Context, text, mode string) (string, error) {
+	body := types.MarkupOption{Text: text, Mode: mode}
+	data, err := s.client.PostRaw(ctx, "/api/v1/markup", body)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// RenderMarkdownRaw renders raw markdown text to HTML. The request body is
+// sent as text/plain and the response is raw HTML text, not JSON.
+func (s *MiscService) RenderMarkdownRaw(ctx context.Context, text string) (string, error) {
+	data, err := s.client.postRawText(ctx, "/api/v1/markdown/raw", text)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 // ListLicenses returns all available licence templates.
 func (s *MiscService) ListLicenses(ctx context.Context) ([]types.LicensesTemplateListEntry, error) {
 	var out []types.LicensesTemplateListEntry
@@ -39,9 +65,25 @@ func (s *MiscService) ListLicenses(ctx context.Context) ([]types.LicensesTemplat
 	return out, nil
 }
 
+// IterLicenses returns an iterator over all available licence templates.
+func (s *MiscService) IterLicenses(ctx context.Context) iter.Seq2[types.LicensesTemplateListEntry, error] {
+	return func(yield func(types.LicensesTemplateListEntry, error) bool) {
+		items, err := s.ListLicenses(ctx)
+		if err != nil {
+			yield(*new(types.LicensesTemplateListEntry), err)
+			return
+		}
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
+}
+
 // GetLicense returns a single licence template by name.
 func (s *MiscService) GetLicense(ctx context.Context, name string) (*types.LicenseTemplateInfo, error) {
-	path := fmt.Sprintf("/api/v1/licenses/%s", name)
+	path := ResolvePath("/api/v1/licenses/{name}", pathParams("name", name))
 	var out types.LicenseTemplateInfo
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -58,9 +100,25 @@ func (s *MiscService) ListGitignoreTemplates(ctx context.Context) ([]string, err
 	return out, nil
 }
 
+// IterGitignoreTemplates returns an iterator over all available gitignore template names.
+func (s *MiscService) IterGitignoreTemplates(ctx context.Context) iter.Seq2[string, error] {
+	return func(yield func(string, error) bool) {
+		items, err := s.ListGitignoreTemplates(ctx)
+		if err != nil {
+			yield("", err)
+			return
+		}
+		for _, item := range items {
+			if !yield(item, nil) {
+				return
+			}
+		}
+	}
+}
+
 // GetGitignoreTemplate returns a single gitignore template by name.
 func (s *MiscService) GetGitignoreTemplate(ctx context.Context, name string) (*types.GitignoreTemplateInfo, error) {
-	path := fmt.Sprintf("/api/v1/gitignore/templates/%s", name)
+	path := ResolvePath("/api/v1/gitignore/templates/{name}", pathParams("name", name))
 	var out types.GitignoreTemplateInfo
 	if err := s.client.Get(ctx, path, &out); err != nil {
 		return nil, err
@@ -72,6 +130,51 @@ func (s *MiscService) GetGitignoreTemplate(ctx context.Context, name string) (*t
 func (s *MiscService) GetNodeInfo(ctx context.Context) (*types.NodeInfo, error) {
 	var out types.NodeInfo
 	if err := s.client.Get(ctx, "/api/v1/nodeinfo", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetSigningKey returns the instance's default signing key.
+func (s *MiscService) GetSigningKey(ctx context.Context) (string, error) {
+	data, err := s.client.GetRaw(ctx, "/api/v1/signing-key.gpg")
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// GetAPISettings returns the instance's global API settings.
+func (s *MiscService) GetAPISettings(ctx context.Context) (*types.GeneralAPISettings, error) {
+	var out types.GeneralAPISettings
+	if err := s.client.Get(ctx, "/api/v1/settings/api", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetAttachmentSettings returns the instance's global attachment settings.
+func (s *MiscService) GetAttachmentSettings(ctx context.Context) (*types.GeneralAttachmentSettings, error) {
+	var out types.GeneralAttachmentSettings
+	if err := s.client.Get(ctx, "/api/v1/settings/attachment", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetRepositorySettings returns the instance's global repository settings.
+func (s *MiscService) GetRepositorySettings(ctx context.Context) (*types.GeneralRepoSettings, error) {
+	var out types.GeneralRepoSettings
+	if err := s.client.Get(ctx, "/api/v1/settings/repository", &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetUISettings returns the instance's global UI settings.
+func (s *MiscService) GetUISettings(ctx context.Context) (*types.GeneralUISettings, error) {
+	var out types.GeneralUISettings
+	if err := s.client.Get(ctx, "/api/v1/settings/ui", &out); err != nil {
 		return nil, err
 	}
 	return &out, nil

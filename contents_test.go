@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,70 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestContentService_Good_GetFile(t *testing.T) {
+func TestContentService_ListContents_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("ref"); got != "main" {
+			t.Errorf("got ref=%q, want %q", got, "main")
+		}
+		json.NewEncoder(w).Encode([]types.ContentsResponse{
+			{Name: "README.md", Path: "README.md", Type: "file"},
+			{Name: "docs", Path: "docs", Type: "dir"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	items, err := f.Contents.ListContents(context.Background(), "core", "go-forge", "main")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(items) != 2 {
+		t.Fatalf("got %d items, want 2", len(items))
+	}
+	if items[0].Name != "README.md" || items[1].Type != "dir" {
+		t.Fatalf("unexpected results: %+v", items)
+	}
+}
+
+func TestContentService_IterContents_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.ContentsResponse{
+			{Name: "README.md", Path: "README.md", Type: "file"},
+			{Name: "docs", Path: "docs", Type: "dir"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for item, err := range f.Contents.IterContents(context.Background(), "core", "go-forge", "") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, item.Name)
+	}
+	if len(got) != 2 {
+		t.Fatalf("got %d items, want 2", len(got))
+	}
+	if got[0] != "README.md" || got[1] != "docs" {
+		t.Fatalf("unexpected items: %+v", got)
+	}
+}
+
+func TestContentService_GetFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -49,7 +112,7 @@ func TestContentService_Good_GetFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_CreateFile(t *testing.T) {
+func TestContentService_CreateFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -98,7 +161,7 @@ func TestContentService_Good_CreateFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_UpdateFile(t *testing.T) {
+func TestContentService_UpdateFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
@@ -138,7 +201,7 @@ func TestContentService_Good_UpdateFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_DeleteFile(t *testing.T) {
+func TestContentService_DeleteFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("expected DELETE, got %s", r.Method)
@@ -168,7 +231,7 @@ func TestContentService_Good_DeleteFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Good_GetRawFile(t *testing.T) {
+func TestContentService_GetRawFile_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -192,7 +255,7 @@ func TestContentService_Good_GetRawFile(t *testing.T) {
 	}
 }
 
-func TestContentService_Bad_NotFound(t *testing.T) {
+func TestContentService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "file not found"})
@@ -209,7 +272,7 @@ func TestContentService_Bad_NotFound(t *testing.T) {
 	}
 }
 
-func TestContentService_Bad_GetRawNotFound(t *testing.T) {
+func TestContentService_GetRawNotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "file not found"})

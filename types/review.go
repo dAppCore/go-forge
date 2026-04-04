@@ -2,8 +2,9 @@
 
 package types
 
-
 // ReviewStateType — ReviewStateType review state type
-// ReviewStateType has no fields in the swagger spec.
-type ReviewStateType struct{}
-
+//
+// Usage:
+//
+//	opts := ReviewStateType("example")
+type ReviewStateType string

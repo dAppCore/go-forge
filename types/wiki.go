@@ -2,45 +2,63 @@
 
 package types
 
-
 // CreateWikiPageOptions — CreateWikiPageOptions form for creating wiki
+//
+// Usage:
+//
+//	opts := CreateWikiPageOptions{Title: "example"}
 type CreateWikiPageOptions struct {
 	ContentBase64 string `json:"content_base64,omitempty"` // content must be base64 encoded
-	Message string `json:"message,omitempty"` // optional commit message summarizing the change
-	Title string `json:"title,omitempty"` // page title. leave empty to keep unchanged
+	Message       string `json:"message,omitempty"`        // optional commit message summarizing the change
+	Title         string `json:"title,omitempty"`          // page title. leave empty to keep unchanged
 }
 
 // WikiCommit — WikiCommit page commit/revision
+//
+// Usage:
+//
+//	opts := WikiCommit{ID: "example"}
 type WikiCommit struct {
-	Author *CommitUser `json:"author,omitempty"`
+	Author   *CommitUser `json:"author,omitempty"`
 	Commiter *CommitUser `json:"commiter,omitempty"`
-	ID string `json:"sha,omitempty"`
-	Message string `json:"message,omitempty"`
+	ID       string      `json:"sha,omitempty"`
+	Message  string      `json:"message,omitempty"`
 }
 
 // WikiCommitList — WikiCommitList commit/revision list
+//
+// Usage:
+//
+//	opts := WikiCommitList{Count: 1}
 type WikiCommitList struct {
-	Count int64 `json:"count,omitempty"`
+	Count       int64         `json:"count,omitempty"`
 	WikiCommits []*WikiCommit `json:"commits,omitempty"`
 }
 
 // WikiPage — WikiPage a wiki page
+//
+// Usage:
+//
+//	opts := WikiPage{Title: "example"}
 type WikiPage struct {
-	CommitCount int64 `json:"commit_count,omitempty"`
-	ContentBase64 string `json:"content_base64,omitempty"` // Page content, base64 encoded
-	Footer string `json:"footer,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	LastCommit *WikiCommit `json:"last_commit,omitempty"`
-	Sidebar string `json:"sidebar,omitempty"`
-	SubURL string `json:"sub_url,omitempty"`
-	Title string `json:"title,omitempty"`
+	CommitCount   int64       `json:"commit_count,omitempty"`
+	ContentBase64 string      `json:"content_base64,omitempty"` // Page content, base64 encoded
+	Footer        string      `json:"footer,omitempty"`
+	HTMLURL       string      `json:"html_url,omitempty"`
+	LastCommit    *WikiCommit `json:"last_commit,omitempty"`
+	Sidebar       string      `json:"sidebar,omitempty"`
+	SubURL        string      `json:"sub_url,omitempty"`
+	Title         string      `json:"title,omitempty"`
 }
 
 // WikiPageMetaData — WikiPageMetaData wiki page meta information
+//
+// Usage:
+//
+//	opts := WikiPageMetaData{Title: "example"}
 type WikiPageMetaData struct {
-	HTMLURL string `json:"html_url,omitempty"`
+	HTMLURL    string      `json:"html_url,omitempty"`
 	LastCommit *WikiCommit `json:"last_commit,omitempty"`
-	SubURL string `json:"sub_url,omitempty"`
-	Title string `json:"title,omitempty"`
+	SubURL     string      `json:"sub_url,omitempty"`
+	Title      string      `json:"title,omitempty"`
 }
-

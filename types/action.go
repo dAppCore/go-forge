@@ -4,58 +4,84 @@ package types
 
 import "time"
 
-
 // ActionTask — ActionTask represents a ActionTask
+//
+// Usage:
+//
+//	opts := ActionTask{DisplayTitle: "example"}
 type ActionTask struct {
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	DisplayTitle string `json:"display_title,omitempty"`
-	Event string `json:"event,omitempty"`
-	HeadBranch string `json:"head_branch,omitempty"`
-	HeadSHA string `json:"head_sha,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	RunNumber int64 `json:"run_number,omitempty"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	DisplayTitle string    `json:"display_title,omitempty"`
+	Event        string    `json:"event,omitempty"`
+	HeadBranch   string    `json:"head_branch,omitempty"`
+	HeadSHA      string    `json:"head_sha,omitempty"`
+	ID           int64     `json:"id,omitempty"`
+	Name         string    `json:"name,omitempty"`
+	RunNumber    int64     `json:"run_number,omitempty"`
 	RunStartedAt time.Time `json:"run_started_at,omitempty"`
-	Status string `json:"status,omitempty"`
-	URL string `json:"url,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	WorkflowID string `json:"workflow_id,omitempty"`
+	Status       string    `json:"status,omitempty"`
+	URL          string    `json:"url,omitempty"`
+	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	WorkflowID   string    `json:"workflow_id,omitempty"`
 }
 
 // ActionTaskResponse — ActionTaskResponse returns a ActionTask
+//
+// Usage:
+//
+//	opts := ActionTaskResponse{TotalCount: 1}
 type ActionTaskResponse struct {
-	Entries []*ActionTask `json:"workflow_runs,omitempty"`
-	TotalCount int64 `json:"total_count,omitempty"`
+	Entries    []*ActionTask `json:"workflow_runs,omitempty"`
+	TotalCount int64         `json:"total_count,omitempty"`
 }
 
 // ActionVariable — ActionVariable return value of the query API
+//
+// Usage:
+//
+//	opts := ActionVariable{Name: "example"}
 type ActionVariable struct {
-	Data string `json:"data,omitempty"` // the value of the variable
-	Name string `json:"name,omitempty"` // the name of the variable
-	OwnerID int64 `json:"owner_id,omitempty"` // the owner to which the variable belongs
-	RepoID int64 `json:"repo_id,omitempty"` // the repository to which the variable belongs
+	Data    string `json:"data,omitempty"`     // the value of the variable
+	Name    string `json:"name,omitempty"`     // the name of the variable
+	OwnerID int64  `json:"owner_id,omitempty"` // the owner to which the variable belongs
+	RepoID  int64  `json:"repo_id,omitempty"`  // the repository to which the variable belongs
 }
 
 // CreateVariableOption — CreateVariableOption the option when creating variable
+//
+// Usage:
+//
+//	opts := CreateVariableOption{Value: "example"}
 type CreateVariableOption struct {
 	Value string `json:"value"` // Value of the variable to create
 }
 
 // DispatchWorkflowOption — DispatchWorkflowOption options when dispatching a workflow
+//
+// Usage:
+//
+//	opts := DispatchWorkflowOption{Ref: "main"}
 type DispatchWorkflowOption struct {
-	Inputs map[string]any `json:"inputs,omitempty"` // Input keys and values configured in the workflow file.
-	Ref string `json:"ref"` // Git reference for the workflow
+	Inputs map[string]string `json:"inputs,omitempty"` // Input keys and values configured in the workflow file.
+	Ref    string            `json:"ref"`              // Git reference for the workflow
 }
 
 // Secret — Secret represents a secret
+//
+// Usage:
+//
+//	opts := Secret{Name: "example"}
 type Secret struct {
 	Created time.Time `json:"created_at,omitempty"`
-	Name string `json:"name,omitempty"` // the secret's name
+	Name    string    `json:"name,omitempty"` // the secret's name
 }
 
 // UpdateVariableOption — UpdateVariableOption the option when updating variable
+//
+// Usage:
+//
+//	opts := UpdateVariableOption{Value: "example"}
 type UpdateVariableOption struct {
-	Name string `json:"name,omitempty"` // New name for the variable. If the field is empty, the variable name won't be updated.
-	Value string `json:"value"` // Value of the variable to update
+	Name  string `json:"name,omitempty"` // New name for the variable. If the field is empty, the variable name won't be updated.
+	Value string `json:"value"`          // Value of the variable to update
 }
-

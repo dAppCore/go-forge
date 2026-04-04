@@ -7,19 +7,58 @@ import (
 	"net/url"
 	"strconv"
 
-	coreerr "dappco.re/go/core/log"
+	core "dappco.re/go/core"
 )
 
+const defaultPageLimit = 50
+
 // ListOptions controls pagination.
+//
+// Usage:
+//
+//	opts := forge.ListOptions{Page: 1, Limit: 50}
+//	_ = opts
 type ListOptions struct {
 	Page  int // 1-based page number
 	Limit int // items per page (default 50)
 }
 
-// DefaultList returns sensible default pagination.
-var DefaultList = ListOptions{Page: 1, Limit: 50}
+// String returns a safe summary of the pagination options.
+//
+// Usage:
+//
+//	_ = forge.DefaultList.String()
+func (o ListOptions) String() string {
+	return core.Concat(
+		"forge.ListOptions{page=",
+		strconv.Itoa(o.Page),
+		", limit=",
+		strconv.Itoa(o.Limit),
+		"}",
+	)
+}
+
+// GoString returns a safe Go-syntax summary of the pagination options.
+//
+// Usage:
+//
+//	_ = fmt.Sprintf("%#v", forge.DefaultList)
+func (o ListOptions) GoString() string { return o.String() }
+
+// DefaultList provides sensible default pagination.
+//
+// Usage:
+//
+//	page, err := forge.ListPage[types.Repository](ctx, client, path, nil, forge.DefaultList)
+//	_ = page
+var DefaultList = ListOptions{Page: 1, Limit: defaultPageLimit}
 
 // PagedResult holds a single page of results with metadata.
+//
+// Usage:
+//
+//	page, err := forge.ListPage[types.Repository](ctx, client, path, nil, forge.DefaultList)
+//	_ = page
 type PagedResult[T any] struct {
 	Items      []T
 	TotalCount int
@@ -27,19 +66,55 @@ type PagedResult[T any] struct {
 	HasMore    bool
 }
 
+// String returns a safe summary of a page of results.
+//
+// Usage:
+//
+//	page, _ := forge.ListPage[types.Repository](...)
+//	_ = page.String()
+func (r PagedResult[T]) String() string {
+	items := 0
+	if r.Items != nil {
+		items = len(r.Items)
+	}
+	return core.Concat(
+		"forge.PagedResult{items=",
+		strconv.Itoa(items),
+		", totalCount=",
+		strconv.Itoa(r.TotalCount),
+		", page=",
+		strconv.Itoa(r.Page),
+		", hasMore=",
+		strconv.FormatBool(r.HasMore),
+		"}",
+	)
+}
+
+// GoString returns a safe Go-syntax summary of a page of results.
+//
+// Usage:
+//
+//	_ = fmt.Sprintf("%#v", page)
+func (r PagedResult[T]) GoString() string { return r.String() }
+
 // ListPage fetches a single page of results.
 // Extra query params can be passed via the query map.
+//
+// Usage:
+//
+//	page, err := forge.ListPage[types.Repository](ctx, client, "/api/v1/user/repos", nil, forge.DefaultList)
+//	_ = page
 func ListPage[T any](ctx context.Context, c *Client, path string, query map[string]string, opts ListOptions) (*PagedResult[T], error) {
 	if opts.Page < 1 {
 		opts.Page = 1
 	}
 	if opts.Limit < 1 {
-		opts.Limit = 50
+		opts.Limit = defaultPageLimit
 	}
 
 	u, err := url.Parse(path)
 	if err != nil {
-		return nil, coreerr.E("ListPage", "forge: parse path", err)
+		return nil, core.E("ListPage", "forge: parse path", err)
 	}
 
 	q := u.Query()
@@ -70,12 +145,17 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 }
 
 // ListAll fetches all pages of results.
+//
+// Usage:
+//
+//	items, err := forge.ListAll[types.Repository](ctx, client, "/api/v1/user/repos", nil)
+//	_ = items
 func ListAll[T any](ctx context.Context, c *Client, path string, query map[string]string) ([]T, error) {
 	var all []T
 	page := 1
 
 	for {
-		result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: 50})
+		result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: defaultPageLimit})
 		if err != nil {
 			return nil, err
 		}
@@ -90,11 +170,17 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 }
 
 // ListIter returns an iterator over all resources across all pages.
+//
+// Usage:
+//
+//	for item, err := range forge.ListIter[types.Repository](ctx, client, "/api/v1/user/repos", nil) {
+//	    _, _ = item, err
+//	}
 func ListIter[T any](ctx context.Context, c *Client, path string, query map[string]string) iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
 		page := 1
 		for {
-			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: 50})
+			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: defaultPageLimit})
 			if err != nil {
 				yield(*new(T), err)
 				return

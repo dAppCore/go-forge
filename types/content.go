@@ -4,101 +4,134 @@ package types
 
 import "time"
 
-
 // ContentsResponse — ContentsResponse contains information about a repo's entry's (dir, file, symlink, submodule) metadata and content
+//
+// Usage:
+//
+//	opts := ContentsResponse{Name: "example"}
 type ContentsResponse struct {
-	Content string `json:"content,omitempty"` // `content` is populated when `type` is `file`, otherwise null
-	DownloadURL string `json:"download_url,omitempty"`
-	Encoding string `json:"encoding,omitempty"` // `encoding` is populated when `type` is `file`, otherwise null
-	GitURL string `json:"git_url,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	LastCommitSHA string `json:"last_commit_sha,omitempty"`
-	Links *FileLinksResponse `json:"_links,omitempty"`
-	Name string `json:"name,omitempty"`
-	Path string `json:"path,omitempty"`
-	SHA string `json:"sha,omitempty"`
-	Size int64 `json:"size,omitempty"`
-	SubmoduleGitURL string `json:"submodule_git_url,omitempty"` // `submodule_git_url` is populated when `type` is `submodule`, otherwise null
-	Target string `json:"target,omitempty"` // `target` is populated when `type` is `symlink`, otherwise null
-	Type string `json:"type,omitempty"` // `type` will be `file`, `dir`, `symlink`, or `submodule`
-	URL string `json:"url,omitempty"`
+	Content         string             `json:"content,omitempty"` // `content` is populated when `type` is `file`, otherwise null
+	DownloadURL     string             `json:"download_url,omitempty"`
+	Encoding        string             `json:"encoding,omitempty"` // `encoding` is populated when `type` is `file`, otherwise null
+	GitURL          string             `json:"git_url,omitempty"`
+	HTMLURL         string             `json:"html_url,omitempty"`
+	LastCommitSHA   string             `json:"last_commit_sha,omitempty"`
+	Links           *FileLinksResponse `json:"_links,omitempty"`
+	Name            string             `json:"name,omitempty"`
+	Path            string             `json:"path,omitempty"`
+	SHA             string             `json:"sha,omitempty"`
+	Size            int64              `json:"size,omitempty"`
+	SubmoduleGitURL string             `json:"submodule_git_url,omitempty"` // `submodule_git_url` is populated when `type` is `submodule`, otherwise null
+	Target          string             `json:"target,omitempty"`            // `target` is populated when `type` is `symlink`, otherwise null
+	Type            string             `json:"type,omitempty"`              // `type` will be `file`, `dir`, `symlink`, or `submodule`
+	URL             string             `json:"url,omitempty"`
 }
 
 // CreateFileOptions — CreateFileOptions options for creating files Note: `author` and `committer` are optional (if only one is given, it will be used for the other, otherwise the authenticated user will be used)
+//
+// Usage:
+//
+//	opts := CreateFileOptions{ContentBase64: "example"}
 type CreateFileOptions struct {
-	Author *Identity `json:"author,omitempty"`
-	BranchName string `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
-	Committer *Identity `json:"committer,omitempty"`
-	ContentBase64 string `json:"content"` // content must be base64 encoded
-	Dates *CommitDateOptions `json:"dates,omitempty"`
-	Message string `json:"message,omitempty"` // message (optional) for the commit of this file. if not supplied, a default message will be used
-	NewBranchName string `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
-	Signoff bool `json:"signoff,omitempty"` // Add a Signed-off-by trailer by the committer at the end of the commit log message.
+	Author        *Identity          `json:"author,omitempty"`
+	BranchName    string             `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
+	Committer     *Identity          `json:"committer,omitempty"`
+	ContentBase64 string             `json:"content"` // content must be base64 encoded
+	Dates         *CommitDateOptions `json:"dates,omitempty"`
+	Message       string             `json:"message,omitempty"`    // message (optional) for the commit of this file. if not supplied, a default message will be used
+	NewBranchName string             `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
+	Signoff       bool               `json:"signoff,omitempty"`    // Add a Signed-off-by trailer by the committer at the end of the commit log message.
 }
 
 // DeleteFileOptions — DeleteFileOptions options for deleting files (used for other File structs below) Note: `author` and `committer` are optional (if only one is given, it will be used for the other, otherwise the authenticated user will be used)
+//
+// Usage:
+//
+//	opts := DeleteFileOptions{SHA: "example"}
 type DeleteFileOptions struct {
-	Author *Identity `json:"author,omitempty"`
-	BranchName string `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
-	Committer *Identity `json:"committer,omitempty"`
-	Dates *CommitDateOptions `json:"dates,omitempty"`
-	Message string `json:"message,omitempty"` // message (optional) for the commit of this file. if not supplied, a default message will be used
-	NewBranchName string `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
-	SHA string `json:"sha"` // sha is the SHA for the file that already exists
-	Signoff bool `json:"signoff,omitempty"` // Add a Signed-off-by trailer by the committer at the end of the commit log message.
+	Author        *Identity          `json:"author,omitempty"`
+	BranchName    string             `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
+	Committer     *Identity          `json:"committer,omitempty"`
+	Dates         *CommitDateOptions `json:"dates,omitempty"`
+	Message       string             `json:"message,omitempty"`    // message (optional) for the commit of this file. if not supplied, a default message will be used
+	NewBranchName string             `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
+	SHA           string             `json:"sha"`                  // sha is the SHA for the file that already exists
+	Signoff       bool               `json:"signoff,omitempty"`    // Add a Signed-off-by trailer by the committer at the end of the commit log message.
 }
 
+// Usage:
+//
+//	opts := FileCommitResponse{HTMLURL: "https://example.com"}
 type FileCommitResponse struct {
-	Author *CommitUser `json:"author,omitempty"`
-	Committer *CommitUser `json:"committer,omitempty"`
-	Created time.Time `json:"created,omitempty"`
-	HTMLURL string `json:"html_url,omitempty"`
-	Message string `json:"message,omitempty"`
-	Parents []*CommitMeta `json:"parents,omitempty"`
-	SHA string `json:"sha,omitempty"`
-	Tree *CommitMeta `json:"tree,omitempty"`
-	URL string `json:"url,omitempty"`
+	Author    *CommitUser   `json:"author,omitempty"`
+	Committer *CommitUser   `json:"committer,omitempty"`
+	Created   time.Time     `json:"created,omitempty"`
+	HTMLURL   string        `json:"html_url,omitempty"`
+	Message   string        `json:"message,omitempty"`
+	Parents   []*CommitMeta `json:"parents,omitempty"`
+	SHA       string        `json:"sha,omitempty"`
+	Tree      *CommitMeta   `json:"tree,omitempty"`
+	URL       string        `json:"url,omitempty"`
 }
 
 // FileDeleteResponse — FileDeleteResponse contains information about a repo's file that was deleted
+//
+// Usage:
+//
+//	opts := FileDeleteResponse{Commit: &FileCommitResponse{}}
 type FileDeleteResponse struct {
-	Commit *FileCommitResponse `json:"commit,omitempty"`
-	Content any `json:"content,omitempty"`
+	Commit       *FileCommitResponse        `json:"commit,omitempty"`
+	Content      any                        `json:"content,omitempty"`
 	Verification *PayloadCommitVerification `json:"verification,omitempty"`
 }
 
 // FileLinksResponse — FileLinksResponse contains the links for a repo's file
+//
+// Usage:
+//
+//	opts := FileLinksResponse{GitURL: "https://example.com"}
 type FileLinksResponse struct {
-	GitURL string `json:"git,omitempty"`
+	GitURL  string `json:"git,omitempty"`
 	HTMLURL string `json:"html,omitempty"`
-	Self string `json:"self,omitempty"`
+	Self    string `json:"self,omitempty"`
 }
 
 // FileResponse — FileResponse contains information about a repo's file
+//
+// Usage:
+//
+//	opts := FileResponse{Commit: &FileCommitResponse{}}
 type FileResponse struct {
-	Commit *FileCommitResponse `json:"commit,omitempty"`
-	Content *ContentsResponse `json:"content,omitempty"`
+	Commit       *FileCommitResponse        `json:"commit,omitempty"`
+	Content      *ContentsResponse          `json:"content,omitempty"`
 	Verification *PayloadCommitVerification `json:"verification,omitempty"`
 }
 
 // FilesResponse — FilesResponse contains information about multiple files from a repo
+//
+// Usage:
+//
+//	opts := FilesResponse{Files: {}}
 type FilesResponse struct {
-	Commit *FileCommitResponse `json:"commit,omitempty"`
-	Files []*ContentsResponse `json:"files,omitempty"`
+	Commit       *FileCommitResponse        `json:"commit,omitempty"`
+	Files        []*ContentsResponse        `json:"files,omitempty"`
 	Verification *PayloadCommitVerification `json:"verification,omitempty"`
 }
 
 // UpdateFileOptions — UpdateFileOptions options for updating files Note: `author` and `committer` are optional (if only one is given, it will be used for the other, otherwise the authenticated user will be used)
+//
+// Usage:
+//
+//	opts := UpdateFileOptions{ContentBase64: "example"}
 type UpdateFileOptions struct {
-	Author *Identity `json:"author,omitempty"`
-	BranchName string `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
-	Committer *Identity `json:"committer,omitempty"`
-	ContentBase64 string `json:"content"` // content must be base64 encoded
-	Dates *CommitDateOptions `json:"dates,omitempty"`
-	FromPath string `json:"from_path,omitempty"` // from_path (optional) is the path of the original file which will be moved/renamed to the path in the URL
-	Message string `json:"message,omitempty"` // message (optional) for the commit of this file. if not supplied, a default message will be used
-	NewBranchName string `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
-	SHA string `json:"sha"` // sha is the SHA for the file that already exists
-	Signoff bool `json:"signoff,omitempty"` // Add a Signed-off-by trailer by the committer at the end of the commit log message.
+	Author        *Identity          `json:"author,omitempty"`
+	BranchName    string             `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
+	Committer     *Identity          `json:"committer,omitempty"`
+	ContentBase64 string             `json:"content"` // content must be base64 encoded
+	Dates         *CommitDateOptions `json:"dates,omitempty"`
+	FromPath      string             `json:"from_path,omitempty"`  // from_path (optional) is the path of the original file which will be moved/renamed to the path in the URL
+	Message       string             `json:"message,omitempty"`    // message (optional) for the commit of this file. if not supplied, a default message will be used
+	NewBranchName string             `json:"new_branch,omitempty"` // new_branch (optional) will make a new branch from `branch` before creating the file
+	SHA           string             `json:"sha"`                  // sha is the SHA for the file that already exists
+	Signoff       bool               `json:"signoff,omitempty"`    // Add a Signed-off-by trailer by the committer at the end of the commit log message.
 }
-

@@ -2,14 +2,15 @@ package main
 
 import (
 	"bytes"
+	"cmp"
 	"maps"
-	"path/filepath"
 	"slices"
+	"strconv"
 	"strings"
 	"text/template"
 
+	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
-	coreerr "dappco.re/go/core/log"
 )
 
 // typeGrouping maps type name prefixes to output file names.
@@ -110,7 +111,7 @@ func classifyType(name string) string {
 	bestKey := ""
 	bestGroup := ""
 	for key, group := range typeGrouping {
-		if strings.HasPrefix(name, key) && len(key) > len(bestKey) {
+		if core.HasPrefix(name, key) && len(key) > len(bestKey) {
 			bestKey = key
 			bestGroup = group
 		}
@@ -122,10 +123,10 @@ func classifyType(name string) string {
 	// Strip CRUD prefixes and Option suffix, then retry.
 	base := name
 	for _, prefix := range []string{"Create", "Edit", "Delete", "Update", "Add", "Submit", "Replace", "Set", "Transfer"} {
-		base = strings.TrimPrefix(base, prefix)
+		base = core.TrimPrefix(base, prefix)
 	}
-	base = strings.TrimSuffix(base, "Option")
-	base = strings.TrimSuffix(base, "Options")
+	base = core.TrimSuffix(base, "Option")
+	base = core.TrimSuffix(base, "Options")
 
 	if base != name && base != "" {
 		if group, ok := typeGrouping[base]; ok {
@@ -135,7 +136,7 @@ func classifyType(name string) string {
 		bestKey = ""
 		bestGroup = ""
 		for key, group := range typeGrouping {
-			if strings.HasPrefix(base, key) && len(key) > len(bestKey) {
+			if core.HasPrefix(base, key) && len(key) > len(bestKey) {
 				bestKey = key
 				bestGroup = group
 			}
@@ -151,7 +152,7 @@ func classifyType(name string) string {
 // sanitiseLine collapses a multi-line string into a single line,
 // replacing newlines and consecutive whitespace with a single space.
 func sanitiseLine(s string) string {
-	return strings.Join(strings.Fields(s), " ")
+	return core.Join(" ", splitFields(s)...)
 }
 
 // enumConstName generates a Go constant name for an enum value.
@@ -176,6 +177,12 @@ import "time"
 {{- if .Description}}
 // {{.Name}} — {{sanitise .Description}}
 {{- end}}
+{{- if .Usage}}
+//
+// Usage:
+//
+//	opts := {{.Usage}}
+{{- end}}
 {{- if .IsEnum}}
 type {{.Name}} string
 
@@ -184,6 +191,8 @@ const (
 	{{enumConstName $t.Name .}} {{$t.Name}} = "{{.}}"
 {{- end}}
 )
+{{- else if .IsAlias}}
+type {{.Name}} {{.AliasType}}
 {{- else if (eq (len .Fields) 0)}}
 // {{.Name}} has no fields in the swagger spec.
 type {{.Name}} struct{}
@@ -204,10 +213,17 @@ type templateData struct {
 }
 
 // Generate writes Go source files for the extracted types, grouped by logical domain.
+//
+// Usage:
+//
+//	err := Generate(types, pairs, "types")
+//	_ = err
 func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	if err := coreio.Local.EnsureDir(outDir); err != nil {
-		return coreerr.E("Generate", "create output directory", err)
+		return core.E("Generate", "create output directory", err)
 	}
+
+	populateUsageExamples(types)
 
 	// Group types by output file.
 	groups := make(map[string][]*GoType)
@@ -219,7 +235,7 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	// Sort types within each group for deterministic output.
 	for file := range groups {
 		slices.SortFunc(groups[file], func(a, b *GoType) int {
-			return strings.Compare(a.Name, b.Name)
+			return cmp.Compare(a.Name, b.Name)
 		})
 	}
 
@@ -228,20 +244,158 @@ func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
 	slices.Sort(fileNames)
 
 	for _, file := range fileNames {
-		outPath := filepath.Join(outDir, file+".go")
+		outPath := core.JoinPath(outDir, file+".go")
 		if err := writeFile(outPath, groups[file]); err != nil {
-			return coreerr.E("Generate", "write "+outPath, err)
+			return core.E("Generate", "write "+outPath, err)
 		}
 	}
 
 	return nil
 }
 
+func populateUsageExamples(types map[string]*GoType) {
+	for _, gt := range types {
+		gt.Usage = usageExample(gt)
+	}
+}
+
+func usageExample(gt *GoType) string {
+	switch {
+	case gt.IsEnum && len(gt.EnumValues) > 0:
+		return enumConstName(gt.Name, gt.EnumValues[0])
+	case gt.IsAlias:
+		return gt.Name + "(" + exampleTypeExpression(gt.AliasType) + ")"
+	default:
+		example := exampleTypeLiteral(gt)
+		if example == "" {
+			example = gt.Name + "{}"
+		}
+		return example
+	}
+}
+
+func exampleTypeLiteral(gt *GoType) string {
+	if len(gt.Fields) == 0 {
+		return gt.Name + "{}"
+	}
+
+	field := chooseUsageField(gt.Fields)
+	if field.GoName == "" {
+		return gt.Name + "{}"
+	}
+
+	return gt.Name + "{" + field.GoName + ": " + exampleValue(field) + "}"
+}
+
+func exampleTypeExpression(typeName string) string {
+	switch {
+	case typeName == "string":
+		return strconv.Quote("example")
+	case typeName == "bool":
+		return "true"
+	case typeName == "int", typeName == "int32", typeName == "int64", typeName == "uint", typeName == "uint32", typeName == "uint64":
+		return "1"
+	case typeName == "float32", typeName == "float64":
+		return "1.0"
+	case typeName == "time.Time":
+		return "time.Now()"
+	case core.HasPrefix(typeName, "[]string"):
+		return "[]string{\"example\"}"
+	case core.HasPrefix(typeName, "[]int64"):
+		return "[]int64{1}"
+	case core.HasPrefix(typeName, "[]int"):
+		return "[]int{1}"
+	case core.HasPrefix(typeName, "map["):
+		return typeName + "{\"key\": \"value\"}"
+	default:
+		return typeName + "{}"
+	}
+}
+
+func chooseUsageField(fields []GoField) GoField {
+	best := fields[0]
+	bestScore := usageFieldScore(best)
+	for _, field := range fields[1:] {
+		score := usageFieldScore(field)
+		if score < bestScore || (score == bestScore && field.GoName < best.GoName) {
+			best = field
+			bestScore = score
+		}
+	}
+	return best
+}
+
+func usageFieldScore(field GoField) int {
+	score := 100
+	if field.Required {
+		score -= 50
+	}
+	switch {
+	case core.HasSuffix(field.GoType, "string"):
+		score -= 30
+	case core.Contains(field.GoType, "time.Time"):
+		score -= 25
+	case core.HasSuffix(field.GoType, "bool"):
+		score -= 20
+	case core.Contains(field.GoType, "int"):
+		score -= 15
+	case core.HasPrefix(field.GoType, "[]"):
+		score -= 10
+	}
+	if core.Contains(field.GoName, "Name") || core.Contains(field.GoName, "Title") || core.Contains(field.GoName, "Body") || core.Contains(field.GoName, "Description") {
+		score -= 10
+	}
+	return score
+}
+
+func exampleValue(field GoField) string {
+	switch {
+	case core.HasPrefix(field.GoType, "*"):
+		return "&" + core.TrimPrefix(field.GoType, "*") + "{}"
+	case field.GoType == "string":
+		return exampleStringValue(field.GoName)
+	case field.GoType == "time.Time":
+		return "time.Now()"
+	case field.GoType == "bool":
+		return "true"
+	case core.HasSuffix(field.GoType, "int64"), core.HasSuffix(field.GoType, "int"), core.HasSuffix(field.GoType, "uint64"), core.HasSuffix(field.GoType, "uint"):
+		return "1"
+	case core.HasPrefix(field.GoType, "[]string"):
+		return "[]string{\"example\"}"
+	case core.HasPrefix(field.GoType, "[]int64"):
+		return "[]int64{1}"
+	case core.HasPrefix(field.GoType, "[]int"):
+		return "[]int{1}"
+	case core.HasPrefix(field.GoType, "map["):
+		return field.GoType + "{\"key\": \"value\"}"
+	default:
+		return "{}"
+	}
+}
+
+func exampleStringValue(fieldName string) string {
+	switch {
+	case core.Contains(fieldName, "URL"):
+		return "\"https://example.com\""
+	case core.Contains(fieldName, "Email"):
+		return "\"alice@example.com\""
+	case core.Contains(fieldName, "Tag"):
+		return "\"v1.0.0\""
+	case core.Contains(fieldName, "Branch"), core.Contains(fieldName, "Ref"):
+		return "\"main\""
+	default:
+		return "\"example\""
+	}
+}
+
 // writeFile renders and writes a single Go source file for the given types.
 func writeFile(path string, types []*GoType) error {
 	needTime := slices.ContainsFunc(types, func(gt *GoType) bool {
+		if core.Contains(gt.AliasType, "time.Time") {
+			return true
+		}
 		return slices.ContainsFunc(gt.Fields, func(f GoField) bool {
-			return strings.Contains(f.GoType, "time.Time")
+			return core.Contains(f.GoType, "time.Time")
 		})
 	})
 
@@ -252,11 +406,12 @@ func writeFile(path string, types []*GoType) error {
 
 	var buf bytes.Buffer
 	if err := fileHeader.Execute(&buf, data); err != nil {
-		return coreerr.E("writeFile", "execute template", err)
+		return core.E("writeFile", "execute template", err)
 	}
 
-	if err := coreio.Local.Write(path, buf.String()); err != nil {
-		return coreerr.E("writeFile", "write file", err)
+	content := strings.TrimRight(buf.String(), "\n") + "\n"
+	if err := coreio.Local.Write(path, content); err != nil {
+		return core.E("writeFile", "write file", err)
 	}
 
 	return nil

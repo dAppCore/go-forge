@@ -2,8 +2,9 @@
 //
 // Usage:
 //
+//	ctx := context.Background()
 //	f := forge.NewForge("https://forge.lthn.ai", "your-token")
-//	repos, err := f.Repos.List(ctx, forge.Params{"org": "core"}, forge.DefaultList)
+//	repos, err := f.Repos.ListOrgRepos(ctx, "core")
 //
 // Types are generated from Forgejo's swagger.v1.json spec via cmd/forgegen/.
 // Run `go generate ./types/...` to regenerate after a Forgejo upgrade.

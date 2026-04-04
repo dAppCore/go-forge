@@ -4,66 +4,87 @@ package types
 
 import "time"
 
-
 // CreateHookOption — CreateHookOption options when create a hook
+//
+// Usage:
+//
+//	opts := CreateHookOption{Type: "example"}
 type CreateHookOption struct {
-	Active bool `json:"active,omitempty"`
-	AuthorizationHeader string `json:"authorization_header,omitempty"`
-	BranchFilter string `json:"branch_filter,omitempty"`
-	Config *CreateHookOptionConfig `json:"config"`
-	Events []string `json:"events,omitempty"`
-	Type string `json:"type"`
+	Active              bool                    `json:"active,omitempty"`
+	AuthorizationHeader string                  `json:"authorization_header,omitempty"`
+	BranchFilter        string                  `json:"branch_filter,omitempty"`
+	Config              *CreateHookOptionConfig `json:"config"`
+	Events              []string                `json:"events,omitempty"`
+	Type                string                  `json:"type"`
 }
 
 // CreateHookOptionConfig — CreateHookOptionConfig has all config options in it required are "content_type" and "url" Required
-// CreateHookOptionConfig has no fields in the swagger spec.
-type CreateHookOptionConfig struct{}
+//
+// Usage:
+//
+//	opts := CreateHookOptionConfig(map[string]any{"key": "value"})
+type CreateHookOptionConfig map[string]any
 
 // EditHookOption — EditHookOption options when modify one hook
+//
+// Usage:
+//
+//	opts := EditHookOption{AuthorizationHeader: "example"}
 type EditHookOption struct {
-	Active bool `json:"active,omitempty"`
-	AuthorizationHeader string `json:"authorization_header,omitempty"`
-	BranchFilter string `json:"branch_filter,omitempty"`
-	Config map[string]any `json:"config,omitempty"`
-	Events []string `json:"events,omitempty"`
+	Active              bool              `json:"active,omitempty"`
+	AuthorizationHeader string            `json:"authorization_header,omitempty"`
+	BranchFilter        string            `json:"branch_filter,omitempty"`
+	Config              map[string]string `json:"config,omitempty"`
+	Events              []string          `json:"events,omitempty"`
 }
 
 // Hook — Hook a hook is a web hook when one repository changed
+//
+// Usage:
+//
+//	opts := Hook{AuthorizationHeader: "example"}
 type Hook struct {
-	Active bool `json:"active,omitempty"`
-	AuthorizationHeader string `json:"authorization_header,omitempty"`
-	BranchFilter string `json:"branch_filter,omitempty"`
-	Config map[string]any `json:"config,omitempty"` // Deprecated: use Metadata instead
-	ContentType string `json:"content_type,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	Events []string `json:"events,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	Metadata any `json:"metadata,omitempty"`
-	Type string `json:"type,omitempty"`
-	URL string `json:"url,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
+	Active              bool              `json:"active,omitempty"`
+	AuthorizationHeader string            `json:"authorization_header,omitempty"`
+	BranchFilter        string            `json:"branch_filter,omitempty"`
+	Config              map[string]string `json:"config,omitempty"` // Deprecated: use Metadata instead
+	ContentType         string            `json:"content_type,omitempty"`
+	Created             time.Time         `json:"created_at,omitempty"`
+	Events              []string          `json:"events,omitempty"`
+	ID                  int64             `json:"id,omitempty"`
+	Metadata            any               `json:"metadata,omitempty"`
+	Type                string            `json:"type,omitempty"`
+	URL                 string            `json:"url,omitempty"`
+	Updated             time.Time         `json:"updated_at,omitempty"`
 }
 
 // PayloadCommit — PayloadCommit represents a commit
+//
+// Usage:
+//
+//	opts := PayloadCommit{Added: []string{"example"}}
 type PayloadCommit struct {
-	Added []string `json:"added,omitempty"`
-	Author *PayloadUser `json:"author,omitempty"`
-	Committer *PayloadUser `json:"committer,omitempty"`
-	ID string `json:"id,omitempty"` // sha1 hash of the commit
-	Message string `json:"message,omitempty"`
-	Modified []string `json:"modified,omitempty"`
-	Removed []string `json:"removed,omitempty"`
-	Timestamp time.Time `json:"timestamp,omitempty"`
-	URL string `json:"url,omitempty"`
+	Added        []string                   `json:"added,omitempty"`
+	Author       *PayloadUser               `json:"author,omitempty"`
+	Committer    *PayloadUser               `json:"committer,omitempty"`
+	ID           string                     `json:"id,omitempty"` // sha1 hash of the commit
+	Message      string                     `json:"message,omitempty"`
+	Modified     []string                   `json:"modified,omitempty"`
+	Removed      []string                   `json:"removed,omitempty"`
+	Timestamp    time.Time                  `json:"timestamp,omitempty"`
+	URL          string                     `json:"url,omitempty"`
 	Verification *PayloadCommitVerification `json:"verification,omitempty"`
 }
 
 // PayloadCommitVerification — PayloadCommitVerification represents the GPG verification of a commit
+//
+// Usage:
+//
+//	opts := PayloadCommitVerification{Payload: "example"}
 type PayloadCommitVerification struct {
-	Payload string `json:"payload,omitempty"`
-	Reason string `json:"reason,omitempty"`
-	Signature string `json:"signature,omitempty"`
-	Signer *PayloadUser `json:"signer,omitempty"`
-	Verified bool `json:"verified,omitempty"`
+	Payload   string       `json:"payload,omitempty"`
+	Reason    string       `json:"reason,omitempty"`
+	Signature string       `json:"signature,omitempty"`
+	Signer    *PayloadUser `json:"signer,omitempty"`
+	Verified  bool         `json:"verified,omitempty"`
 }
-

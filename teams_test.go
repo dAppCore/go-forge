@@ -2,7 +2,7 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +10,7 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestTeamService_Good_Get(t *testing.T) {
+func TestTeamService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -32,7 +32,38 @@ func TestTeamService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestTeamService_Good_ListMembers(t *testing.T) {
+func TestTeamService_CreateOrgTeam_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/orgs/core/teams" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateTeamOption
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Name != "platform" {
+			t.Errorf("got name=%q, want %q", opts.Name, "platform")
+		}
+		json.NewEncoder(w).Encode(types.Team{ID: 7, Name: opts.Name})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	team, err := f.Teams.CreateOrgTeam(context.Background(), "core", &types.CreateTeamOption{
+		Name: "platform",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if team.ID != 7 || team.Name != "platform" {
+		t.Fatalf("got %#v", team)
+	}
+}
+
+func TestTeamService_ListMembers_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -61,7 +92,7 @@ func TestTeamService_Good_ListMembers(t *testing.T) {
 	}
 }
 
-func TestTeamService_Good_AddMember(t *testing.T) {
+func TestTeamService_AddMember_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("expected PUT, got %s", r.Method)
@@ -77,5 +108,27 @@ func TestTeamService_Good_AddMember(t *testing.T) {
 	err := f.Teams.AddMember(context.Background(), 42, "alice")
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestTeamService_GetMember_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/teams/42/members/alice" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.User{ID: 1, UserName: "alice"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	member, err := f.Teams.GetMember(context.Background(), 42, "alice")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if member.UserName != "alice" {
+		t.Errorf("got username=%q, want %q", member.UserName, "alice")
 	}
 }

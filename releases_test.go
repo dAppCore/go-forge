@@ -1,16 +1,64 @@
 package forge
 
 import (
+	"bytes"
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
+	"io"
+	"mime"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"dappco.re/go/core/forge/types"
 )
 
-func TestReleaseService_Good_List(t *testing.T) {
+func readMultipartReleaseAttachment(t *testing.T, r *http.Request) (map[string]string, string, string) {
+	t.Helper()
+
+	mediaType, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if mediaType != "multipart/form-data" {
+		t.Fatalf("got content-type=%q", mediaType)
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fields := make(map[string]string)
+	reader := multipart.NewReader(bytes.NewReader(body), params["boundary"])
+	var fileName string
+	var fileContent string
+	for {
+		part, err := reader.NextPart()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			t.Fatal(err)
+		}
+		data, err := io.ReadAll(part)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if part.FormName() == "attachment" {
+			fileName = part.FileName()
+			fileContent = string(data)
+			continue
+		}
+		fields[part.FormName()] = string(data)
+	}
+
+	return fields, fileName, fileContent
+}
+
+func TestReleaseService_List_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -36,7 +84,48 @@ func TestReleaseService_Good_List(t *testing.T) {
 	}
 }
 
-func TestReleaseService_Good_Get(t *testing.T) {
+func TestReleaseService_ListFiltered_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/releases" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		want := map[string]string{
+			"draft":       "true",
+			"pre-release": "true",
+			"q":           "1.0",
+			"page":        "1",
+			"limit":       "50",
+		}
+		for key, wantValue := range want {
+			if got := r.URL.Query().Get(key); got != wantValue {
+				t.Errorf("got %s=%q, want %q", key, got, wantValue)
+			}
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Release{{ID: 1, TagName: "v1.0.0", Title: "Release 1.0"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	releases, err := f.Releases.ListReleases(context.Background(), "core", "go-forge", ReleaseListOptions{
+		Draft:      true,
+		PreRelease: true,
+		Query:      "1.0",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(releases) != 1 || releases[0].TagName != "v1.0.0" {
+		t.Fatalf("got %#v", releases)
+	}
+}
+
+func TestReleaseService_Get_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -61,7 +150,7 @@ func TestReleaseService_Good_Get(t *testing.T) {
 	}
 }
 
-func TestReleaseService_Good_GetByTag(t *testing.T) {
+func TestReleaseService_GetByTag_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -83,5 +172,148 @@ func TestReleaseService_Good_GetByTag(t *testing.T) {
 	}
 	if release.ID != 1 {
 		t.Errorf("got id=%d, want 1", release.ID)
+	}
+}
+
+func TestReleaseService_GetLatest_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/releases/latest" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.Release{ID: 3, TagName: "v2.1.0", Title: "Latest Release"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	release, err := f.Releases.GetLatest(context.Background(), "core", "go-forge")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if release.TagName != "v2.1.0" {
+		t.Errorf("got tag=%q, want %q", release.TagName, "v2.1.0")
+	}
+	if release.Title != "Latest Release" {
+		t.Errorf("got title=%q, want %q", release.Title, "Latest Release")
+	}
+}
+
+func TestReleaseService_CreateAttachment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/releases/1/assets" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("name"); got != "linux-amd64" {
+			t.Fatalf("got name=%q", got)
+		}
+		fields, filename, content := readMultipartReleaseAttachment(t, r)
+		if !reflect.DeepEqual(fields, map[string]string{}) {
+			t.Fatalf("got fields=%#v", fields)
+		}
+		if filename != "release.tar.gz" {
+			t.Fatalf("got filename=%q", filename)
+		}
+		if content != "release bytes" {
+			t.Fatalf("got content=%q", content)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.Attachment{ID: 9, Name: filename})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Releases.CreateAttachment(
+		context.Background(),
+		"core",
+		"go-forge",
+		1,
+		&ReleaseAttachmentUploadOptions{Name: "linux-amd64"},
+		"release.tar.gz",
+		bytes.NewBufferString("release bytes"),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "release.tar.gz" {
+		t.Fatalf("got name=%q", attachment.Name)
+	}
+}
+
+func TestReleaseService_CreateAttachmentExternalURL_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/releases/1/assets" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("name"); got != "docs" {
+			t.Fatalf("got name=%q", got)
+		}
+		fields, filename, content := readMultipartReleaseAttachment(t, r)
+		if !reflect.DeepEqual(fields, map[string]string{"external_url": "https://example.com/release.tar.gz"}) {
+			t.Fatalf("got fields=%#v", fields)
+		}
+		if filename != "" || content != "" {
+			t.Fatalf("unexpected file upload: filename=%q content=%q", filename, content)
+		}
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(types.Attachment{ID: 10, Name: "docs"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Releases.CreateAttachment(
+		context.Background(),
+		"core",
+		"go-forge",
+		1,
+		&ReleaseAttachmentUploadOptions{Name: "docs", ExternalURL: "https://example.com/release.tar.gz"},
+		"",
+		nil,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "docs" {
+		t.Fatalf("got name=%q", attachment.Name)
+	}
+}
+
+func TestReleaseService_EditAttachment_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPatch {
+			t.Errorf("expected PATCH, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/releases/1/assets/4" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body types.EditAttachmentOptions
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Name != "release-notes.pdf" {
+			t.Fatalf("got body=%#v", body)
+		}
+		json.NewEncoder(w).Encode(types.Attachment{ID: 4, Name: body.Name})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	attachment, err := f.Releases.EditAttachment(context.Background(), "core", "go-forge", 1, 4, &types.EditAttachmentOptions{Name: "release-notes.pdf"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if attachment.Name != "release-notes.pdf" {
+		t.Fatalf("got name=%q", attachment.Name)
 	}
 }

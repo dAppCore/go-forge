@@ -2,7 +2,8 @@ package forge
 
 import (
 	"context"
-	"encoding/json"
+	json "github.com/goccy/go-json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +11,199 @@ import (
 	"dappco.re/go/core/forge/types"
 )
 
-func TestCommitService_Good_ListStatuses(t *testing.T) {
+func TestCommitService_List_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if r.URL.Query().Get("page") != "1" {
+			t.Errorf("got page=%q, want %q", r.URL.Query().Get("page"), "1")
+		}
+		if r.URL.Query().Get("limit") != "50" {
+			t.Errorf("got limit=%q, want %q", r.URL.Query().Get("limit"), "50")
+		}
+		w.Header().Set("X-Total-Count", "2")
+		json.NewEncoder(w).Encode([]types.Commit{
+			{
+				SHA: "abc123",
+				Commit: &types.RepoCommit{
+					Message: "first commit",
+				},
+			},
+			{
+				SHA: "def456",
+				Commit: &types.RepoCommit{
+					Message: "second commit",
+				},
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	result, err := f.Commits.List(context.Background(), Params{"owner": "core", "repo": "go-forge"}, DefaultList)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Items) != 2 {
+		t.Fatalf("got %d items, want 2", len(result.Items))
+	}
+	if result.Items[0].SHA != "abc123" {
+		t.Errorf("got sha=%q, want %q", result.Items[0].SHA, "abc123")
+	}
+	if result.Items[1].Commit == nil {
+		t.Fatal("expected commit payload, got nil")
+	}
+	if result.Items[1].Commit.Message != "second commit" {
+		t.Errorf("got message=%q, want %q", result.Items[1].Commit.Message, "second commit")
+	}
+}
+
+func TestCommitService_ListFiltered_Good(t *testing.T) {
+	stat := false
+	verification := false
+	files := false
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		want := map[string]string{
+			"sha":          "main",
+			"path":         "docs",
+			"stat":         "false",
+			"verification": "false",
+			"files":        "false",
+			"not":          "deadbeef",
+			"page":         "1",
+			"limit":        "50",
+		}
+		for key, wantValue := range want {
+			if got := r.URL.Query().Get(key); got != wantValue {
+				t.Errorf("got %s=%q, want %q", key, got, wantValue)
+			}
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode([]types.Commit{{SHA: "abc123"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	commits, err := f.Commits.ListAll(context.Background(), Params{"owner": "core", "repo": "go-forge"}, CommitListOptions{
+		Sha:          "main",
+		Path:         "docs",
+		Stat:         &stat,
+		Verification: &verification,
+		Files:        &files,
+		Not:          "deadbeef",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(commits) != 1 || commits[0].SHA != "abc123" {
+		t.Fatalf("got %#v", commits)
+	}
+}
+
+func TestCommitService_Get_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/commits/abc123" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.Commit{
+			SHA:     "abc123",
+			HTMLURL: "https://forge.example/core/go-forge/commit/abc123",
+			Commit: &types.RepoCommit{
+				Message: "initial import",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	commit, err := f.Commits.Get(context.Background(), Params{"owner": "core", "repo": "go-forge", "sha": "abc123"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if commit.SHA != "abc123" {
+		t.Errorf("got sha=%q, want %q", commit.SHA, "abc123")
+	}
+	if commit.Commit == nil {
+		t.Fatal("expected commit payload, got nil")
+	}
+	if commit.Commit.Message != "initial import" {
+		t.Errorf("got message=%q, want %q", commit.Commit.Message, "initial import")
+	}
+}
+
+func TestCommitService_GetDiffOrPatch_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/commits/abc123.diff" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "text/plain")
+		io.WriteString(w, "diff --git a/README.md b/README.md")
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	data, err := f.Commits.GetDiffOrPatch(context.Background(), "core", "go-forge", "abc123", "diff")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "diff --git a/README.md b/README.md" {
+		t.Fatalf("got body=%q", string(data))
+	}
+}
+
+func TestCommitService_GetPullRequest_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits/abc123/pull" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode(types.PullRequest{
+			ID:    17,
+			Index: 9,
+			Title: "Add commit-linked pull request",
+			Head: &types.PRBranchInfo{
+				Ref: "feature/commit-link",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	pr, err := f.Commits.GetPullRequest(context.Background(), "core", "go-forge", "abc123")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if pr.ID != 17 {
+		t.Errorf("got id=%d, want 17", pr.ID)
+	}
+	if pr.Index != 9 {
+		t.Errorf("got index=%d, want 9", pr.Index)
+	}
+	if pr.Head == nil || pr.Head.Ref != "feature/commit-link" {
+		t.Fatalf("unexpected head branch info: %+v", pr.Head)
+	}
+}
+
+func TestCommitService_ListStatuses_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -41,7 +234,40 @@ func TestCommitService_Good_ListStatuses(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_CreateStatus(t *testing.T) {
+func TestCommitService_IterStatuses_Good(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/commits/abc123/statuses" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		json.NewEncoder(w).Encode([]types.CommitStatus{
+			{ID: 1, Context: "ci/build"},
+			{ID: 2, Context: "ci/test"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var got []string
+	for status, err := range f.Commits.IterStatuses(context.Background(), "core", "go-forge", "abc123") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		got = append(got, status.Context)
+	}
+	if requests != 1 {
+		t.Fatalf("expected 1 request, got %d", requests)
+	}
+	if len(got) != 2 || got[0] != "ci/build" || got[1] != "ci/test" {
+		t.Fatalf("got %#v", got)
+	}
+}
+
+func TestCommitService_CreateStatus_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
@@ -84,7 +310,7 @@ func TestCommitService_Good_CreateStatus(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_GetNote(t *testing.T) {
+func TestCommitService_GetNote_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -114,7 +340,62 @@ func TestCommitService_Good_GetNote(t *testing.T) {
 	}
 }
 
-func TestCommitService_Good_GetCombinedStatus(t *testing.T) {
+func TestCommitService_SetNote_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/notes/abc123" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.NoteOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.Message != "reviewed and approved" {
+			t.Errorf("got message=%q, want %q", opts.Message, "reviewed and approved")
+		}
+		json.NewEncoder(w).Encode(types.Note{
+			Message: "reviewed and approved",
+			Commit: &types.Commit{
+				SHA: "abc123",
+			},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	note, err := f.Commits.SetNote(context.Background(), "core", "go-forge", "abc123", "reviewed and approved")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if note.Message != "reviewed and approved" {
+		t.Errorf("got message=%q, want %q", note.Message, "reviewed and approved")
+	}
+	if note.Commit.SHA != "abc123" {
+		t.Errorf("got commit sha=%q, want %q", note.Commit.SHA, "abc123")
+	}
+}
+
+func TestCommitService_DeleteNote_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			t.Errorf("expected DELETE, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/git/notes/abc123" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	if err := f.Commits.DeleteNote(context.Background(), "core", "go-forge", "abc123"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestCommitService_GetCombinedStatus_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
@@ -149,7 +430,7 @@ func TestCommitService_Good_GetCombinedStatus(t *testing.T) {
 	}
 }
 
-func TestCommitService_Bad_NotFound(t *testing.T) {
+func TestCommitService_NotFound_Bad(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"message": "not found"})

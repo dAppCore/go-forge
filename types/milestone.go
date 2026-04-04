@@ -4,34 +4,44 @@ package types
 
 import "time"
 
-
 // CreateMilestoneOption — CreateMilestoneOption options for creating a milestone
+//
+// Usage:
+//
+//	opts := CreateMilestoneOption{Description: "example"}
 type CreateMilestoneOption struct {
-	Deadline time.Time `json:"due_on,omitempty"`
-	Description string `json:"description,omitempty"`
-	State string `json:"state,omitempty"`
-	Title string `json:"title,omitempty"`
+	Deadline    time.Time `json:"due_on,omitempty"`
+	Description string    `json:"description,omitempty"`
+	State       string    `json:"state,omitempty"`
+	Title       string    `json:"title,omitempty"`
 }
 
 // EditMilestoneOption — EditMilestoneOption options for editing a milestone
+//
+// Usage:
+//
+//	opts := EditMilestoneOption{Description: "example"}
 type EditMilestoneOption struct {
-	Deadline time.Time `json:"due_on,omitempty"`
-	Description string `json:"description,omitempty"`
-	State string `json:"state,omitempty"`
-	Title string `json:"title,omitempty"`
+	Deadline    time.Time `json:"due_on,omitempty"`
+	Description string    `json:"description,omitempty"`
+	State       string    `json:"state,omitempty"`
+	Title       string    `json:"title,omitempty"`
 }
 
 // Milestone — Milestone milestone is a collection of issues on one repository
+//
+// Usage:
+//
+//	opts := Milestone{Description: "example"}
 type Milestone struct {
-	Closed time.Time `json:"closed_at,omitempty"`
-	ClosedIssues int64 `json:"closed_issues,omitempty"`
-	Created time.Time `json:"created_at,omitempty"`
-	Deadline time.Time `json:"due_on,omitempty"`
-	Description string `json:"description,omitempty"`
-	ID int64 `json:"id,omitempty"`
-	OpenIssues int64 `json:"open_issues,omitempty"`
-	State *StateType `json:"state,omitempty"`
-	Title string `json:"title,omitempty"`
-	Updated time.Time `json:"updated_at,omitempty"`
+	Closed       time.Time `json:"closed_at,omitempty"`
+	ClosedIssues int64     `json:"closed_issues,omitempty"`
+	Created      time.Time `json:"created_at,omitempty"`
+	Deadline     time.Time `json:"due_on,omitempty"`
+	Description  string    `json:"description,omitempty"`
+	ID           int64     `json:"id,omitempty"`
+	OpenIssues   int64     `json:"open_issues,omitempty"`
+	State        StateType `json:"state,omitempty"`
+	Title        string    `json:"title,omitempty"`
+	Updated      time.Time `json:"updated_at,omitempty"`
 }
-
