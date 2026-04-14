@@ -298,12 +298,33 @@ func (s *IssueService) IterSearchIssues(ctx context.Context, opts SearchIssuesOp
 // ListIssues returns all issues in a repository.
 func (s *IssueService) ListIssues(ctx context.Context, owner, repo string, filters ...any) ([]types.Issue, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
+	if pageOpts, ok := issueListPageOptions(filters...); ok {
+		page, err := ListPage[types.Issue](ctx, s.client, path, issueListQuery(filters...), pageOpts)
+		if err != nil {
+			return nil, err
+		}
+		return page.Items, nil
+	}
 	return ListAll[types.Issue](ctx, s.client, path, issueListQuery(filters...))
 }
 
 // IterIssues returns an iterator over all issues in a repository.
 func (s *IssueService) IterIssues(ctx context.Context, owner, repo string, filters ...any) iter.Seq2[types.Issue, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
+	if pageOpts, ok := issueListPageOptions(filters...); ok {
+		return func(yield func(types.Issue, error) bool) {
+			page, err := ListPage[types.Issue](ctx, s.client, path, issueListQuery(filters...), pageOpts)
+			if err != nil {
+				yield(*new(types.Issue), err)
+				return
+			}
+			for _, item := range page.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+		}
+	}
 	return ListIter[types.Issue](ctx, s.client, path, issueListQuery(filters...))
 }
 
@@ -695,6 +716,24 @@ func issueListQueryFromCompat(filter types.ListIssueOption) map[string]string {
 		query["mentioned_by"] = filter.MentionedBy
 	}
 	return query
+}
+
+func issueListPageOptions(filters ...any) (ListOptions, bool) {
+	for _, filter := range filters {
+		switch v := filter.(type) {
+		case types.ListIssueOption:
+			if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+				return opts, true
+			}
+		case *types.ListIssueOption:
+			if v != nil {
+				if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+					return opts, true
+				}
+			}
+		}
+	}
+	return ListOptions{}, false
 }
 
 func attachmentUploadQuery(opts *AttachmentUploadOptions) map[string]string {

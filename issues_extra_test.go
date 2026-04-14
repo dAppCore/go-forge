@@ -61,3 +61,39 @@ func TestIssueService_CreateIssue_Good(t *testing.T) {
 		t.Fatalf("got title=%q", issue.Title)
 	}
 }
+
+func TestIssueService_ListRepoIssues_CompatPagination_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("state"); got != "open" {
+			t.Errorf("got state=%q, want %q", got, "open")
+		}
+		if got := r.URL.Query().Get("page"); got != "2" {
+			t.Errorf("got page=%q, want %q", got, "2")
+		}
+		if got := r.URL.Query().Get("limit"); got != "25" {
+			t.Errorf("got limit=%q, want %q", got, "25")
+		}
+		w.Header().Set("X-Total-Count", "40")
+		json.NewEncoder(w).Encode([]types.Issue{{ID: 2, Title: "paged issue"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issues, err := f.Issues.ListRepoIssues(context.Background(), "core", "go-forge", &types.ListIssueOption{
+		State:    "open",
+		Page:     2,
+		PageSize: 25,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(issues) != 1 || issues[0].Title != "paged issue" {
+		t.Fatalf("got %#v", issues)
+	}
+}

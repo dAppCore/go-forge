@@ -30,6 +30,7 @@ type AddTimeOption struct {
 //
 //	opts := ChangeFileOperation{Operation: "example"}
 type ChangeFileOperation struct {
+	Content       string `json:"-"`                   // RFC compatibility alias for ContentBase64
 	ContentBase64 string `json:"content,omitempty"`   // new or updated file content, must be base64 encoded
 	FromPath      string `json:"from_path,omitempty"` // old path of the file to move
 	Operation     string `json:"operation"`           // indicates what to do with the file

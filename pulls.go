@@ -77,11 +77,32 @@ func newPullService(c *Client) *PullService {
 
 // ListPullRequests returns all pull requests in a repository.
 func (s *PullService) ListPullRequests(ctx context.Context, owner, repo string, filters ...any) ([]types.PullRequest, error) {
+	if pageOpts, ok := compatPullListPageOptions(filters...); ok {
+		page, err := s.listPage(ctx, owner, repo, pageOpts, filters...)
+		if err != nil {
+			return nil, err
+		}
+		return page.Items, nil
+	}
 	return s.listAll(ctx, owner, repo, filters...)
 }
 
 // IterPullRequests returns an iterator over all pull requests in a repository.
 func (s *PullService) IterPullRequests(ctx context.Context, owner, repo string, filters ...any) iter.Seq2[types.PullRequest, error] {
+	if pageOpts, ok := compatPullListPageOptions(filters...); ok {
+		return func(yield func(types.PullRequest, error) bool) {
+			page, err := s.listPage(ctx, owner, repo, pageOpts, filters...)
+			if err != nil {
+				yield(*new(types.PullRequest), err)
+				return
+			}
+			for _, item := range page.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+		}
+	}
 	return s.listIter(ctx, owner, repo, filters...)
 }
 
@@ -388,6 +409,24 @@ func addCompatPullFilter(values url.Values, filter types.ListPullRequestsOption)
 	if filter.Poster != "" {
 		values.Set("poster", filter.Poster)
 	}
+}
+
+func compatPullListPageOptions(filters ...any) (ListOptions, bool) {
+	for _, filter := range filters {
+		switch v := filter.(type) {
+		case types.ListPullRequestsOption:
+			if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+				return opts, true
+			}
+		case *types.ListPullRequestsOption:
+			if v != nil {
+				if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+					return opts, true
+				}
+			}
+		}
+	}
+	return ListOptions{}, false
 }
 
 // ListReviewComments returns all comments on a pull request review.

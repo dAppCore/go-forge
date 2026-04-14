@@ -36,6 +36,7 @@ type CreateFileOptions struct {
 	Author        *Identity          `json:"author,omitempty"`
 	BranchName    string             `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
 	Committer     *Identity          `json:"committer,omitempty"`
+	Content       string             `json:"-"`       // RFC compatibility alias for ContentBase64
 	ContentBase64 string             `json:"content"` // content must be base64 encoded
 	Dates         *CommitDateOptions `json:"dates,omitempty"`
 	Message       string             `json:"message,omitempty"`    // message (optional) for the commit of this file. if not supplied, a default message will be used
@@ -127,6 +128,7 @@ type UpdateFileOptions struct {
 	Author        *Identity          `json:"author,omitempty"`
 	BranchName    string             `json:"branch,omitempty"` // branch (optional) to base this file from. if not given, the default branch is used
 	Committer     *Identity          `json:"committer,omitempty"`
+	Content       string             `json:"-"`       // RFC compatibility alias for ContentBase64
 	ContentBase64 string             `json:"content"` // content must be base64 encoded
 	Dates         *CommitDateOptions `json:"dates,omitempty"`
 	FromPath      string             `json:"from_path,omitempty"`  // from_path (optional) is the path of the original file which will be moved/renamed to the path in the URL
