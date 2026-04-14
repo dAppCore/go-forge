@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 
 	core "dappco.re/go/core"
 	coreio "dappco.re/go/core/io"
@@ -49,7 +50,7 @@ func readConfigFile() (url, token string, err error) {
 
 	data, err := coreio.Local.Read(path)
 	if err != nil {
-		if os.IsNotExist(err) {
+		if os.IsNotExist(err) || strings.Contains(err.Error(), "no such file or directory") {
 			return "", "", nil
 		}
 		return "", "", core.E("ResolveConfig", "forge: read config file", err)

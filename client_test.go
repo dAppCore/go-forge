@@ -16,7 +16,7 @@ func TestClient_Get_Good(t *testing.T) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
 		}
-		if r.Header.Get("Authorization") != "token test-token" {
+		if r.Header.Get("Authorization") != "Bearer test-token" {
 			t.Errorf("missing auth header")
 		}
 		if r.URL.Path != "/api/v1/user" {

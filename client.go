@@ -365,7 +365,9 @@ func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte
 		return nil, core.E("Client.PostRaw", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	req.Header.Set("Content-Type", "application/json")
 	if c.userAgent != "" {
 		req.Header.Set("User-Agent", c.userAgent)
@@ -399,7 +401,9 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 		return nil, core.E("Client.PostText", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	req.Header.Set("Accept", "text/html")
 	req.Header.Set("Content-Type", "text/plain")
 	if c.userAgent != "" {
@@ -466,7 +470,9 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 		return core.E("Client.PostMultipart", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	if c.userAgent != "" {
 		req.Header.Set("User-Agent", c.userAgent)
@@ -505,7 +511,9 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 		return nil, core.E("Client.GetRaw", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	if c.userAgent != "" {
 		req.Header.Set("User-Agent", c.userAgent)
 	}
@@ -552,7 +560,9 @@ func (c *Client) doJSON(ctx context.Context, method, path string, body, out any)
 		return nil, core.E("Client.doJSON", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	req.Header.Set("Accept", "application/json")
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
@@ -616,4 +626,11 @@ func (c *Client) updateRateLimit(resp *http.Response) {
 	if reset := resp.Header.Get("X-RateLimit-Reset"); reset != "" {
 		c.rateLimit.Reset, _ = strconv.ParseInt(reset, 10, 64)
 	}
+}
+
+func (c *Client) authorizationHeader() string {
+	if c == nil || c.token == "" {
+		return ""
+	}
+	return "Bearer " + c.token
 }
