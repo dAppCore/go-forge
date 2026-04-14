@@ -88,7 +88,29 @@ func newUserService(c *Client) *UserService {
 
 // GetUserByID returns a user by numeric ID.
 func (s *UserService) GetUserByID(ctx context.Context, id int64) (*types.User, error) {
-	return s.GetUserByUsername(ctx, strconv.FormatInt(id, 10))
+	if id < 1 {
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+			Message:    "user not found",
+			URL:        "/api/v1/users/search",
+		}
+	}
+
+	result, err := s.SearchUsersPage(ctx, "", ListOptions{Page: 1, PageSize: 1}, UserSearchOptions{UID: id})
+	if err != nil {
+		return nil, err
+	}
+	for i := range result.Items {
+		if result.Items[i].ID == id {
+			return &result.Items[i], nil
+		}
+	}
+
+	return nil, &APIError{
+		StatusCode: http.StatusNotFound,
+		Message:    "user not found",
+		URL:        "/api/v1/users/search",
+	}
 }
 
 // GetUserByUsername returns a user by username.
