@@ -66,6 +66,44 @@ func TestPullService_CreatePullRequest_Good(t *testing.T) {
 	}
 }
 
+func TestPullService_CreatePullRequest_LabelNamesCompat_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreatePullRequestOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		labels, ok := body.Labels.([]string)
+		if !ok {
+			t.Fatalf("expected []string labels, got %T", body.Labels)
+		}
+		if len(labels) != 1 || labels[0] != "feature" {
+			t.Fatalf("unexpected labels: %#v", labels)
+		}
+		json.NewEncoder(w).Encode(types.PullRequest{ID: 2, Title: "labelled pr", Index: 2})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	pr, err := f.Pulls.CreatePullRequest(context.Background(), "core", "go-forge", &types.CreatePullRequestOption{
+		Title:  "labelled pr",
+		Base:   "main",
+		Head:   "feature",
+		Labels: []string{"feature"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if pr.Title != "labelled pr" {
+		t.Fatalf("got title=%q", pr.Title)
+	}
+}
+
 func TestPullService_ListPullRequests_CompatPagination_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

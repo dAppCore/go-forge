@@ -62,6 +62,42 @@ func TestIssueService_CreateIssue_Good(t *testing.T) {
 	}
 }
 
+func TestIssueService_CreateIssue_LabelNamesCompat_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateIssueOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		labels, ok := body.Labels.([]string)
+		if !ok {
+			t.Fatalf("expected []string labels, got %T", body.Labels)
+		}
+		if len(labels) != 1 || labels[0] != "enhancement" {
+			t.Fatalf("unexpected labels: %#v", labels)
+		}
+		json.NewEncoder(w).Encode(types.Issue{ID: 2, Index: 2, Title: "label issue"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issue, err := f.Issues.CreateIssue(context.Background(), "core", "go-forge", &types.CreateIssueOption{
+		Title:  "label issue",
+		Labels: []string{"enhancement"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if issue.Title != "label issue" {
+		t.Fatalf("got title=%q", issue.Title)
+	}
+}
+
 func TestIssueService_ListRepoIssues_CompatPagination_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {

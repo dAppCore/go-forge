@@ -167,3 +167,35 @@ func TestParser_PrimitiveAndCollectionAliases_Good(t *testing.T) {
 		})
 	}
 }
+
+func TestParser_RFCLabelCompatibility_Good(t *testing.T) {
+	spec, err := LoadSpec("../../testdata/swagger.v1.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	types := ExtractTypes(spec)
+	cases := []string{
+		"CreateIssueOption",
+		"CreatePullRequestOption",
+		"EditPullRequestOption",
+	}
+
+	for _, typeName := range cases {
+		t.Run(typeName, func(t *testing.T) {
+			gt, ok := types[typeName]
+			if !ok {
+				t.Fatalf("type %q not found", typeName)
+			}
+			for _, field := range gt.Fields {
+				if field.JSONName == "labels" {
+					if field.GoType != "any" {
+						t.Fatalf("labels field: got %q, want any", field.GoType)
+					}
+					return
+				}
+			}
+			t.Fatalf("labels field not found on %s", typeName)
+		})
+	}
+}
