@@ -75,6 +75,11 @@ func newPullService(c *Client) *PullService {
 	}
 }
 
+// ListPullRequestsPage returns a single page of pull requests in a repository.
+func (s *PullService) ListPullRequestsPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...any) (*PagedResult[types.PullRequest], error) {
+	return s.listPage(ctx, owner, repo, opts, filters...)
+}
+
 // ListPullRequests returns all pull requests in a repository.
 func (s *PullService) ListPullRequests(ctx context.Context, owner, repo string, filters ...any) ([]types.PullRequest, error) {
 	if pageOpts, ok := compatPullListPageOptions(filters...); ok {

@@ -110,6 +110,13 @@ func (s *CommitService) Get(ctx context.Context, params Params) (*types.Commit, 
 	return &out, nil
 }
 
+// ListCommitsPage returns a single page of commits for a repository.
+func (s *CommitService) ListCommitsPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...any) (*PagedResult[types.Commit], error) {
+	params := pathParams("owner", owner, "repo", repo)
+	path := ResolvePath(commitCollectionPath, params)
+	return ListPage[types.Commit](ctx, s.client, path, commitCompatListQuery(filters...), opts)
+}
+
 // ListCommits returns commits for a repository using RFC-compatible filters.
 func (s *CommitService) ListCommits(ctx context.Context, owner, repo string, filters ...any) ([]types.Commit, error) {
 	params := pathParams("owner", owner, "repo", repo)

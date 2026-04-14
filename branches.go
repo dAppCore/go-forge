@@ -25,6 +25,12 @@ func newBranchService(c *Client) *BranchService {
 	}
 }
 
+// ListBranchesPage returns a single page of branches for a repository.
+func (s *BranchService) ListBranchesPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Branch], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Branch](ctx, s.client, path, nil, opts)
+}
+
 // ListBranches returns all branches for a repository.
 func (s *BranchService) ListBranches(ctx context.Context, owner, repo string) ([]types.Branch, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches", pathParams("owner", owner, "repo", repo))

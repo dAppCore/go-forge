@@ -26,10 +26,21 @@ func newWebhookService(c *Client) *WebhookService {
 	}
 }
 
+// ListHooksPage returns a single page of webhooks for a repository.
+func (s *WebhookService) ListHooksPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Hook], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Hook](ctx, s.client, path, nil, opts)
+}
+
 // ListHooks returns all webhooks for a repository.
 func (s *WebhookService) ListHooks(ctx context.Context, owner, repo string) ([]types.Hook, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
 	return ListAll[types.Hook](ctx, s.client, path, nil)
+}
+
+// ListRepoHooksPage returns a single page of webhooks for a repository.
+func (s *WebhookService) ListRepoHooksPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Hook], error) {
+	return s.ListHooksPage(ctx, owner, repo, opts)
 }
 
 // ListRepoHooks returns all webhooks for a repository.
@@ -126,6 +137,11 @@ func (s *WebhookService) ListUserHooks(ctx context.Context) ([]types.Hook, error
 	return ListAll[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil)
 }
 
+// ListUserHooksPage returns a single page of webhooks for the authenticated user.
+func (s *WebhookService) ListUserHooksPage(ctx context.Context, opts ListOptions) (*PagedResult[types.Hook], error) {
+	return ListPage[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil, opts)
+}
+
 // IterUserHooks returns an iterator over all webhooks for the authenticated user.
 func (s *WebhookService) IterUserHooks(ctx context.Context) iter.Seq2[types.Hook, error] {
 	return ListIter[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil)
@@ -170,6 +186,12 @@ func (s *WebhookService) DeleteUserHook(ctx context.Context, id int64) error {
 func (s *WebhookService) ListOrgHooks(ctx context.Context, org string) ([]types.Hook, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/hooks", pathParams("org", org))
 	return ListAll[types.Hook](ctx, s.client, path, nil)
+}
+
+// ListOrgHooksPage returns a single page of webhooks for an organisation.
+func (s *WebhookService) ListOrgHooksPage(ctx context.Context, org string, opts ListOptions) (*PagedResult[types.Hook], error) {
+	path := ResolvePath("/api/v1/orgs/{org}/hooks", pathParams("org", org))
+	return ListPage[types.Hook](ctx, s.client, path, nil, opts)
 }
 
 // IterOrgHooks returns an iterator over all webhooks for an organisation.

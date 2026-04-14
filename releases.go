@@ -100,6 +100,12 @@ func newReleaseService(c *Client) *ReleaseService {
 	}
 }
 
+// ListReleasesPage returns a single page of releases in a repository.
+func (s *ReleaseService) ListReleasesPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...ReleaseListOptions) (*PagedResult[types.Release], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Release](ctx, s.client, path, releaseListQuery(filters...), opts)
+}
+
 // ListReleases returns all releases in a repository.
 func (s *ReleaseService) ListReleases(ctx context.Context, owner, repo string, filters ...ReleaseListOptions) ([]types.Release, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))

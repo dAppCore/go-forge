@@ -181,6 +181,12 @@ func (s *RepoService) CreateOrgRepoDeprecated(ctx context.Context, org string, o
 	return &out, nil
 }
 
+// ListOrgReposPage returns a single page of repositories for an organisation.
+func (s *RepoService) ListOrgReposPage(ctx context.Context, org string, opts ListOptions) (*PagedResult[types.Repository], error) {
+	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
+	return ListPage[types.Repository](ctx, s.client, path, nil, opts)
+}
+
 // ListOrgRepos returns all repositories for an organisation.
 func (s *RepoService) ListOrgRepos(ctx context.Context, org string) ([]types.Repository, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
@@ -191,6 +197,17 @@ func (s *RepoService) ListOrgRepos(ctx context.Context, org string) ([]types.Rep
 func (s *RepoService) IterOrgRepos(ctx context.Context, org string) iter.Seq2[types.Repository, error] {
 	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
 	return ListIter[types.Repository](ctx, s.client, path, nil)
+}
+
+// ListCurrentUserReposPage returns a single page of repositories for the authenticated user.
+func (s *RepoService) ListCurrentUserReposPage(ctx context.Context, opts ListOptions) (*PagedResult[types.Repository], error) {
+	return ListPage[types.Repository](ctx, s.client, "/api/v1/user/repos", nil, opts)
+}
+
+// ListUserReposPage returns a single page of repositories for a user.
+func (s *RepoService) ListUserReposPage(ctx context.Context, username string, opts ListOptions) (*PagedResult[types.Repository], error) {
+	path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username))
+	return ListPage[types.Repository](ctx, s.client, path, nil, opts)
 }
 
 // ListUserRepos returns all repositories for a user.

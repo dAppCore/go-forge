@@ -295,6 +295,12 @@ func (s *IssueService) IterSearchIssues(ctx context.Context, opts SearchIssuesOp
 	return ListIter[types.Issue](ctx, s.client, "/api/v1/repos/issues/search", opts.queryParams())
 }
 
+// ListIssuesPage returns a single page of issues in a repository.
+func (s *IssueService) ListIssuesPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...any) (*PagedResult[types.Issue], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Issue](ctx, s.client, path, issueListQuery(filters...), opts)
+}
+
 // ListIssues returns all issues in a repository.
 func (s *IssueService) ListIssues(ctx context.Context, owner, repo string, filters ...any) ([]types.Issue, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
@@ -331,6 +337,11 @@ func (s *IssueService) IterIssues(ctx context.Context, owner, repo string, filte
 // ListRepoIssues returns all issues in a repository.
 func (s *IssueService) ListRepoIssues(ctx context.Context, owner, repo string, filters ...any) ([]types.Issue, error) {
 	return s.ListIssues(ctx, owner, repo, filters...)
+}
+
+// ListRepoIssuesPage returns a single page of issues in a repository.
+func (s *IssueService) ListRepoIssuesPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...any) (*PagedResult[types.Issue], error) {
+	return s.ListIssuesPage(ctx, owner, repo, opts, filters...)
 }
 
 // IterRepoIssues returns an iterator over all issues in a repository.

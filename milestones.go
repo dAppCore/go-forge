@@ -53,6 +53,11 @@ func newMilestoneService(c *Client) *MilestoneService {
 	return &MilestoneService{client: c}
 }
 
+// ListMilestonesPage returns a single page of milestones for a repository.
+func (s *MilestoneService) ListMilestonesPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...MilestoneListOptions) (*PagedResult[types.Milestone], error) {
+	return s.List(ctx, pathParams("owner", owner, "repo", repo), opts, filters...)
+}
+
 // ListMilestones returns all milestones for a repository.
 func (s *MilestoneService) ListMilestones(ctx context.Context, owner, repo string, filters ...MilestoneListOptions) ([]types.Milestone, error) {
 	return s.ListAll(ctx, pathParams("owner", owner, "repo", repo), filters...)
