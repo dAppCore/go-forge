@@ -473,6 +473,7 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 	if auth := c.authorizationHeader(); auth != "" {
 		req.Header.Set("Authorization", auth)
 	}
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	if c.userAgent != "" {
 		req.Header.Set("User-Agent", c.userAgent)
@@ -483,6 +484,8 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 		return core.E("Client.PostMultipart", "forge: request POST "+path, err)
 	}
 	defer resp.Body.Close()
+
+	c.updateRateLimit(resp)
 
 	if resp.StatusCode >= 400 {
 		return c.parseError(resp, path)
