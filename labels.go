@@ -28,10 +28,20 @@ func (s *LabelService) ListRepoLabels(ctx context.Context, owner, repo string) (
 	return ListAll[types.Label](ctx, s.client, path, nil)
 }
 
+// ListLabels returns all labels for a repository.
+func (s *LabelService) ListLabels(ctx context.Context, owner, repo string) ([]types.Label, error) {
+	return s.ListRepoLabels(ctx, owner, repo)
+}
+
 // IterRepoLabels returns an iterator over all labels for a repository.
 func (s *LabelService) IterRepoLabels(ctx context.Context, owner, repo string) iter.Seq2[types.Label, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/labels", pathParams("owner", owner, "repo", repo))
 	return ListIter[types.Label](ctx, s.client, path, nil)
+}
+
+// IterLabels returns an iterator over all labels for a repository.
+func (s *LabelService) IterLabels(ctx context.Context, owner, repo string) iter.Seq2[types.Label, error] {
+	return s.IterRepoLabels(ctx, owner, repo)
 }
 
 // GetRepoLabel returns a single label by ID.

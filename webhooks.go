@@ -32,10 +32,20 @@ func (s *WebhookService) ListHooks(ctx context.Context, owner, repo string) ([]t
 	return ListAll[types.Hook](ctx, s.client, path, nil)
 }
 
+// ListRepoHooks returns all webhooks for a repository.
+func (s *WebhookService) ListRepoHooks(ctx context.Context, owner, repo string) ([]types.Hook, error) {
+	return s.ListHooks(ctx, owner, repo)
+}
+
 // IterHooks returns an iterator over all webhooks for a repository.
 func (s *WebhookService) IterHooks(ctx context.Context, owner, repo string) iter.Seq2[types.Hook, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
 	return ListIter[types.Hook](ctx, s.client, path, nil)
+}
+
+// IterRepoHooks returns an iterator over all webhooks for a repository.
+func (s *WebhookService) IterRepoHooks(ctx context.Context, owner, repo string) iter.Seq2[types.Hook, error] {
+	return s.IterHooks(ctx, owner, repo)
 }
 
 // CreateHook creates a webhook for a repository.
@@ -45,6 +55,26 @@ func (s *WebhookService) CreateHook(ctx context.Context, owner, repo string, opt
 		return nil, err
 	}
 	return &out, nil
+}
+
+// CreateRepoHook creates a webhook for a repository.
+func (s *WebhookService) CreateRepoHook(ctx context.Context, owner, repo string, opts *types.CreateHookOption) (*types.Hook, error) {
+	return s.CreateHook(ctx, owner, repo, opts)
+}
+
+// GetRepoHook returns a single webhook for a repository.
+func (s *WebhookService) GetRepoHook(ctx context.Context, owner, repo string, id int64) (*types.Hook, error) {
+	return s.Get(ctx, pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+}
+
+// EditRepoHook updates an existing webhook in a repository.
+func (s *WebhookService) EditRepoHook(ctx context.Context, owner, repo string, id int64, opts *types.EditHookOption) (*types.Hook, error) {
+	return s.Update(ctx, pathParams("owner", owner, "repo", repo, "id", int64String(id)), opts)
+}
+
+// DeleteRepoHook deletes a webhook from a repository.
+func (s *WebhookService) DeleteRepoHook(ctx context.Context, owner, repo string, id int64) error {
+	return s.Delete(ctx, pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 }
 
 // TestHook triggers a test delivery for a webhook.

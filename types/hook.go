@@ -10,12 +10,12 @@ import "time"
 //
 //	opts := CreateHookOption{Type: "example"}
 type CreateHookOption struct {
-	Active              bool                    `json:"active,omitempty"`
-	AuthorizationHeader string                  `json:"authorization_header,omitempty"`
-	BranchFilter        string                  `json:"branch_filter,omitempty"`
-	Config              *CreateHookOptionConfig `json:"config"`
-	Events              []string                `json:"events,omitempty"`
-	Type                string                  `json:"type"`
+	Active              bool     `json:"active,omitempty"`
+	AuthorizationHeader string   `json:"authorization_header,omitempty"`
+	BranchFilter        string   `json:"branch_filter,omitempty"`
+	Config              any      `json:"config"`
+	Events              []string `json:"events,omitempty"`
+	Type                string   `json:"type"`
 }
 
 // CreateHookOptionConfig — CreateHookOptionConfig has all config options in it required are "content_type" and "url" Required

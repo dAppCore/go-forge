@@ -203,6 +203,7 @@ type MergePullRequestOption struct {
 	MergeMessageField      string `json:"MergeMessageField,omitempty"`
 	MergeTitleField        string `json:"MergeTitleField,omitempty"`
 	MergeWhenChecksSucceed bool   `json:"merge_when_checks_succeed,omitempty"`
+	MergeStyle             string `json:"-"`
 }
 
 // MigrateRepoOptions — MigrateRepoOptions options for migrating repository's this is used to interact with api v1

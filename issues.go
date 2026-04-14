@@ -28,6 +28,7 @@ type IssueService struct {
 //	opts := forge.IssueListOptions{State: "open", Labels: "bug"}
 type IssueListOptions struct {
 	State       string
+	Sort        string
 	Labels      string
 	Query       string
 	Type        string
@@ -43,6 +44,7 @@ type IssueListOptions struct {
 func (o IssueListOptions) String() string {
 	return optionString("forge.IssueListOptions",
 		"state", o.State,
+		"sort", o.Sort,
 		"labels", o.Labels,
 		"q", o.Query,
 		"type", o.Type,
@@ -62,6 +64,9 @@ func (o IssueListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 10)
 	if o.State != "" {
 		query["state"] = o.State
+	}
+	if o.Sort != "" {
+		query["sort"] = o.Sort
 	}
 	if o.Labels != "" {
 		query["labels"] = o.Labels
@@ -158,6 +163,21 @@ func newIssueService(c *Client) *IssueService {
 			c, "/api/v1/repos/{owner}/{repo}/issues/{index}",
 		),
 	}
+}
+
+// GetIssue returns a single issue by index.
+func (s *IssueService) GetIssue(ctx context.Context, owner, repo string, index int64) (*types.Issue, error) {
+	return s.Get(ctx, pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+}
+
+// EditIssue updates an existing issue.
+func (s *IssueService) EditIssue(ctx context.Context, owner, repo string, index int64, opts *types.EditIssueOption) (*types.Issue, error) {
+	return s.Update(ctx, pathParams("owner", owner, "repo", repo, "index", int64String(index)), opts)
+}
+
+// DeleteIssue deletes an issue.
+func (s *IssueService) DeleteIssue(ctx context.Context, owner, repo string, index int64) error {
+	return s.Delete(ctx, pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 }
 
 // SearchIssuesOptions controls filtering for the global issue search endpoint.
@@ -276,15 +296,25 @@ func (s *IssueService) IterSearchIssues(ctx context.Context, opts SearchIssuesOp
 }
 
 // ListIssues returns all issues in a repository.
-func (s *IssueService) ListIssues(ctx context.Context, owner, repo string, filters ...IssueListOptions) ([]types.Issue, error) {
+func (s *IssueService) ListIssues(ctx context.Context, owner, repo string, filters ...any) ([]types.Issue, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
 	return ListAll[types.Issue](ctx, s.client, path, issueListQuery(filters...))
 }
 
 // IterIssues returns an iterator over all issues in a repository.
-func (s *IssueService) IterIssues(ctx context.Context, owner, repo string, filters ...IssueListOptions) iter.Seq2[types.Issue, error] {
+func (s *IssueService) IterIssues(ctx context.Context, owner, repo string, filters ...any) iter.Seq2[types.Issue, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues", pathParams("owner", owner, "repo", repo))
 	return ListIter[types.Issue](ctx, s.client, path, issueListQuery(filters...))
+}
+
+// ListRepoIssues returns all issues in a repository.
+func (s *IssueService) ListRepoIssues(ctx context.Context, owner, repo string, filters ...any) ([]types.Issue, error) {
+	return s.ListIssues(ctx, owner, repo, filters...)
+}
+
+// IterRepoIssues returns an iterator over all issues in a repository.
+func (s *IssueService) IterRepoIssues(ctx context.Context, owner, repo string, filters ...any) iter.Seq2[types.Issue, error] {
+	return s.IterIssues(ctx, owner, repo, filters...)
 }
 
 // CreateIssue creates a new issue in a repository.
@@ -430,10 +460,40 @@ func (s *IssueService) ListComments(ctx context.Context, owner, repo string, ind
 	return ListAll[types.Comment](ctx, s.client, path, nil)
 }
 
+// ListIssueComments returns all comments on an issue.
+func (s *IssueService) ListIssueComments(ctx context.Context, owner, repo string, index int64) ([]types.Comment, error) {
+	return s.ListComments(ctx, owner, repo, index)
+}
+
 // IterComments returns an iterator over all comments on an issue.
 func (s *IssueService) IterComments(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.Comment, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/comments", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	return ListIter[types.Comment](ctx, s.client, path, nil)
+}
+
+// IterIssueComments returns an iterator over all comments on an issue.
+func (s *IssueService) IterIssueComments(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.Comment, error] {
+	return s.IterComments(ctx, owner, repo, index)
+}
+
+// GetIssueComment returns a single comment on an issue.
+func (s *IssueService) GetIssueComment(ctx context.Context, owner, repo string, index, id int64) (*types.Comment, error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/issues/{index}/comments/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(id)))
+	var out types.Comment
+	if err := s.client.Get(ctx, path, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// EditIssueComment updates an issue comment.
+func (s *IssueService) EditIssueComment(ctx context.Context, owner, repo string, index, id int64, opts *types.EditIssueCommentOption) (*types.Comment, error) {
+	return s.EditComment(ctx, owner, repo, index, id, opts)
+}
+
+// DeleteIssueComment deletes an issue comment.
+func (s *IssueService) DeleteIssueComment(ctx context.Context, owner, repo string, index, id int64) error {
+	return s.DeleteComment(ctx, owner, repo, index, id)
 }
 
 // CreateComment creates a comment on an issue.
@@ -529,15 +589,110 @@ func (s *IssueService) DeleteCommentReaction(ctx context.Context, owner, repo st
 	return s.client.DeleteWithBody(ctx, path, types.EditReactionOption{Reaction: reaction})
 }
 
-func issueListQuery(filters ...IssueListOptions) map[string]string {
+func issueListQuery(filters ...any) map[string]string {
 	query := make(map[string]string, len(filters))
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
+		switch v := filter.(type) {
+		case IssueListOptions:
+			for key, value := range issueListQueryFromOption(v) {
+				query[key] = value
+			}
+		case *IssueListOptions:
+			if v != nil {
+				for key, value := range issueListQueryFromOption(*v) {
+					query[key] = value
+				}
+			}
+		case types.ListIssueOption:
+			for key, value := range issueListQueryFromCompat(v) {
+				query[key] = value
+			}
+		case *types.ListIssueOption:
+			if v != nil {
+				for key, value := range issueListQueryFromCompat(*v) {
+					query[key] = value
+				}
+			}
 		}
 	}
 	if len(query) == 0 {
 		return nil
+	}
+	return query
+}
+
+func issueListQueryFromOption(filter IssueListOptions) map[string]string {
+	query := make(map[string]string, 10)
+	if filter.State != "" {
+		query["state"] = filter.State
+	}
+	if filter.Sort != "" {
+		query["sort"] = filter.Sort
+	}
+	if filter.Labels != "" {
+		query["labels"] = filter.Labels
+	}
+	if filter.Query != "" {
+		query["q"] = filter.Query
+	}
+	if filter.Type != "" {
+		query["type"] = filter.Type
+	}
+	if filter.Milestones != "" {
+		query["milestones"] = filter.Milestones
+	}
+	if filter.Since != nil {
+		query["since"] = filter.Since.Format(time.RFC3339)
+	}
+	if filter.Before != nil {
+		query["before"] = filter.Before.Format(time.RFC3339)
+	}
+	if filter.CreatedBy != "" {
+		query["created_by"] = filter.CreatedBy
+	}
+	if filter.AssignedBy != "" {
+		query["assigned_by"] = filter.AssignedBy
+	}
+	if filter.MentionedBy != "" {
+		query["mentioned_by"] = filter.MentionedBy
+	}
+	return query
+}
+
+func issueListQueryFromCompat(filter types.ListIssueOption) map[string]string {
+	query := make(map[string]string, 10)
+	if filter.State != "" {
+		query["state"] = filter.State
+	}
+	if filter.Sort != "" {
+		query["sort"] = filter.Sort
+	}
+	if filter.Labels != "" {
+		query["labels"] = filter.Labels
+	}
+	if filter.Query != "" {
+		query["q"] = filter.Query
+	}
+	if filter.Type != "" {
+		query["type"] = filter.Type
+	}
+	if filter.Milestones != "" {
+		query["milestones"] = filter.Milestones
+	}
+	if filter.Since != nil {
+		query["since"] = filter.Since.Format(time.RFC3339)
+	}
+	if filter.Before != nil {
+		query["before"] = filter.Before.Format(time.RFC3339)
+	}
+	if filter.CreatedBy != "" {
+		query["created_by"] = filter.CreatedBy
+	}
+	if filter.AssignedBy != "" {
+		query["assigned_by"] = filter.AssignedBy
+	}
+	if filter.MentionedBy != "" {
+		query["mentioned_by"] = filter.MentionedBy
 	}
 	return query
 }

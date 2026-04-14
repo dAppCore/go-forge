@@ -73,6 +73,11 @@ func (s *ContentService) GetFile(ctx context.Context, owner, repo, filepath stri
 	return &out, nil
 }
 
+// GetContents returns metadata and content for a file in a repository.
+func (s *ContentService) GetContents(ctx context.Context, owner, repo, filepath string) (*types.ContentsResponse, error) {
+	return s.GetFile(ctx, owner, repo, filepath)
+}
+
 // CreateFile creates a new file in a repository.
 func (s *ContentService) CreateFile(ctx context.Context, owner, repo, filepath string, opts *types.CreateFileOptions) (*types.FileResponse, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/contents/{filepath}", pathParams("owner", owner, "repo", repo, "filepath", filepath))

@@ -131,6 +131,11 @@ func (s *ReleaseService) GetByTag(ctx context.Context, owner, repo, tag string) 
 	return &out, nil
 }
 
+// GetRelease returns a release by its tag name.
+func (s *ReleaseService) GetRelease(ctx context.Context, owner, repo, tag string) (*types.Release, error) {
+	return s.GetByTag(ctx, owner, repo, tag)
+}
+
 // GetLatest returns the most recent non-prerelease, non-draft release.
 func (s *ReleaseService) GetLatest(ctx context.Context, owner, repo string) (*types.Release, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases/latest", pathParams("owner", owner, "repo", repo))

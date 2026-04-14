@@ -128,6 +128,21 @@ func newRepoService(c *Client) *RepoService {
 	}
 }
 
+// GetRepo returns a repository by owner and name.
+func (s *RepoService) GetRepo(ctx context.Context, owner, repo string) (*types.Repository, error) {
+	return s.Get(ctx, pathParams("owner", owner, "repo", repo))
+}
+
+// UpdateRepo updates an existing repository.
+func (s *RepoService) UpdateRepo(ctx context.Context, owner, repo string, opts *types.EditRepoOption) (*types.Repository, error) {
+	return s.Update(ctx, pathParams("owner", owner, "repo", repo), opts)
+}
+
+// DeleteRepo deletes a repository.
+func (s *RepoService) DeleteRepo(ctx context.Context, owner, repo string) error {
+	return s.Delete(ctx, pathParams("owner", owner, "repo", repo))
+}
+
 // Migrate imports a remote git repository into Forgejo.
 func (s *RepoService) Migrate(ctx context.Context, opts *types.MigrateRepoOptions) (*types.Repository, error) {
 	var out types.Repository
@@ -178,13 +193,23 @@ func (s *RepoService) IterOrgRepos(ctx context.Context, org string) iter.Seq2[ty
 	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
-// ListUserRepos returns all repositories for the authenticated user.
-func (s *RepoService) ListUserRepos(ctx context.Context) ([]types.Repository, error) {
+// ListUserRepos returns all repositories for a user.
+// When username is omitted, it returns repositories for the authenticated user.
+func (s *RepoService) ListUserRepos(ctx context.Context, username ...string) ([]types.Repository, error) {
+	if len(username) > 0 && username[0] != "" {
+		path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username[0]))
+		return ListAll[types.Repository](ctx, s.client, path, nil)
+	}
 	return ListAll[types.Repository](ctx, s.client, "/api/v1/user/repos", nil)
 }
 
-// IterUserRepos returns an iterator over all repositories for the authenticated user.
-func (s *RepoService) IterUserRepos(ctx context.Context) iter.Seq2[types.Repository, error] {
+// IterUserRepos returns an iterator over repositories for a user.
+// When username is omitted, it returns repositories for the authenticated user.
+func (s *RepoService) IterUserRepos(ctx context.Context, username ...string) iter.Seq2[types.Repository, error] {
+	if len(username) > 0 && username[0] != "" {
+		path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username[0]))
+		return ListIter[types.Repository](ctx, s.client, path, nil)
+	}
 	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/repos", nil)
 }
 
