@@ -1,0 +1,25 @@
+version: "3"
+
+tasks:
+  default:
+    deps: [test]
+
+  test:
+    desc: Validate the go-forge AX-10 CLI artifact driver.
+    dir: ../../..
+    cmds:
+      - |
+        export GOCACHE="${GOCACHE:-/tmp/go-forge-gocache}"
+        export GOMODCACHE="${GOMODCACHE:-/tmp/go-forge-gomodcache}"
+        export GOWORK=off
+        mkdir -p "$GOCACHE" "$GOMODCACHE"
+        bin="$(mktemp -t core-forge.XXXXXX)"
+        trap 'rm -f "$bin"' EXIT
+        go build -o "$bin" ./tests/cli/forge
+        "$bin"
+
+  driver:
+    desc: Run the go-forge AX-10 driver directly.
+    dir: ../../..
+    cmds:
+      - GOWORK=off go run ./tests/cli/forge
