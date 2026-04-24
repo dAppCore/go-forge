@@ -1,15 +1,19 @@
 package forge
 
 import (
+	// Note: bytes.Buffer/Reader for body buffering.
 	"bytes"
 	"context"
 	// Note: goccy/go-json — faster drop-in encoding/json replacement; no core equivalent for JSON-decoder performance profile.
 	json "github.com/goccy/go-json"
+	// Note: multipart writer for file uploads; no core equivalent.
 	"mime/multipart"
+	// Note: HTTP client primitives; no core.Client equivalent.
 	"net/http"
 	"net/url"
 	"strconv"
 
+	// Note: io.Reader/Writer for streaming upload.
 	goio "io"
 
 	core "dappco.re/go/core"
