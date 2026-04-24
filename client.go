@@ -3,6 +3,7 @@ package forge
 import (
 	"bytes"
 	"context"
+	// Note: goccy/go-json — faster drop-in encoding/json replacement; no core equivalent for JSON-decoder performance profile.
 	json "github.com/goccy/go-json"
 	"mime/multipart"
 	"net/http"
