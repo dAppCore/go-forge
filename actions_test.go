@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestActionsService_ListRepoSecrets_Good(t *testing.T) {

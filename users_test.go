@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestUserService_Get_Good(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // ContentService handles file read/write operations via the Forgejo API.

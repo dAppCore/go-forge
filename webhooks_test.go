@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestWebhookService_List_Good(t *testing.T) {

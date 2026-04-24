@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestMilestoneService_List_Good(t *testing.T) {

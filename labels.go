@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // LabelService handles repository labels, organisation labels, and issue labels.

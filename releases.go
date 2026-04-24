@@ -7,7 +7,7 @@ import (
 
 	goio "io"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // ReleaseService handles release operations within a repository.

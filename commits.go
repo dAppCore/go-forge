@@ -5,7 +5,7 @@ import (
 	"iter"
 	"strconv"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // CommitService handles commit-related operations such as commit statuses

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // OrgService handles organisation operations.

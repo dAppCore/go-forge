@@ -9,7 +9,7 @@ import (
 	"time"
 
 	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // RepoService handles repository operations.

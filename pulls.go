@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // PullService handles pull request operations within a repository.

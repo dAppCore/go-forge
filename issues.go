@@ -8,7 +8,7 @@ import (
 
 	goio "io"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // IssueService handles issue operations within a repository.
