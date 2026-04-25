@@ -1,22 +1,19 @@
 package forge
 
 import (
+	// Note: AX-6 — request cancellation and deadlines are structural to HTTP calls; no core context primitive exists.
 	"context"
 	// Note: goccy/go-json — faster drop-in encoding/json replacement; no core equivalent for JSON-decoder performance profile.
 	json "github.com/goccy/go-json"
-	// Note: AX-6 intrinsic — multipart upload bodies require the standard multipart writer; core-io provides storage, not multipart encoding.
+	// Note: AX-6 — multipart upload bodies require the standard multipart writer; core-io provides storage, not multipart encoding.
 	"mime/multipart"
-	// Note: HTTP client primitives; no core.Client equivalent.
+	// Note: AX-6 — this low-level Forgejo client owns the HTTP boundary; no core.Client equivalent exists.
 	"net/http"
-	// Note: AX-6 intrinsic — URL parsing/query encoding is structural here; core.URLParse/core.URLEncode are not available in the pinned core module.
-	"net/url"
-	// Note: AX-6 intrinsic — integer conversion, quoting, and rate-limit parsing need strconv; core.Itoa/core.Atoi are not available in the pinned core module.
-	"strconv"
-	// Note: AX-6 intrinsic — stream types, multipart content piping, and bounded HTTP error reads require io; coreio Medium only replaces multipart buffering below.
+	// Note: AX-6 — stream types, multipart content piping, and bounded HTTP error reads require io; coreio Medium only replaces multipart buffering below.
 	goio "io"
 
 	core "dappco.re/go/core"
-	coreio "dappco.re/go/core/io"
+	coreio "dappco.re/go/io"
 )
 
 // APIError represents an error response from the Forgejo API.
@@ -41,7 +38,7 @@ func (e *APIError) Error() string {
 	if e == nil {
 		return "forge.APIError{<nil>}"
 	}
-	return core.Concat("forge: ", e.URL, " ", strconv.Itoa(e.StatusCode), ": ", e.Message)
+	return core.Concat("forge: ", e.URL, " ", core.Itoa(e.StatusCode), ": ", e.Message)
 }
 
 // String returns a safe summary of the API error.
@@ -140,11 +137,11 @@ type RateLimit struct {
 func (r RateLimit) String() string {
 	return core.Concat(
 		"forge.RateLimit{limit=",
-		strconv.Itoa(r.Limit),
+		core.Itoa(r.Limit),
 		", remaining=",
-		strconv.Itoa(r.Remaining),
+		core.Itoa(r.Remaining),
 		", reset=",
-		strconv.FormatInt(r.Reset, 10),
+		core.FormatInt(r.Reset, 10),
 		"}",
 	)
 }
@@ -231,7 +228,7 @@ func (c *Client) String() string {
 	if c.HasToken() {
 		tokenState = "set"
 	}
-	return core.Concat("forge.Client{baseURL=", strconv.Quote(c.baseURL), ", token=", tokenState, ", userAgent=", strconv.Quote(c.userAgent), "}")
+	return core.Concat("forge.Client{baseURL=", core.Sprintf("%q", c.baseURL), ", token=", tokenState, ", userAgent=", core.Sprintf("%q", c.userAgent), "}")
 }
 
 // GoString returns a safe Go-syntax summary of the client configuration.
@@ -437,16 +434,32 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 }
 
 func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[string]string, fields map[string]string, fieldName, fileName string, content goio.Reader, out any) error {
-	target, err := url.Parse(c.baseURL + path)
-	if err != nil {
+	target := c.baseURL + path
+	parsedTarget := core.URLParse(target)
+	if !parsedTarget.OK {
+		var err error
+		if parseErr, ok := parsedTarget.Value.(error); ok {
+			err = parseErr
+		}
 		return core.E("Client.PostMultipart", "forge: parse url", err)
 	}
+	targetStringer, ok := parsedTarget.Value.(interface{ String() string })
+	if !ok {
+		return core.E("Client.PostMultipart", "forge: parse url", nil)
+	}
+	target = targetStringer.String()
 	if len(query) > 0 {
-		values := target.Query()
+		values := newQueryBuilder()
 		for key, value := range query {
 			values.Set(key, value)
 		}
-		target.RawQuery = values.Encode()
+		if encoded := values.Encode(); encoded != "" {
+			separator := "?"
+			if core.Contains(target, "?") {
+				separator = "&"
+			}
+			target = core.Concat(target, separator, encoded)
+		}
 	}
 
 	body := coreio.NewMemoryMedium()
@@ -493,7 +506,7 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 	}
 	defer bodyReader.Close()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target.String(), bodyReader)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target, bodyReader)
 	if err != nil {
 		return core.E("Client.PostMultipart", "forge: create request", err)
 	}
@@ -666,14 +679,36 @@ func readBody(reader any) ([]byte, error) {
 
 func (c *Client) updateRateLimit(resp *http.Response) {
 	if limit := resp.Header.Get("X-RateLimit-Limit"); limit != "" {
-		c.rateLimit.Limit, _ = strconv.Atoi(limit)
+		c.rateLimit.Limit = parseRateLimitInt(limit)
 	}
 	if remaining := resp.Header.Get("X-RateLimit-Remaining"); remaining != "" {
-		c.rateLimit.Remaining, _ = strconv.Atoi(remaining)
+		c.rateLimit.Remaining = parseRateLimitInt(remaining)
 	}
 	if reset := resp.Header.Get("X-RateLimit-Reset"); reset != "" {
-		c.rateLimit.Reset, _ = strconv.ParseInt(reset, 10, 64)
+		c.rateLimit.Reset = parseRateLimitInt64(reset)
 	}
+}
+
+func parseRateLimitInt(value string) int {
+	result := core.Atoi(value)
+	if !result.OK {
+		return 0
+	}
+	if parsed, ok := result.Value.(int); ok {
+		return parsed
+	}
+	return 0
+}
+
+func parseRateLimitInt64(value string) int64 {
+	result := core.ParseInt(value, 10, 64)
+	if !result.OK {
+		return 0
+	}
+	if parsed, ok := result.Value.(int64); ok {
+		return parsed
+	}
+	return 0
 }
 
 func (c *Client) authorizationHeader() string {
