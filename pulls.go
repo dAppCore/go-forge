@@ -3,10 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
-	"net/url"
-	"strconv"
 
-	core "dappco.re/go/core"
 	"dappco.re/go/forge/types"
 )
 
@@ -47,7 +44,7 @@ func (o PullListOptions) String() string {
 // GoString returns a safe Go-syntax summary of the pull request list filters.
 func (o PullListOptions) GoString() string { return o.String() }
 
-func (o PullListOptions) addQuery(values url.Values) {
+func (o PullListOptions) addQuery(values *queryBuilder) {
 	if o.State != "" {
 		values.Set("state", o.State)
 	}
@@ -55,11 +52,11 @@ func (o PullListOptions) addQuery(values url.Values) {
 		values.Set("sort", o.Sort)
 	}
 	if o.Milestone != 0 {
-		values.Set("milestone", strconv.FormatInt(o.Milestone, 10))
+		values.Set("milestone", int64String(o.Milestone))
 	}
 	for _, label := range o.Labels {
 		if label != 0 {
-			values.Add("labels", strconv.FormatInt(label, 10))
+			values.Add("labels", int64String(label))
 		}
 	}
 	if o.Poster != "" {
@@ -309,24 +306,19 @@ func (s *PullService) listPage(ctx context.Context, owner, repo string, opts Lis
 	}
 
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
-	u, err := url.Parse(path)
-	if err != nil {
-		return nil, core.E("PullService.listPage", "forge: parse path", err)
-	}
-
-	values := u.Query()
-	values.Set("page", strconv.Itoa(opts.Page))
-	values.Set("limit", strconv.Itoa(pageSize))
-	addPullFilters(values, filters...)
-	u.RawQuery = values.Encode()
+	path = appendQuery(path, func(values *queryBuilder) {
+		values.Set("page", intString(opts.Page))
+		values.Set("limit", intString(pageSize))
+		addPullFilters(values, filters...)
+	})
 
 	var items []types.PullRequest
-	resp, err := s.client.doJSON(ctx, "GET", u.String(), nil, &items)
+	resp, err := s.client.doJSON(ctx, "GET", path, nil, &items)
 	if err != nil {
 		return nil, err
 	}
 
-	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	totalCount := parseInt(resp.Header.Get("X-Total-Count"))
 	return &PagedResult[types.PullRequest]{
 		Items:      items,
 		TotalCount: totalCount,
@@ -377,7 +369,7 @@ func (s *PullService) listIter(ctx context.Context, owner, repo string, filters 
 	}
 }
 
-func addPullFilters(values url.Values, filters ...any) {
+func addPullFilters(values *queryBuilder, filters ...any) {
 	for _, filter := range filters {
 		switch v := filter.(type) {
 		case PullListOptions:
@@ -396,7 +388,7 @@ func addPullFilters(values url.Values, filters ...any) {
 	}
 }
 
-func addCompatPullFilter(values url.Values, filter types.ListPullRequestsOption) {
+func addCompatPullFilter(values *queryBuilder, filter types.ListPullRequestsOption) {
 	if filter.State != "" {
 		values.Set("state", filter.State)
 	}
@@ -404,11 +396,11 @@ func addCompatPullFilter(values url.Values, filter types.ListPullRequestsOption)
 		values.Set("sort", filter.Sort)
 	}
 	if filter.Milestone != 0 {
-		values.Set("milestone", strconv.FormatInt(filter.Milestone, 10))
+		values.Set("milestone", int64String(filter.Milestone))
 	}
 	for _, label := range filter.Labels {
 		if label != 0 {
-			values.Add("labels", strconv.FormatInt(label, 10))
+			values.Add("labels", int64String(label))
 		}
 	}
 	if filter.Poster != "" {

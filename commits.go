@@ -3,7 +3,6 @@ package forge
 import (
 	"context"
 	"iter"
-	"strconv"
 
 	"dappco.re/go/forge/types"
 )
@@ -60,13 +59,13 @@ func (o CommitListOptions) queryParams() map[string]string {
 		query["path"] = o.Path
 	}
 	if o.Stat != nil {
-		query["stat"] = strconv.FormatBool(*o.Stat)
+		query["stat"] = boolString(*o.Stat)
 	}
 	if o.Verification != nil {
-		query["verification"] = strconv.FormatBool(*o.Verification)
+		query["verification"] = boolString(*o.Verification)
 	}
 	if o.Files != nil {
-		query["files"] = strconv.FormatBool(*o.Files)
+		query["files"] = boolString(*o.Files)
 	}
 	if o.Not != "" {
 		query["not"] = o.Not
@@ -316,13 +315,13 @@ func commitListQueryFromCompat(filter types.ListCommitsOption) map[string]string
 		query["path"] = filter.Path
 	}
 	if filter.Stat != nil {
-		query["stat"] = strconv.FormatBool(*filter.Stat)
+		query["stat"] = boolString(*filter.Stat)
 	}
 	if filter.Verification != nil {
-		query["verification"] = strconv.FormatBool(*filter.Verification)
+		query["verification"] = boolString(*filter.Verification)
 	}
 	if filter.Files != nil {
-		query["files"] = strconv.FormatBool(*filter.Files)
+		query["files"] = boolString(*filter.Files)
 	}
 	if filter.Not != "" {
 		query["not"] = filter.Not

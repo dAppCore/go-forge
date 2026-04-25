@@ -3,8 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
-	"strconv"
 
+	// Note: AX-6 intrinsic — upload APIs must expose the structural request body type; coreio Medium is used inside Client multipart handling.
 	goio "io"
 
 	"dappco.re/go/forge/types"
@@ -46,10 +46,10 @@ func (o ReleaseListOptions) GoString() string { return o.String() }
 func (o ReleaseListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 3)
 	if o.Draft {
-		query["draft"] = strconv.FormatBool(true)
+		query["draft"] = "true"
 	}
 	if o.PreRelease {
-		query["pre-release"] = strconv.FormatBool(true)
+		query["pre-release"] = "true"
 	}
 	if o.Query != "" {
 		query["q"] = o.Query

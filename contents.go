@@ -3,9 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
-	"net/url"
 
-	core "dappco.re/go/core"
 	"dappco.re/go/forge/types"
 )
 
@@ -29,14 +27,9 @@ func newContentService(c *Client) *ContentService {
 func (s *ContentService) ListContents(ctx context.Context, owner, repo, ref string) ([]types.ContentsResponse, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/contents", pathParams("owner", owner, "repo", repo))
 	if ref != "" {
-		u, err := url.Parse(path)
-		if err != nil {
-			return nil, core.E("ContentService.ListContents", "forge: parse path", err)
-		}
-		q := u.Query()
-		q.Set("ref", ref)
-		u.RawQuery = q.Encode()
-		path = u.String()
+		path = appendQuery(path, func(q *queryBuilder) {
+			q.Set("ref", ref)
+		})
 	}
 
 	var out []types.ContentsResponse

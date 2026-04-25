@@ -3,9 +3,9 @@ package forge
 import (
 	"context"
 	"iter"
-	"strconv"
 	"time"
 
+	// Note: AX-6 intrinsic — upload APIs must expose the structural request body type; coreio Medium is used inside Client multipart handling.
 	goio "io"
 
 	"dappco.re/go/forge/types"
@@ -242,7 +242,7 @@ func (o SearchIssuesOptions) queryParams() map[string]string {
 		query["q"] = o.Query
 	}
 	if o.PriorityRepoID != 0 {
-		query["priority_repo_id"] = strconv.FormatInt(o.PriorityRepoID, 10)
+		query["priority_repo_id"] = int64String(o.PriorityRepoID)
 	}
 	if o.Type != "" {
 		query["type"] = o.Type
@@ -254,19 +254,19 @@ func (o SearchIssuesOptions) queryParams() map[string]string {
 		query["before"] = o.Before.Format(time.RFC3339)
 	}
 	if o.Assigned {
-		query["assigned"] = strconv.FormatBool(true)
+		query["assigned"] = "true"
 	}
 	if o.Created {
-		query["created"] = strconv.FormatBool(true)
+		query["created"] = "true"
 	}
 	if o.Mentioned {
-		query["mentioned"] = strconv.FormatBool(true)
+		query["mentioned"] = "true"
 	}
 	if o.ReviewRequested {
-		query["review_requested"] = strconv.FormatBool(true)
+		query["review_requested"] = "true"
 	}
 	if o.Reviewed {
-		query["reviewed"] = strconv.FormatBool(true)
+		query["reviewed"] = "true"
 	}
 	if o.Owner != "" {
 		query["owner"] = o.Owner

@@ -4,10 +4,7 @@ import (
 	"context"
 	"iter"
 	"net/http"
-	"net/url"
-	"strconv"
 
-	core "dappco.re/go/core"
 	"dappco.re/go/forge/types"
 )
 
@@ -43,7 +40,7 @@ func (o UserSearchOptions) queryParams() map[string]string {
 		return nil
 	}
 	return map[string]string{
-		"uid": strconv.FormatInt(o.UID, 10),
+		"uid": int64String(o.UID),
 	}
 }
 
@@ -167,29 +164,24 @@ func (s *UserService) SearchUsersPage(ctx context.Context, query string, pageOpt
 		pageSize = 50
 	}
 
-	u, err := url.Parse("/api/v1/users/search")
-	if err != nil {
-		return nil, core.E("UserService.SearchUsersPage", "forge: parse path", err)
-	}
-
-	q := u.Query()
-	q.Set("q", query)
-	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			q.Set(key, value)
+	path := appendQuery("/api/v1/users/search", func(q *queryBuilder) {
+		q.Set("q", query)
+		for _, filter := range filters {
+			for key, value := range filter.queryParams() {
+				q.Set(key, value)
+			}
 		}
-	}
-	q.Set("page", strconv.Itoa(pageOpts.Page))
-	q.Set("limit", strconv.Itoa(pageSize))
-	u.RawQuery = q.Encode()
+		q.Set("page", intString(pageOpts.Page))
+		q.Set("limit", intString(pageSize))
+	})
 
 	var out userSearchResults
-	resp, err := s.client.doJSON(ctx, http.MethodGet, u.String(), nil, &out)
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, &out)
 	if err != nil {
 		return nil, err
 	}
 
-	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	totalCount := parseInt(resp.Header.Get("X-Total-Count"))
 	items := make([]types.User, 0, len(out.Data))
 	for _, user := range out.Data {
 		if user != nil {
