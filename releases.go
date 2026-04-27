@@ -3,11 +3,11 @@ package forge
 import (
 	"context"
 	"iter"
-	"strconv"
 
+	// Note: AX-6 intrinsic — upload APIs must expose the structural request body type; coreio Medium is used inside Client multipart handling.
 	goio "io"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // ReleaseService handles release operations within a repository.
@@ -46,10 +46,10 @@ func (o ReleaseListOptions) GoString() string { return o.String() }
 func (o ReleaseListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 3)
 	if o.Draft {
-		query["draft"] = strconv.FormatBool(true)
+		query["draft"] = "true"
 	}
 	if o.PreRelease {
-		query["pre-release"] = strconv.FormatBool(true)
+		query["pre-release"] = "true"
 	}
 	if o.Query != "" {
 		query["q"] = o.Query
@@ -100,6 +100,12 @@ func newReleaseService(c *Client) *ReleaseService {
 	}
 }
 
+// ListReleasesPage returns a single page of releases in a repository.
+func (s *ReleaseService) ListReleasesPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...ReleaseListOptions) (*PagedResult[types.Release], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Release](ctx, s.client, path, releaseListQuery(filters...), opts)
+}
+
 // ListReleases returns all releases in a repository.
 func (s *ReleaseService) ListReleases(ctx context.Context, owner, repo string, filters ...ReleaseListOptions) ([]types.Release, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/releases", pathParams("owner", owner, "repo", repo))
@@ -129,6 +135,11 @@ func (s *ReleaseService) GetByTag(ctx context.Context, owner, repo, tag string) 
 		return nil, err
 	}
 	return &out, nil
+}
+
+// GetRelease returns a release by its tag name.
+func (s *ReleaseService) GetRelease(ctx context.Context, owner, repo, tag string) (*types.Release, error) {
+	return s.GetByTag(ctx, owner, repo, tag)
 }
 
 // GetLatest returns the most recent non-prerelease, non-draft release.

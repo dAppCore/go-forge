@@ -35,8 +35,8 @@ func TestParams_String_NilSafe(t *testing.T) {
 }
 
 func TestListOptions_String_Good(t *testing.T) {
-	opts := ListOptions{Page: 2, Limit: 25}
-	want := "forge.ListOptions{page=2, limit=25}"
+	opts := ListOptions{Page: 2, PageSize: 25}
+	want := "forge.ListOptions{page=2, page_size=25}"
 	if got := opts.String(); got != want {
 		t.Fatalf("got String()=%q, want %q", got, want)
 	}

@@ -3,10 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
-	"net/url"
 
-	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // ContentService handles file read/write operations via the Forgejo API.
@@ -29,14 +27,9 @@ func newContentService(c *Client) *ContentService {
 func (s *ContentService) ListContents(ctx context.Context, owner, repo, ref string) ([]types.ContentsResponse, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/contents", pathParams("owner", owner, "repo", repo))
 	if ref != "" {
-		u, err := url.Parse(path)
-		if err != nil {
-			return nil, core.E("ContentService.ListContents", "forge: parse path", err)
-		}
-		q := u.Query()
-		q.Set("ref", ref)
-		u.RawQuery = q.Encode()
-		path = u.String()
+		path = appendQuery(path, func(q *queryBuilder) {
+			q.Set("ref", ref)
+		})
 	}
 
 	var out []types.ContentsResponse
@@ -71,6 +64,11 @@ func (s *ContentService) GetFile(ctx context.Context, owner, repo, filepath stri
 		return nil, err
 	}
 	return &out, nil
+}
+
+// GetContents returns metadata and content for a file in a repository.
+func (s *ContentService) GetContents(ctx context.Context, owner, repo, filepath string) (*types.ContentsResponse, error) {
+	return s.GetFile(ctx, owner, repo, filepath)
 }
 
 // CreateFile creates a new file in a repository.

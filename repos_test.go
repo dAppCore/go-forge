@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestRepoService_ListActivityFeeds_Good(t *testing.T) {

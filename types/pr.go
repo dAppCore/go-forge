@@ -16,7 +16,7 @@ type CreatePullRequestOption struct {
 	Body      string    `json:"body,omitempty"`
 	Deadline  time.Time `json:"due_date,omitempty"`
 	Head      string    `json:"head,omitempty"`
-	Labels    []int64   `json:"labels,omitempty"`
+	Labels    any       `json:"labels,omitempty"` // list of label ids or names (RFC compatibility)
 	Milestone int64     `json:"milestone,omitempty"`
 	Title     string    `json:"title,omitempty"`
 }
@@ -64,7 +64,7 @@ type EditPullRequestOption struct {
 	Base                string    `json:"base,omitempty"`
 	Body                string    `json:"body,omitempty"`
 	Deadline            time.Time `json:"due_date,omitempty"`
-	Labels              []int64   `json:"labels,omitempty"`
+	Labels              any       `json:"labels,omitempty"` // list of label ids or names (RFC compatibility)
 	Milestone           int64     `json:"milestone,omitempty"`
 	RemoveDeadline      bool      `json:"unset_due_date,omitempty"`
 	State               string    `json:"state,omitempty"`

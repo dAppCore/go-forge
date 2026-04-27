@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // WebhookService handles webhook (hook) operations within a repository.
@@ -26,16 +26,37 @@ func newWebhookService(c *Client) *WebhookService {
 	}
 }
 
+// ListHooksPage returns a single page of webhooks for a repository.
+func (s *WebhookService) ListHooksPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Hook], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Hook](ctx, s.client, path, nil, opts)
+}
+
 // ListHooks returns all webhooks for a repository.
 func (s *WebhookService) ListHooks(ctx context.Context, owner, repo string) ([]types.Hook, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
 	return ListAll[types.Hook](ctx, s.client, path, nil)
 }
 
+// ListRepoHooksPage returns a single page of webhooks for a repository.
+func (s *WebhookService) ListRepoHooksPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Hook], error) {
+	return s.ListHooksPage(ctx, owner, repo, opts)
+}
+
+// ListRepoHooks returns all webhooks for a repository.
+func (s *WebhookService) ListRepoHooks(ctx context.Context, owner, repo string) ([]types.Hook, error) {
+	return s.ListHooks(ctx, owner, repo)
+}
+
 // IterHooks returns an iterator over all webhooks for a repository.
 func (s *WebhookService) IterHooks(ctx context.Context, owner, repo string) iter.Seq2[types.Hook, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/hooks", pathParams("owner", owner, "repo", repo))
 	return ListIter[types.Hook](ctx, s.client, path, nil)
+}
+
+// IterRepoHooks returns an iterator over all webhooks for a repository.
+func (s *WebhookService) IterRepoHooks(ctx context.Context, owner, repo string) iter.Seq2[types.Hook, error] {
+	return s.IterHooks(ctx, owner, repo)
 }
 
 // CreateHook creates a webhook for a repository.
@@ -45,6 +66,26 @@ func (s *WebhookService) CreateHook(ctx context.Context, owner, repo string, opt
 		return nil, err
 	}
 	return &out, nil
+}
+
+// CreateRepoHook creates a webhook for a repository.
+func (s *WebhookService) CreateRepoHook(ctx context.Context, owner, repo string, opts *types.CreateHookOption) (*types.Hook, error) {
+	return s.CreateHook(ctx, owner, repo, opts)
+}
+
+// GetRepoHook returns a single webhook for a repository.
+func (s *WebhookService) GetRepoHook(ctx context.Context, owner, repo string, id int64) (*types.Hook, error) {
+	return s.Get(ctx, pathParams("owner", owner, "repo", repo, "id", int64String(id)))
+}
+
+// EditRepoHook updates an existing webhook in a repository.
+func (s *WebhookService) EditRepoHook(ctx context.Context, owner, repo string, id int64, opts *types.EditHookOption) (*types.Hook, error) {
+	return s.Update(ctx, pathParams("owner", owner, "repo", repo, "id", int64String(id)), opts)
+}
+
+// DeleteRepoHook deletes a webhook from a repository.
+func (s *WebhookService) DeleteRepoHook(ctx context.Context, owner, repo string, id int64) error {
+	return s.Delete(ctx, pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 }
 
 // TestHook triggers a test delivery for a webhook.
@@ -96,6 +137,11 @@ func (s *WebhookService) ListUserHooks(ctx context.Context) ([]types.Hook, error
 	return ListAll[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil)
 }
 
+// ListUserHooksPage returns a single page of webhooks for the authenticated user.
+func (s *WebhookService) ListUserHooksPage(ctx context.Context, opts ListOptions) (*PagedResult[types.Hook], error) {
+	return ListPage[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil, opts)
+}
+
 // IterUserHooks returns an iterator over all webhooks for the authenticated user.
 func (s *WebhookService) IterUserHooks(ctx context.Context) iter.Seq2[types.Hook, error] {
 	return ListIter[types.Hook](ctx, s.client, "/api/v1/user/hooks", nil)
@@ -140,6 +186,12 @@ func (s *WebhookService) DeleteUserHook(ctx context.Context, id int64) error {
 func (s *WebhookService) ListOrgHooks(ctx context.Context, org string) ([]types.Hook, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/hooks", pathParams("org", org))
 	return ListAll[types.Hook](ctx, s.client, path, nil)
+}
+
+// ListOrgHooksPage returns a single page of webhooks for an organisation.
+func (s *WebhookService) ListOrgHooksPage(ctx context.Context, org string, opts ListOptions) (*PagedResult[types.Hook], error) {
+	path := ResolvePath("/api/v1/orgs/{org}/hooks", pathParams("org", org))
+	return ListPage[types.Hook](ctx, s.client, path, nil, opts)
 }
 
 // IterOrgHooks returns an iterator over all webhooks for an organisation.

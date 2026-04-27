@@ -110,7 +110,7 @@ func TestListPage_QueryParams_Good(t *testing.T) {
 
 	c := NewClient(srv.URL, "tok")
 	_, err := ListPage[map[string]int](context.Background(), c, "/api/v1/repos",
-		map[string]string{"state": "open"}, ListOptions{Page: 2, Limit: 25})
+		map[string]string{"state": "open"}, ListOptions{Page: 2, PageSize: 25})
 	if err != nil {
 		t.Fatal(err)
 	}

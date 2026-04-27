@@ -1,17 +1,19 @@
 package forge
 
 import (
-	"bytes"
+	// Note: AX-6 — request cancellation and deadlines are structural to HTTP calls; no core context primitive exists.
 	"context"
+	// Note: goccy/go-json — faster drop-in encoding/json replacement; no core equivalent for JSON-decoder performance profile.
 	json "github.com/goccy/go-json"
+	// Note: AX-6 — multipart upload bodies require the standard multipart writer; core-io provides storage, not multipart encoding.
 	"mime/multipart"
+	// Note: AX-6 — this low-level Forgejo client owns the HTTP boundary; no core.Client equivalent exists.
 	"net/http"
-	"net/url"
-	"strconv"
-
+	// Note: AX-6 — stream types, multipart content piping, and bounded HTTP error reads require io; coreio Medium only replaces multipart buffering below.
 	goio "io"
 
 	core "dappco.re/go/core"
+	coreio "dappco.re/go/io"
 )
 
 // APIError represents an error response from the Forgejo API.
@@ -36,7 +38,7 @@ func (e *APIError) Error() string {
 	if e == nil {
 		return "forge.APIError{<nil>}"
 	}
-	return core.Concat("forge: ", e.URL, " ", strconv.Itoa(e.StatusCode), ": ", e.Message)
+	return core.Concat("forge: ", e.URL, " ", core.Itoa(e.StatusCode), ": ", e.Message)
 }
 
 // String returns a safe summary of the API error.
@@ -135,11 +137,11 @@ type RateLimit struct {
 func (r RateLimit) String() string {
 	return core.Concat(
 		"forge.RateLimit{limit=",
-		strconv.Itoa(r.Limit),
+		core.Itoa(r.Limit),
 		", remaining=",
-		strconv.Itoa(r.Remaining),
+		core.Itoa(r.Remaining),
 		", reset=",
-		strconv.FormatInt(r.Reset, 10),
+		core.FormatInt(r.Reset, 10),
 		"}",
 	)
 }
@@ -226,7 +228,7 @@ func (c *Client) String() string {
 	if c.HasToken() {
 		tokenState = "set"
 	}
-	return core.Concat("forge.Client{baseURL=", strconv.Quote(c.baseURL), ", token=", tokenState, ", userAgent=", strconv.Quote(c.userAgent), "}")
+	return core.Concat("forge.Client{baseURL=", core.Sprintf("%q", c.baseURL), ", token=", tokenState, ", userAgent=", core.Sprintf("%q", c.userAgent), "}")
 }
 
 // GoString returns a safe Go-syntax summary of the client configuration.
@@ -351,21 +353,24 @@ func (c *Client) PostRaw(ctx context.Context, path string, body any) ([]byte, er
 func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte, error) {
 	url := c.baseURL + path
 
-	var bodyReader goio.Reader
-	if body != nil {
+	var req *http.Request
+	var err error
+	if body == nil {
+		req, err = http.NewRequestWithContext(ctx, http.MethodPost, url, nil)
+	} else {
 		data, err := json.Marshal(body)
 		if err != nil {
 			return nil, core.E("Client.PostRaw", "forge: marshal body", err)
 		}
-		bodyReader = bytes.NewReader(data)
+		req, err = http.NewRequestWithContext(ctx, http.MethodPost, url, core.NewReader(string(data)))
 	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bodyReader)
 	if err != nil {
 		return nil, core.E("Client.PostRaw", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	req.Header.Set("Content-Type", "application/json")
 	if c.userAgent != "" {
 		req.Header.Set("User-Agent", c.userAgent)
@@ -383,7 +388,7 @@ func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte
 		return nil, c.parseError(resp, path)
 	}
 
-	data, err := goio.ReadAll(resp.Body)
+	data, err := readBody(resp.Body)
 	if err != nil {
 		return nil, core.E("Client.PostRaw", "forge: read response body", err)
 	}
@@ -394,12 +399,14 @@ func (c *Client) postRawJSON(ctx context.Context, path string, body any) ([]byte
 func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, error) {
 	url := c.baseURL + path
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBufferString(body))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, core.NewReader(body))
 	if err != nil {
 		return nil, core.E("Client.PostText", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	req.Header.Set("Accept", "text/html")
 	req.Header.Set("Content-Type", "text/plain")
 	if c.userAgent != "" {
@@ -418,7 +425,7 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 		return nil, c.parseError(resp, path)
 	}
 
-	data, err := goio.ReadAll(resp.Body)
+	data, err := readBody(resp.Body)
 	if err != nil {
 		return nil, core.E("Client.PostText", "forge: read response body", err)
 	}
@@ -427,20 +434,47 @@ func (c *Client) postRawText(ctx context.Context, path, body string) ([]byte, er
 }
 
 func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[string]string, fields map[string]string, fieldName, fileName string, content goio.Reader, out any) error {
-	target, err := url.Parse(c.baseURL + path)
-	if err != nil {
+	target := c.baseURL + path
+	parsedTarget := core.URLParse(target)
+	if !parsedTarget.OK {
+		var err error
+		if parseErr, ok := parsedTarget.Value.(error); ok {
+			err = parseErr
+		}
 		return core.E("Client.PostMultipart", "forge: parse url", err)
 	}
+	targetStringer, ok := parsedTarget.Value.(interface{ String() string })
+	if !ok {
+		return core.E("Client.PostMultipart", "forge: parse url", nil)
+	}
+	target = targetStringer.String()
 	if len(query) > 0 {
-		values := target.Query()
+		values := newQueryBuilder()
 		for key, value := range query {
 			values.Set(key, value)
 		}
-		target.RawQuery = values.Encode()
+		if encoded := values.Encode(); encoded != "" {
+			separator := "?"
+			if core.Contains(target, "?") {
+				separator = "&"
+			}
+			target = core.Concat(target, separator, encoded)
+		}
 	}
 
-	var body bytes.Buffer
-	writer := multipart.NewWriter(&body)
+	body := coreio.NewMemoryMedium()
+	bodyWriter, err := body.Create("multipart")
+	if err != nil {
+		return core.E("Client.PostMultipart", "forge: create multipart body", err)
+	}
+	bodyWriterOpen := true
+	defer func() {
+		if bodyWriterOpen {
+			_ = bodyWriter.Close()
+		}
+	}()
+
+	writer := multipart.NewWriter(bodyWriter)
 	for key, value := range fields {
 		if err := writer.WriteField(key, value); err != nil {
 			return core.E("Client.PostMultipart", "forge: create multipart form field", err)
@@ -460,13 +494,27 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 	if err := writer.Close(); err != nil {
 		return core.E("Client.PostMultipart", "forge: close multipart writer", err)
 	}
+	if err := bodyWriter.Close(); err != nil {
+		bodyWriterOpen = false
+		return core.E("Client.PostMultipart", "forge: close multipart body", err)
+	}
+	bodyWriterOpen = false
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target.String(), &body)
+	bodyReader, err := body.ReadStream("multipart")
+	if err != nil {
+		return core.E("Client.PostMultipart", "forge: read multipart body", err)
+	}
+	defer bodyReader.Close()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target, bodyReader)
 	if err != nil {
 		return core.E("Client.PostMultipart", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	if c.userAgent != "" {
 		req.Header.Set("User-Agent", c.userAgent)
@@ -477,6 +525,8 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 		return core.E("Client.PostMultipart", "forge: request POST "+path, err)
 	}
 	defer resp.Body.Close()
+
+	c.updateRateLimit(resp)
 
 	if resp.StatusCode >= 400 {
 		return c.parseError(resp, path)
@@ -505,7 +555,9 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 		return nil, core.E("Client.GetRaw", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	if c.userAgent != "" {
 		req.Header.Set("User-Agent", c.userAgent)
 	}
@@ -522,7 +574,7 @@ func (c *Client) GetRaw(ctx context.Context, path string) ([]byte, error) {
 		return nil, c.parseError(resp, path)
 	}
 
-	data, err := goio.ReadAll(resp.Body)
+	data, err := readBody(resp.Body)
 	if err != nil {
 		return nil, core.E("Client.GetRaw", "forge: read response body", err)
 	}
@@ -538,21 +590,24 @@ func (c *Client) do(ctx context.Context, method, path string, body, out any) err
 func (c *Client) doJSON(ctx context.Context, method, path string, body, out any) (*http.Response, error) {
 	url := c.baseURL + path
 
-	var bodyReader goio.Reader
-	if body != nil {
+	var req *http.Request
+	var err error
+	if body == nil {
+		req, err = http.NewRequestWithContext(ctx, method, url, nil)
+	} else {
 		data, err := json.Marshal(body)
 		if err != nil {
 			return nil, core.E("Client.doJSON", "forge: marshal body", err)
 		}
-		bodyReader = bytes.NewReader(data)
+		req, err = http.NewRequestWithContext(ctx, method, url, core.NewReader(string(data)))
 	}
-
-	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
 	if err != nil {
 		return nil, core.E("Client.doJSON", "forge: create request", err)
 	}
 
-	req.Header.Set("Authorization", "token "+c.token)
+	if auth := c.authorizationHeader(); auth != "" {
+		req.Header.Set("Authorization", auth)
+	}
 	req.Header.Set("Accept", "application/json")
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
@@ -588,7 +643,7 @@ func (c *Client) parseError(resp *http.Response, path string) error {
 	}
 
 	// Read a bit of the body to see if we can get a message
-	data, _ := goio.ReadAll(goio.LimitReader(resp.Body, 1024))
+	data, _ := readBody(goio.LimitReader(resp.Body, 1024))
 	_ = json.Unmarshal(data, &errBody)
 
 	msg := errBody.Message
@@ -606,14 +661,59 @@ func (c *Client) parseError(resp *http.Response, path string) error {
 	}
 }
 
+func readBody(reader any) ([]byte, error) {
+	result := core.ReadAll(reader)
+	if !result.OK {
+		if err, ok := result.Value.(error); ok {
+			return nil, err
+		}
+		return nil, core.E("Client.readBody", "forge: read body", nil)
+	}
+
+	body, ok := result.Value.(string)
+	if !ok {
+		return nil, core.E("Client.readBody", "forge: read body", nil)
+	}
+	return []byte(body), nil
+}
+
 func (c *Client) updateRateLimit(resp *http.Response) {
 	if limit := resp.Header.Get("X-RateLimit-Limit"); limit != "" {
-		c.rateLimit.Limit, _ = strconv.Atoi(limit)
+		c.rateLimit.Limit = parseRateLimitInt(limit)
 	}
 	if remaining := resp.Header.Get("X-RateLimit-Remaining"); remaining != "" {
-		c.rateLimit.Remaining, _ = strconv.Atoi(remaining)
+		c.rateLimit.Remaining = parseRateLimitInt(remaining)
 	}
 	if reset := resp.Header.Get("X-RateLimit-Reset"); reset != "" {
-		c.rateLimit.Reset, _ = strconv.ParseInt(reset, 10, 64)
+		c.rateLimit.Reset = parseRateLimitInt64(reset)
 	}
+}
+
+func parseRateLimitInt(value string) int {
+	result := core.Atoi(value)
+	if !result.OK {
+		return 0
+	}
+	if parsed, ok := result.Value.(int); ok {
+		return parsed
+	}
+	return 0
+}
+
+func parseRateLimitInt64(value string) int64 {
+	result := core.ParseInt(value, 10, 64)
+	if !result.OK {
+		return 0
+	}
+	if parsed, ok := result.Value.(int64); ok {
+		return parsed
+	}
+	return 0
+}
+
+func (c *Client) authorizationHeader() string {
+	if c == nil || c.token == "" {
+		return ""
+	}
+	return "Bearer " + c.token
 }

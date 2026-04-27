@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestMiscService_RenderMarkdown_Good(t *testing.T) {

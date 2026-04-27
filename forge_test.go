@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestForge_NewForge_Good(t *testing.T) {

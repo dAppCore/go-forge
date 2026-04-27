@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func readMultipartAttachment(t *testing.T, r *http.Request) (string, string) {

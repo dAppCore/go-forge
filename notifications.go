@@ -4,12 +4,9 @@ import (
 	"context"
 	"iter"
 	"net/http"
-	"net/url"
-	"strconv"
 	"time"
 
-	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // NotificationListOptions controls filtering for notification listings.
@@ -39,7 +36,7 @@ func (o NotificationListOptions) String() string {
 // GoString returns a safe Go-syntax summary of the notification filters.
 func (o NotificationListOptions) GoString() string { return o.String() }
 
-func (o NotificationListOptions) addQuery(values url.Values) {
+func (o NotificationListOptions) addQuery(values *queryBuilder) {
 	if o.All {
 		values.Set("all", "true")
 	}
@@ -127,22 +124,22 @@ func newNotificationService(c *Client) *NotificationService {
 }
 
 func notificationMarkQueryString(all bool, statusTypes []string, toStatus string, lastReadAt *time.Time) string {
-	values := url.Values{}
-	if all {
-		values.Set("all", "true")
-	}
-	for _, status := range statusTypes {
-		if status != "" {
-			values.Add("status-types", status)
+	return encodeQuery(func(values *queryBuilder) {
+		if all {
+			values.Set("all", "true")
 		}
-	}
-	if toStatus != "" {
-		values.Set("to-status", toStatus)
-	}
-	if lastReadAt != nil {
-		values.Set("last_read_at", lastReadAt.Format(time.RFC3339))
-	}
-	return values.Encode()
+		for _, status := range statusTypes {
+			if status != "" {
+				values.Add("status-types", status)
+			}
+		}
+		if toStatus != "" {
+			values.Set("to-status", toStatus)
+		}
+		if lastReadAt != nil {
+			values.Set("last_read_at", lastReadAt.Format(time.RFC3339))
+		}
+	})
 }
 
 func (o NotificationRepoMarkOptions) queryString() string {
@@ -284,26 +281,21 @@ func (s *NotificationService) listPage(ctx context.Context, path string, opts Li
 		opts.Limit = defaultPageLimit
 	}
 
-	u, err := url.Parse(path)
-	if err != nil {
-		return nil, core.E("NotificationService.listPage", "forge: parse path", err)
-	}
-
-	values := u.Query()
-	values.Set("page", strconv.Itoa(opts.Page))
-	values.Set("limit", strconv.Itoa(opts.Limit))
-	for _, filter := range filters {
-		filter.addQuery(values)
-	}
-	u.RawQuery = values.Encode()
+	path = appendQuery(path, func(values *queryBuilder) {
+		values.Set("page", intString(opts.Page))
+		values.Set("limit", intString(opts.Limit))
+		for _, filter := range filters {
+			filter.addQuery(values)
+		}
+	})
 
 	var items []types.NotificationThread
-	resp, err := s.client.doJSON(ctx, http.MethodGet, u.String(), nil, &items)
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, &items)
 	if err != nil {
 		return nil, err
 	}
 
-	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	totalCount := parseInt(resp.Header.Get("X-Total-Count"))
 	return &PagedResult[types.NotificationThread]{
 		Items:      items,
 		TotalCount: totalCount,

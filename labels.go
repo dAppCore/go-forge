@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // LabelService handles repository labels, organisation labels, and issue labels.
@@ -22,16 +22,37 @@ func newLabelService(c *Client) *LabelService {
 	return &LabelService{client: c}
 }
 
+// ListRepoLabelsPage returns a single page of labels for a repository.
+func (s *LabelService) ListRepoLabelsPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Label], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/labels", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Label](ctx, s.client, path, nil, opts)
+}
+
 // ListRepoLabels returns all labels for a repository.
 func (s *LabelService) ListRepoLabels(ctx context.Context, owner, repo string) ([]types.Label, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/labels", pathParams("owner", owner, "repo", repo))
 	return ListAll[types.Label](ctx, s.client, path, nil)
 }
 
+// ListLabelsPage returns a single page of labels for a repository.
+func (s *LabelService) ListLabelsPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Label], error) {
+	return s.ListRepoLabelsPage(ctx, owner, repo, opts)
+}
+
+// ListLabels returns all labels for a repository.
+func (s *LabelService) ListLabels(ctx context.Context, owner, repo string) ([]types.Label, error) {
+	return s.ListRepoLabels(ctx, owner, repo)
+}
+
 // IterRepoLabels returns an iterator over all labels for a repository.
 func (s *LabelService) IterRepoLabels(ctx context.Context, owner, repo string) iter.Seq2[types.Label, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/labels", pathParams("owner", owner, "repo", repo))
 	return ListIter[types.Label](ctx, s.client, path, nil)
+}
+
+// IterLabels returns an iterator over all labels for a repository.
+func (s *LabelService) IterLabels(ctx context.Context, owner, repo string) iter.Seq2[types.Label, error] {
+	return s.IterRepoLabels(ctx, owner, repo)
 }
 
 // GetRepoLabel returns a single label by ID.

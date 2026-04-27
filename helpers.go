@@ -2,6 +2,10 @@ package forge
 
 import (
 	"fmt"
+	// Note: AX-6 intrinsic — query escaping is centralised here because the pinned core module has no core.URLEncode helper.
+	"net/url"
+	"sort"
+	// Note: AX-6 intrinsic — the pinned core module has no core.Itoa/core.FormatInt/core.Atoi/core.FormatBool/core.Quote helpers.
 	"strconv"
 	"strings"
 	"time"
@@ -18,6 +22,19 @@ func trimTrailingSlashes(s string) string {
 
 func int64String(v int64) string {
 	return strconv.FormatInt(v, 10)
+}
+
+func intString(v int) string {
+	return strconv.Itoa(v)
+}
+
+func boolString(v bool) string {
+	return strconv.FormatBool(v)
+}
+
+func parseInt(value string) int {
+	v, _ := strconv.Atoi(value)
+	return v
 }
 
 func pathParams(values ...string) Params {
@@ -118,4 +135,63 @@ func lastIndexByte(s string, b byte) int {
 		}
 	}
 	return -1
+}
+
+type queryBuilder struct {
+	values map[string][]string
+}
+
+func newQueryBuilder() *queryBuilder {
+	return &queryBuilder{values: make(map[string][]string)}
+}
+
+func (q *queryBuilder) Set(key, value string) {
+	q.values[key] = []string{value}
+}
+
+func (q *queryBuilder) Add(key, value string) {
+	q.values[key] = append(q.values[key], value)
+}
+
+func (q *queryBuilder) Encode() string {
+	if q == nil || len(q.values) == 0 {
+		return ""
+	}
+
+	keys := make([]string, 0, len(q.values))
+	for key := range q.values {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	var b strings.Builder
+	for _, key := range keys {
+		escapedKey := url.QueryEscape(key)
+		for _, value := range q.values[key] {
+			if b.Len() > 0 {
+				b.WriteByte('&')
+			}
+			b.WriteString(escapedKey)
+			b.WriteByte('=')
+			b.WriteString(url.QueryEscape(value))
+		}
+	}
+	return b.String()
+}
+
+func encodeQuery(build func(*queryBuilder)) string {
+	query := newQueryBuilder()
+	build(query)
+	return query.Encode()
+}
+
+func appendQuery(path string, build func(*queryBuilder)) string {
+	query := encodeQuery(build)
+	if query == "" {
+		return path
+	}
+	if strings.Contains(path, "?") {
+		return path + "&" + query
+	}
+	return path + "?" + query
 }

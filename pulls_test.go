@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestPullService_List_Good(t *testing.T) {
@@ -402,6 +402,43 @@ func TestPullService_Merge_Good(t *testing.T) {
 
 	f := NewForge(srv.URL, "tok")
 	err := f.Pulls.Merge(context.Background(), "core", "go-forge", 7, "merge")
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestPullService_MergePullRequest_CompatMergeStyle_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/pulls/7/merge" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode body: %v", err)
+		}
+		if got := body["Do"]; got != "squash" {
+			t.Fatalf("got Do=%v, want squash", got)
+		}
+		if got := body["MergeMessageField"]; got != "PR: Add feature" {
+			t.Fatalf("got MergeMessageField=%v, want %q", got, "PR: Add feature")
+		}
+		if _, ok := body["MergeStyle"]; ok {
+			t.Fatalf("did not expect MergeStyle in request body: %#v", body)
+		}
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	err := f.Pulls.MergePullRequest(context.Background(), "core", "go-forge", 7, &types.MergePullRequestOption{
+		MergeMessageField: "PR: Add feature",
+		MergeStyle:        "squash",
+	})
 	if err != nil {
 		t.Fatal(err)
 	}

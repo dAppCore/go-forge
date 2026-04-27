@@ -6,7 +6,7 @@ import (
 	"slices"
 
 	core "dappco.re/go/core"
-	coreio "dappco.re/go/core/io"
+	coreio "dappco.re/go/io"
 )
 
 // Spec represents a Swagger 2.0 specification document.
@@ -171,9 +171,26 @@ func ExtractTypes(spec *Spec) map[string]*GoType {
 		slices.SortFunc(gt.Fields, func(a, b GoField) int {
 			return cmp.Compare(a.GoName, b.GoName)
 		})
+		applyRFCCompatOverrides(gt)
 		result[name] = gt
 	}
 	return result
+}
+
+func applyRFCCompatOverrides(gt *GoType) {
+	if gt == nil {
+		return
+	}
+
+	switch gt.Name {
+	case "CreateIssueOption", "CreatePullRequestOption", "EditPullRequestOption":
+		for i := range gt.Fields {
+			if gt.Fields[i].JSONName == "labels" {
+				gt.Fields[i].GoType = "any"
+				gt.Fields[i].Comment = "list of label ids or names (RFC compatibility)"
+			}
+		}
+	}
 }
 
 func definitionAliasType(def SchemaDefinition, defs map[string]SchemaDefinition) (string, bool) {

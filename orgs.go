@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // OrgService handles organisation operations.
@@ -53,9 +53,47 @@ func newOrgService(c *Client) *OrgService {
 	}
 }
 
+// GetOrg returns an organisation by name.
+func (s *OrgService) GetOrg(ctx context.Context, org string) (*types.Organization, error) {
+	return s.Get(ctx, pathParams("org", org))
+}
+
+// UpdateOrg updates an organisation.
+func (s *OrgService) UpdateOrg(ctx context.Context, org string, opts *types.EditOrgOption) (*types.Organization, error) {
+	return s.Update(ctx, pathParams("org", org), opts)
+}
+
+// DeleteOrg deletes an organisation.
+func (s *OrgService) DeleteOrg(ctx context.Context, org string) error {
+	return s.Delete(ctx, pathParams("org", org))
+}
+
+// ListOrgsPage returns a single page of organisations.
+func (s *OrgService) ListOrgsPage(ctx context.Context, opts ListOptions) (*PagedResult[types.Organization], error) {
+	return ListPage[types.Organization](ctx, s.client, "/api/v1/orgs", nil, opts)
+}
+
 // ListOrgs returns all organisations.
 func (s *OrgService) ListOrgs(ctx context.Context) ([]types.Organization, error) {
 	return ListAll[types.Organization](ctx, s.client, "/api/v1/orgs", nil)
+}
+
+// ListOrgTeamsPage returns a single page of teams in an organisation.
+func (s *OrgService) ListOrgTeamsPage(ctx context.Context, org string, opts ListOptions) (*PagedResult[types.Team], error) {
+	path := ResolvePath("/api/v1/orgs/{org}/teams", pathParams("org", org))
+	return ListPage[types.Team](ctx, s.client, path, nil, opts)
+}
+
+// ListOrgTeams returns all teams in an organisation.
+func (s *OrgService) ListOrgTeams(ctx context.Context, org string) ([]types.Team, error) {
+	path := ResolvePath("/api/v1/orgs/{org}/teams", pathParams("org", org))
+	return ListAll[types.Team](ctx, s.client, path, nil)
+}
+
+// IterOrgTeams returns an iterator over all teams in an organisation.
+func (s *OrgService) IterOrgTeams(ctx context.Context, org string) iter.Seq2[types.Team, error] {
+	path := ResolvePath("/api/v1/orgs/{org}/teams", pathParams("org", org))
+	return ListIter[types.Team](ctx, s.client, path, nil)
 }
 
 // IterOrgs returns an iterator over all organisations.
@@ -72,16 +110,37 @@ func (s *OrgService) CreateOrg(ctx context.Context, opts *types.CreateOrgOption)
 	return &out, nil
 }
 
+// ListMembersPage returns a single page of members of an organisation.
+func (s *OrgService) ListMembersPage(ctx context.Context, org string, opts ListOptions) (*PagedResult[types.User], error) {
+	path := ResolvePath("/api/v1/orgs/{org}/members", pathParams("org", org))
+	return ListPage[types.User](ctx, s.client, path, nil, opts)
+}
+
 // ListMembers returns all members of an organisation.
 func (s *OrgService) ListMembers(ctx context.Context, org string) ([]types.User, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/members", pathParams("org", org))
 	return ListAll[types.User](ctx, s.client, path, nil)
 }
 
+// ListOrgMembersPage returns a single page of members of an organisation.
+func (s *OrgService) ListOrgMembersPage(ctx context.Context, org string, opts ListOptions) (*PagedResult[types.User], error) {
+	return s.ListMembersPage(ctx, org, opts)
+}
+
+// ListOrgMembers returns all members of an organisation.
+func (s *OrgService) ListOrgMembers(ctx context.Context, org string) ([]types.User, error) {
+	return s.ListMembers(ctx, org)
+}
+
 // IterMembers returns an iterator over all members of an organisation.
 func (s *OrgService) IterMembers(ctx context.Context, org string) iter.Seq2[types.User, error] {
 	path := ResolvePath("/api/v1/orgs/{org}/members", pathParams("org", org))
 	return ListIter[types.User](ctx, s.client, path, nil)
+}
+
+// IterOrgMembers returns an iterator over all members of an organisation.
+func (s *OrgService) IterOrgMembers(ctx context.Context, org string) iter.Seq2[types.User, error] {
+	return s.IterMembers(ctx, org)
 }
 
 // AddMember adds a user to an organisation.

@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestContentService_ListContents_Good(t *testing.T) {
@@ -158,6 +158,40 @@ func TestContentService_CreateFile_Good(t *testing.T) {
 	}
 	if resp.Commit.Message != "create docs/new.md" {
 		t.Errorf("got commit message=%q, want %q", resp.Commit.Message, "create docs/new.md")
+	}
+}
+
+func TestContentService_CreateFile_ContentCompat_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/contents/docs/rfc.md" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var opts types.CreateFileOptions
+		if err := json.NewDecoder(r.Body).Decode(&opts); err != nil {
+			t.Fatal(err)
+		}
+		if opts.ContentBase64 != "Y29tcGF0" {
+			t.Errorf("got content=%q, want %q", opts.ContentBase64, "Y29tcGF0")
+		}
+		json.NewEncoder(w).Encode(types.FileResponse{
+			Content: &types.ContentsResponse{Name: "rfc.md", Path: "docs/rfc.md"},
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	resp, err := f.Contents.CreateFile(context.Background(), "core", "go-forge", "docs/rfc.md", &types.CreateFileOptions{
+		Content: "Y29tcGF0",
+		Message: "create docs/rfc.md",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Content == nil || resp.Content.Path != "docs/rfc.md" {
+		t.Fatalf("got %#v", resp)
 	}
 }
 

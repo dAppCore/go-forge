@@ -3,11 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
-	"net/url"
-	"strconv"
 
-	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // PullService handles pull request operations within a repository.
@@ -47,7 +44,7 @@ func (o PullListOptions) String() string {
 // GoString returns a safe Go-syntax summary of the pull request list filters.
 func (o PullListOptions) GoString() string { return o.String() }
 
-func (o PullListOptions) addQuery(values url.Values) {
+func (o PullListOptions) addQuery(values *queryBuilder) {
 	if o.State != "" {
 		values.Set("state", o.State)
 	}
@@ -55,11 +52,11 @@ func (o PullListOptions) addQuery(values url.Values) {
 		values.Set("sort", o.Sort)
 	}
 	if o.Milestone != 0 {
-		values.Set("milestone", strconv.FormatInt(o.Milestone, 10))
+		values.Set("milestone", int64String(o.Milestone))
 	}
 	for _, label := range o.Labels {
 		if label != 0 {
-			values.Add("labels", strconv.FormatInt(label, 10))
+			values.Add("labels", int64String(label))
 		}
 	}
 	if o.Poster != "" {
@@ -75,13 +72,39 @@ func newPullService(c *Client) *PullService {
 	}
 }
 
+// ListPullRequestsPage returns a single page of pull requests in a repository.
+func (s *PullService) ListPullRequestsPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...any) (*PagedResult[types.PullRequest], error) {
+	return s.listPage(ctx, owner, repo, opts, filters...)
+}
+
 // ListPullRequests returns all pull requests in a repository.
-func (s *PullService) ListPullRequests(ctx context.Context, owner, repo string, filters ...PullListOptions) ([]types.PullRequest, error) {
+func (s *PullService) ListPullRequests(ctx context.Context, owner, repo string, filters ...any) ([]types.PullRequest, error) {
+	if pageOpts, ok := compatPullListPageOptions(filters...); ok {
+		page, err := s.listPage(ctx, owner, repo, pageOpts, filters...)
+		if err != nil {
+			return nil, err
+		}
+		return page.Items, nil
+	}
 	return s.listAll(ctx, owner, repo, filters...)
 }
 
 // IterPullRequests returns an iterator over all pull requests in a repository.
-func (s *PullService) IterPullRequests(ctx context.Context, owner, repo string, filters ...PullListOptions) iter.Seq2[types.PullRequest, error] {
+func (s *PullService) IterPullRequests(ctx context.Context, owner, repo string, filters ...any) iter.Seq2[types.PullRequest, error] {
+	if pageOpts, ok := compatPullListPageOptions(filters...); ok {
+		return func(yield func(types.PullRequest, error) bool) {
+			page, err := s.listPage(ctx, owner, repo, pageOpts, filters...)
+			if err != nil {
+				yield(*new(types.PullRequest), err)
+				return
+			}
+			for _, item := range page.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+		}
+	}
 	return s.listIter(ctx, owner, repo, filters...)
 }
 
@@ -94,11 +117,37 @@ func (s *PullService) CreatePullRequest(ctx context.Context, owner, repo string,
 	return &out, nil
 }
 
+// GetPullRequest returns a single pull request by index.
+func (s *PullService) GetPullRequest(ctx context.Context, owner, repo string, index int64) (*types.PullRequest, error) {
+	return s.Get(ctx, pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+}
+
+// EditPullRequest updates an existing pull request.
+func (s *PullService) EditPullRequest(ctx context.Context, owner, repo string, index int64, opts *types.EditPullRequestOption) (*types.PullRequest, error) {
+	return s.Resource.Update(ctx, pathParams("owner", owner, "repo", repo, "index", int64String(index)), opts)
+}
+
+// DeletePullRequest deletes a pull request.
+func (s *PullService) DeletePullRequest(ctx context.Context, owner, repo string, index int64) error {
+	return s.Delete(ctx, pathParams("owner", owner, "repo", repo, "index", int64String(index)))
+}
+
 // Merge merges a pull request. Method is one of "merge", "rebase", "rebase-merge", "squash", "fast-forward-only", "manually-merged".
 func (s *PullService) Merge(ctx context.Context, owner, repo string, index int64, method string) error {
+	return s.MergePullRequest(ctx, owner, repo, index, &types.MergePullRequestOption{Do: method})
+}
+
+// MergePullRequest merges a pull request.
+func (s *PullService) MergePullRequest(ctx context.Context, owner, repo string, index int64, opts *types.MergePullRequestOption) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/merge", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
-	body := map[string]string{"Do": method}
-	return s.client.Post(ctx, path, body, nil)
+	if opts != nil {
+		body := *opts
+		if body.Do == "" {
+			body.Do = body.MergeStyle
+		}
+		opts = &body
+	}
+	return s.client.Post(ctx, path, opts, nil)
 }
 
 // CancelScheduledAutoMerge cancels the scheduled auto merge for a pull request.
@@ -137,10 +186,20 @@ func (s *PullService) ListReviews(ctx context.Context, owner, repo string, index
 	return ListAll[types.PullReview](ctx, s.client, path, nil)
 }
 
+// ListPullReviews returns all reviews on a pull request.
+func (s *PullService) ListPullReviews(ctx context.Context, owner, repo string, index int64) ([]types.PullReview, error) {
+	return s.ListReviews(ctx, owner, repo, index)
+}
+
 // IterReviews returns an iterator over all reviews on a pull request.
 func (s *PullService) IterReviews(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.PullReview, error] {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews", pathParams("owner", owner, "repo", repo, "index", int64String(index)))
 	return ListIter[types.PullReview](ctx, s.client, path, nil)
+}
+
+// IterPullReviews returns an iterator over all reviews on a pull request.
+func (s *PullService) IterPullReviews(ctx context.Context, owner, repo string, index int64) iter.Seq2[types.PullReview, error] {
+	return s.IterReviews(ctx, owner, repo, index)
 }
 
 // ListFiles returns all changed files on a pull request.
@@ -218,56 +277,63 @@ func (s *PullService) GetReview(ctx context.Context, owner, repo string, index, 
 	return &out, nil
 }
 
+// GetPullReview returns a single pull request review.
+func (s *PullService) GetPullReview(ctx context.Context, owner, repo string, index, reviewID int64) (*types.PullReview, error) {
+	return s.GetReview(ctx, owner, repo, index, reviewID)
+}
+
 // DeleteReview deletes a pull request review.
 func (s *PullService) DeleteReview(ctx context.Context, owner, repo string, index, reviewID int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls/{index}/reviews/{id}", pathParams("owner", owner, "repo", repo, "index", int64String(index), "id", int64String(reviewID)))
 	return s.client.Delete(ctx, path)
 }
 
-func (s *PullService) listPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...PullListOptions) (*PagedResult[types.PullRequest], error) {
+// DeletePullReview deletes a pull request review.
+func (s *PullService) DeletePullReview(ctx context.Context, owner, repo string, index, reviewID int64) error {
+	return s.DeleteReview(ctx, owner, repo, index, reviewID)
+}
+
+func (s *PullService) listPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...any) (*PagedResult[types.PullRequest], error) {
 	if opts.Page < 1 {
 		opts.Page = 1
 	}
-	if opts.Limit < 1 {
-		opts.Limit = defaultPageLimit
+	pageSize := opts.PageSize
+	if pageSize < 1 {
+		pageSize = opts.Limit
+	}
+	if pageSize < 1 {
+		pageSize = defaultPageLimit
 	}
 
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/pulls", pathParams("owner", owner, "repo", repo))
-	u, err := url.Parse(path)
-	if err != nil {
-		return nil, core.E("PullService.listPage", "forge: parse path", err)
-	}
-
-	values := u.Query()
-	values.Set("page", strconv.Itoa(opts.Page))
-	values.Set("limit", strconv.Itoa(opts.Limit))
-	for _, filter := range filters {
-		filter.addQuery(values)
-	}
-	u.RawQuery = values.Encode()
+	path = appendQuery(path, func(values *queryBuilder) {
+		values.Set("page", intString(opts.Page))
+		values.Set("limit", intString(pageSize))
+		addPullFilters(values, filters...)
+	})
 
 	var items []types.PullRequest
-	resp, err := s.client.doJSON(ctx, "GET", u.String(), nil, &items)
+	resp, err := s.client.doJSON(ctx, "GET", path, nil, &items)
 	if err != nil {
 		return nil, err
 	}
 
-	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	totalCount := parseInt(resp.Header.Get("X-Total-Count"))
 	return &PagedResult[types.PullRequest]{
 		Items:      items,
 		TotalCount: totalCount,
 		Page:       opts.Page,
-		HasMore: (totalCount > 0 && (opts.Page-1)*opts.Limit+len(items) < totalCount) ||
-			(totalCount == 0 && len(items) >= opts.Limit),
+		HasMore: (totalCount > 0 && (opts.Page-1)*pageSize+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= pageSize),
 	}, nil
 }
 
-func (s *PullService) listAll(ctx context.Context, owner, repo string, filters ...PullListOptions) ([]types.PullRequest, error) {
+func (s *PullService) listAll(ctx context.Context, owner, repo string, filters ...any) ([]types.PullRequest, error) {
 	var all []types.PullRequest
 	page := 1
 
 	for {
-		result, err := s.listPage(ctx, owner, repo, ListOptions{Page: page, Limit: defaultPageLimit}, filters...)
+		result, err := s.listPage(ctx, owner, repo, ListOptions{Page: page, PageSize: defaultPageLimit}, filters...)
 		if err != nil {
 			return nil, err
 		}
@@ -281,11 +347,11 @@ func (s *PullService) listAll(ctx context.Context, owner, repo string, filters .
 	return all, nil
 }
 
-func (s *PullService) listIter(ctx context.Context, owner, repo string, filters ...PullListOptions) iter.Seq2[types.PullRequest, error] {
+func (s *PullService) listIter(ctx context.Context, owner, repo string, filters ...any) iter.Seq2[types.PullRequest, error] {
 	return func(yield func(types.PullRequest, error) bool) {
 		page := 1
 		for {
-			result, err := s.listPage(ctx, owner, repo, ListOptions{Page: page, Limit: defaultPageLimit}, filters...)
+			result, err := s.listPage(ctx, owner, repo, ListOptions{Page: page, PageSize: defaultPageLimit}, filters...)
 			if err != nil {
 				yield(*new(types.PullRequest), err)
 				return
@@ -301,6 +367,63 @@ func (s *PullService) listIter(ctx context.Context, owner, repo string, filters 
 			page++
 		}
 	}
+}
+
+func addPullFilters(values *queryBuilder, filters ...any) {
+	for _, filter := range filters {
+		switch v := filter.(type) {
+		case PullListOptions:
+			v.addQuery(values)
+		case *PullListOptions:
+			if v != nil {
+				v.addQuery(values)
+			}
+		case types.ListPullRequestsOption:
+			addCompatPullFilter(values, v)
+		case *types.ListPullRequestsOption:
+			if v != nil {
+				addCompatPullFilter(values, *v)
+			}
+		}
+	}
+}
+
+func addCompatPullFilter(values *queryBuilder, filter types.ListPullRequestsOption) {
+	if filter.State != "" {
+		values.Set("state", filter.State)
+	}
+	if filter.Sort != "" {
+		values.Set("sort", filter.Sort)
+	}
+	if filter.Milestone != 0 {
+		values.Set("milestone", int64String(filter.Milestone))
+	}
+	for _, label := range filter.Labels {
+		if label != 0 {
+			values.Add("labels", int64String(label))
+		}
+	}
+	if filter.Poster != "" {
+		values.Set("poster", filter.Poster)
+	}
+}
+
+func compatPullListPageOptions(filters ...any) (ListOptions, bool) {
+	for _, filter := range filters {
+		switch v := filter.(type) {
+		case types.ListPullRequestsOption:
+			if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+				return opts, true
+			}
+		case *types.ListPullRequestsOption:
+			if v != nil {
+				if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+					return opts, true
+				}
+			}
+		}
+	}
+	return ListOptions{}, false
 }
 
 // ListReviewComments returns all comments on a pull request review.

@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // MilestoneListOptions controls filtering for repository milestone listings.
@@ -53,6 +53,21 @@ func newMilestoneService(c *Client) *MilestoneService {
 	return &MilestoneService{client: c}
 }
 
+// ListMilestonesPage returns a single page of milestones for a repository.
+func (s *MilestoneService) ListMilestonesPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...MilestoneListOptions) (*PagedResult[types.Milestone], error) {
+	return s.List(ctx, pathParams("owner", owner, "repo", repo), opts, filters...)
+}
+
+// ListMilestones returns all milestones for a repository.
+func (s *MilestoneService) ListMilestones(ctx context.Context, owner, repo string, filters ...MilestoneListOptions) ([]types.Milestone, error) {
+	return s.ListAll(ctx, pathParams("owner", owner, "repo", repo), filters...)
+}
+
+// IterMilestones returns an iterator over all milestones for a repository.
+func (s *MilestoneService) IterMilestones(ctx context.Context, owner, repo string, filters ...MilestoneListOptions) iter.Seq2[types.Milestone, error] {
+	return s.Iter(ctx, pathParams("owner", owner, "repo", repo), filters...)
+}
+
 // List returns a single page of milestones for a repository.
 func (s *MilestoneService) List(ctx context.Context, params Params, opts ListOptions, filters ...MilestoneListOptions) (*PagedResult[types.Milestone], error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones", params)
@@ -81,6 +96,11 @@ func (s *MilestoneService) Get(ctx context.Context, owner, repo string, id int64
 	return &out, nil
 }
 
+// GetMilestone returns a single milestone by ID.
+func (s *MilestoneService) GetMilestone(ctx context.Context, owner, repo string, id int64) (*types.Milestone, error) {
+	return s.Get(ctx, owner, repo, id)
+}
+
 // Create creates a new milestone.
 func (s *MilestoneService) Create(ctx context.Context, owner, repo string, opts *types.CreateMilestoneOption) (*types.Milestone, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones", pathParams("owner", owner, "repo", repo))
@@ -89,6 +109,11 @@ func (s *MilestoneService) Create(ctx context.Context, owner, repo string, opts 
 		return nil, err
 	}
 	return &out, nil
+}
+
+// CreateMilestone creates a new milestone.
+func (s *MilestoneService) CreateMilestone(ctx context.Context, owner, repo string, opts *types.CreateMilestoneOption) (*types.Milestone, error) {
+	return s.Create(ctx, owner, repo, opts)
 }
 
 // Edit updates an existing milestone.
@@ -101,10 +126,20 @@ func (s *MilestoneService) Edit(ctx context.Context, owner, repo string, id int6
 	return &out, nil
 }
 
+// EditMilestone updates an existing milestone.
+func (s *MilestoneService) EditMilestone(ctx context.Context, owner, repo string, id int64, opts *types.EditMilestoneOption) (*types.Milestone, error) {
+	return s.Edit(ctx, owner, repo, id, opts)
+}
+
 // Delete removes a milestone.
 func (s *MilestoneService) Delete(ctx context.Context, owner, repo string, id int64) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/milestones/{id}", pathParams("owner", owner, "repo", repo, "id", int64String(id)))
 	return s.client.Delete(ctx, path)
+}
+
+// DeleteMilestone deletes a milestone.
+func (s *MilestoneService) DeleteMilestone(ctx context.Context, owner, repo string, id int64) error {
+	return s.Delete(ctx, owner, repo, id)
 }
 
 func milestoneQuery(filters ...MilestoneListOptions) map[string]string {

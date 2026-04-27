@@ -10,7 +10,7 @@ import (
 	"text/template"
 
 	core "dappco.re/go/core"
-	coreio "dappco.re/go/core/io"
+	coreio "dappco.re/go/io"
 )
 
 // typeGrouping maps type name prefixes to output file names.

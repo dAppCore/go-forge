@@ -3,9 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
-	"strconv"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // CommitService handles commit-related operations such as commit statuses
@@ -60,13 +59,13 @@ func (o CommitListOptions) queryParams() map[string]string {
 		query["path"] = o.Path
 	}
 	if o.Stat != nil {
-		query["stat"] = strconv.FormatBool(*o.Stat)
+		query["stat"] = boolString(*o.Stat)
 	}
 	if o.Verification != nil {
-		query["verification"] = strconv.FormatBool(*o.Verification)
+		query["verification"] = boolString(*o.Verification)
 	}
 	if o.Files != nil {
-		query["files"] = strconv.FormatBool(*o.Files)
+		query["files"] = boolString(*o.Files)
 	}
 	if o.Not != "" {
 		query["not"] = o.Not
@@ -108,6 +107,55 @@ func (s *CommitService) Get(ctx context.Context, params Params) (*types.Commit, 
 		return nil, err
 	}
 	return &out, nil
+}
+
+// ListCommitsPage returns a single page of commits for a repository.
+func (s *CommitService) ListCommitsPage(ctx context.Context, owner, repo string, opts ListOptions, filters ...any) (*PagedResult[types.Commit], error) {
+	params := pathParams("owner", owner, "repo", repo)
+	path := ResolvePath(commitCollectionPath, params)
+	return ListPage[types.Commit](ctx, s.client, path, commitCompatListQuery(filters...), opts)
+}
+
+// ListCommits returns commits for a repository using RFC-compatible filters.
+func (s *CommitService) ListCommits(ctx context.Context, owner, repo string, filters ...any) ([]types.Commit, error) {
+	params := pathParams("owner", owner, "repo", repo)
+	path := ResolvePath(commitCollectionPath, params)
+	query := commitCompatListQuery(filters...)
+	if pageOpts, ok := commitCompatPageOptions(filters...); ok {
+		page, err := ListPage[types.Commit](ctx, s.client, path, query, pageOpts)
+		if err != nil {
+			return nil, err
+		}
+		return page.Items, nil
+	}
+	return ListAll[types.Commit](ctx, s.client, path, query)
+}
+
+// IterCommits returns an iterator over commits for a repository using RFC-compatible filters.
+func (s *CommitService) IterCommits(ctx context.Context, owner, repo string, filters ...any) iter.Seq2[types.Commit, error] {
+	params := pathParams("owner", owner, "repo", repo)
+	path := ResolvePath(commitCollectionPath, params)
+	query := commitCompatListQuery(filters...)
+	if pageOpts, ok := commitCompatPageOptions(filters...); ok {
+		return func(yield func(types.Commit, error) bool) {
+			page, err := ListPage[types.Commit](ctx, s.client, path, query, pageOpts)
+			if err != nil {
+				yield(*new(types.Commit), err)
+				return
+			}
+			for _, item := range page.Items {
+				if !yield(item, nil) {
+					return
+				}
+			}
+		}
+	}
+	return ListIter[types.Commit](ctx, s.client, path, query)
+}
+
+// GetCommit returns a single commit by SHA or ref.
+func (s *CommitService) GetCommit(ctx context.Context, owner, repo, sha string) (*types.Commit, error) {
+	return s.Get(ctx, pathParams("owner", owner, "repo", repo, "sha", sha))
 }
 
 // GetDiffOrPatch returns a commit diff or patch as raw bytes.
@@ -224,4 +272,77 @@ func commitListQuery(filters ...CommitListOptions) map[string]string {
 		return nil
 	}
 	return query
+}
+
+func commitCompatListQuery(filters ...any) map[string]string {
+	query := make(map[string]string, len(filters))
+	for _, filter := range filters {
+		switch v := filter.(type) {
+		case CommitListOptions:
+			for key, value := range v.queryParams() {
+				query[key] = value
+			}
+		case *CommitListOptions:
+			if v != nil {
+				for key, value := range v.queryParams() {
+					query[key] = value
+				}
+			}
+		case types.ListCommitsOption:
+			for key, value := range commitListQueryFromCompat(v) {
+				query[key] = value
+			}
+		case *types.ListCommitsOption:
+			if v != nil {
+				for key, value := range commitListQueryFromCompat(*v) {
+					query[key] = value
+				}
+			}
+		}
+	}
+	if len(query) == 0 {
+		return nil
+	}
+	return query
+}
+
+func commitListQueryFromCompat(filter types.ListCommitsOption) map[string]string {
+	query := make(map[string]string, 6)
+	if filter.Sha != "" {
+		query["sha"] = filter.Sha
+	}
+	if filter.Path != "" {
+		query["path"] = filter.Path
+	}
+	if filter.Stat != nil {
+		query["stat"] = boolString(*filter.Stat)
+	}
+	if filter.Verification != nil {
+		query["verification"] = boolString(*filter.Verification)
+	}
+	if filter.Files != nil {
+		query["files"] = boolString(*filter.Files)
+	}
+	if filter.Not != "" {
+		query["not"] = filter.Not
+	}
+	return query
+}
+
+func commitCompatPageOptions(filters ...any) (ListOptions, bool) {
+	for _, filter := range filters {
+		switch v := filter.(type) {
+		case types.ListCommitsOption:
+			if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+				return opts, true
+			}
+		case *types.ListCommitsOption:
+			if v != nil {
+				if opts, ok := compatListOptions(v.Page, v.PageSize, v.Limit); ok {
+					return opts, true
+				}
+			}
+		}
+	}
+	return ListOptions{}, false
 }

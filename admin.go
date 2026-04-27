@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // AdminService handles site administration operations.

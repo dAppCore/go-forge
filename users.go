@@ -4,11 +4,8 @@ import (
 	"context"
 	"iter"
 	"net/http"
-	"net/url"
-	"strconv"
 
-	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // UserService handles user operations.
@@ -43,7 +40,7 @@ func (o UserSearchOptions) queryParams() map[string]string {
 		return nil
 	}
 	return map[string]string{
-		"uid": strconv.FormatInt(o.UID, 10),
+		"uid": int64String(o.UID),
 	}
 }
 
@@ -84,6 +81,38 @@ func newUserService(c *Client) *UserService {
 			c, "/api/v1/users/{username}",
 		),
 	}
+}
+
+// GetUserByID returns a user by numeric ID.
+func (s *UserService) GetUserByID(ctx context.Context, id int64) (*types.User, error) {
+	if id < 1 {
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+			Message:    "user not found",
+			URL:        "/api/v1/users/search",
+		}
+	}
+
+	result, err := s.SearchUsersPage(ctx, "", ListOptions{Page: 1, PageSize: 1}, UserSearchOptions{UID: id})
+	if err != nil {
+		return nil, err
+	}
+	for i := range result.Items {
+		if result.Items[i].ID == id {
+			return &result.Items[i], nil
+		}
+	}
+
+	return nil, &APIError{
+		StatusCode: http.StatusNotFound,
+		Message:    "user not found",
+		URL:        "/api/v1/users/search",
+	}
+}
+
+// GetUserByUsername returns a user by username.
+func (s *UserService) GetUserByUsername(ctx context.Context, username string) (*types.User, error) {
+	return s.Get(ctx, pathParams("username", username))
 }
 
 // GetCurrent returns the authenticated user.
@@ -127,33 +156,32 @@ func (s *UserService) SearchUsersPage(ctx context.Context, query string, pageOpt
 	if pageOpts.Page < 1 {
 		pageOpts.Page = 1
 	}
-	if pageOpts.Limit < 1 {
-		pageOpts.Limit = 50
+	pageSize := pageOpts.PageSize
+	if pageSize < 1 {
+		pageSize = pageOpts.Limit
+	}
+	if pageSize < 1 {
+		pageSize = 50
 	}
 
-	u, err := url.Parse("/api/v1/users/search")
-	if err != nil {
-		return nil, core.E("UserService.SearchUsersPage", "forge: parse path", err)
-	}
-
-	q := u.Query()
-	q.Set("q", query)
-	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			q.Set(key, value)
+	path := appendQuery("/api/v1/users/search", func(q *queryBuilder) {
+		q.Set("q", query)
+		for _, filter := range filters {
+			for key, value := range filter.queryParams() {
+				q.Set(key, value)
+			}
 		}
-	}
-	q.Set("page", strconv.Itoa(pageOpts.Page))
-	q.Set("limit", strconv.Itoa(pageOpts.Limit))
-	u.RawQuery = q.Encode()
+		q.Set("page", intString(pageOpts.Page))
+		q.Set("limit", intString(pageSize))
+	})
 
 	var out userSearchResults
-	resp, err := s.client.doJSON(ctx, http.MethodGet, u.String(), nil, &out)
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, &out)
 	if err != nil {
 		return nil, err
 	}
 
-	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	totalCount := parseInt(resp.Header.Get("X-Total-Count"))
 	items := make([]types.User, 0, len(out.Data))
 	for _, user := range out.Data {
 		if user != nil {
@@ -165,8 +193,8 @@ func (s *UserService) SearchUsersPage(ctx context.Context, query string, pageOpt
 		Items:      items,
 		TotalCount: totalCount,
 		Page:       pageOpts.Page,
-		HasMore: (totalCount > 0 && (pageOpts.Page-1)*pageOpts.Limit+len(items) < totalCount) ||
-			(totalCount == 0 && len(items) >= pageOpts.Limit),
+		HasMore: (totalCount > 0 && (pageOpts.Page-1)*pageSize+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= pageSize),
 	}, nil
 }
 
@@ -176,7 +204,7 @@ func (s *UserService) SearchUsers(ctx context.Context, query string, filters ...
 	page := 1
 
 	for {
-		result, err := s.SearchUsersPage(ctx, query, ListOptions{Page: page, Limit: 50}, filters...)
+		result, err := s.SearchUsersPage(ctx, query, ListOptions{Page: page, PageSize: 50}, filters...)
 		if err != nil {
 			return nil, err
 		}
@@ -195,7 +223,7 @@ func (s *UserService) IterSearchUsers(ctx context.Context, query string, filters
 	return func(yield func(types.User, error) bool) {
 		page := 1
 		for {
-			result, err := s.SearchUsersPage(ctx, query, ListOptions{Page: page, Limit: 50}, filters...)
+			result, err := s.SearchUsersPage(ctx, query, ListOptions{Page: page, PageSize: 50}, filters...)
 			if err != nil {
 				yield(*new(types.User), err)
 				return

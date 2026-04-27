@@ -25,7 +25,7 @@ type CreateIssueOption struct {
 	Body      string    `json:"body,omitempty"`
 	Closed    bool      `json:"closed,omitempty"`
 	Deadline  time.Time `json:"due_date,omitempty"`
-	Labels    []int64   `json:"labels,omitempty"`    // list of label ids
+	Labels    any       `json:"labels,omitempty"`    // list of label ids or names (RFC compatibility)
 	Milestone int64     `json:"milestone,omitempty"` // milestone id
 	Ref       string    `json:"ref,omitempty"`
 	Title     string    `json:"title"`

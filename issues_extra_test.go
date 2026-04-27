@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestIssueService_ListIssues_Good(t *testing.T) {
@@ -59,5 +59,77 @@ func TestIssueService_CreateIssue_Good(t *testing.T) {
 	}
 	if issue.Title != "new issue" {
 		t.Fatalf("got title=%q", issue.Title)
+	}
+}
+
+func TestIssueService_CreateIssue_LabelNamesCompat_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		var body types.CreateIssueOption
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		labels, ok := body.Labels.([]string)
+		if !ok {
+			t.Fatalf("expected []string labels, got %T", body.Labels)
+		}
+		if len(labels) != 1 || labels[0] != "enhancement" {
+			t.Fatalf("unexpected labels: %#v", labels)
+		}
+		json.NewEncoder(w).Encode(types.Issue{ID: 2, Index: 2, Title: "label issue"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issue, err := f.Issues.CreateIssue(context.Background(), "core", "go-forge", &types.CreateIssueOption{
+		Title:  "label issue",
+		Labels: []string{"enhancement"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if issue.Title != "label issue" {
+		t.Fatalf("got title=%q", issue.Title)
+	}
+}
+
+func TestIssueService_ListRepoIssues_CompatPagination_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/repos/core/go-forge/issues" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+		}
+		if got := r.URL.Query().Get("state"); got != "open" {
+			t.Errorf("got state=%q, want %q", got, "open")
+		}
+		if got := r.URL.Query().Get("page"); got != "2" {
+			t.Errorf("got page=%q, want %q", got, "2")
+		}
+		if got := r.URL.Query().Get("limit"); got != "25" {
+			t.Errorf("got limit=%q, want %q", got, "25")
+		}
+		w.Header().Set("X-Total-Count", "40")
+		json.NewEncoder(w).Encode([]types.Issue{{ID: 2, Title: "paged issue"}})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	issues, err := f.Issues.ListRepoIssues(context.Background(), "core", "go-forge", &types.ListIssueOption{
+		State:    "open",
+		Page:     2,
+		PageSize: 25,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(issues) != 1 || issues[0].Title != "paged issue" {
+		t.Fatalf("got %#v", issues)
 	}
 }

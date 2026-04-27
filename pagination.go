@@ -10,7 +10,10 @@ import (
 	core "dappco.re/go/core"
 )
 
-const defaultPageLimit = 50
+const defaultPageSize = 50
+
+// defaultPageLimit is retained for compatibility with existing call sites.
+const defaultPageLimit = defaultPageSize
 
 // ListOptions controls pagination.
 //
@@ -19,8 +22,10 @@ const defaultPageLimit = 50
 //	opts := forge.ListOptions{Page: 1, Limit: 50}
 //	_ = opts
 type ListOptions struct {
-	Page  int // 1-based page number
-	Limit int // items per page (default 50)
+	Page     int // 1-based page number
+	PageSize int // items per page (default 50)
+	// Limit is a compatibility alias for PageSize.
+	Limit int
 }
 
 // String returns a safe summary of the pagination options.
@@ -29,11 +34,15 @@ type ListOptions struct {
 //
 //	_ = forge.DefaultList.String()
 func (o ListOptions) String() string {
+	pageSize := o.PageSize
+	if pageSize == 0 {
+		pageSize = o.Limit
+	}
 	return core.Concat(
 		"forge.ListOptions{page=",
 		strconv.Itoa(o.Page),
-		", limit=",
-		strconv.Itoa(o.Limit),
+		", page_size=",
+		strconv.Itoa(pageSize),
 		"}",
 	)
 }
@@ -51,7 +60,7 @@ func (o ListOptions) GoString() string { return o.String() }
 //
 //	page, err := forge.ListPage[types.Repository](ctx, client, path, nil, forge.DefaultList)
 //	_ = page
-var DefaultList = ListOptions{Page: 1, Limit: defaultPageLimit}
+var DefaultList = ListOptions{Page: 1, PageSize: defaultPageSize}
 
 // PagedResult holds a single page of results with metadata.
 //
@@ -108,8 +117,12 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 	if opts.Page < 1 {
 		opts.Page = 1
 	}
-	if opts.Limit < 1 {
-		opts.Limit = defaultPageLimit
+	pageSize := opts.PageSize
+	if pageSize < 1 {
+		pageSize = opts.Limit
+	}
+	if pageSize < 1 {
+		pageSize = defaultPageSize
 	}
 
 	u, err := url.Parse(path)
@@ -119,7 +132,7 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 
 	q := u.Query()
 	q.Set("page", strconv.Itoa(opts.Page))
-	q.Set("limit", strconv.Itoa(opts.Limit))
+	q.Set("limit", strconv.Itoa(pageSize))
 	for k, v := range query {
 		q.Set(k, v)
 	}
@@ -139,8 +152,8 @@ func ListPage[T any](ctx context.Context, c *Client, path string, query map[stri
 		Page:       opts.Page,
 		// If totalCount is provided, use it to determine if there are more items.
 		// Otherwise, assume there are more if we got a full page.
-		HasMore: (totalCount > 0 && (opts.Page-1)*opts.Limit+len(items) < totalCount) ||
-			(totalCount == 0 && len(items) >= opts.Limit),
+		HasMore: (totalCount > 0 && (opts.Page-1)*pageSize+len(items) < totalCount) ||
+			(totalCount == 0 && len(items) >= pageSize),
 	}, nil
 }
 
@@ -155,7 +168,7 @@ func ListAll[T any](ctx context.Context, c *Client, path string, query map[strin
 	page := 1
 
 	for {
-		result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: defaultPageLimit})
+		result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, PageSize: defaultPageSize})
 		if err != nil {
 			return nil, err
 		}
@@ -180,7 +193,7 @@ func ListIter[T any](ctx context.Context, c *Client, path string, query map[stri
 	return func(yield func(T, error) bool) {
 		page := 1
 		for {
-			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, Limit: defaultPageLimit})
+			result, err := ListPage[T](ctx, c, path, query, ListOptions{Page: page, PageSize: defaultPageSize})
 			if err != nil {
 				yield(*new(T), err)
 				return

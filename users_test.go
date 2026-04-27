@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func TestUserService_Get_Good(t *testing.T) {
@@ -52,6 +52,73 @@ func TestUserService_GetCurrent_Good(t *testing.T) {
 	}
 	if user.UserName != "me" {
 		t.Errorf("got username=%q, want %q", user.UserName, "me")
+	}
+}
+
+func TestUserService_GetUserByID_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("uid"); got != "42" {
+			t.Errorf("wrong uid: %s", got)
+		}
+		if got := r.URL.Query().Get("page"); got != "1" {
+			t.Errorf("wrong page: %s", got)
+		}
+		if got := r.URL.Query().Get("limit"); got != "1" {
+			t.Errorf("wrong limit: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "1")
+		json.NewEncoder(w).Encode(map[string]any{
+			"data": []*types.User{
+				{ID: 42, UserName: "alice"},
+			},
+			"ok": true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	user, err := f.Users.GetUserByID(context.Background(), 42)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if user.ID != 42 || user.UserName != "alice" {
+		t.Fatalf("got %#v", user)
+	}
+}
+
+func TestUserService_GetUserByID_NotFound(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+		if r.URL.Path != "/api/v1/users/search" {
+			t.Errorf("wrong path: %s", r.URL.Path)
+			http.NotFound(w, r)
+			return
+		}
+		if got := r.URL.Query().Get("uid"); got != "42" {
+			t.Errorf("wrong uid: %s", got)
+		}
+		w.Header().Set("X-Total-Count", "0")
+		json.NewEncoder(w).Encode(map[string]any{
+			"data": []*types.User{},
+			"ok":   true,
+		})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	_, err := f.Users.GetUserByID(context.Background(), 42)
+	if !IsNotFound(err) {
+		t.Fatalf("expected not found error, got %v", err)
 	}
 }
 

@@ -3,11 +3,8 @@ package forge
 import (
 	"context"
 	"iter"
-	"net/url"
-	"strconv"
 
-	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // ActionsService handles CI/CD actions operations across repositories and
@@ -213,19 +210,14 @@ func (s *ActionsService) ListRepoTasks(ctx context.Context, owner, repo string, 
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/actions/tasks", pathParams("owner", owner, "repo", repo))
 
 	if opts.Page > 0 || opts.Limit > 0 {
-		u, err := url.Parse(path)
-		if err != nil {
-			return nil, core.E("ActionsService.ListRepoTasks", "forge: parse path", err)
-		}
-		q := u.Query()
-		if opts.Page > 0 {
-			q.Set("page", strconv.Itoa(opts.Page))
-		}
-		if opts.Limit > 0 {
-			q.Set("limit", strconv.Itoa(opts.Limit))
-		}
-		u.RawQuery = q.Encode()
-		path = u.String()
+		path = appendQuery(path, func(q *queryBuilder) {
+			if opts.Page > 0 {
+				q.Set("page", intString(opts.Page))
+			}
+			if opts.Limit > 0 {
+				q.Set("limit", intString(opts.Limit))
+			}
+		})
 	}
 
 	var out types.ActionTaskResponse

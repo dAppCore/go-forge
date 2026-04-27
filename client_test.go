@@ -6,6 +6,7 @@ import (
 	json "github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	core "dappco.re/go/core"
@@ -16,7 +17,7 @@ func TestClient_Get_Good(t *testing.T) {
 		if r.Method != http.MethodGet {
 			t.Errorf("expected GET, got %s", r.Method)
 		}
-		if r.Header.Get("Authorization") != "token test-token" {
+		if r.Header.Get("Authorization") != "Bearer test-token" {
 			t.Errorf("missing auth header")
 		}
 		if r.URL.Path != "/api/v1/user" {
@@ -135,6 +136,81 @@ func TestClient_GetRaw_Good(t *testing.T) {
 	}
 	rl := c.RateLimit()
 	if rl.Limit != 60 || rl.Remaining != 59 || rl.Reset != 1700000002 {
+		t.Fatalf("unexpected rate limit: %+v", rl)
+	}
+}
+
+func TestClient_PostMultipartJSON_RateLimit_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if got := r.Header.Get("Accept"); got != "application/json" {
+			t.Errorf("got Accept=%q, want %q", got, "application/json")
+		}
+		if got := r.Header.Get("Authorization"); got != "Bearer test-token" {
+			t.Errorf("got Authorization=%q", got)
+		}
+		if got := r.Header.Get("Content-Type"); !strings.HasPrefix(got, "multipart/form-data; boundary=") {
+			t.Errorf("got Content-Type=%q", got)
+		}
+		w.Header().Set("X-RateLimit-Limit", "70")
+		w.Header().Set("X-RateLimit-Remaining", "69")
+		w.Header().Set("X-RateLimit-Reset", "1700000003")
+		json.NewEncoder(w).Encode(map[string]any{"id": 1, "name": "artifact"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "test-token")
+	var out map[string]any
+	err := c.postMultipartJSON(
+		context.Background(),
+		"/api/v1/repos/core/go-forge/releases/1/assets",
+		map[string]string{"name": "artifact"},
+		nil,
+		"attachment",
+		"artifact.tar.gz",
+		strings.NewReader("payload"),
+		&out,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out["name"] != "artifact" {
+		t.Fatalf("got out=%#v", out)
+	}
+	rl := c.RateLimit()
+	if rl.Limit != 70 || rl.Remaining != 69 || rl.Reset != 1700000003 {
+		t.Fatalf("unexpected rate limit: %+v", rl)
+	}
+}
+
+func TestClient_PostMultipartJSON_RateLimitOnError_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-RateLimit-Limit", "80")
+		w.Header().Set("X-RateLimit-Remaining", "0")
+		w.Header().Set("X-RateLimit-Reset", "1700000004")
+		w.WriteHeader(http.StatusForbidden)
+		json.NewEncoder(w).Encode(map[string]string{"message": "forbidden"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "test-token")
+	err := c.postMultipartJSON(
+		context.Background(),
+		"/api/v1/repos/core/go-forge/releases/1/assets",
+		nil,
+		nil,
+		"attachment",
+		"artifact.tar.gz",
+		strings.NewReader("payload"),
+		nil,
+	)
+	if !IsForbidden(err) {
+		t.Fatalf("expected forbidden, got %v", err)
+	}
+	rl := c.RateLimit()
+	if rl.Limit != 80 || rl.Remaining != 0 || rl.Reset != 1700000004 {
 		t.Fatalf("unexpected rate limit: %+v", rl)
 	}
 }

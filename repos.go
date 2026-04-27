@@ -4,12 +4,9 @@ import (
 	"context"
 	"iter"
 	"net/http"
-	"net/url"
-	"strconv"
 	"time"
 
-	core "dappco.re/go/core"
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // RepoService handles repository operations.
@@ -43,7 +40,7 @@ func (o RepoKeyListOptions) GoString() string { return o.String() }
 func (o RepoKeyListOptions) queryParams() map[string]string {
 	query := make(map[string]string, 2)
 	if o.KeyID != 0 {
-		query["key_id"] = strconv.FormatInt(o.KeyID, 10)
+		query["key_id"] = int64String(o.KeyID)
 	}
 	if o.Fingerprint != "" {
 		query["fingerprint"] = o.Fingerprint
@@ -128,6 +125,21 @@ func newRepoService(c *Client) *RepoService {
 	}
 }
 
+// GetRepo returns a repository by owner and name.
+func (s *RepoService) GetRepo(ctx context.Context, owner, repo string) (*types.Repository, error) {
+	return s.Get(ctx, pathParams("owner", owner, "repo", repo))
+}
+
+// UpdateRepo updates an existing repository.
+func (s *RepoService) UpdateRepo(ctx context.Context, owner, repo string, opts *types.EditRepoOption) (*types.Repository, error) {
+	return s.Update(ctx, pathParams("owner", owner, "repo", repo), opts)
+}
+
+// DeleteRepo deletes a repository.
+func (s *RepoService) DeleteRepo(ctx context.Context, owner, repo string) error {
+	return s.Delete(ctx, pathParams("owner", owner, "repo", repo))
+}
+
 // Migrate imports a remote git repository into Forgejo.
 func (s *RepoService) Migrate(ctx context.Context, opts *types.MigrateRepoOptions) (*types.Repository, error) {
 	var out types.Repository
@@ -166,6 +178,12 @@ func (s *RepoService) CreateOrgRepoDeprecated(ctx context.Context, org string, o
 	return &out, nil
 }
 
+// ListOrgReposPage returns a single page of repositories for an organisation.
+func (s *RepoService) ListOrgReposPage(ctx context.Context, org string, opts ListOptions) (*PagedResult[types.Repository], error) {
+	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
+	return ListPage[types.Repository](ctx, s.client, path, nil, opts)
+}
+
 // ListOrgRepos returns all repositories for an organisation.
 func (s *RepoService) ListOrgRepos(ctx context.Context, org string) ([]types.Repository, error) {
 	path := ResolvePath("/api/v1/orgs/{org}/repos", pathParams("org", org))
@@ -178,13 +196,34 @@ func (s *RepoService) IterOrgRepos(ctx context.Context, org string) iter.Seq2[ty
 	return ListIter[types.Repository](ctx, s.client, path, nil)
 }
 
-// ListUserRepos returns all repositories for the authenticated user.
-func (s *RepoService) ListUserRepos(ctx context.Context) ([]types.Repository, error) {
+// ListCurrentUserReposPage returns a single page of repositories for the authenticated user.
+func (s *RepoService) ListCurrentUserReposPage(ctx context.Context, opts ListOptions) (*PagedResult[types.Repository], error) {
+	return ListPage[types.Repository](ctx, s.client, "/api/v1/user/repos", nil, opts)
+}
+
+// ListUserReposPage returns a single page of repositories for a user.
+func (s *RepoService) ListUserReposPage(ctx context.Context, username string, opts ListOptions) (*PagedResult[types.Repository], error) {
+	path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username))
+	return ListPage[types.Repository](ctx, s.client, path, nil, opts)
+}
+
+// ListUserRepos returns all repositories for a user.
+// When username is omitted, it returns repositories for the authenticated user.
+func (s *RepoService) ListUserRepos(ctx context.Context, username ...string) ([]types.Repository, error) {
+	if len(username) > 0 && username[0] != "" {
+		path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username[0]))
+		return ListAll[types.Repository](ctx, s.client, path, nil)
+	}
 	return ListAll[types.Repository](ctx, s.client, "/api/v1/user/repos", nil)
 }
 
-// IterUserRepos returns an iterator over all repositories for the authenticated user.
-func (s *RepoService) IterUserRepos(ctx context.Context) iter.Seq2[types.Repository, error] {
+// IterUserRepos returns an iterator over repositories for a user.
+// When username is omitted, it returns repositories for the authenticated user.
+func (s *RepoService) IterUserRepos(ctx context.Context, username ...string) iter.Seq2[types.Repository, error] {
+	if len(username) > 0 && username[0] != "" {
+		path := ResolvePath("/api/v1/users/{username}/repos", pathParams("username", username[0]))
+		return ListIter[types.Repository](ctx, s.client, path, nil)
+	}
 	return ListIter[types.Repository](ctx, s.client, "/api/v1/user/repos", nil)
 }
 
@@ -465,14 +504,9 @@ func (s *RepoService) GetRawFile(ctx context.Context, owner, repo, filepath stri
 func (s *RepoService) GetRawFileOrLFS(ctx context.Context, owner, repo, filepath, ref string) ([]byte, error) {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/media/{filepath}", pathParams("owner", owner, "repo", repo, "filepath", filepath))
 	if ref != "" {
-		u, err := url.Parse(path)
-		if err != nil {
-			return nil, core.E("RepoService.GetRawFileOrLFS", "forge: parse path", err)
-		}
-		q := u.Query()
-		q.Set("ref", ref)
-		u.RawQuery = q.Encode()
-		path = u.String()
+		path = appendQuery(path, func(q *queryBuilder) {
+			q.Set("ref", ref)
+		})
 	}
 	return s.client.GetRaw(ctx, path)
 }
@@ -481,14 +515,9 @@ func (s *RepoService) GetRawFileOrLFS(ctx context.Context, owner, repo, filepath
 func (s *RepoService) GetEditorConfig(ctx context.Context, owner, repo, filepath, ref string) error {
 	path := ResolvePath("/api/v1/repos/{owner}/{repo}/editorconfig/{filepath}", pathParams("owner", owner, "repo", repo, "filepath", filepath))
 	if ref != "" {
-		u, err := url.Parse(path)
-		if err != nil {
-			return core.E("RepoService.GetEditorConfig", "forge: parse path", err)
-		}
-		q := u.Query()
-		q.Set("ref", ref)
-		u.RawQuery = q.Encode()
-		path = u.String()
+		path = appendQuery(path, func(q *queryBuilder) {
+			q.Set("ref", ref)
+		})
 	}
 	return s.client.Get(ctx, path, nil)
 }
@@ -650,24 +679,19 @@ func (s *RepoService) SearchRepositoriesPage(ctx context.Context, query string, 
 		pageOpts.Limit = 50
 	}
 
-	u, err := url.Parse("/api/v1/repos/search")
-	if err != nil {
-		return nil, core.E("RepoService.SearchRepositoriesPage", "forge: parse path", err)
-	}
-
-	q := u.Query()
-	q.Set("q", query)
-	q.Set("page", strconv.Itoa(pageOpts.Page))
-	q.Set("limit", strconv.Itoa(pageOpts.Limit))
-	u.RawQuery = q.Encode()
+	path := appendQuery("/api/v1/repos/search", func(q *queryBuilder) {
+		q.Set("q", query)
+		q.Set("page", intString(pageOpts.Page))
+		q.Set("limit", intString(pageOpts.Limit))
+	})
 
 	var out types.SearchResults
-	resp, err := s.client.doJSON(ctx, http.MethodGet, u.String(), nil, &out)
+	resp, err := s.client.doJSON(ctx, http.MethodGet, path, nil, &out)
 	if err != nil {
 		return nil, err
 	}
 
-	totalCount, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	totalCount := parseInt(resp.Header.Get("X-Total-Count"))
 	items := make([]types.Repository, 0, len(out.Data))
 	for _, repo := range out.Data {
 		if repo != nil {
@@ -1045,7 +1069,7 @@ func repoKeyQuery(filters ...RepoKeyListOptions) map[string]string {
 	query := make(map[string]string, 2)
 	for _, filter := range filters {
 		if filter.KeyID != 0 {
-			query["key_id"] = strconv.FormatInt(filter.KeyID, 10)
+			query["key_id"] = int64String(filter.KeyID)
 		}
 		if filter.Fingerprint != "" {
 			query["fingerprint"] = filter.Fingerprint

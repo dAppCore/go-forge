@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 // BranchService handles branch operations within a repository.
@@ -23,6 +23,12 @@ func newBranchService(c *Client) *BranchService {
 			c, "/api/v1/repos/{owner}/{repo}/branches/{branch}",
 		),
 	}
+}
+
+// ListBranchesPage returns a single page of branches for a repository.
+func (s *BranchService) ListBranchesPage(ctx context.Context, owner, repo string, opts ListOptions) (*PagedResult[types.Branch], error) {
+	path := ResolvePath("/api/v1/repos/{owner}/{repo}/branches", pathParams("owner", owner, "repo", repo))
+	return ListPage[types.Branch](ctx, s.client, path, nil, opts)
 }
 
 // ListBranches returns all branches for a repository.

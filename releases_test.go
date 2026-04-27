@@ -12,7 +12,7 @@ import (
 	"reflect"
 	"testing"
 
-	"dappco.re/go/core/forge/types"
+	"dappco.re/go/forge/types"
 )
 
 func readMultipartReleaseAttachment(t *testing.T, r *http.Request) (map[string]string, string, string) {
