@@ -3,10 +3,10 @@ package main
 import (
 	"cmp"
 	json "github.com/goccy/go-json"
+	"os"
 	"slices"
 
-	core "dappco.re/go/core"
-	coreio "dappco.re/go/io"
+	core "dappco.re/go"
 )
 
 // Spec represents a Swagger 2.0 specification document.
@@ -113,12 +113,12 @@ type CRUDPair struct {
 //	spec, err := LoadSpec("testdata/swagger.v1.json")
 //	_ = spec
 func LoadSpec(path string) (*Spec, error) {
-	content, err := coreio.Local.Read(path)
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil, core.E("LoadSpec", "read spec", err)
 	}
 	var spec Spec
-	if err := json.Unmarshal([]byte(content), &spec); err != nil {
+	if err := json.Unmarshal(content, &spec); err != nil {
 		return nil, core.E("LoadSpec", "parse spec", err)
 	}
 	return &spec, nil

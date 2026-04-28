@@ -1,10 +1,10 @@
 package main
 
 import (
+	"os"
 	"testing"
 
-	core "dappco.re/go/core"
-	coreio "dappco.re/go/io"
+	core "dappco.re/go"
 )
 
 func TestGenerate_CreatesFiles_Good(t *testing.T) {
@@ -21,7 +21,7 @@ func TestGenerate_CreatesFiles_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := coreio.Local.List(outDir)
+	entries, _ := os.ReadDir(outDir)
 	goFiles := 0
 	for _, e := range entries {
 		if core.HasSuffix(e.Name(), ".go") {
@@ -47,14 +47,17 @@ func TestGenerate_ValidGoSyntax_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := coreio.Local.List(outDir)
+	entries, _ := os.ReadDir(outDir)
 	var content string
 	for _, e := range entries {
 		if core.HasSuffix(e.Name(), ".go") {
-			content, err = coreio.Local.Read(core.JoinPath(outDir, e.Name()))
-			if err == nil {
+			data, readErr := os.ReadFile(core.JoinPath(outDir, e.Name()))
+			if readErr == nil {
+				content = string(data)
+				err = nil
 				break
 			}
+			err = readErr
 		}
 	}
 	if err != nil || content == "" {
@@ -83,11 +86,11 @@ func TestGenerate_RepositoryType_Good(t *testing.T) {
 	}
 
 	var content string
-	entries, _ := coreio.Local.List(outDir)
+	entries, _ := os.ReadDir(outDir)
 	for _, e := range entries {
-		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
-		if core.Contains(data, "type Repository struct") {
-			content = data
+		data, _ := os.ReadFile(core.JoinPath(outDir, e.Name()))
+		if core.Contains(string(data), "type Repository struct") {
+			content = string(data)
 			break
 		}
 	}
@@ -125,9 +128,10 @@ func TestGenerate_TimeImport_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := coreio.Local.List(outDir)
+	entries, _ := os.ReadDir(outDir)
 	for _, e := range entries {
-		content, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
+		data, _ := os.ReadFile(core.JoinPath(outDir, e.Name()))
+		content := string(data)
 		if core.Contains(content, "time.Time") && !core.Contains(content, "\"time\"") {
 			t.Errorf("file %s uses time.Time but doesn't import time", e.Name())
 		}
@@ -148,16 +152,17 @@ func TestGenerate_AdditionalProperties_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := coreio.Local.List(outDir)
+	entries, _ := os.ReadDir(outDir)
 	var hookContent string
 	var teamContent string
 	for _, e := range entries {
-		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
-		if core.Contains(data, "type CreateHookOptionConfig") {
-			hookContent = data
+		data, _ := os.ReadFile(core.JoinPath(outDir, e.Name()))
+		content := string(data)
+		if core.Contains(content, "type CreateHookOptionConfig") {
+			hookContent = content
 		}
-		if core.Contains(data, "UnitsMap map[string]string `json:\"units_map,omitempty\"`") {
-			teamContent = data
+		if core.Contains(content, "UnitsMap map[string]string `json:\"units_map,omitempty\"`") {
+			teamContent = content
 		}
 	}
 	if hookContent == "" {
@@ -185,12 +190,12 @@ func TestGenerate_UsageExamples_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := coreio.Local.List(outDir)
+	entries, _ := os.ReadDir(outDir)
 	var content string
 	for _, e := range entries {
-		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
-		if core.Contains(data, "type CreateIssueOption struct") {
-			content = data
+		data, _ := os.ReadFile(core.JoinPath(outDir, e.Name()))
+		if core.Contains(string(data), "type CreateIssueOption struct") {
+			content = string(data)
 			break
 		}
 	}
@@ -219,12 +224,12 @@ func TestGenerate_UsageExamples_AllKinds_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, _ := coreio.Local.List(outDir)
+	entries, _ := os.ReadDir(outDir)
 	var content string
 	for _, e := range entries {
-		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
-		if core.Contains(data, "type CommitStatusState string") {
-			content = data
+		data, _ := os.ReadFile(core.JoinPath(outDir, e.Name()))
+		if core.Contains(string(data), "type CommitStatusState string") {
+			content = string(data)
 			break
 		}
 	}
@@ -240,9 +245,9 @@ func TestGenerate_UsageExamples_AllKinds_Good(t *testing.T) {
 
 	content = ""
 	for _, e := range entries {
-		data, _ := coreio.Local.Read(core.JoinPath(outDir, e.Name()))
-		if core.Contains(data, "type CreateHookOptionConfig map[string]any") {
-			content = data
+		data, _ := os.ReadFile(core.JoinPath(outDir, e.Name()))
+		if core.Contains(string(data), "type CreateHookOptionConfig map[string]any") {
+			content = string(data)
 			break
 		}
 	}

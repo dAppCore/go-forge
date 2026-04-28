@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	core "dappco.re/go/core"
+	core "dappco.re/go"
 )
 
 func trimTrailingSlashes(s string) string {
