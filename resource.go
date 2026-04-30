@@ -5,7 +5,7 @@ import (
 	"iter"
 	"strconv"
 
-	core "dappco.re/go/core"
+	core "dappco.re/go"
 )
 
 // Resource provides generic CRUD operations for a Forgejo API resource.

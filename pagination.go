@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
-	core "dappco.re/go/core"
+	core "dappco.re/go"
 )
 
 const defaultPageSize = 50

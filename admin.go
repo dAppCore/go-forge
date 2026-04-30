@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strconv"
 
-	core "dappco.re/go/core"
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 

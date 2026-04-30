@@ -1,6 +1,7 @@
 package forge
 
 import (
+	"bytes"
 	// Note: AX-6 — request cancellation and deadlines are structural to HTTP calls; no core context primitive exists.
 	"context"
 	// Note: goccy/go-json — faster drop-in encoding/json replacement; no core equivalent for JSON-decoder performance profile.
@@ -12,8 +13,7 @@ import (
 	// Note: AX-6 — stream types, multipart content piping, and bounded HTTP error reads require io; coreio Medium only replaces multipart buffering below.
 	goio "io"
 
-	core "dappco.re/go/core"
-	coreio "dappco.re/go/io"
+	core "dappco.re/go"
 )
 
 // APIError represents an error response from the Forgejo API.
@@ -462,19 +462,8 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 		}
 	}
 
-	body := coreio.NewMemoryMedium()
-	bodyWriter, err := body.Create("multipart")
-	if err != nil {
-		return core.E("Client.PostMultipart", "forge: create multipart body", err)
-	}
-	bodyWriterOpen := true
-	defer func() {
-		if bodyWriterOpen {
-			_ = bodyWriter.Close()
-		}
-	}()
-
-	writer := multipart.NewWriter(bodyWriter)
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
 	for key, value := range fields {
 		if err := writer.WriteField(key, value); err != nil {
 			return core.E("Client.PostMultipart", "forge: create multipart form field", err)
@@ -494,19 +483,7 @@ func (c *Client) postMultipartJSON(ctx context.Context, path string, query map[s
 	if err := writer.Close(); err != nil {
 		return core.E("Client.PostMultipart", "forge: close multipart writer", err)
 	}
-	if err := bodyWriter.Close(); err != nil {
-		bodyWriterOpen = false
-		return core.E("Client.PostMultipart", "forge: close multipart body", err)
-	}
-	bodyWriterOpen = false
-
-	bodyReader, err := body.ReadStream("multipart")
-	if err != nil {
-		return core.E("Client.PostMultipart", "forge: read multipart body", err)
-	}
-	defer bodyReader.Close()
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target, bodyReader)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, target, &body)
 	if err != nil {
 		return core.E("Client.PostMultipart", "forge: create request", err)
 	}
@@ -644,7 +621,9 @@ func (c *Client) parseError(resp *http.Response, path string) error {
 
 	// Read a bit of the body to see if we can get a message
 	data, _ := readBody(goio.LimitReader(resp.Body, 1024))
-	_ = json.Unmarshal(data, &errBody)
+	if err := json.Unmarshal(data, &errBody); err != nil {
+		errBody.Message = ""
+	}
 
 	msg := errBody.Message
 	if msg == "" && len(data) > 0 {

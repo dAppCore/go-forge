@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	core "dappco.re/go/core"
+	core "dappco.re/go"
 )
 
 // Params maps path variable names to values.
