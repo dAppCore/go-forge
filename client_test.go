@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	core "dappco.re/go/core"
+	core "dappco.re/go"
 )
 
 func TestClient_Get_Good(t *testing.T) {

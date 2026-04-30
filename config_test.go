@@ -2,10 +2,9 @@ package forge
 
 import (
 	"encoding/json"
+	"os"
 	"path/filepath"
 	"testing"
-
-	coreio "dappco.re/go/io"
 )
 
 func TestResolveConfig_EnvOverrides_Good(t *testing.T) {
@@ -63,7 +62,7 @@ func TestResolveConfig_ConfigFile_Good(t *testing.T) {
 	t.Setenv("FORGE_TOKEN", "")
 
 	cfgPath := filepath.Join(home, ".config", "forge", "config.json")
-	if err := coreio.Local.EnsureDir(filepath.Dir(cfgPath)); err != nil {
+	if err := os.MkdirAll(filepath.Dir(cfgPath), 0700); err != nil {
 		t.Fatal(err)
 	}
 	data, err := json.Marshal(map[string]string{
@@ -73,7 +72,7 @@ func TestResolveConfig_ConfigFile_Good(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := coreio.Local.WriteMode(cfgPath, string(data), 0600); err != nil {
+	if err := os.WriteFile(cfgPath, data, 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -118,10 +117,10 @@ func TestResolveConfig_FlagOverridesBrokenConfig_Good(t *testing.T) {
 	t.Setenv("FORGE_TOKEN", "")
 
 	cfgPath := filepath.Join(home, ".config", "forge", "config.json")
-	if err := coreio.Local.EnsureDir(filepath.Dir(cfgPath)); err != nil {
+	if err := os.MkdirAll(filepath.Dir(cfgPath), 0700); err != nil {
 		t.Fatal(err)
 	}
-	if err := coreio.Local.WriteMode(cfgPath, "{not-json", 0600); err != nil {
+	if err := os.WriteFile(cfgPath, []byte("{not-json"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -174,12 +173,12 @@ func TestSaveConfig_Good(t *testing.T) {
 	}
 
 	cfgPath := filepath.Join(home, ".config", "forge", "config.json")
-	data, err := coreio.Local.Read(cfgPath)
+	data, err := os.ReadFile(cfgPath)
 	if err != nil {
 		t.Fatal(err)
 	}
 	var cfg map[string]string
-	if err := json.Unmarshal([]byte(data), &cfg); err != nil {
+	if err := json.Unmarshal(data, &cfg); err != nil {
 		t.Fatal(err)
 	}
 	if cfg["url"] != "https://file.example.com" {

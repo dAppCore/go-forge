@@ -1,10 +1,10 @@
 package main
 
 import (
+	"os"
 	"testing"
 
-	core "dappco.re/go/core"
-	coreio "dappco.re/go/io"
+	core "dappco.re/go"
 )
 
 func TestMain_Run_Good(t *testing.T) {
@@ -13,7 +13,7 @@ func TestMain_Run_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	entries, err := coreio.Local.List(outDir)
+	entries, err := os.ReadDir(outDir)
 	if err != nil {
 		t.Fatal(err)
 	}

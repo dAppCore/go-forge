@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	core "dappco.re/go/core"
+	core "dappco.re/go"
 )
 
 func main() {

@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"cmp"
 	"maps"
+	"os"
 	"slices"
 	"strconv"
 	"strings"
 	"text/template"
 
-	core "dappco.re/go/core"
-	coreio "dappco.re/go/io"
+	core "dappco.re/go"
 )
 
 // typeGrouping maps type name prefixes to output file names.
@@ -219,7 +219,7 @@ type templateData struct {
 //	err := Generate(types, pairs, "types")
 //	_ = err
 func Generate(types map[string]*GoType, pairs []CRUDPair, outDir string) error {
-	if err := coreio.Local.EnsureDir(outDir); err != nil {
+	if err := os.MkdirAll(outDir, 0755); err != nil {
 		return core.E("Generate", "create output directory", err)
 	}
 
@@ -410,7 +410,7 @@ func writeFile(path string, types []*GoType) error {
 	}
 
 	content := strings.TrimRight(buf.String(), "\n") + "\n"
-	if err := coreio.Local.Write(path, content); err != nil {
+	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
 		return core.E("writeFile", "write file", err)
 	}
 

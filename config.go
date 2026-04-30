@@ -6,8 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	core "dappco.re/go/core"
-	coreio "dappco.re/go/io"
+	core "dappco.re/go"
 )
 
 const (
@@ -48,7 +47,7 @@ func readConfigFile() (url, token string, err error) {
 		return "", "", err
 	}
 
-	data, err := coreio.Local.Read(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) || strings.Contains(err.Error(), "no such file or directory") {
 			return "", "", nil
@@ -57,7 +56,7 @@ func readConfigFile() (url, token string, err error) {
 	}
 
 	var cfg configFile
-	if err := json.Unmarshal([]byte(data), &cfg); err != nil {
+	if err := json.Unmarshal(data, &cfg); err != nil {
 		return "", "", core.E("ResolveConfig", "forge: decode config file", err)
 	}
 	return cfg.URL, cfg.Token, nil
@@ -74,14 +73,14 @@ func SaveConfig(url, token string) error {
 	if err != nil {
 		return err
 	}
-	if err := coreio.Local.EnsureDir(filepath.Dir(path)); err != nil {
+	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
 		return core.E("SaveConfig", "forge: create config directory", err)
 	}
 	payload, err := json.MarshalIndent(configFile{URL: url, Token: token}, "", "  ")
 	if err != nil {
 		return core.E("SaveConfig", "forge: encode config file", err)
 	}
-	return coreio.Local.WriteMode(path, string(payload), 0600)
+	return os.WriteFile(path, payload, 0600)
 }
 
 // ResolveConfig resolves the Forgejo URL and API token from flags, environment
