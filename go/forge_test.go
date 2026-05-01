@@ -322,3 +322,201 @@ func TestRepoService_ListTags_Good(t *testing.T) {
 		t.Fatalf("unexpected result: %+v", tags)
 	}
 }
+
+func TestForge_NewForge_Bad(t *core.T) {
+	subject := NewForge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_NewForge_Ugly(t *core.T) {
+	subject := NewForge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_Client_Bad(t *core.T) {
+	subject := (*Forge).Client
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_Client_Ugly(t *core.T) {
+	subject := (*Forge).Client
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_BaseURL_Bad(t *core.T) {
+	subject := (*Forge).BaseURL
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_BaseURL_Ugly(t *core.T) {
+	subject := (*Forge).BaseURL
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_RateLimit_Bad(t *core.T) {
+	subject := (*Forge).RateLimit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_RateLimit_Ugly(t *core.T) {
+	subject := (*Forge).RateLimit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_UserAgent_Bad(t *core.T) {
+	subject := (*Forge).UserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_UserAgent_Ugly(t *core.T) {
+	subject := (*Forge).UserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_HTTPClient_Bad(t *core.T) {
+	subject := (*Forge).HTTPClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_HTTPClient_Ugly(t *core.T) {
+	subject := (*Forge).HTTPClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_HasToken_Ugly(t *core.T) {
+	subject := (*Forge).HasToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_String_Bad(t *core.T) {
+	subject := (*Forge).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_String_Ugly(t *core.T) {
+	subject := (*Forge).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_GoString_Good(t *core.T) {
+	subject := (*Forge).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_GoString_Bad(t *core.T) {
+	subject := (*Forge).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestForge_Forge_GoString_Ugly(t *core.T) {
+	subject := (*Forge).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

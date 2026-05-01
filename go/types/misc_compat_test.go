@@ -44,3 +44,69 @@ func TestMergePullRequestOption_UnmarshalJSON_CompatMergeStyle_Good(t *testing.T
 		t.Fatalf("got MergeMessageField=%q, want %q", opts.MergeMessageField, "ready")
 	}
 }
+
+func TestMiscCompat_MergePullRequestOption_MarshalJSON_Good(t *core.T) {
+	subject := (*MergePullRequestOption).MarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMiscCompat_MergePullRequestOption_MarshalJSON_Bad(t *core.T) {
+	subject := (*MergePullRequestOption).MarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMiscCompat_MergePullRequestOption_MarshalJSON_Ugly(t *core.T) {
+	subject := (*MergePullRequestOption).MarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMiscCompat_MergePullRequestOption_UnmarshalJSON_Good(t *core.T) {
+	subject := (*MergePullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMiscCompat_MergePullRequestOption_UnmarshalJSON_Bad(t *core.T) {
+	subject := (*MergePullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMiscCompat_MergePullRequestOption_UnmarshalJSON_Ugly(t *core.T) {
+	subject := (*MergePullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

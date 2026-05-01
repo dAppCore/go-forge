@@ -595,3 +595,1026 @@ func TestWebhookService_NotFound_Bad(t *testing.T) {
 		t.Errorf("expected not-found error, got %v", err)
 	}
 }
+
+func TestWebhooks_WebhookService_ListHooksPage_Good(t *core.T) {
+	subject := (*WebhookService).ListHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListHooksPage_Bad(t *core.T) {
+	subject := (*WebhookService).ListHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListHooksPage_Ugly(t *core.T) {
+	subject := (*WebhookService).ListHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListHooks_Good(t *core.T) {
+	subject := (*WebhookService).ListHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListHooks_Bad(t *core.T) {
+	subject := (*WebhookService).ListHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).ListHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListRepoHooksPage_Good(t *core.T) {
+	subject := (*WebhookService).ListRepoHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListRepoHooksPage_Bad(t *core.T) {
+	subject := (*WebhookService).ListRepoHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListRepoHooksPage_Ugly(t *core.T) {
+	subject := (*WebhookService).ListRepoHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListRepoHooks_Good(t *core.T) {
+	subject := (*WebhookService).ListRepoHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListRepoHooks_Bad(t *core.T) {
+	subject := (*WebhookService).ListRepoHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListRepoHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).ListRepoHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterHooks_Good(t *core.T) {
+	subject := (*WebhookService).IterHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterHooks_Bad(t *core.T) {
+	subject := (*WebhookService).IterHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).IterHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterRepoHooks_Good(t *core.T) {
+	subject := (*WebhookService).IterRepoHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterRepoHooks_Bad(t *core.T) {
+	subject := (*WebhookService).IterRepoHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterRepoHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).IterRepoHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateHook_Good(t *core.T) {
+	subject := (*WebhookService).CreateHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateHook_Bad(t *core.T) {
+	subject := (*WebhookService).CreateHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateHook_Ugly(t *core.T) {
+	subject := (*WebhookService).CreateHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateRepoHook_Good(t *core.T) {
+	subject := (*WebhookService).CreateRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateRepoHook_Bad(t *core.T) {
+	subject := (*WebhookService).CreateRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateRepoHook_Ugly(t *core.T) {
+	subject := (*WebhookService).CreateRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetRepoHook_Good(t *core.T) {
+	subject := (*WebhookService).GetRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetRepoHook_Bad(t *core.T) {
+	subject := (*WebhookService).GetRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetRepoHook_Ugly(t *core.T) {
+	subject := (*WebhookService).GetRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditRepoHook_Good(t *core.T) {
+	subject := (*WebhookService).EditRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditRepoHook_Bad(t *core.T) {
+	subject := (*WebhookService).EditRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditRepoHook_Ugly(t *core.T) {
+	subject := (*WebhookService).EditRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteRepoHook_Good(t *core.T) {
+	subject := (*WebhookService).DeleteRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteRepoHook_Bad(t *core.T) {
+	subject := (*WebhookService).DeleteRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteRepoHook_Ugly(t *core.T) {
+	subject := (*WebhookService).DeleteRepoHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_TestHook_Good(t *core.T) {
+	subject := (*WebhookService).TestHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_TestHook_Bad(t *core.T) {
+	subject := (*WebhookService).TestHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_TestHook_Ugly(t *core.T) {
+	subject := (*WebhookService).TestHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListGitHooks_Good(t *core.T) {
+	subject := (*WebhookService).ListGitHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListGitHooks_Bad(t *core.T) {
+	subject := (*WebhookService).ListGitHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListGitHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).ListGitHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterGitHooks_Good(t *core.T) {
+	subject := (*WebhookService).IterGitHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterGitHooks_Bad(t *core.T) {
+	subject := (*WebhookService).IterGitHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterGitHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).IterGitHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetGitHook_Good(t *core.T) {
+	subject := (*WebhookService).GetGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetGitHook_Bad(t *core.T) {
+	subject := (*WebhookService).GetGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetGitHook_Ugly(t *core.T) {
+	subject := (*WebhookService).GetGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditGitHook_Good(t *core.T) {
+	subject := (*WebhookService).EditGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditGitHook_Bad(t *core.T) {
+	subject := (*WebhookService).EditGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditGitHook_Ugly(t *core.T) {
+	subject := (*WebhookService).EditGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteGitHook_Good(t *core.T) {
+	subject := (*WebhookService).DeleteGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteGitHook_Bad(t *core.T) {
+	subject := (*WebhookService).DeleteGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteGitHook_Ugly(t *core.T) {
+	subject := (*WebhookService).DeleteGitHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListUserHooks_Good(t *core.T) {
+	subject := (*WebhookService).ListUserHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListUserHooks_Bad(t *core.T) {
+	subject := (*WebhookService).ListUserHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListUserHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).ListUserHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListUserHooksPage_Good(t *core.T) {
+	subject := (*WebhookService).ListUserHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListUserHooksPage_Bad(t *core.T) {
+	subject := (*WebhookService).ListUserHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListUserHooksPage_Ugly(t *core.T) {
+	subject := (*WebhookService).ListUserHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterUserHooks_Good(t *core.T) {
+	subject := (*WebhookService).IterUserHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterUserHooks_Bad(t *core.T) {
+	subject := (*WebhookService).IterUserHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterUserHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).IterUserHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetUserHook_Good(t *core.T) {
+	subject := (*WebhookService).GetUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetUserHook_Bad(t *core.T) {
+	subject := (*WebhookService).GetUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetUserHook_Ugly(t *core.T) {
+	subject := (*WebhookService).GetUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateUserHook_Good(t *core.T) {
+	subject := (*WebhookService).CreateUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateUserHook_Bad(t *core.T) {
+	subject := (*WebhookService).CreateUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateUserHook_Ugly(t *core.T) {
+	subject := (*WebhookService).CreateUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditUserHook_Good(t *core.T) {
+	subject := (*WebhookService).EditUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditUserHook_Bad(t *core.T) {
+	subject := (*WebhookService).EditUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditUserHook_Ugly(t *core.T) {
+	subject := (*WebhookService).EditUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteUserHook_Good(t *core.T) {
+	subject := (*WebhookService).DeleteUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteUserHook_Bad(t *core.T) {
+	subject := (*WebhookService).DeleteUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteUserHook_Ugly(t *core.T) {
+	subject := (*WebhookService).DeleteUserHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListOrgHooks_Good(t *core.T) {
+	subject := (*WebhookService).ListOrgHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListOrgHooks_Bad(t *core.T) {
+	subject := (*WebhookService).ListOrgHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListOrgHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).ListOrgHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListOrgHooksPage_Good(t *core.T) {
+	subject := (*WebhookService).ListOrgHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListOrgHooksPage_Bad(t *core.T) {
+	subject := (*WebhookService).ListOrgHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_ListOrgHooksPage_Ugly(t *core.T) {
+	subject := (*WebhookService).ListOrgHooksPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterOrgHooks_Good(t *core.T) {
+	subject := (*WebhookService).IterOrgHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterOrgHooks_Bad(t *core.T) {
+	subject := (*WebhookService).IterOrgHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_IterOrgHooks_Ugly(t *core.T) {
+	subject := (*WebhookService).IterOrgHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetOrgHook_Good(t *core.T) {
+	subject := (*WebhookService).GetOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetOrgHook_Bad(t *core.T) {
+	subject := (*WebhookService).GetOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_GetOrgHook_Ugly(t *core.T) {
+	subject := (*WebhookService).GetOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateOrgHook_Good(t *core.T) {
+	subject := (*WebhookService).CreateOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateOrgHook_Bad(t *core.T) {
+	subject := (*WebhookService).CreateOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_CreateOrgHook_Ugly(t *core.T) {
+	subject := (*WebhookService).CreateOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditOrgHook_Good(t *core.T) {
+	subject := (*WebhookService).EditOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditOrgHook_Bad(t *core.T) {
+	subject := (*WebhookService).EditOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_EditOrgHook_Ugly(t *core.T) {
+	subject := (*WebhookService).EditOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteOrgHook_Good(t *core.T) {
+	subject := (*WebhookService).DeleteOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteOrgHook_Bad(t *core.T) {
+	subject := (*WebhookService).DeleteOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWebhooks_WebhookService_DeleteOrgHook_Ugly(t *core.T) {
+	subject := (*WebhookService).DeleteOrgHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

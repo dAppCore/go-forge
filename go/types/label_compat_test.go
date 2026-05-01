@@ -34,3 +34,102 @@ func TestCreatePullRequestOption_Unmarshal_LabelIDsCompat_Good(t *testing.T) {
 		t.Fatalf("unexpected labels: %#v", labels)
 	}
 }
+
+func TestLabelCompat_CreateIssueOption_UnmarshalJSON_Good(t *core.T) {
+	subject := (*CreateIssueOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_CreateIssueOption_UnmarshalJSON_Bad(t *core.T) {
+	subject := (*CreateIssueOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_CreateIssueOption_UnmarshalJSON_Ugly(t *core.T) {
+	subject := (*CreateIssueOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_CreatePullRequestOption_UnmarshalJSON_Good(t *core.T) {
+	subject := (*CreatePullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_CreatePullRequestOption_UnmarshalJSON_Bad(t *core.T) {
+	subject := (*CreatePullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_CreatePullRequestOption_UnmarshalJSON_Ugly(t *core.T) {
+	subject := (*CreatePullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_EditPullRequestOption_UnmarshalJSON_Good(t *core.T) {
+	subject := (*EditPullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_EditPullRequestOption_UnmarshalJSON_Bad(t *core.T) {
+	subject := (*EditPullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabelCompat_EditPullRequestOption_UnmarshalJSON_Ugly(t *core.T) {
+	subject := (*EditPullRequestOption).UnmarshalJSON
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

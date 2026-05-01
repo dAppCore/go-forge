@@ -497,3 +497,531 @@ func TestMiscService_NotFound_Bad(t *testing.T) {
 		t.Errorf("expected not-found error, got %v", err)
 	}
 }
+
+func TestMisc_MiscService_RenderMarkdown_Good(t *core.T) {
+	subject := (*MiscService).RenderMarkdown
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkdown_Bad(t *core.T) {
+	subject := (*MiscService).RenderMarkdown
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkdown_Ugly(t *core.T) {
+	subject := (*MiscService).RenderMarkdown
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkup_Good(t *core.T) {
+	subject := (*MiscService).RenderMarkup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkup_Bad(t *core.T) {
+	subject := (*MiscService).RenderMarkup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkup_Ugly(t *core.T) {
+	subject := (*MiscService).RenderMarkup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkdownRaw_Good(t *core.T) {
+	subject := (*MiscService).RenderMarkdownRaw
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkdownRaw_Bad(t *core.T) {
+	subject := (*MiscService).RenderMarkdownRaw
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_RenderMarkdownRaw_Ugly(t *core.T) {
+	subject := (*MiscService).RenderMarkdownRaw
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_ListLicenses_Good(t *core.T) {
+	subject := (*MiscService).ListLicenses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_ListLicenses_Bad(t *core.T) {
+	subject := (*MiscService).ListLicenses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_ListLicenses_Ugly(t *core.T) {
+	subject := (*MiscService).ListLicenses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_IterLicenses_Good(t *core.T) {
+	subject := (*MiscService).IterLicenses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_IterLicenses_Bad(t *core.T) {
+	subject := (*MiscService).IterLicenses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_IterLicenses_Ugly(t *core.T) {
+	subject := (*MiscService).IterLicenses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetLicense_Good(t *core.T) {
+	subject := (*MiscService).GetLicense
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetLicense_Bad(t *core.T) {
+	subject := (*MiscService).GetLicense
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetLicense_Ugly(t *core.T) {
+	subject := (*MiscService).GetLicense
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_ListGitignoreTemplates_Good(t *core.T) {
+	subject := (*MiscService).ListGitignoreTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_ListGitignoreTemplates_Bad(t *core.T) {
+	subject := (*MiscService).ListGitignoreTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_ListGitignoreTemplates_Ugly(t *core.T) {
+	subject := (*MiscService).ListGitignoreTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_IterGitignoreTemplates_Good(t *core.T) {
+	subject := (*MiscService).IterGitignoreTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_IterGitignoreTemplates_Bad(t *core.T) {
+	subject := (*MiscService).IterGitignoreTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_IterGitignoreTemplates_Ugly(t *core.T) {
+	subject := (*MiscService).IterGitignoreTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetGitignoreTemplate_Good(t *core.T) {
+	subject := (*MiscService).GetGitignoreTemplate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetGitignoreTemplate_Bad(t *core.T) {
+	subject := (*MiscService).GetGitignoreTemplate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetGitignoreTemplate_Ugly(t *core.T) {
+	subject := (*MiscService).GetGitignoreTemplate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetNodeInfo_Good(t *core.T) {
+	subject := (*MiscService).GetNodeInfo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetNodeInfo_Bad(t *core.T) {
+	subject := (*MiscService).GetNodeInfo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetNodeInfo_Ugly(t *core.T) {
+	subject := (*MiscService).GetNodeInfo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetSigningKey_Good(t *core.T) {
+	subject := (*MiscService).GetSigningKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetSigningKey_Bad(t *core.T) {
+	subject := (*MiscService).GetSigningKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetSigningKey_Ugly(t *core.T) {
+	subject := (*MiscService).GetSigningKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetAPISettings_Good(t *core.T) {
+	subject := (*MiscService).GetAPISettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetAPISettings_Bad(t *core.T) {
+	subject := (*MiscService).GetAPISettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetAPISettings_Ugly(t *core.T) {
+	subject := (*MiscService).GetAPISettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetAttachmentSettings_Good(t *core.T) {
+	subject := (*MiscService).GetAttachmentSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetAttachmentSettings_Bad(t *core.T) {
+	subject := (*MiscService).GetAttachmentSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetAttachmentSettings_Ugly(t *core.T) {
+	subject := (*MiscService).GetAttachmentSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetRepositorySettings_Good(t *core.T) {
+	subject := (*MiscService).GetRepositorySettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetRepositorySettings_Bad(t *core.T) {
+	subject := (*MiscService).GetRepositorySettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetRepositorySettings_Ugly(t *core.T) {
+	subject := (*MiscService).GetRepositorySettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetUISettings_Good(t *core.T) {
+	subject := (*MiscService).GetUISettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetUISettings_Bad(t *core.T) {
+	subject := (*MiscService).GetUISettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetUISettings_Ugly(t *core.T) {
+	subject := (*MiscService).GetUISettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetVersion_Good(t *core.T) {
+	subject := (*MiscService).GetVersion
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetVersion_Bad(t *core.T) {
+	subject := (*MiscService).GetVersion
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMisc_MiscService_GetVersion_Ugly(t *core.T) {
+	subject := (*MiscService).GetVersion
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

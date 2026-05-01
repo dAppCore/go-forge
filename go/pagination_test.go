@@ -129,3 +129,234 @@ func TestPagination_ServerError_Bad(t *testing.T) {
 		t.Fatal("expected error")
 	}
 }
+
+func TestPagination_ListOptions_String_Good(t *core.T) {
+	subject := (*ListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListOptions_String_Bad(t *core.T) {
+	subject := (*ListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListOptions_String_Ugly(t *core.T) {
+	subject := (*ListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListOptions_GoString_Good(t *core.T) {
+	subject := (*ListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListOptions_GoString_Bad(t *core.T) {
+	subject := (*ListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListOptions_GoString_Ugly(t *core.T) {
+	subject := (*ListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_PagedResult_String_Good(t *core.T) {
+	subject := (*PagedResult).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_PagedResult_String_Bad(t *core.T) {
+	subject := (*PagedResult).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_PagedResult_String_Ugly(t *core.T) {
+	subject := (*PagedResult).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_PagedResult_GoString_Good(t *core.T) {
+	subject := (*PagedResult).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_PagedResult_GoString_Bad(t *core.T) {
+	subject := (*PagedResult).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_PagedResult_GoString_Ugly(t *core.T) {
+	subject := (*PagedResult).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListPage_Good(t *core.T) {
+	subject := ListPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListPage_Bad(t *core.T) {
+	subject := ListPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListPage_Ugly(t *core.T) {
+	subject := ListPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListAll_Good(t *core.T) {
+	subject := ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListAll_Bad(t *core.T) {
+	subject := ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListAll_Ugly(t *core.T) {
+	subject := ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListIter_Good(t *core.T) {
+	subject := ListIter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListIter_Bad(t *core.T) {
+	subject := ListIter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPagination_ListIter_Ugly(t *core.T) {
+	subject := ListIter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

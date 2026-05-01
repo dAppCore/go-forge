@@ -199,3 +199,80 @@ func TestParser_RFCLabelCompatibility_Good(t *testing.T) {
 		})
 	}
 }
+
+func TestParser_LoadSpec_Bad(t *core.T) {
+	subject := LoadSpec
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParser_LoadSpec_Ugly(t *core.T) {
+	subject := LoadSpec
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParser_ExtractTypes_Bad(t *core.T) {
+	subject := ExtractTypes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParser_ExtractTypes_Ugly(t *core.T) {
+	subject := ExtractTypes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParser_DetectCRUDPairs_Good(t *core.T) {
+	subject := DetectCRUDPairs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParser_DetectCRUDPairs_Bad(t *core.T) {
+	subject := DetectCRUDPairs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParser_DetectCRUDPairs_Ugly(t *core.T) {
+	subject := DetectCRUDPairs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

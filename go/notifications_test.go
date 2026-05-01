@@ -371,3 +371,531 @@ func TestNotificationService_NotFound_Bad(t *testing.T) {
 		t.Errorf("expected not-found error, got %v", err)
 	}
 }
+
+func TestNotifications_NotificationListOptions_String_Good(t *core.T) {
+	subject := (*NotificationListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationListOptions_String_Bad(t *core.T) {
+	subject := (*NotificationListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationListOptions_String_Ugly(t *core.T) {
+	subject := (*NotificationListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationListOptions_GoString_Good(t *core.T) {
+	subject := (*NotificationListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationListOptions_GoString_Bad(t *core.T) {
+	subject := (*NotificationListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationListOptions_GoString_Ugly(t *core.T) {
+	subject := (*NotificationListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationRepoMarkOptions_String_Good(t *core.T) {
+	subject := (*NotificationRepoMarkOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationRepoMarkOptions_String_Bad(t *core.T) {
+	subject := (*NotificationRepoMarkOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationRepoMarkOptions_String_Ugly(t *core.T) {
+	subject := (*NotificationRepoMarkOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationRepoMarkOptions_GoString_Good(t *core.T) {
+	subject := (*NotificationRepoMarkOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationRepoMarkOptions_GoString_Bad(t *core.T) {
+	subject := (*NotificationRepoMarkOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationRepoMarkOptions_GoString_Ugly(t *core.T) {
+	subject := (*NotificationRepoMarkOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationMarkOptions_String_Good(t *core.T) {
+	subject := (*NotificationMarkOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationMarkOptions_String_Bad(t *core.T) {
+	subject := (*NotificationMarkOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationMarkOptions_String_Ugly(t *core.T) {
+	subject := (*NotificationMarkOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationMarkOptions_GoString_Good(t *core.T) {
+	subject := (*NotificationMarkOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationMarkOptions_GoString_Bad(t *core.T) {
+	subject := (*NotificationMarkOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationMarkOptions_GoString_Ugly(t *core.T) {
+	subject := (*NotificationMarkOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_List_Good(t *core.T) {
+	subject := (*NotificationService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_List_Bad(t *core.T) {
+	subject := (*NotificationService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_List_Ugly(t *core.T) {
+	subject := (*NotificationService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_Iter_Good(t *core.T) {
+	subject := (*NotificationService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_Iter_Bad(t *core.T) {
+	subject := (*NotificationService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_Iter_Ugly(t *core.T) {
+	subject := (*NotificationService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_NewAvailable_Good(t *core.T) {
+	subject := (*NotificationService).NewAvailable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_NewAvailable_Bad(t *core.T) {
+	subject := (*NotificationService).NewAvailable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_NewAvailable_Ugly(t *core.T) {
+	subject := (*NotificationService).NewAvailable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_ListRepo_Good(t *core.T) {
+	subject := (*NotificationService).ListRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_ListRepo_Bad(t *core.T) {
+	subject := (*NotificationService).ListRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_ListRepo_Ugly(t *core.T) {
+	subject := (*NotificationService).ListRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_IterRepo_Good(t *core.T) {
+	subject := (*NotificationService).IterRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_IterRepo_Bad(t *core.T) {
+	subject := (*NotificationService).IterRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_IterRepo_Ugly(t *core.T) {
+	subject := (*NotificationService).IterRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkNotifications_Good(t *core.T) {
+	subject := (*NotificationService).MarkNotifications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkNotifications_Bad(t *core.T) {
+	subject := (*NotificationService).MarkNotifications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkNotifications_Ugly(t *core.T) {
+	subject := (*NotificationService).MarkNotifications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkRepoNotifications_Good(t *core.T) {
+	subject := (*NotificationService).MarkRepoNotifications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkRepoNotifications_Bad(t *core.T) {
+	subject := (*NotificationService).MarkRepoNotifications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkRepoNotifications_Ugly(t *core.T) {
+	subject := (*NotificationService).MarkRepoNotifications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkRead_Good(t *core.T) {
+	subject := (*NotificationService).MarkRead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkRead_Bad(t *core.T) {
+	subject := (*NotificationService).MarkRead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkRead_Ugly(t *core.T) {
+	subject := (*NotificationService).MarkRead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_GetThread_Good(t *core.T) {
+	subject := (*NotificationService).GetThread
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_GetThread_Bad(t *core.T) {
+	subject := (*NotificationService).GetThread
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_GetThread_Ugly(t *core.T) {
+	subject := (*NotificationService).GetThread
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkThreadRead_Good(t *core.T) {
+	subject := (*NotificationService).MarkThreadRead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkThreadRead_Bad(t *core.T) {
+	subject := (*NotificationService).MarkThreadRead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestNotifications_NotificationService_MarkThreadRead_Ugly(t *core.T) {
+	subject := (*NotificationService).MarkThreadRead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

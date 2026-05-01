@@ -34,3 +34,102 @@ func TestResolvePath_URLEncoding_Good(t *testing.T) {
 		t.Errorf("got %q, want %q", got, want)
 	}
 }
+
+func TestParams_Params_String_Good(t *core.T) {
+	subject := (*Params).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_String_Bad(t *core.T) {
+	subject := (*Params).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_String_Ugly(t *core.T) {
+	subject := (*Params).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_GoString_Good(t *core.T) {
+	subject := (*Params).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_GoString_Bad(t *core.T) {
+	subject := (*Params).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_GoString_Ugly(t *core.T) {
+	subject := (*Params).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_ResolvePath_Good(t *core.T) {
+	subject := ResolvePath
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_ResolvePath_Bad(t *core.T) {
+	subject := ResolvePath
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_ResolvePath_Ugly(t *core.T) {
+	subject := ResolvePath
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

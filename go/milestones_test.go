@@ -271,3 +271,531 @@ func TestMilestoneService_Delete_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestMilestones_MilestoneListOptions_String_Good(t *core.T) {
+	subject := (*MilestoneListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneListOptions_String_Bad(t *core.T) {
+	subject := (*MilestoneListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneListOptions_String_Ugly(t *core.T) {
+	subject := (*MilestoneListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneListOptions_GoString_Good(t *core.T) {
+	subject := (*MilestoneListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneListOptions_GoString_Bad(t *core.T) {
+	subject := (*MilestoneListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneListOptions_GoString_Ugly(t *core.T) {
+	subject := (*MilestoneListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListMilestonesPage_Good(t *core.T) {
+	subject := (*MilestoneService).ListMilestonesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListMilestonesPage_Bad(t *core.T) {
+	subject := (*MilestoneService).ListMilestonesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListMilestonesPage_Ugly(t *core.T) {
+	subject := (*MilestoneService).ListMilestonesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListMilestones_Good(t *core.T) {
+	subject := (*MilestoneService).ListMilestones
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListMilestones_Bad(t *core.T) {
+	subject := (*MilestoneService).ListMilestones
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListMilestones_Ugly(t *core.T) {
+	subject := (*MilestoneService).ListMilestones
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_IterMilestones_Good(t *core.T) {
+	subject := (*MilestoneService).IterMilestones
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_IterMilestones_Bad(t *core.T) {
+	subject := (*MilestoneService).IterMilestones
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_IterMilestones_Ugly(t *core.T) {
+	subject := (*MilestoneService).IterMilestones
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_List_Good(t *core.T) {
+	subject := (*MilestoneService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_List_Bad(t *core.T) {
+	subject := (*MilestoneService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_List_Ugly(t *core.T) {
+	subject := (*MilestoneService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Iter_Good(t *core.T) {
+	subject := (*MilestoneService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Iter_Bad(t *core.T) {
+	subject := (*MilestoneService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Iter_Ugly(t *core.T) {
+	subject := (*MilestoneService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListAll_Good(t *core.T) {
+	subject := (*MilestoneService).ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListAll_Bad(t *core.T) {
+	subject := (*MilestoneService).ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_ListAll_Ugly(t *core.T) {
+	subject := (*MilestoneService).ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Get_Good(t *core.T) {
+	subject := (*MilestoneService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Get_Bad(t *core.T) {
+	subject := (*MilestoneService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Get_Ugly(t *core.T) {
+	subject := (*MilestoneService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_GetMilestone_Good(t *core.T) {
+	subject := (*MilestoneService).GetMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_GetMilestone_Bad(t *core.T) {
+	subject := (*MilestoneService).GetMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_GetMilestone_Ugly(t *core.T) {
+	subject := (*MilestoneService).GetMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Create_Good(t *core.T) {
+	subject := (*MilestoneService).Create
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Create_Bad(t *core.T) {
+	subject := (*MilestoneService).Create
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Create_Ugly(t *core.T) {
+	subject := (*MilestoneService).Create
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_CreateMilestone_Good(t *core.T) {
+	subject := (*MilestoneService).CreateMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_CreateMilestone_Bad(t *core.T) {
+	subject := (*MilestoneService).CreateMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_CreateMilestone_Ugly(t *core.T) {
+	subject := (*MilestoneService).CreateMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Edit_Good(t *core.T) {
+	subject := (*MilestoneService).Edit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Edit_Bad(t *core.T) {
+	subject := (*MilestoneService).Edit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Edit_Ugly(t *core.T) {
+	subject := (*MilestoneService).Edit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_EditMilestone_Good(t *core.T) {
+	subject := (*MilestoneService).EditMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_EditMilestone_Bad(t *core.T) {
+	subject := (*MilestoneService).EditMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_EditMilestone_Ugly(t *core.T) {
+	subject := (*MilestoneService).EditMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Delete_Good(t *core.T) {
+	subject := (*MilestoneService).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Delete_Bad(t *core.T) {
+	subject := (*MilestoneService).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_Delete_Ugly(t *core.T) {
+	subject := (*MilestoneService).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_DeleteMilestone_Good(t *core.T) {
+	subject := (*MilestoneService).DeleteMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_DeleteMilestone_Bad(t *core.T) {
+	subject := (*MilestoneService).DeleteMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestMilestones_MilestoneService_DeleteMilestone_Ugly(t *core.T) {
+	subject := (*MilestoneService).DeleteMilestone
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

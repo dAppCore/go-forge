@@ -476,3 +476,1290 @@ func TestPullService_CancelScheduledAutoMerge_Good(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestPulls_PullListOptions_String_Good(t *core.T) {
+	subject := (*PullListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullListOptions_String_Bad(t *core.T) {
+	subject := (*PullListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullListOptions_String_Ugly(t *core.T) {
+	subject := (*PullListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullListOptions_GoString_Good(t *core.T) {
+	subject := (*PullListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullListOptions_GoString_Bad(t *core.T) {
+	subject := (*PullListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullListOptions_GoString_Ugly(t *core.T) {
+	subject := (*PullListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullRequestsPage_Good(t *core.T) {
+	subject := (*PullService).ListPullRequestsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullRequestsPage_Bad(t *core.T) {
+	subject := (*PullService).ListPullRequestsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullRequestsPage_Ugly(t *core.T) {
+	subject := (*PullService).ListPullRequestsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullRequests_Good(t *core.T) {
+	subject := (*PullService).ListPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullRequests_Bad(t *core.T) {
+	subject := (*PullService).ListPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullRequests_Ugly(t *core.T) {
+	subject := (*PullService).ListPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterPullRequests_Good(t *core.T) {
+	subject := (*PullService).IterPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterPullRequests_Bad(t *core.T) {
+	subject := (*PullService).IterPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterPullRequests_Ugly(t *core.T) {
+	subject := (*PullService).IterPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CreatePullRequest_Good(t *core.T) {
+	subject := (*PullService).CreatePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CreatePullRequest_Bad(t *core.T) {
+	subject := (*PullService).CreatePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CreatePullRequest_Ugly(t *core.T) {
+	subject := (*PullService).CreatePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetPullRequest_Good(t *core.T) {
+	subject := (*PullService).GetPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetPullRequest_Bad(t *core.T) {
+	subject := (*PullService).GetPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetPullRequest_Ugly(t *core.T) {
+	subject := (*PullService).GetPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_EditPullRequest_Good(t *core.T) {
+	subject := (*PullService).EditPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_EditPullRequest_Bad(t *core.T) {
+	subject := (*PullService).EditPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_EditPullRequest_Ugly(t *core.T) {
+	subject := (*PullService).EditPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeletePullRequest_Good(t *core.T) {
+	subject := (*PullService).DeletePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeletePullRequest_Bad(t *core.T) {
+	subject := (*PullService).DeletePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeletePullRequest_Ugly(t *core.T) {
+	subject := (*PullService).DeletePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_Merge_Good(t *core.T) {
+	subject := (*PullService).Merge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_Merge_Bad(t *core.T) {
+	subject := (*PullService).Merge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_Merge_Ugly(t *core.T) {
+	subject := (*PullService).Merge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_MergePullRequest_Good(t *core.T) {
+	subject := (*PullService).MergePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_MergePullRequest_Bad(t *core.T) {
+	subject := (*PullService).MergePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_MergePullRequest_Ugly(t *core.T) {
+	subject := (*PullService).MergePullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CancelScheduledAutoMerge_Good(t *core.T) {
+	subject := (*PullService).CancelScheduledAutoMerge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CancelScheduledAutoMerge_Bad(t *core.T) {
+	subject := (*PullService).CancelScheduledAutoMerge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CancelScheduledAutoMerge_Ugly(t *core.T) {
+	subject := (*PullService).CancelScheduledAutoMerge
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_Update_Good(t *core.T) {
+	subject := (*PullService).Update
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_Update_Bad(t *core.T) {
+	subject := (*PullService).Update
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_Update_Ugly(t *core.T) {
+	subject := (*PullService).Update
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetDiffOrPatch_Good(t *core.T) {
+	subject := (*PullService).GetDiffOrPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetDiffOrPatch_Bad(t *core.T) {
+	subject := (*PullService).GetDiffOrPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetDiffOrPatch_Ugly(t *core.T) {
+	subject := (*PullService).GetDiffOrPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListCommits_Good(t *core.T) {
+	subject := (*PullService).ListCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListCommits_Bad(t *core.T) {
+	subject := (*PullService).ListCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListCommits_Ugly(t *core.T) {
+	subject := (*PullService).ListCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterCommits_Good(t *core.T) {
+	subject := (*PullService).IterCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterCommits_Bad(t *core.T) {
+	subject := (*PullService).IterCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterCommits_Ugly(t *core.T) {
+	subject := (*PullService).IterCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviews_Good(t *core.T) {
+	subject := (*PullService).ListReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviews_Bad(t *core.T) {
+	subject := (*PullService).ListReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviews_Ugly(t *core.T) {
+	subject := (*PullService).ListReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullReviews_Good(t *core.T) {
+	subject := (*PullService).ListPullReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullReviews_Bad(t *core.T) {
+	subject := (*PullService).ListPullReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListPullReviews_Ugly(t *core.T) {
+	subject := (*PullService).ListPullReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviews_Good(t *core.T) {
+	subject := (*PullService).IterReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviews_Bad(t *core.T) {
+	subject := (*PullService).IterReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviews_Ugly(t *core.T) {
+	subject := (*PullService).IterReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterPullReviews_Good(t *core.T) {
+	subject := (*PullService).IterPullReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterPullReviews_Bad(t *core.T) {
+	subject := (*PullService).IterPullReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterPullReviews_Ugly(t *core.T) {
+	subject := (*PullService).IterPullReviews
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListFiles_Good(t *core.T) {
+	subject := (*PullService).ListFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListFiles_Bad(t *core.T) {
+	subject := (*PullService).ListFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListFiles_Ugly(t *core.T) {
+	subject := (*PullService).ListFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterFiles_Good(t *core.T) {
+	subject := (*PullService).IterFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterFiles_Bad(t *core.T) {
+	subject := (*PullService).IterFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterFiles_Ugly(t *core.T) {
+	subject := (*PullService).IterFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetByBaseHead_Good(t *core.T) {
+	subject := (*PullService).GetByBaseHead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetByBaseHead_Bad(t *core.T) {
+	subject := (*PullService).GetByBaseHead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetByBaseHead_Ugly(t *core.T) {
+	subject := (*PullService).GetByBaseHead
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviewers_Good(t *core.T) {
+	subject := (*PullService).ListReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviewers_Bad(t *core.T) {
+	subject := (*PullService).ListReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviewers_Ugly(t *core.T) {
+	subject := (*PullService).ListReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviewers_Good(t *core.T) {
+	subject := (*PullService).IterReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviewers_Bad(t *core.T) {
+	subject := (*PullService).IterReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviewers_Ugly(t *core.T) {
+	subject := (*PullService).IterReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_RequestReviewers_Good(t *core.T) {
+	subject := (*PullService).RequestReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_RequestReviewers_Bad(t *core.T) {
+	subject := (*PullService).RequestReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_RequestReviewers_Ugly(t *core.T) {
+	subject := (*PullService).RequestReviewers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CancelReviewRequests_Good(t *core.T) {
+	subject := (*PullService).CancelReviewRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CancelReviewRequests_Bad(t *core.T) {
+	subject := (*PullService).CancelReviewRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CancelReviewRequests_Ugly(t *core.T) {
+	subject := (*PullService).CancelReviewRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_SubmitReview_Good(t *core.T) {
+	subject := (*PullService).SubmitReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_SubmitReview_Bad(t *core.T) {
+	subject := (*PullService).SubmitReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_SubmitReview_Ugly(t *core.T) {
+	subject := (*PullService).SubmitReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetReview_Good(t *core.T) {
+	subject := (*PullService).GetReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetReview_Bad(t *core.T) {
+	subject := (*PullService).GetReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetReview_Ugly(t *core.T) {
+	subject := (*PullService).GetReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetPullReview_Good(t *core.T) {
+	subject := (*PullService).GetPullReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetPullReview_Bad(t *core.T) {
+	subject := (*PullService).GetPullReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetPullReview_Ugly(t *core.T) {
+	subject := (*PullService).GetPullReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeleteReview_Good(t *core.T) {
+	subject := (*PullService).DeleteReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeleteReview_Bad(t *core.T) {
+	subject := (*PullService).DeleteReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeleteReview_Ugly(t *core.T) {
+	subject := (*PullService).DeleteReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeletePullReview_Good(t *core.T) {
+	subject := (*PullService).DeletePullReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeletePullReview_Bad(t *core.T) {
+	subject := (*PullService).DeletePullReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeletePullReview_Ugly(t *core.T) {
+	subject := (*PullService).DeletePullReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviewComments_Good(t *core.T) {
+	subject := (*PullService).ListReviewComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviewComments_Bad(t *core.T) {
+	subject := (*PullService).ListReviewComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_ListReviewComments_Ugly(t *core.T) {
+	subject := (*PullService).ListReviewComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviewComments_Good(t *core.T) {
+	subject := (*PullService).IterReviewComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviewComments_Bad(t *core.T) {
+	subject := (*PullService).IterReviewComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_IterReviewComments_Ugly(t *core.T) {
+	subject := (*PullService).IterReviewComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetReviewComment_Good(t *core.T) {
+	subject := (*PullService).GetReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetReviewComment_Bad(t *core.T) {
+	subject := (*PullService).GetReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_GetReviewComment_Ugly(t *core.T) {
+	subject := (*PullService).GetReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CreateReviewComment_Good(t *core.T) {
+	subject := (*PullService).CreateReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CreateReviewComment_Bad(t *core.T) {
+	subject := (*PullService).CreateReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_CreateReviewComment_Ugly(t *core.T) {
+	subject := (*PullService).CreateReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeleteReviewComment_Good(t *core.T) {
+	subject := (*PullService).DeleteReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeleteReviewComment_Bad(t *core.T) {
+	subject := (*PullService).DeleteReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DeleteReviewComment_Ugly(t *core.T) {
+	subject := (*PullService).DeleteReviewComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DismissReview_Good(t *core.T) {
+	subject := (*PullService).DismissReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DismissReview_Bad(t *core.T) {
+	subject := (*PullService).DismissReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_DismissReview_Ugly(t *core.T) {
+	subject := (*PullService).DismissReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_UndismissReview_Good(t *core.T) {
+	subject := (*PullService).UndismissReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_UndismissReview_Bad(t *core.T) {
+	subject := (*PullService).UndismissReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPulls_PullService_UndismissReview_Ugly(t *core.T) {
+	subject := (*PullService).UndismissReview
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

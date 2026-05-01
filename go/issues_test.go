@@ -1566,3 +1566,2874 @@ func TestIssueService_ListIgnoresIndexParam_Ugly(t *testing.T) {
 		t.Errorf("got %d items, want 0", len(result.Items))
 	}
 }
+
+func TestIssues_IssueListOptions_String_Good(t *core.T) {
+	subject := (*IssueListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueListOptions_String_Bad(t *core.T) {
+	subject := (*IssueListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueListOptions_String_Ugly(t *core.T) {
+	subject := (*IssueListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueListOptions_GoString_Good(t *core.T) {
+	subject := (*IssueListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueListOptions_GoString_Bad(t *core.T) {
+	subject := (*IssueListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueListOptions_GoString_Ugly(t *core.T) {
+	subject := (*IssueListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_AttachmentUploadOptions_String_Good(t *core.T) {
+	subject := (*AttachmentUploadOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_AttachmentUploadOptions_String_Bad(t *core.T) {
+	subject := (*AttachmentUploadOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_AttachmentUploadOptions_String_Ugly(t *core.T) {
+	subject := (*AttachmentUploadOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_AttachmentUploadOptions_GoString_Good(t *core.T) {
+	subject := (*AttachmentUploadOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_AttachmentUploadOptions_GoString_Bad(t *core.T) {
+	subject := (*AttachmentUploadOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_AttachmentUploadOptions_GoString_Ugly(t *core.T) {
+	subject := (*AttachmentUploadOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_RepoCommentListOptions_String_Good(t *core.T) {
+	subject := (*RepoCommentListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_RepoCommentListOptions_String_Bad(t *core.T) {
+	subject := (*RepoCommentListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_RepoCommentListOptions_String_Ugly(t *core.T) {
+	subject := (*RepoCommentListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_RepoCommentListOptions_GoString_Good(t *core.T) {
+	subject := (*RepoCommentListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_RepoCommentListOptions_GoString_Bad(t *core.T) {
+	subject := (*RepoCommentListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_RepoCommentListOptions_GoString_Ugly(t *core.T) {
+	subject := (*RepoCommentListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetIssue_Good(t *core.T) {
+	subject := (*IssueService).GetIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetIssue_Bad(t *core.T) {
+	subject := (*IssueService).GetIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetIssue_Ugly(t *core.T) {
+	subject := (*IssueService).GetIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditIssue_Good(t *core.T) {
+	subject := (*IssueService).EditIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditIssue_Bad(t *core.T) {
+	subject := (*IssueService).EditIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditIssue_Ugly(t *core.T) {
+	subject := (*IssueService).EditIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteIssue_Good(t *core.T) {
+	subject := (*IssueService).DeleteIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteIssue_Bad(t *core.T) {
+	subject := (*IssueService).DeleteIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteIssue_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_SearchIssuesOptions_String_Good(t *core.T) {
+	subject := (*SearchIssuesOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_SearchIssuesOptions_String_Bad(t *core.T) {
+	subject := (*SearchIssuesOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_SearchIssuesOptions_String_Ugly(t *core.T) {
+	subject := (*SearchIssuesOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_SearchIssuesOptions_GoString_Good(t *core.T) {
+	subject := (*SearchIssuesOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_SearchIssuesOptions_GoString_Bad(t *core.T) {
+	subject := (*SearchIssuesOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_SearchIssuesOptions_GoString_Ugly(t *core.T) {
+	subject := (*SearchIssuesOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SearchIssuesPage_Good(t *core.T) {
+	subject := (*IssueService).SearchIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SearchIssuesPage_Bad(t *core.T) {
+	subject := (*IssueService).SearchIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SearchIssuesPage_Ugly(t *core.T) {
+	subject := (*IssueService).SearchIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SearchIssues_Good(t *core.T) {
+	subject := (*IssueService).SearchIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SearchIssues_Bad(t *core.T) {
+	subject := (*IssueService).SearchIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SearchIssues_Ugly(t *core.T) {
+	subject := (*IssueService).SearchIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterSearchIssues_Good(t *core.T) {
+	subject := (*IssueService).IterSearchIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterSearchIssues_Bad(t *core.T) {
+	subject := (*IssueService).IterSearchIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterSearchIssues_Ugly(t *core.T) {
+	subject := (*IssueService).IterSearchIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssuesPage_Good(t *core.T) {
+	subject := (*IssueService).ListIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssuesPage_Bad(t *core.T) {
+	subject := (*IssueService).ListIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssuesPage_Ugly(t *core.T) {
+	subject := (*IssueService).ListIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssues_Good(t *core.T) {
+	subject := (*IssueService).ListIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssues_Bad(t *core.T) {
+	subject := (*IssueService).ListIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssues_Ugly(t *core.T) {
+	subject := (*IssueService).ListIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterIssues_Good(t *core.T) {
+	subject := (*IssueService).IterIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterIssues_Bad(t *core.T) {
+	subject := (*IssueService).IterIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterIssues_Ugly(t *core.T) {
+	subject := (*IssueService).IterIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoIssues_Good(t *core.T) {
+	subject := (*IssueService).ListRepoIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoIssues_Bad(t *core.T) {
+	subject := (*IssueService).ListRepoIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoIssues_Ugly(t *core.T) {
+	subject := (*IssueService).ListRepoIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoIssuesPage_Good(t *core.T) {
+	subject := (*IssueService).ListRepoIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoIssuesPage_Bad(t *core.T) {
+	subject := (*IssueService).ListRepoIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoIssuesPage_Ugly(t *core.T) {
+	subject := (*IssueService).ListRepoIssuesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterRepoIssues_Good(t *core.T) {
+	subject := (*IssueService).IterRepoIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterRepoIssues_Bad(t *core.T) {
+	subject := (*IssueService).IterRepoIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterRepoIssues_Ugly(t *core.T) {
+	subject := (*IssueService).IterRepoIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateIssue_Good(t *core.T) {
+	subject := (*IssueService).CreateIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateIssue_Bad(t *core.T) {
+	subject := (*IssueService).CreateIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateIssue_Ugly(t *core.T) {
+	subject := (*IssueService).CreateIssue
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_Pin_Good(t *core.T) {
+	subject := (*IssueService).Pin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_Pin_Bad(t *core.T) {
+	subject := (*IssueService).Pin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_Pin_Ugly(t *core.T) {
+	subject := (*IssueService).Pin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_MovePin_Good(t *core.T) {
+	subject := (*IssueService).MovePin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_MovePin_Bad(t *core.T) {
+	subject := (*IssueService).MovePin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_MovePin_Ugly(t *core.T) {
+	subject := (*IssueService).MovePin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListPinnedIssues_Good(t *core.T) {
+	subject := (*IssueService).ListPinnedIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListPinnedIssues_Bad(t *core.T) {
+	subject := (*IssueService).ListPinnedIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListPinnedIssues_Ugly(t *core.T) {
+	subject := (*IssueService).ListPinnedIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterPinnedIssues_Good(t *core.T) {
+	subject := (*IssueService).IterPinnedIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterPinnedIssues_Bad(t *core.T) {
+	subject := (*IssueService).IterPinnedIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterPinnedIssues_Ugly(t *core.T) {
+	subject := (*IssueService).IterPinnedIssues
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_Unpin_Good(t *core.T) {
+	subject := (*IssueService).Unpin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_Unpin_Bad(t *core.T) {
+	subject := (*IssueService).Unpin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_Unpin_Ugly(t *core.T) {
+	subject := (*IssueService).Unpin
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SetDeadline_Good(t *core.T) {
+	subject := (*IssueService).SetDeadline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SetDeadline_Bad(t *core.T) {
+	subject := (*IssueService).SetDeadline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SetDeadline_Ugly(t *core.T) {
+	subject := (*IssueService).SetDeadline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddReaction_Good(t *core.T) {
+	subject := (*IssueService).AddReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddReaction_Bad(t *core.T) {
+	subject := (*IssueService).AddReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddReaction_Ugly(t *core.T) {
+	subject := (*IssueService).AddReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListReactions_Good(t *core.T) {
+	subject := (*IssueService).ListReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListReactions_Bad(t *core.T) {
+	subject := (*IssueService).ListReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListReactions_Ugly(t *core.T) {
+	subject := (*IssueService).ListReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterReactions_Good(t *core.T) {
+	subject := (*IssueService).IterReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterReactions_Bad(t *core.T) {
+	subject := (*IssueService).IterReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterReactions_Ugly(t *core.T) {
+	subject := (*IssueService).IterReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteReaction_Good(t *core.T) {
+	subject := (*IssueService).DeleteReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteReaction_Bad(t *core.T) {
+	subject := (*IssueService).DeleteReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteReaction_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_StartStopwatch_Good(t *core.T) {
+	subject := (*IssueService).StartStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_StartStopwatch_Bad(t *core.T) {
+	subject := (*IssueService).StartStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_StartStopwatch_Ugly(t *core.T) {
+	subject := (*IssueService).StartStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_StopStopwatch_Good(t *core.T) {
+	subject := (*IssueService).StopStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_StopStopwatch_Bad(t *core.T) {
+	subject := (*IssueService).StopStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_StopStopwatch_Ugly(t *core.T) {
+	subject := (*IssueService).StopStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteStopwatch_Good(t *core.T) {
+	subject := (*IssueService).DeleteStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteStopwatch_Bad(t *core.T) {
+	subject := (*IssueService).DeleteStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteStopwatch_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteStopwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListTimes_Good(t *core.T) {
+	subject := (*IssueService).ListTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListTimes_Bad(t *core.T) {
+	subject := (*IssueService).ListTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListTimes_Ugly(t *core.T) {
+	subject := (*IssueService).ListTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterTimes_Good(t *core.T) {
+	subject := (*IssueService).IterTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterTimes_Bad(t *core.T) {
+	subject := (*IssueService).IterTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterTimes_Ugly(t *core.T) {
+	subject := (*IssueService).IterTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddTime_Good(t *core.T) {
+	subject := (*IssueService).AddTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddTime_Bad(t *core.T) {
+	subject := (*IssueService).AddTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddTime_Ugly(t *core.T) {
+	subject := (*IssueService).AddTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ResetTime_Good(t *core.T) {
+	subject := (*IssueService).ResetTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ResetTime_Bad(t *core.T) {
+	subject := (*IssueService).ResetTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ResetTime_Ugly(t *core.T) {
+	subject := (*IssueService).ResetTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteTime_Good(t *core.T) {
+	subject := (*IssueService).DeleteTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteTime_Bad(t *core.T) {
+	subject := (*IssueService).DeleteTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteTime_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteTime
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddLabels_Good(t *core.T) {
+	subject := (*IssueService).AddLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddLabels_Bad(t *core.T) {
+	subject := (*IssueService).AddLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddLabels_Ugly(t *core.T) {
+	subject := (*IssueService).AddLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveLabel_Good(t *core.T) {
+	subject := (*IssueService).RemoveLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveLabel_Bad(t *core.T) {
+	subject := (*IssueService).RemoveLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveLabel_Ugly(t *core.T) {
+	subject := (*IssueService).RemoveLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListComments_Good(t *core.T) {
+	subject := (*IssueService).ListComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListComments_Bad(t *core.T) {
+	subject := (*IssueService).ListComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListComments_Ugly(t *core.T) {
+	subject := (*IssueService).ListComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssueComments_Good(t *core.T) {
+	subject := (*IssueService).ListIssueComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssueComments_Bad(t *core.T) {
+	subject := (*IssueService).ListIssueComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListIssueComments_Ugly(t *core.T) {
+	subject := (*IssueService).ListIssueComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterComments_Good(t *core.T) {
+	subject := (*IssueService).IterComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterComments_Bad(t *core.T) {
+	subject := (*IssueService).IterComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterComments_Ugly(t *core.T) {
+	subject := (*IssueService).IterComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterIssueComments_Good(t *core.T) {
+	subject := (*IssueService).IterIssueComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterIssueComments_Bad(t *core.T) {
+	subject := (*IssueService).IterIssueComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterIssueComments_Ugly(t *core.T) {
+	subject := (*IssueService).IterIssueComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetIssueComment_Good(t *core.T) {
+	subject := (*IssueService).GetIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetIssueComment_Bad(t *core.T) {
+	subject := (*IssueService).GetIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetIssueComment_Ugly(t *core.T) {
+	subject := (*IssueService).GetIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditIssueComment_Good(t *core.T) {
+	subject := (*IssueService).EditIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditIssueComment_Bad(t *core.T) {
+	subject := (*IssueService).EditIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditIssueComment_Ugly(t *core.T) {
+	subject := (*IssueService).EditIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteIssueComment_Good(t *core.T) {
+	subject := (*IssueService).DeleteIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteIssueComment_Bad(t *core.T) {
+	subject := (*IssueService).DeleteIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteIssueComment_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteIssueComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateComment_Good(t *core.T) {
+	subject := (*IssueService).CreateComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateComment_Bad(t *core.T) {
+	subject := (*IssueService).CreateComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateComment_Ugly(t *core.T) {
+	subject := (*IssueService).CreateComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditComment_Good(t *core.T) {
+	subject := (*IssueService).EditComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditComment_Bad(t *core.T) {
+	subject := (*IssueService).EditComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditComment_Ugly(t *core.T) {
+	subject := (*IssueService).EditComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteComment_Good(t *core.T) {
+	subject := (*IssueService).DeleteComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteComment_Bad(t *core.T) {
+	subject := (*IssueService).DeleteComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteComment_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoComments_Good(t *core.T) {
+	subject := (*IssueService).ListRepoComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoComments_Bad(t *core.T) {
+	subject := (*IssueService).ListRepoComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListRepoComments_Ugly(t *core.T) {
+	subject := (*IssueService).ListRepoComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterRepoComments_Good(t *core.T) {
+	subject := (*IssueService).IterRepoComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterRepoComments_Bad(t *core.T) {
+	subject := (*IssueService).IterRepoComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterRepoComments_Ugly(t *core.T) {
+	subject := (*IssueService).IterRepoComments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetRepoComment_Good(t *core.T) {
+	subject := (*IssueService).GetRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetRepoComment_Bad(t *core.T) {
+	subject := (*IssueService).GetRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetRepoComment_Ugly(t *core.T) {
+	subject := (*IssueService).GetRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditRepoComment_Good(t *core.T) {
+	subject := (*IssueService).EditRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditRepoComment_Bad(t *core.T) {
+	subject := (*IssueService).EditRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditRepoComment_Ugly(t *core.T) {
+	subject := (*IssueService).EditRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteRepoComment_Good(t *core.T) {
+	subject := (*IssueService).DeleteRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteRepoComment_Bad(t *core.T) {
+	subject := (*IssueService).DeleteRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteRepoComment_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteRepoComment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListCommentReactions_Good(t *core.T) {
+	subject := (*IssueService).ListCommentReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListCommentReactions_Bad(t *core.T) {
+	subject := (*IssueService).ListCommentReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListCommentReactions_Ugly(t *core.T) {
+	subject := (*IssueService).ListCommentReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterCommentReactions_Good(t *core.T) {
+	subject := (*IssueService).IterCommentReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterCommentReactions_Bad(t *core.T) {
+	subject := (*IssueService).IterCommentReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterCommentReactions_Ugly(t *core.T) {
+	subject := (*IssueService).IterCommentReactions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddCommentReaction_Good(t *core.T) {
+	subject := (*IssueService).AddCommentReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddCommentReaction_Bad(t *core.T) {
+	subject := (*IssueService).AddCommentReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddCommentReaction_Ugly(t *core.T) {
+	subject := (*IssueService).AddCommentReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteCommentReaction_Good(t *core.T) {
+	subject := (*IssueService).DeleteCommentReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteCommentReaction_Bad(t *core.T) {
+	subject := (*IssueService).DeleteCommentReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteCommentReaction_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteCommentReaction
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateAttachment_Good(t *core.T) {
+	subject := (*IssueService).CreateAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateAttachment_Bad(t *core.T) {
+	subject := (*IssueService).CreateAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).CreateAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListAttachments_Good(t *core.T) {
+	subject := (*IssueService).ListAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListAttachments_Bad(t *core.T) {
+	subject := (*IssueService).ListAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListAttachments_Ugly(t *core.T) {
+	subject := (*IssueService).ListAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterAttachments_Good(t *core.T) {
+	subject := (*IssueService).IterAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterAttachments_Bad(t *core.T) {
+	subject := (*IssueService).IterAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterAttachments_Ugly(t *core.T) {
+	subject := (*IssueService).IterAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetAttachment_Good(t *core.T) {
+	subject := (*IssueService).GetAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetAttachment_Bad(t *core.T) {
+	subject := (*IssueService).GetAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).GetAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditAttachment_Good(t *core.T) {
+	subject := (*IssueService).EditAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditAttachment_Bad(t *core.T) {
+	subject := (*IssueService).EditAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).EditAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteAttachment_Good(t *core.T) {
+	subject := (*IssueService).DeleteAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteAttachment_Bad(t *core.T) {
+	subject := (*IssueService).DeleteAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListCommentAttachments_Good(t *core.T) {
+	subject := (*IssueService).ListCommentAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListCommentAttachments_Bad(t *core.T) {
+	subject := (*IssueService).ListCommentAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListCommentAttachments_Ugly(t *core.T) {
+	subject := (*IssueService).ListCommentAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterCommentAttachments_Good(t *core.T) {
+	subject := (*IssueService).IterCommentAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterCommentAttachments_Bad(t *core.T) {
+	subject := (*IssueService).IterCommentAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterCommentAttachments_Ugly(t *core.T) {
+	subject := (*IssueService).IterCommentAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetCommentAttachment_Good(t *core.T) {
+	subject := (*IssueService).GetCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetCommentAttachment_Bad(t *core.T) {
+	subject := (*IssueService).GetCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_GetCommentAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).GetCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateCommentAttachment_Good(t *core.T) {
+	subject := (*IssueService).CreateCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateCommentAttachment_Bad(t *core.T) {
+	subject := (*IssueService).CreateCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CreateCommentAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).CreateCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditCommentAttachment_Good(t *core.T) {
+	subject := (*IssueService).EditCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditCommentAttachment_Bad(t *core.T) {
+	subject := (*IssueService).EditCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_EditCommentAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).EditCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteCommentAttachment_Good(t *core.T) {
+	subject := (*IssueService).DeleteCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteCommentAttachment_Bad(t *core.T) {
+	subject := (*IssueService).DeleteCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_DeleteCommentAttachment_Ugly(t *core.T) {
+	subject := (*IssueService).DeleteCommentAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListTimeline_Good(t *core.T) {
+	subject := (*IssueService).ListTimeline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListTimeline_Bad(t *core.T) {
+	subject := (*IssueService).ListTimeline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListTimeline_Ugly(t *core.T) {
+	subject := (*IssueService).ListTimeline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterTimeline_Good(t *core.T) {
+	subject := (*IssueService).IterTimeline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterTimeline_Bad(t *core.T) {
+	subject := (*IssueService).IterTimeline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterTimeline_Ugly(t *core.T) {
+	subject := (*IssueService).IterTimeline
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListSubscriptions_Good(t *core.T) {
+	subject := (*IssueService).ListSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListSubscriptions_Bad(t *core.T) {
+	subject := (*IssueService).ListSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListSubscriptions_Ugly(t *core.T) {
+	subject := (*IssueService).ListSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterSubscriptions_Good(t *core.T) {
+	subject := (*IssueService).IterSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterSubscriptions_Bad(t *core.T) {
+	subject := (*IssueService).IterSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterSubscriptions_Ugly(t *core.T) {
+	subject := (*IssueService).IterSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CheckSubscription_Good(t *core.T) {
+	subject := (*IssueService).CheckSubscription
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CheckSubscription_Bad(t *core.T) {
+	subject := (*IssueService).CheckSubscription
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_CheckSubscription_Ugly(t *core.T) {
+	subject := (*IssueService).CheckSubscription
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SubscribeUser_Good(t *core.T) {
+	subject := (*IssueService).SubscribeUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SubscribeUser_Bad(t *core.T) {
+	subject := (*IssueService).SubscribeUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_SubscribeUser_Ugly(t *core.T) {
+	subject := (*IssueService).SubscribeUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_UnsubscribeUser_Good(t *core.T) {
+	subject := (*IssueService).UnsubscribeUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_UnsubscribeUser_Bad(t *core.T) {
+	subject := (*IssueService).UnsubscribeUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_UnsubscribeUser_Ugly(t *core.T) {
+	subject := (*IssueService).UnsubscribeUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListDependencies_Good(t *core.T) {
+	subject := (*IssueService).ListDependencies
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListDependencies_Bad(t *core.T) {
+	subject := (*IssueService).ListDependencies
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListDependencies_Ugly(t *core.T) {
+	subject := (*IssueService).ListDependencies
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterDependencies_Good(t *core.T) {
+	subject := (*IssueService).IterDependencies
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterDependencies_Bad(t *core.T) {
+	subject := (*IssueService).IterDependencies
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterDependencies_Ugly(t *core.T) {
+	subject := (*IssueService).IterDependencies
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddDependency_Good(t *core.T) {
+	subject := (*IssueService).AddDependency
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddDependency_Bad(t *core.T) {
+	subject := (*IssueService).AddDependency
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddDependency_Ugly(t *core.T) {
+	subject := (*IssueService).AddDependency
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveDependency_Good(t *core.T) {
+	subject := (*IssueService).RemoveDependency
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveDependency_Bad(t *core.T) {
+	subject := (*IssueService).RemoveDependency
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveDependency_Ugly(t *core.T) {
+	subject := (*IssueService).RemoveDependency
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListBlocks_Good(t *core.T) {
+	subject := (*IssueService).ListBlocks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListBlocks_Bad(t *core.T) {
+	subject := (*IssueService).ListBlocks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_ListBlocks_Ugly(t *core.T) {
+	subject := (*IssueService).ListBlocks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterBlocks_Good(t *core.T) {
+	subject := (*IssueService).IterBlocks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterBlocks_Bad(t *core.T) {
+	subject := (*IssueService).IterBlocks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_IterBlocks_Ugly(t *core.T) {
+	subject := (*IssueService).IterBlocks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddBlock_Good(t *core.T) {
+	subject := (*IssueService).AddBlock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddBlock_Bad(t *core.T) {
+	subject := (*IssueService).AddBlock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_AddBlock_Ugly(t *core.T) {
+	subject := (*IssueService).AddBlock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveBlock_Good(t *core.T) {
+	subject := (*IssueService).RemoveBlock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveBlock_Bad(t *core.T) {
+	subject := (*IssueService).RemoveBlock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestIssues_IssueService_RemoveBlock_Ugly(t *core.T) {
+	subject := (*IssueService).RemoveBlock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

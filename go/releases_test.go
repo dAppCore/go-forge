@@ -317,3 +317,663 @@ func TestReleaseService_EditAttachment_Good(t *testing.T) {
 		t.Fatalf("got name=%q", attachment.Name)
 	}
 }
+
+func TestReleases_ReleaseListOptions_String_Good(t *core.T) {
+	subject := (*ReleaseListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseListOptions_String_Bad(t *core.T) {
+	subject := (*ReleaseListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseListOptions_String_Ugly(t *core.T) {
+	subject := (*ReleaseListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseListOptions_GoString_Good(t *core.T) {
+	subject := (*ReleaseListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseListOptions_GoString_Bad(t *core.T) {
+	subject := (*ReleaseListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseListOptions_GoString_Ugly(t *core.T) {
+	subject := (*ReleaseListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseAttachmentUploadOptions_String_Good(t *core.T) {
+	subject := (*ReleaseAttachmentUploadOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseAttachmentUploadOptions_String_Bad(t *core.T) {
+	subject := (*ReleaseAttachmentUploadOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseAttachmentUploadOptions_String_Ugly(t *core.T) {
+	subject := (*ReleaseAttachmentUploadOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseAttachmentUploadOptions_GoString_Good(t *core.T) {
+	subject := (*ReleaseAttachmentUploadOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseAttachmentUploadOptions_GoString_Bad(t *core.T) {
+	subject := (*ReleaseAttachmentUploadOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseAttachmentUploadOptions_GoString_Ugly(t *core.T) {
+	subject := (*ReleaseAttachmentUploadOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListReleasesPage_Good(t *core.T) {
+	subject := (*ReleaseService).ListReleasesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListReleasesPage_Bad(t *core.T) {
+	subject := (*ReleaseService).ListReleasesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListReleasesPage_Ugly(t *core.T) {
+	subject := (*ReleaseService).ListReleasesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListReleases_Good(t *core.T) {
+	subject := (*ReleaseService).ListReleases
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListReleases_Bad(t *core.T) {
+	subject := (*ReleaseService).ListReleases
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListReleases_Ugly(t *core.T) {
+	subject := (*ReleaseService).ListReleases
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_IterReleases_Good(t *core.T) {
+	subject := (*ReleaseService).IterReleases
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_IterReleases_Bad(t *core.T) {
+	subject := (*ReleaseService).IterReleases
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_IterReleases_Ugly(t *core.T) {
+	subject := (*ReleaseService).IterReleases
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateRelease_Good(t *core.T) {
+	subject := (*ReleaseService).CreateRelease
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateRelease_Bad(t *core.T) {
+	subject := (*ReleaseService).CreateRelease
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateRelease_Ugly(t *core.T) {
+	subject := (*ReleaseService).CreateRelease
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetByTag_Good(t *core.T) {
+	subject := (*ReleaseService).GetByTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetByTag_Bad(t *core.T) {
+	subject := (*ReleaseService).GetByTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetByTag_Ugly(t *core.T) {
+	subject := (*ReleaseService).GetByTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetRelease_Good(t *core.T) {
+	subject := (*ReleaseService).GetRelease
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetRelease_Bad(t *core.T) {
+	subject := (*ReleaseService).GetRelease
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetRelease_Ugly(t *core.T) {
+	subject := (*ReleaseService).GetRelease
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetLatest_Good(t *core.T) {
+	subject := (*ReleaseService).GetLatest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetLatest_Bad(t *core.T) {
+	subject := (*ReleaseService).GetLatest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetLatest_Ugly(t *core.T) {
+	subject := (*ReleaseService).GetLatest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_DeleteByTag_Good(t *core.T) {
+	subject := (*ReleaseService).DeleteByTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_DeleteByTag_Bad(t *core.T) {
+	subject := (*ReleaseService).DeleteByTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_DeleteByTag_Ugly(t *core.T) {
+	subject := (*ReleaseService).DeleteByTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListAssets_Good(t *core.T) {
+	subject := (*ReleaseService).ListAssets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListAssets_Bad(t *core.T) {
+	subject := (*ReleaseService).ListAssets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_ListAssets_Ugly(t *core.T) {
+	subject := (*ReleaseService).ListAssets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateAttachment_Good(t *core.T) {
+	subject := (*ReleaseService).CreateAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateAttachment_Bad(t *core.T) {
+	subject := (*ReleaseService).CreateAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateAttachment_Ugly(t *core.T) {
+	subject := (*ReleaseService).CreateAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_EditAttachment_Good(t *core.T) {
+	subject := (*ReleaseService).EditAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_EditAttachment_Bad(t *core.T) {
+	subject := (*ReleaseService).EditAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_EditAttachment_Ugly(t *core.T) {
+	subject := (*ReleaseService).EditAttachment
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateAsset_Good(t *core.T) {
+	subject := (*ReleaseService).CreateAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateAsset_Bad(t *core.T) {
+	subject := (*ReleaseService).CreateAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_CreateAsset_Ugly(t *core.T) {
+	subject := (*ReleaseService).CreateAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_EditAsset_Good(t *core.T) {
+	subject := (*ReleaseService).EditAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_EditAsset_Bad(t *core.T) {
+	subject := (*ReleaseService).EditAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_EditAsset_Ugly(t *core.T) {
+	subject := (*ReleaseService).EditAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_IterAssets_Good(t *core.T) {
+	subject := (*ReleaseService).IterAssets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_IterAssets_Bad(t *core.T) {
+	subject := (*ReleaseService).IterAssets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_IterAssets_Ugly(t *core.T) {
+	subject := (*ReleaseService).IterAssets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetAsset_Good(t *core.T) {
+	subject := (*ReleaseService).GetAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetAsset_Bad(t *core.T) {
+	subject := (*ReleaseService).GetAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_GetAsset_Ugly(t *core.T) {
+	subject := (*ReleaseService).GetAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_DeleteAsset_Good(t *core.T) {
+	subject := (*ReleaseService).DeleteAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_DeleteAsset_Bad(t *core.T) {
+	subject := (*ReleaseService).DeleteAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestReleases_ReleaseService_DeleteAsset_Ugly(t *core.T) {
+	subject := (*ReleaseService).DeleteAsset
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

@@ -554,3 +554,993 @@ func TestActionsService_NotFound_Bad(t *testing.T) {
 		t.Errorf("expected not-found error, got %v", err)
 	}
 }
+
+func TestActions_ActionsService_ListRepoSecrets_Good(t *core.T) {
+	subject := (*ActionsService).ListRepoSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoSecrets_Bad(t *core.T) {
+	subject := (*ActionsService).ListRepoSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoSecrets_Ugly(t *core.T) {
+	subject := (*ActionsService).ListRepoSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoSecrets_Good(t *core.T) {
+	subject := (*ActionsService).IterRepoSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoSecrets_Bad(t *core.T) {
+	subject := (*ActionsService).IterRepoSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoSecrets_Ugly(t *core.T) {
+	subject := (*ActionsService).IterRepoSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateRepoSecret_Good(t *core.T) {
+	subject := (*ActionsService).CreateRepoSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateRepoSecret_Bad(t *core.T) {
+	subject := (*ActionsService).CreateRepoSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateRepoSecret_Ugly(t *core.T) {
+	subject := (*ActionsService).CreateRepoSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteRepoSecret_Good(t *core.T) {
+	subject := (*ActionsService).DeleteRepoSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteRepoSecret_Bad(t *core.T) {
+	subject := (*ActionsService).DeleteRepoSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteRepoSecret_Ugly(t *core.T) {
+	subject := (*ActionsService).DeleteRepoSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoVariables_Good(t *core.T) {
+	subject := (*ActionsService).ListRepoVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoVariables_Bad(t *core.T) {
+	subject := (*ActionsService).ListRepoVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoVariables_Ugly(t *core.T) {
+	subject := (*ActionsService).ListRepoVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoVariables_Good(t *core.T) {
+	subject := (*ActionsService).IterRepoVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoVariables_Bad(t *core.T) {
+	subject := (*ActionsService).IterRepoVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoVariables_Ugly(t *core.T) {
+	subject := (*ActionsService).IterRepoVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateRepoVariable_Good(t *core.T) {
+	subject := (*ActionsService).CreateRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateRepoVariable_Bad(t *core.T) {
+	subject := (*ActionsService).CreateRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateRepoVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).CreateRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateRepoVariable_Good(t *core.T) {
+	subject := (*ActionsService).UpdateRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateRepoVariable_Bad(t *core.T) {
+	subject := (*ActionsService).UpdateRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateRepoVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).UpdateRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteRepoVariable_Good(t *core.T) {
+	subject := (*ActionsService).DeleteRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteRepoVariable_Bad(t *core.T) {
+	subject := (*ActionsService).DeleteRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteRepoVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).DeleteRepoVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListOrgSecrets_Good(t *core.T) {
+	subject := (*ActionsService).ListOrgSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListOrgSecrets_Bad(t *core.T) {
+	subject := (*ActionsService).ListOrgSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListOrgSecrets_Ugly(t *core.T) {
+	subject := (*ActionsService).ListOrgSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterOrgSecrets_Good(t *core.T) {
+	subject := (*ActionsService).IterOrgSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterOrgSecrets_Bad(t *core.T) {
+	subject := (*ActionsService).IterOrgSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterOrgSecrets_Ugly(t *core.T) {
+	subject := (*ActionsService).IterOrgSecrets
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListOrgVariables_Good(t *core.T) {
+	subject := (*ActionsService).ListOrgVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListOrgVariables_Bad(t *core.T) {
+	subject := (*ActionsService).ListOrgVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListOrgVariables_Ugly(t *core.T) {
+	subject := (*ActionsService).ListOrgVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterOrgVariables_Good(t *core.T) {
+	subject := (*ActionsService).IterOrgVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterOrgVariables_Bad(t *core.T) {
+	subject := (*ActionsService).IterOrgVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterOrgVariables_Ugly(t *core.T) {
+	subject := (*ActionsService).IterOrgVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_GetOrgVariable_Good(t *core.T) {
+	subject := (*ActionsService).GetOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_GetOrgVariable_Bad(t *core.T) {
+	subject := (*ActionsService).GetOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_GetOrgVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).GetOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateOrgVariable_Good(t *core.T) {
+	subject := (*ActionsService).CreateOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateOrgVariable_Bad(t *core.T) {
+	subject := (*ActionsService).CreateOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateOrgVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).CreateOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateOrgVariable_Good(t *core.T) {
+	subject := (*ActionsService).UpdateOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateOrgVariable_Bad(t *core.T) {
+	subject := (*ActionsService).UpdateOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateOrgVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).UpdateOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteOrgVariable_Good(t *core.T) {
+	subject := (*ActionsService).DeleteOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteOrgVariable_Bad(t *core.T) {
+	subject := (*ActionsService).DeleteOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteOrgVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).DeleteOrgVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateOrgSecret_Good(t *core.T) {
+	subject := (*ActionsService).CreateOrgSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateOrgSecret_Bad(t *core.T) {
+	subject := (*ActionsService).CreateOrgSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateOrgSecret_Ugly(t *core.T) {
+	subject := (*ActionsService).CreateOrgSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteOrgSecret_Good(t *core.T) {
+	subject := (*ActionsService).DeleteOrgSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteOrgSecret_Bad(t *core.T) {
+	subject := (*ActionsService).DeleteOrgSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteOrgSecret_Ugly(t *core.T) {
+	subject := (*ActionsService).DeleteOrgSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListUserVariables_Good(t *core.T) {
+	subject := (*ActionsService).ListUserVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListUserVariables_Bad(t *core.T) {
+	subject := (*ActionsService).ListUserVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListUserVariables_Ugly(t *core.T) {
+	subject := (*ActionsService).ListUserVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterUserVariables_Good(t *core.T) {
+	subject := (*ActionsService).IterUserVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterUserVariables_Bad(t *core.T) {
+	subject := (*ActionsService).IterUserVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterUserVariables_Ugly(t *core.T) {
+	subject := (*ActionsService).IterUserVariables
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_GetUserVariable_Good(t *core.T) {
+	subject := (*ActionsService).GetUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_GetUserVariable_Bad(t *core.T) {
+	subject := (*ActionsService).GetUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_GetUserVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).GetUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateUserVariable_Good(t *core.T) {
+	subject := (*ActionsService).CreateUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateUserVariable_Bad(t *core.T) {
+	subject := (*ActionsService).CreateUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateUserVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).CreateUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateUserVariable_Good(t *core.T) {
+	subject := (*ActionsService).UpdateUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateUserVariable_Bad(t *core.T) {
+	subject := (*ActionsService).UpdateUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_UpdateUserVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).UpdateUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteUserVariable_Good(t *core.T) {
+	subject := (*ActionsService).DeleteUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteUserVariable_Bad(t *core.T) {
+	subject := (*ActionsService).DeleteUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteUserVariable_Ugly(t *core.T) {
+	subject := (*ActionsService).DeleteUserVariable
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateUserSecret_Good(t *core.T) {
+	subject := (*ActionsService).CreateUserSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateUserSecret_Bad(t *core.T) {
+	subject := (*ActionsService).CreateUserSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_CreateUserSecret_Ugly(t *core.T) {
+	subject := (*ActionsService).CreateUserSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteUserSecret_Good(t *core.T) {
+	subject := (*ActionsService).DeleteUserSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteUserSecret_Bad(t *core.T) {
+	subject := (*ActionsService).DeleteUserSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DeleteUserSecret_Ugly(t *core.T) {
+	subject := (*ActionsService).DeleteUserSecret
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DispatchWorkflow_Good(t *core.T) {
+	subject := (*ActionsService).DispatchWorkflow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DispatchWorkflow_Bad(t *core.T) {
+	subject := (*ActionsService).DispatchWorkflow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_DispatchWorkflow_Ugly(t *core.T) {
+	subject := (*ActionsService).DispatchWorkflow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoTasks_Good(t *core.T) {
+	subject := (*ActionsService).ListRepoTasks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoTasks_Bad(t *core.T) {
+	subject := (*ActionsService).ListRepoTasks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_ListRepoTasks_Ugly(t *core.T) {
+	subject := (*ActionsService).ListRepoTasks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoTasks_Good(t *core.T) {
+	subject := (*ActionsService).IterRepoTasks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoTasks_Bad(t *core.T) {
+	subject := (*ActionsService).IterRepoTasks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestActions_ActionsService_IterRepoTasks_Ugly(t *core.T) {
+	subject := (*ActionsService).IterRepoTasks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

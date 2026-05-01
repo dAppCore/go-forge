@@ -1756,3 +1756,2973 @@ func TestUserService_GetHeatmap_Good(t *testing.T) {
 		t.Errorf("unexpected heatmap data: %+v", heatmap)
 	}
 }
+
+func TestUsers_UserSearchOptions_String_Good(t *core.T) {
+	subject := (*UserSearchOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserSearchOptions_String_Bad(t *core.T) {
+	subject := (*UserSearchOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserSearchOptions_String_Ugly(t *core.T) {
+	subject := (*UserSearchOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserSearchOptions_GoString_Good(t *core.T) {
+	subject := (*UserSearchOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserSearchOptions_GoString_Bad(t *core.T) {
+	subject := (*UserSearchOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserSearchOptions_GoString_Ugly(t *core.T) {
+	subject := (*UserSearchOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserKeyListOptions_String_Good(t *core.T) {
+	subject := (*UserKeyListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserKeyListOptions_String_Bad(t *core.T) {
+	subject := (*UserKeyListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserKeyListOptions_String_Ugly(t *core.T) {
+	subject := (*UserKeyListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserKeyListOptions_GoString_Good(t *core.T) {
+	subject := (*UserKeyListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserKeyListOptions_GoString_Bad(t *core.T) {
+	subject := (*UserKeyListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserKeyListOptions_GoString_Ugly(t *core.T) {
+	subject := (*UserKeyListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetUserByID_Good(t *core.T) {
+	subject := (*UserService).GetUserByID
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetUserByID_Bad(t *core.T) {
+	subject := (*UserService).GetUserByID
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetUserByID_Ugly(t *core.T) {
+	subject := (*UserService).GetUserByID
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetUserByUsername_Good(t *core.T) {
+	subject := (*UserService).GetUserByUsername
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetUserByUsername_Bad(t *core.T) {
+	subject := (*UserService).GetUserByUsername
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetUserByUsername_Ugly(t *core.T) {
+	subject := (*UserService).GetUserByUsername
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetCurrent_Good(t *core.T) {
+	subject := (*UserService).GetCurrent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetCurrent_Bad(t *core.T) {
+	subject := (*UserService).GetCurrent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetCurrent_Ugly(t *core.T) {
+	subject := (*UserService).GetCurrent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetSettings_Good(t *core.T) {
+	subject := (*UserService).GetSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetSettings_Bad(t *core.T) {
+	subject := (*UserService).GetSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetSettings_Ugly(t *core.T) {
+	subject := (*UserService).GetSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateSettings_Good(t *core.T) {
+	subject := (*UserService).UpdateSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateSettings_Bad(t *core.T) {
+	subject := (*UserService).UpdateSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateSettings_Ugly(t *core.T) {
+	subject := (*UserService).UpdateSettings
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetQuota_Good(t *core.T) {
+	subject := (*UserService).GetQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetQuota_Bad(t *core.T) {
+	subject := (*UserService).GetQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetQuota_Ugly(t *core.T) {
+	subject := (*UserService).GetQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_SearchUsersPage_Good(t *core.T) {
+	subject := (*UserService).SearchUsersPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_SearchUsersPage_Bad(t *core.T) {
+	subject := (*UserService).SearchUsersPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_SearchUsersPage_Ugly(t *core.T) {
+	subject := (*UserService).SearchUsersPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_SearchUsers_Good(t *core.T) {
+	subject := (*UserService).SearchUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_SearchUsers_Bad(t *core.T) {
+	subject := (*UserService).SearchUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_SearchUsers_Ugly(t *core.T) {
+	subject := (*UserService).SearchUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterSearchUsers_Good(t *core.T) {
+	subject := (*UserService).IterSearchUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterSearchUsers_Bad(t *core.T) {
+	subject := (*UserService).IterSearchUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterSearchUsers_Ugly(t *core.T) {
+	subject := (*UserService).IterSearchUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaArtifacts_Good(t *core.T) {
+	subject := (*UserService).ListQuotaArtifacts
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaArtifacts_Bad(t *core.T) {
+	subject := (*UserService).ListQuotaArtifacts
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaArtifacts_Ugly(t *core.T) {
+	subject := (*UserService).ListQuotaArtifacts
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaArtifacts_Good(t *core.T) {
+	subject := (*UserService).IterQuotaArtifacts
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaArtifacts_Bad(t *core.T) {
+	subject := (*UserService).IterQuotaArtifacts
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaArtifacts_Ugly(t *core.T) {
+	subject := (*UserService).IterQuotaArtifacts
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaAttachments_Good(t *core.T) {
+	subject := (*UserService).ListQuotaAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaAttachments_Bad(t *core.T) {
+	subject := (*UserService).ListQuotaAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaAttachments_Ugly(t *core.T) {
+	subject := (*UserService).ListQuotaAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaAttachments_Good(t *core.T) {
+	subject := (*UserService).IterQuotaAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaAttachments_Bad(t *core.T) {
+	subject := (*UserService).IterQuotaAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaAttachments_Ugly(t *core.T) {
+	subject := (*UserService).IterQuotaAttachments
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaPackages_Good(t *core.T) {
+	subject := (*UserService).ListQuotaPackages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaPackages_Bad(t *core.T) {
+	subject := (*UserService).ListQuotaPackages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListQuotaPackages_Ugly(t *core.T) {
+	subject := (*UserService).ListQuotaPackages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaPackages_Good(t *core.T) {
+	subject := (*UserService).IterQuotaPackages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaPackages_Bad(t *core.T) {
+	subject := (*UserService).IterQuotaPackages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterQuotaPackages_Ugly(t *core.T) {
+	subject := (*UserService).IterQuotaPackages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListEmails_Good(t *core.T) {
+	subject := (*UserService).ListEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListEmails_Bad(t *core.T) {
+	subject := (*UserService).ListEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListEmails_Ugly(t *core.T) {
+	subject := (*UserService).ListEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterEmails_Good(t *core.T) {
+	subject := (*UserService).IterEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterEmails_Bad(t *core.T) {
+	subject := (*UserService).IterEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterEmails_Ugly(t *core.T) {
+	subject := (*UserService).IterEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_AddEmails_Good(t *core.T) {
+	subject := (*UserService).AddEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_AddEmails_Bad(t *core.T) {
+	subject := (*UserService).AddEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_AddEmails_Ugly(t *core.T) {
+	subject := (*UserService).AddEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteEmails_Good(t *core.T) {
+	subject := (*UserService).DeleteEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteEmails_Bad(t *core.T) {
+	subject := (*UserService).DeleteEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteEmails_Ugly(t *core.T) {
+	subject := (*UserService).DeleteEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateAvatar_Good(t *core.T) {
+	subject := (*UserService).UpdateAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateAvatar_Bad(t *core.T) {
+	subject := (*UserService).UpdateAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateAvatar_Ugly(t *core.T) {
+	subject := (*UserService).UpdateAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteAvatar_Good(t *core.T) {
+	subject := (*UserService).DeleteAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteAvatar_Bad(t *core.T) {
+	subject := (*UserService).DeleteAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteAvatar_Ugly(t *core.T) {
+	subject := (*UserService).DeleteAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListKeys_Good(t *core.T) {
+	subject := (*UserService).ListKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListKeys_Bad(t *core.T) {
+	subject := (*UserService).ListKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListKeys_Ugly(t *core.T) {
+	subject := (*UserService).ListKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterKeys_Good(t *core.T) {
+	subject := (*UserService).IterKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterKeys_Bad(t *core.T) {
+	subject := (*UserService).IterKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterKeys_Ugly(t *core.T) {
+	subject := (*UserService).IterKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateKey_Good(t *core.T) {
+	subject := (*UserService).CreateKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateKey_Bad(t *core.T) {
+	subject := (*UserService).CreateKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateKey_Ugly(t *core.T) {
+	subject := (*UserService).CreateKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetKey_Good(t *core.T) {
+	subject := (*UserService).GetKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetKey_Bad(t *core.T) {
+	subject := (*UserService).GetKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetKey_Ugly(t *core.T) {
+	subject := (*UserService).GetKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteKey_Good(t *core.T) {
+	subject := (*UserService).DeleteKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteKey_Bad(t *core.T) {
+	subject := (*UserService).DeleteKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteKey_Ugly(t *core.T) {
+	subject := (*UserService).DeleteKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListUserKeys_Good(t *core.T) {
+	subject := (*UserService).ListUserKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListUserKeys_Bad(t *core.T) {
+	subject := (*UserService).ListUserKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListUserKeys_Ugly(t *core.T) {
+	subject := (*UserService).ListUserKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterUserKeys_Good(t *core.T) {
+	subject := (*UserService).IterUserKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterUserKeys_Bad(t *core.T) {
+	subject := (*UserService).IterUserKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterUserKeys_Ugly(t *core.T) {
+	subject := (*UserService).IterUserKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListGPGKeys_Good(t *core.T) {
+	subject := (*UserService).ListGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListGPGKeys_Bad(t *core.T) {
+	subject := (*UserService).ListGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListGPGKeys_Ugly(t *core.T) {
+	subject := (*UserService).ListGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterGPGKeys_Good(t *core.T) {
+	subject := (*UserService).IterGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterGPGKeys_Bad(t *core.T) {
+	subject := (*UserService).IterGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterGPGKeys_Ugly(t *core.T) {
+	subject := (*UserService).IterGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateGPGKey_Good(t *core.T) {
+	subject := (*UserService).CreateGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateGPGKey_Bad(t *core.T) {
+	subject := (*UserService).CreateGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateGPGKey_Ugly(t *core.T) {
+	subject := (*UserService).CreateGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetGPGKey_Good(t *core.T) {
+	subject := (*UserService).GetGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetGPGKey_Bad(t *core.T) {
+	subject := (*UserService).GetGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetGPGKey_Ugly(t *core.T) {
+	subject := (*UserService).GetGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteGPGKey_Good(t *core.T) {
+	subject := (*UserService).DeleteGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteGPGKey_Bad(t *core.T) {
+	subject := (*UserService).DeleteGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteGPGKey_Ugly(t *core.T) {
+	subject := (*UserService).DeleteGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListUserGPGKeys_Good(t *core.T) {
+	subject := (*UserService).ListUserGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListUserGPGKeys_Bad(t *core.T) {
+	subject := (*UserService).ListUserGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListUserGPGKeys_Ugly(t *core.T) {
+	subject := (*UserService).ListUserGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterUserGPGKeys_Good(t *core.T) {
+	subject := (*UserService).IterUserGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterUserGPGKeys_Bad(t *core.T) {
+	subject := (*UserService).IterUserGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterUserGPGKeys_Ugly(t *core.T) {
+	subject := (*UserService).IterUserGPGKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetGPGKeyVerificationToken_Good(t *core.T) {
+	subject := (*UserService).GetGPGKeyVerificationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetGPGKeyVerificationToken_Bad(t *core.T) {
+	subject := (*UserService).GetGPGKeyVerificationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetGPGKeyVerificationToken_Ugly(t *core.T) {
+	subject := (*UserService).GetGPGKeyVerificationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_VerifyGPGKey_Good(t *core.T) {
+	subject := (*UserService).VerifyGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_VerifyGPGKey_Bad(t *core.T) {
+	subject := (*UserService).VerifyGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_VerifyGPGKey_Ugly(t *core.T) {
+	subject := (*UserService).VerifyGPGKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListTokens_Good(t *core.T) {
+	subject := (*UserService).ListTokens
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListTokens_Bad(t *core.T) {
+	subject := (*UserService).ListTokens
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListTokens_Ugly(t *core.T) {
+	subject := (*UserService).ListTokens
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterTokens_Good(t *core.T) {
+	subject := (*UserService).IterTokens
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterTokens_Bad(t *core.T) {
+	subject := (*UserService).IterTokens
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterTokens_Ugly(t *core.T) {
+	subject := (*UserService).IterTokens
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateToken_Good(t *core.T) {
+	subject := (*UserService).CreateToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateToken_Bad(t *core.T) {
+	subject := (*UserService).CreateToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateToken_Ugly(t *core.T) {
+	subject := (*UserService).CreateToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteToken_Good(t *core.T) {
+	subject := (*UserService).DeleteToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteToken_Bad(t *core.T) {
+	subject := (*UserService).DeleteToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteToken_Ugly(t *core.T) {
+	subject := (*UserService).DeleteToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListOAuth2Applications_Good(t *core.T) {
+	subject := (*UserService).ListOAuth2Applications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListOAuth2Applications_Bad(t *core.T) {
+	subject := (*UserService).ListOAuth2Applications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListOAuth2Applications_Ugly(t *core.T) {
+	subject := (*UserService).ListOAuth2Applications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterOAuth2Applications_Good(t *core.T) {
+	subject := (*UserService).IterOAuth2Applications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterOAuth2Applications_Bad(t *core.T) {
+	subject := (*UserService).IterOAuth2Applications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterOAuth2Applications_Ugly(t *core.T) {
+	subject := (*UserService).IterOAuth2Applications
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateOAuth2Application_Good(t *core.T) {
+	subject := (*UserService).CreateOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateOAuth2Application_Bad(t *core.T) {
+	subject := (*UserService).CreateOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CreateOAuth2Application_Ugly(t *core.T) {
+	subject := (*UserService).CreateOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetOAuth2Application_Good(t *core.T) {
+	subject := (*UserService).GetOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetOAuth2Application_Bad(t *core.T) {
+	subject := (*UserService).GetOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetOAuth2Application_Ugly(t *core.T) {
+	subject := (*UserService).GetOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateOAuth2Application_Good(t *core.T) {
+	subject := (*UserService).UpdateOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateOAuth2Application_Bad(t *core.T) {
+	subject := (*UserService).UpdateOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_UpdateOAuth2Application_Ugly(t *core.T) {
+	subject := (*UserService).UpdateOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteOAuth2Application_Good(t *core.T) {
+	subject := (*UserService).DeleteOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteOAuth2Application_Bad(t *core.T) {
+	subject := (*UserService).DeleteOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_DeleteOAuth2Application_Ugly(t *core.T) {
+	subject := (*UserService).DeleteOAuth2Application
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListStopwatches_Good(t *core.T) {
+	subject := (*UserService).ListStopwatches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListStopwatches_Bad(t *core.T) {
+	subject := (*UserService).ListStopwatches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListStopwatches_Ugly(t *core.T) {
+	subject := (*UserService).ListStopwatches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterStopwatches_Good(t *core.T) {
+	subject := (*UserService).IterStopwatches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterStopwatches_Bad(t *core.T) {
+	subject := (*UserService).IterStopwatches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterStopwatches_Ugly(t *core.T) {
+	subject := (*UserService).IterStopwatches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListBlockedUsers_Good(t *core.T) {
+	subject := (*UserService).ListBlockedUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListBlockedUsers_Bad(t *core.T) {
+	subject := (*UserService).ListBlockedUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListBlockedUsers_Ugly(t *core.T) {
+	subject := (*UserService).ListBlockedUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterBlockedUsers_Good(t *core.T) {
+	subject := (*UserService).IterBlockedUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterBlockedUsers_Bad(t *core.T) {
+	subject := (*UserService).IterBlockedUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterBlockedUsers_Ugly(t *core.T) {
+	subject := (*UserService).IterBlockedUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Block_Good(t *core.T) {
+	subject := (*UserService).Block
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Block_Bad(t *core.T) {
+	subject := (*UserService).Block
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Block_Ugly(t *core.T) {
+	subject := (*UserService).Block
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unblock_Good(t *core.T) {
+	subject := (*UserService).Unblock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unblock_Bad(t *core.T) {
+	subject := (*UserService).Unblock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unblock_Ugly(t *core.T) {
+	subject := (*UserService).Unblock
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMySubscriptions_Good(t *core.T) {
+	subject := (*UserService).ListMySubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMySubscriptions_Bad(t *core.T) {
+	subject := (*UserService).ListMySubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMySubscriptions_Ugly(t *core.T) {
+	subject := (*UserService).ListMySubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMySubscriptions_Good(t *core.T) {
+	subject := (*UserService).IterMySubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMySubscriptions_Bad(t *core.T) {
+	subject := (*UserService).IterMySubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMySubscriptions_Ugly(t *core.T) {
+	subject := (*UserService).IterMySubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyStarred_Good(t *core.T) {
+	subject := (*UserService).ListMyStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyStarred_Bad(t *core.T) {
+	subject := (*UserService).ListMyStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyStarred_Ugly(t *core.T) {
+	subject := (*UserService).ListMyStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyStarred_Good(t *core.T) {
+	subject := (*UserService).IterMyStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyStarred_Bad(t *core.T) {
+	subject := (*UserService).IterMyStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyStarred_Ugly(t *core.T) {
+	subject := (*UserService).IterMyStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyFollowers_Good(t *core.T) {
+	subject := (*UserService).ListMyFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyFollowers_Bad(t *core.T) {
+	subject := (*UserService).ListMyFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyFollowers_Ugly(t *core.T) {
+	subject := (*UserService).ListMyFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyFollowers_Good(t *core.T) {
+	subject := (*UserService).IterMyFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyFollowers_Bad(t *core.T) {
+	subject := (*UserService).IterMyFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyFollowers_Ugly(t *core.T) {
+	subject := (*UserService).IterMyFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyFollowing_Good(t *core.T) {
+	subject := (*UserService).ListMyFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyFollowing_Bad(t *core.T) {
+	subject := (*UserService).ListMyFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyFollowing_Ugly(t *core.T) {
+	subject := (*UserService).ListMyFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyFollowing_Good(t *core.T) {
+	subject := (*UserService).IterMyFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyFollowing_Bad(t *core.T) {
+	subject := (*UserService).IterMyFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyFollowing_Ugly(t *core.T) {
+	subject := (*UserService).IterMyFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyTeams_Good(t *core.T) {
+	subject := (*UserService).ListMyTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyTeams_Bad(t *core.T) {
+	subject := (*UserService).ListMyTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyTeams_Ugly(t *core.T) {
+	subject := (*UserService).ListMyTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyTeams_Good(t *core.T) {
+	subject := (*UserService).IterMyTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyTeams_Bad(t *core.T) {
+	subject := (*UserService).IterMyTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyTeams_Ugly(t *core.T) {
+	subject := (*UserService).IterMyTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyTrackedTimes_Good(t *core.T) {
+	subject := (*UserService).ListMyTrackedTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyTrackedTimes_Bad(t *core.T) {
+	subject := (*UserService).ListMyTrackedTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListMyTrackedTimes_Ugly(t *core.T) {
+	subject := (*UserService).ListMyTrackedTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyTrackedTimes_Good(t *core.T) {
+	subject := (*UserService).IterMyTrackedTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyTrackedTimes_Bad(t *core.T) {
+	subject := (*UserService).IterMyTrackedTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterMyTrackedTimes_Ugly(t *core.T) {
+	subject := (*UserService).IterMyTrackedTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckQuota_Good(t *core.T) {
+	subject := (*UserService).CheckQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckQuota_Bad(t *core.T) {
+	subject := (*UserService).CheckQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckQuota_Ugly(t *core.T) {
+	subject := (*UserService).CheckQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetRunnerRegistrationToken_Good(t *core.T) {
+	subject := (*UserService).GetRunnerRegistrationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetRunnerRegistrationToken_Bad(t *core.T) {
+	subject := (*UserService).GetRunnerRegistrationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetRunnerRegistrationToken_Ugly(t *core.T) {
+	subject := (*UserService).GetRunnerRegistrationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListFollowers_Good(t *core.T) {
+	subject := (*UserService).ListFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListFollowers_Bad(t *core.T) {
+	subject := (*UserService).ListFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListFollowers_Ugly(t *core.T) {
+	subject := (*UserService).ListFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterFollowers_Good(t *core.T) {
+	subject := (*UserService).IterFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterFollowers_Bad(t *core.T) {
+	subject := (*UserService).IterFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterFollowers_Ugly(t *core.T) {
+	subject := (*UserService).IterFollowers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListSubscriptions_Good(t *core.T) {
+	subject := (*UserService).ListSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListSubscriptions_Bad(t *core.T) {
+	subject := (*UserService).ListSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListSubscriptions_Ugly(t *core.T) {
+	subject := (*UserService).ListSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterSubscriptions_Good(t *core.T) {
+	subject := (*UserService).IterSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterSubscriptions_Bad(t *core.T) {
+	subject := (*UserService).IterSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterSubscriptions_Ugly(t *core.T) {
+	subject := (*UserService).IterSubscriptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListFollowing_Good(t *core.T) {
+	subject := (*UserService).ListFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListFollowing_Bad(t *core.T) {
+	subject := (*UserService).ListFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListFollowing_Ugly(t *core.T) {
+	subject := (*UserService).ListFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterFollowing_Good(t *core.T) {
+	subject := (*UserService).IterFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterFollowing_Bad(t *core.T) {
+	subject := (*UserService).IterFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterFollowing_Ugly(t *core.T) {
+	subject := (*UserService).IterFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListActivityFeeds_Good(t *core.T) {
+	subject := (*UserService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListActivityFeeds_Bad(t *core.T) {
+	subject := (*UserService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListActivityFeeds_Ugly(t *core.T) {
+	subject := (*UserService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterActivityFeeds_Good(t *core.T) {
+	subject := (*UserService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterActivityFeeds_Bad(t *core.T) {
+	subject := (*UserService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterActivityFeeds_Ugly(t *core.T) {
+	subject := (*UserService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListRepos_Good(t *core.T) {
+	subject := (*UserService).ListRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListRepos_Bad(t *core.T) {
+	subject := (*UserService).ListRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListRepos_Ugly(t *core.T) {
+	subject := (*UserService).ListRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterRepos_Good(t *core.T) {
+	subject := (*UserService).IterRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterRepos_Bad(t *core.T) {
+	subject := (*UserService).IterRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterRepos_Ugly(t *core.T) {
+	subject := (*UserService).IterRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Follow_Good(t *core.T) {
+	subject := (*UserService).Follow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Follow_Bad(t *core.T) {
+	subject := (*UserService).Follow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Follow_Ugly(t *core.T) {
+	subject := (*UserService).Follow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckFollowing_Good(t *core.T) {
+	subject := (*UserService).CheckFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckFollowing_Bad(t *core.T) {
+	subject := (*UserService).CheckFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckFollowing_Ugly(t *core.T) {
+	subject := (*UserService).CheckFollowing
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unfollow_Good(t *core.T) {
+	subject := (*UserService).Unfollow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unfollow_Bad(t *core.T) {
+	subject := (*UserService).Unfollow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unfollow_Ugly(t *core.T) {
+	subject := (*UserService).Unfollow
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListStarred_Good(t *core.T) {
+	subject := (*UserService).ListStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListStarred_Bad(t *core.T) {
+	subject := (*UserService).ListStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_ListStarred_Ugly(t *core.T) {
+	subject := (*UserService).ListStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterStarred_Good(t *core.T) {
+	subject := (*UserService).IterStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterStarred_Bad(t *core.T) {
+	subject := (*UserService).IterStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_IterStarred_Ugly(t *core.T) {
+	subject := (*UserService).IterStarred
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetHeatmap_Good(t *core.T) {
+	subject := (*UserService).GetHeatmap
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetHeatmap_Bad(t *core.T) {
+	subject := (*UserService).GetHeatmap
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_GetHeatmap_Ugly(t *core.T) {
+	subject := (*UserService).GetHeatmap
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Star_Good(t *core.T) {
+	subject := (*UserService).Star
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Star_Bad(t *core.T) {
+	subject := (*UserService).Star
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Star_Ugly(t *core.T) {
+	subject := (*UserService).Star
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unstar_Good(t *core.T) {
+	subject := (*UserService).Unstar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unstar_Bad(t *core.T) {
+	subject := (*UserService).Unstar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_Unstar_Ugly(t *core.T) {
+	subject := (*UserService).Unstar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckStarring_Good(t *core.T) {
+	subject := (*UserService).CheckStarring
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckStarring_Bad(t *core.T) {
+	subject := (*UserService).CheckStarring
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestUsers_UserService_CheckStarring_Ugly(t *core.T) {
+	subject := (*UserService).CheckStarring
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
