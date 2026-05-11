@@ -141,8 +141,8 @@ func TestNewForgeFromConfig_NoToken_Bad(t *testing.T) {
 	t.Setenv("FORGE_URL", "")
 	t.Setenv("FORGE_TOKEN", "")
 
-	_, err := NewForgeFromConfig("", "")
-	if err == nil {
+	r := NewForgeFromConfig("", "")
+	if r.OK {
 		t.Fatal("expected error for missing token")
 	}
 }
@@ -152,13 +152,11 @@ func TestNewFromConfig_Good(t *testing.T) {
 	t.Setenv("FORGE_URL", "https://forge.example.com")
 	t.Setenv("FORGE_TOKEN", "env-token")
 
-	f, err := NewFromConfig("", "")
-	if err != nil {
-		t.Fatal(err)
+	r := NewFromConfig("", "")
+	if !r.OK {
+		t.Fatal(r.Error())
 	}
-	if f == nil {
-		t.Fatal("expected forge client")
-	}
+	f := r.Value.(*Forge)
 	if got := f.BaseURL(); got != "https://forge.example.com" {
 		t.Errorf("got baseURL=%q", got)
 	}

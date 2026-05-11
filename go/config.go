@@ -129,30 +129,39 @@ func ResolveConfig(flagURL, flagToken string) (url, token string, err error) {
 }
 
 // NewFromConfig creates a new Forge client using resolved configuration.
+// Thin alias for NewForgeFromConfig — same Result contract.
 //
-// Usage:
-//
-//	f, err := forge.NewFromConfig("", "")
-//	_ = f
-func NewFromConfig(flagURL, flagToken string, opts ...Option) (*Forge, error) {
+//	r := forge.NewFromConfig("", "")
+//	if !r.OK { return r }
+//	f := r.Value.(*Forge)
+func NewFromConfig(flagURL, flagToken string, opts ...Option) core.Result {
 	return NewForgeFromConfig(flagURL, flagToken, opts...)
 }
 
 // NewForgeFromConfig creates a new Forge client using resolved configuration.
-// It returns an error if no API token is available from flags, environment,
-// or the saved config file.
+// Fails if no API token is available from flags, environment, or saved config.
+// Panics in the constructor body recover as Result.Fail.
 //
-// Usage:
-//
-//	f, err := forge.NewForgeFromConfig("", "")
-//	_ = f
-func NewForgeFromConfig(flagURL, flagToken string, opts ...Option) (*Forge, error) {
+//	r := forge.NewForgeFromConfig("", "")
+//	if !r.OK { return r }
+//	f := r.Value.(*Forge)
+func NewForgeFromConfig(flagURL, flagToken string, opts ...Option) (r core.Result) {
+	defer func() {
+		if rec := recover(); rec != nil {
+			if err, ok := rec.(error); ok {
+				r = core.Fail(err)
+				return
+			}
+			r = core.Fail(core.E("NewForgeFromConfig", "panic recovered", nil))
+		}
+	}()
+
 	url, token, err := ResolveConfig(flagURL, flagToken)
 	if err != nil {
-		return nil, err
+		return core.Fail(err)
 	}
 	if token == "" {
-		return nil, core.E("NewForgeFromConfig", "forge: no API token configured (set FORGE_TOKEN or pass --token)", nil)
+		return core.Fail(core.E("NewForgeFromConfig", "forge: no API token configured (set FORGE_TOKEN or pass --token)", nil))
 	}
-	return NewForge(url, token, opts...), nil
+	return core.Ok(NewForge(url, token, opts...))
 }

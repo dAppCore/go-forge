@@ -3879,47 +3879,49 @@ func TestAX7_ResolveConfig_Ugly(t *core.T) {
 
 func TestAX7_NewFromConfig_Good(t *core.T) {
 	t.Setenv("HOME", t.TempDir())
-	fg, err := NewFromConfig("http://forge.test", "tok")
-	core.AssertNoError(t, err)
+	r := NewFromConfig("http://forge.test", "tok")
+	core.AssertTrue(t, r.OK)
+	fg := r.Value.(*Forge)
 	core.AssertTrue(t, fg.HasToken())
 }
 func TestAX7_NewFromConfig_Bad(t *core.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("FORGE_URL", "")
 	t.Setenv("FORGE_TOKEN", "")
-	fg, err := NewFromConfig("http://forge.test", "")
-	core.AssertError(t, err)
-	core.AssertNil(t, fg)
+	r := NewFromConfig("http://forge.test", "")
+	core.AssertFalse(t, r.OK)
 }
 func TestAX7_NewFromConfig_Ugly(t *core.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("FORGE_URL", "http://env.test")
 	t.Setenv("FORGE_TOKEN", "env-token")
-	fg, err := NewFromConfig("", "")
-	core.AssertNoError(t, err)
+	r := NewFromConfig("", "")
+	core.AssertTrue(t, r.OK)
+	fg := r.Value.(*Forge)
 	core.AssertEqual(t, "http://env.test", fg.BaseURL())
 }
 
 func TestAX7_NewForgeFromConfig_Good(t *core.T) {
 	t.Setenv("HOME", t.TempDir())
-	fg, err := NewForgeFromConfig("http://forge.test", "tok")
-	core.AssertNoError(t, err)
+	r := NewForgeFromConfig("http://forge.test", "tok")
+	core.AssertTrue(t, r.OK)
+	fg := r.Value.(*Forge)
 	core.AssertTrue(t, fg.HasToken())
 }
 func TestAX7_NewForgeFromConfig_Bad(t *core.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("FORGE_URL", "")
 	t.Setenv("FORGE_TOKEN", "")
-	fg, err := NewForgeFromConfig("http://forge.test", "")
-	core.AssertError(t, err)
-	core.AssertNil(t, fg)
+	r := NewForgeFromConfig("http://forge.test", "")
+	core.AssertFalse(t, r.OK)
 }
 func TestAX7_NewForgeFromConfig_Ugly(t *core.T) {
 	t.Setenv("HOME", t.TempDir())
 	t.Setenv("FORGE_URL", "http://env.test")
 	t.Setenv("FORGE_TOKEN", "env-token")
-	fg, err := NewForgeFromConfig("", "")
-	core.AssertNoError(t, err)
+	r := NewForgeFromConfig("", "")
+	core.AssertTrue(t, r.OK)
+	fg := r.Value.(*Forge)
 	core.AssertEqual(t, "http://env.test", fg.BaseURL())
 }
 
