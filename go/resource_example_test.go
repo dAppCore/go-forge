@@ -1,41 +1,41 @@
 package forge
 
 func ExampleResource_String() {
-	_ = (*Resource).String
+	_ = (*Resource[int, int, int]).String
 }
 
 func ExampleResource_GoString() {
-	_ = (*Resource).GoString
+	_ = (*Resource[int, int, int]).GoString
 }
 
 func ExampleNewResource() {
-	_ = NewResource
+	_ = NewResource[int, int, int]
 }
 
 func ExampleResource_List() {
-	_ = (*Resource).List
+	_ = (*Resource[int, int, int]).List
 }
 
 func ExampleResource_ListAll() {
-	_ = (*Resource).ListAll
+	_ = (*Resource[int, int, int]).ListAll
 }
 
 func ExampleResource_Iter() {
-	_ = (*Resource).Iter
+	_ = (*Resource[int, int, int]).Iter
 }
 
 func ExampleResource_Get() {
-	_ = (*Resource).Get
+	_ = (*Resource[int, int, int]).Get
 }
 
 func ExampleResource_Create() {
-	_ = (*Resource).Create
+	_ = (*Resource[int, int, int]).Create
 }
 
 func ExampleResource_Update() {
-	_ = (*Resource).Update
+	_ = (*Resource[int, int, int]).Update
 }
 
 func ExampleResource_Delete() {
-	_ = (*Resource).Delete
+	_ = (*Resource[int, int, int]).Delete
 }

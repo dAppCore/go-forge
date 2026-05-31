@@ -240,7 +240,7 @@ func TestResource_IterBreakEarly_Good(t *testing.T) {
 }
 
 func TestResource_Resource_String_Good(t *core.T) {
-	subject := (*Resource).String
+	subject := (*Resource[int, int, int]).String
 	if subject == nil {
 		t.FailNow()
 	}
@@ -251,7 +251,7 @@ func TestResource_Resource_String_Good(t *core.T) {
 }
 
 func TestResource_Resource_String_Bad(t *core.T) {
-	subject := (*Resource).String
+	subject := (*Resource[int, int, int]).String
 	if subject == nil {
 		t.FailNow()
 	}
@@ -262,7 +262,7 @@ func TestResource_Resource_String_Bad(t *core.T) {
 }
 
 func TestResource_Resource_String_Ugly(t *core.T) {
-	subject := (*Resource).String
+	subject := (*Resource[int, int, int]).String
 	if subject == nil {
 		t.FailNow()
 	}
@@ -273,7 +273,7 @@ func TestResource_Resource_String_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_GoString_Good(t *core.T) {
-	subject := (*Resource).GoString
+	subject := (*Resource[int, int, int]).GoString
 	if subject == nil {
 		t.FailNow()
 	}
@@ -284,7 +284,7 @@ func TestResource_Resource_GoString_Good(t *core.T) {
 }
 
 func TestResource_Resource_GoString_Bad(t *core.T) {
-	subject := (*Resource).GoString
+	subject := (*Resource[int, int, int]).GoString
 	if subject == nil {
 		t.FailNow()
 	}
@@ -295,7 +295,7 @@ func TestResource_Resource_GoString_Bad(t *core.T) {
 }
 
 func TestResource_Resource_GoString_Ugly(t *core.T) {
-	subject := (*Resource).GoString
+	subject := (*Resource[int, int, int]).GoString
 	if subject == nil {
 		t.FailNow()
 	}
@@ -306,7 +306,7 @@ func TestResource_Resource_GoString_Ugly(t *core.T) {
 }
 
 func TestResource_NewResource_Good(t *core.T) {
-	subject := NewResource
+	subject := NewResource[int, int, int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -317,7 +317,7 @@ func TestResource_NewResource_Good(t *core.T) {
 }
 
 func TestResource_NewResource_Bad(t *core.T) {
-	subject := NewResource
+	subject := NewResource[int, int, int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -328,7 +328,7 @@ func TestResource_NewResource_Bad(t *core.T) {
 }
 
 func TestResource_NewResource_Ugly(t *core.T) {
-	subject := NewResource
+	subject := NewResource[int, int, int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -339,7 +339,7 @@ func TestResource_NewResource_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_List_Bad(t *core.T) {
-	subject := (*Resource).List
+	subject := (*Resource[int, int, int]).List
 	if subject == nil {
 		t.FailNow()
 	}
@@ -350,7 +350,7 @@ func TestResource_Resource_List_Bad(t *core.T) {
 }
 
 func TestResource_Resource_List_Ugly(t *core.T) {
-	subject := (*Resource).List
+	subject := (*Resource[int, int, int]).List
 	if subject == nil {
 		t.FailNow()
 	}
@@ -361,7 +361,7 @@ func TestResource_Resource_List_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_ListAll_Bad(t *core.T) {
-	subject := (*Resource).ListAll
+	subject := (*Resource[int, int, int]).ListAll
 	if subject == nil {
 		t.FailNow()
 	}
@@ -372,7 +372,7 @@ func TestResource_Resource_ListAll_Bad(t *core.T) {
 }
 
 func TestResource_Resource_ListAll_Ugly(t *core.T) {
-	subject := (*Resource).ListAll
+	subject := (*Resource[int, int, int]).ListAll
 	if subject == nil {
 		t.FailNow()
 	}
@@ -383,7 +383,7 @@ func TestResource_Resource_ListAll_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_Iter_Bad(t *core.T) {
-	subject := (*Resource).Iter
+	subject := (*Resource[int, int, int]).Iter
 	if subject == nil {
 		t.FailNow()
 	}
@@ -394,7 +394,7 @@ func TestResource_Resource_Iter_Bad(t *core.T) {
 }
 
 func TestResource_Resource_Iter_Ugly(t *core.T) {
-	subject := (*Resource).Iter
+	subject := (*Resource[int, int, int]).Iter
 	if subject == nil {
 		t.FailNow()
 	}
@@ -405,7 +405,7 @@ func TestResource_Resource_Iter_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_Get_Bad(t *core.T) {
-	subject := (*Resource).Get
+	subject := (*Resource[int, int, int]).Get
 	if subject == nil {
 		t.FailNow()
 	}
@@ -416,7 +416,7 @@ func TestResource_Resource_Get_Bad(t *core.T) {
 }
 
 func TestResource_Resource_Get_Ugly(t *core.T) {
-	subject := (*Resource).Get
+	subject := (*Resource[int, int, int]).Get
 	if subject == nil {
 		t.FailNow()
 	}
@@ -427,7 +427,7 @@ func TestResource_Resource_Get_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_Create_Bad(t *core.T) {
-	subject := (*Resource).Create
+	subject := (*Resource[int, int, int]).Create
 	if subject == nil {
 		t.FailNow()
 	}
@@ -438,7 +438,7 @@ func TestResource_Resource_Create_Bad(t *core.T) {
 }
 
 func TestResource_Resource_Create_Ugly(t *core.T) {
-	subject := (*Resource).Create
+	subject := (*Resource[int, int, int]).Create
 	if subject == nil {
 		t.FailNow()
 	}
@@ -449,7 +449,7 @@ func TestResource_Resource_Create_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_Update_Bad(t *core.T) {
-	subject := (*Resource).Update
+	subject := (*Resource[int, int, int]).Update
 	if subject == nil {
 		t.FailNow()
 	}
@@ -460,7 +460,7 @@ func TestResource_Resource_Update_Bad(t *core.T) {
 }
 
 func TestResource_Resource_Update_Ugly(t *core.T) {
-	subject := (*Resource).Update
+	subject := (*Resource[int, int, int]).Update
 	if subject == nil {
 		t.FailNow()
 	}
@@ -471,7 +471,7 @@ func TestResource_Resource_Update_Ugly(t *core.T) {
 }
 
 func TestResource_Resource_Delete_Bad(t *core.T) {
-	subject := (*Resource).Delete
+	subject := (*Resource[int, int, int]).Delete
 	if subject == nil {
 		t.FailNow()
 	}
@@ -482,7 +482,7 @@ func TestResource_Resource_Delete_Bad(t *core.T) {
 }
 
 func TestResource_Resource_Delete_Ugly(t *core.T) {
-	subject := (*Resource).Delete
+	subject := (*Resource[int, int, int]).Delete
 	if subject == nil {
 		t.FailNow()
 	}

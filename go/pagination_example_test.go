@@ -9,21 +9,21 @@ func ExampleListOptions_GoString() {
 }
 
 func ExamplePagedResult_String() {
-	_ = (*PagedResult).String
+	_ = (*PagedResult[int]).String
 }
 
 func ExamplePagedResult_GoString() {
-	_ = (*PagedResult).GoString
+	_ = (*PagedResult[int]).GoString
 }
 
 func ExampleListPage() {
-	_ = ListPage
+	_ = ListPage[int]
 }
 
 func ExampleListAll() {
-	_ = ListAll
+	_ = ListAll[int]
 }
 
 func ExampleListIter() {
-	_ = ListIter
+	_ = ListIter[int]
 }

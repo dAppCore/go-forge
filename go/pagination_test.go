@@ -199,7 +199,7 @@ func TestPagination_ListOptions_GoString_Ugly(t *core.T) {
 }
 
 func TestPagination_PagedResult_String_Good(t *core.T) {
-	subject := (*PagedResult).String
+	subject := (*PagedResult[int]).String
 	if subject == nil {
 		t.FailNow()
 	}
@@ -210,7 +210,7 @@ func TestPagination_PagedResult_String_Good(t *core.T) {
 }
 
 func TestPagination_PagedResult_String_Bad(t *core.T) {
-	subject := (*PagedResult).String
+	subject := (*PagedResult[int]).String
 	if subject == nil {
 		t.FailNow()
 	}
@@ -221,7 +221,7 @@ func TestPagination_PagedResult_String_Bad(t *core.T) {
 }
 
 func TestPagination_PagedResult_String_Ugly(t *core.T) {
-	subject := (*PagedResult).String
+	subject := (*PagedResult[int]).String
 	if subject == nil {
 		t.FailNow()
 	}
@@ -232,7 +232,7 @@ func TestPagination_PagedResult_String_Ugly(t *core.T) {
 }
 
 func TestPagination_PagedResult_GoString_Good(t *core.T) {
-	subject := (*PagedResult).GoString
+	subject := (*PagedResult[int]).GoString
 	if subject == nil {
 		t.FailNow()
 	}
@@ -243,7 +243,7 @@ func TestPagination_PagedResult_GoString_Good(t *core.T) {
 }
 
 func TestPagination_PagedResult_GoString_Bad(t *core.T) {
-	subject := (*PagedResult).GoString
+	subject := (*PagedResult[int]).GoString
 	if subject == nil {
 		t.FailNow()
 	}
@@ -254,7 +254,7 @@ func TestPagination_PagedResult_GoString_Bad(t *core.T) {
 }
 
 func TestPagination_PagedResult_GoString_Ugly(t *core.T) {
-	subject := (*PagedResult).GoString
+	subject := (*PagedResult[int]).GoString
 	if subject == nil {
 		t.FailNow()
 	}
@@ -265,7 +265,7 @@ func TestPagination_PagedResult_GoString_Ugly(t *core.T) {
 }
 
 func TestPagination_ListPage_Good(t *core.T) {
-	subject := ListPage
+	subject := ListPage[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -276,7 +276,7 @@ func TestPagination_ListPage_Good(t *core.T) {
 }
 
 func TestPagination_ListPage_Bad(t *core.T) {
-	subject := ListPage
+	subject := ListPage[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -287,7 +287,7 @@ func TestPagination_ListPage_Bad(t *core.T) {
 }
 
 func TestPagination_ListPage_Ugly(t *core.T) {
-	subject := ListPage
+	subject := ListPage[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -298,7 +298,7 @@ func TestPagination_ListPage_Ugly(t *core.T) {
 }
 
 func TestPagination_ListAll_Good(t *core.T) {
-	subject := ListAll
+	subject := ListAll[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -309,7 +309,7 @@ func TestPagination_ListAll_Good(t *core.T) {
 }
 
 func TestPagination_ListAll_Bad(t *core.T) {
-	subject := ListAll
+	subject := ListAll[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -320,7 +320,7 @@ func TestPagination_ListAll_Bad(t *core.T) {
 }
 
 func TestPagination_ListAll_Ugly(t *core.T) {
-	subject := ListAll
+	subject := ListAll[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -331,7 +331,7 @@ func TestPagination_ListAll_Ugly(t *core.T) {
 }
 
 func TestPagination_ListIter_Good(t *core.T) {
-	subject := ListIter
+	subject := ListIter[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -342,7 +342,7 @@ func TestPagination_ListIter_Good(t *core.T) {
 }
 
 func TestPagination_ListIter_Bad(t *core.T) {
-	subject := ListIter
+	subject := ListIter[int]
 	if subject == nil {
 		t.FailNow()
 	}
@@ -353,7 +353,7 @@ func TestPagination_ListIter_Bad(t *core.T) {
 }
 
 func TestPagination_ListIter_Ugly(t *core.T) {
-	subject := ListIter
+	subject := ListIter[int]
 	if subject == nil {
 		t.FailNow()
 	}
