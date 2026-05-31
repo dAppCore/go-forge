@@ -93,6 +93,105 @@ func TestParseRateLimitInt64_Bad(t *testing.T) {
 	}
 }
 
+func TestClient_postMultipartJSON_Fields_Good(t *testing.T) {
+	// A fields map (not just a file) exercises the WriteField loop, and an
+	// empty fieldName skips the file part entirely.
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseMultipartForm(1 << 20); err != nil {
+			t.Fatalf("parse multipart: %v", err)
+		}
+		if got := r.FormValue("kind"); got != "label" {
+			t.Errorf("got kind=%q, want label", got)
+		}
+		json.NewEncoder(w).Encode(map[string]string{"ok": "yes"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	var out map[string]string
+	err := c.postMultipartJSON(
+		context.Background(),
+		"/api/v1/x",
+		nil,
+		map[string]string{"kind": "label"},
+		"", // no file
+		"",
+		nil,
+		&out,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out["ok"] != "yes" {
+		t.Fatalf("got %v", out)
+	}
+}
+
+func TestClient_postMultipartJSON_NilContent_Good(t *testing.T) {
+	// A non-empty fieldName with nil content writes an empty file part.
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	err := c.postMultipartJSON(
+		context.Background(),
+		"/api/v1/x",
+		nil,
+		nil,
+		"attachment",
+		"empty.bin",
+		nil,
+		nil,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestClient_postMultipartJSON_DecodeError_Bad(t *testing.T) {
+	// A 2xx body that is not valid JSON surfaces a decode error.
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Write([]byte("not json"))
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	var out map[string]string
+	err := c.postMultipartJSON(
+		context.Background(),
+		"/api/v1/x",
+		nil,
+		nil,
+		"attachment",
+		"f.bin",
+		core.NewReader("data"),
+		&out,
+	)
+	if err == nil {
+		t.Fatal("expected a decode error from a non-JSON body")
+	}
+}
+
+func TestClient_postMultipartJSON_ParseURL_Bad(t *testing.T) {
+	// A control character in the base URL fails URLParse before any request.
+	c := NewClient("http://exa\x7fmple.com", "tok")
+	err := c.postMultipartJSON(
+		context.Background(),
+		"/api/v1/x",
+		nil,
+		nil,
+		"attachment",
+		"f.bin",
+		core.NewReader("data"),
+		nil,
+	)
+	if err == nil {
+		t.Fatal("expected a URL parse error")
+	}
+}
+
 func TestReadBody_Good(t *testing.T) {
 	data, err := readBody(core.NewReader("hello"))
 	if err != nil {
