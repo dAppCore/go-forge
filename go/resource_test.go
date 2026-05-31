@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	core "dappco.re/go"
 )
 
 // Test types

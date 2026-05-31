@@ -1,6 +1,10 @@
 package forge
 
-import "testing"
+import (
+	"testing"
+
+	core "dappco.re/go"
+)
 
 func TestResolvePath_Simple_Good(t *testing.T) {
 	got := ResolvePath("/api/v1/repos/{owner}/{repo}", Params{"owner": "core", "repo": "go-forge"})

@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	core "dappco.re/go"
 )
 
 func TestParser_LoadSpec_Good(t *testing.T) {

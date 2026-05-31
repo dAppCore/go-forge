@@ -3,6 +3,8 @@ package types
 import (
 	json "github.com/goccy/go-json"
 	"testing"
+
+	core "dappco.re/go"
 )
 
 func TestMergePullRequestOption_MarshalJSON_CompatMergeStyle_Good(t *testing.T) {

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	core "dappco.re/go"
 )
 
 func TestPagination_SinglePage_Good(t *testing.T) {
