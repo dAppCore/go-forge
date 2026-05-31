@@ -79,6 +79,77 @@ func TestRepoService_ListUserRepos_NamedUser_Good(t *testing.T) {
 	}
 }
 
+func TestRepoService_IterSearchRepositories_MultiPage_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		page := r.URL.Query().Get("page")
+		w.Header().Set("X-Total-Count", "60")
+		var data []*types.Repository
+		if page == "2" {
+			data = make([]*types.Repository, 10)
+			for i := range data {
+				data[i] = &types.Repository{}
+			}
+		} else {
+			data = make([]*types.Repository, 50)
+			for i := range data {
+				data[i] = &types.Repository{}
+			}
+		}
+		json.NewEncoder(w).Encode(types.SearchResults{Data: data, OK: true})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var count int
+	for _, err := range f.Repos.IterSearchRepositories(context.Background(), "go") {
+		if err != nil {
+			t.Fatal(err)
+		}
+		count++
+	}
+	if count != 60 {
+		t.Fatalf("got %d repos across pages, want 60", count)
+	}
+}
+
+func TestRepoService_IterSearchRepositories_Bad(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"message": "boom"})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var sawErr bool
+	for _, err := range f.Repos.IterSearchRepositories(context.Background(), "go") {
+		if err != nil {
+			sawErr = true
+			break
+		}
+	}
+	if !sawErr {
+		t.Fatal("expected an error yielded from IterSearchRepositories")
+	}
+}
+
+func TestRepoService_IterSearchRepositories_EarlyBreak_Ugly(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("X-Total-Count", "3")
+		json.NewEncoder(w).Encode(types.SearchResults{Data: []*types.Repository{{}, {}, {}}, OK: true})
+	}))
+	defer srv.Close()
+
+	f := NewForge(srv.URL, "tok")
+	var count int
+	for range f.Repos.IterSearchRepositories(context.Background(), "go") {
+		count++
+		break
+	}
+	if count != 1 {
+		t.Fatalf("early break should stop after one item, got %d", count)
+	}
+}
+
 func TestRepoService_IterUserRepos_NamedUser_Good(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v1/users/bob/repos" {

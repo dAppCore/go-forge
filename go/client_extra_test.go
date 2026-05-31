@@ -192,6 +192,59 @@ func TestClient_postMultipartJSON_ParseURL_Bad(t *testing.T) {
 	}
 }
 
+func TestClient_PostRaw_NilBody_Good(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.ContentLength > 0 {
+			t.Errorf("expected no body, got content-length %d", r.ContentLength)
+		}
+		w.Write([]byte("rendered"))
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	data, err := c.PostRaw(context.Background(), "/api/v1/markdown", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "rendered" {
+		t.Fatalf("got %q", data)
+	}
+}
+
+func TestClient_PostRaw_ServerError_Bad(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		json.NewEncoder(w).Encode(map[string]string{"message": "bad markdown"})
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	if _, err := c.PostRaw(context.Background(), "/api/v1/markdown", map[string]string{"text": "x"}); err == nil {
+		t.Fatal("expected error from a 422 response")
+	}
+}
+
+func TestClient_Redirect_UsesLastResponse_Good(t *testing.T) {
+	// NewClient installs a CheckRedirect that returns ErrUseLastResponse, so a
+	// 3xx is surfaced as-is rather than being followed. A 302 then becomes a
+	// >=400-free non-redirected response the client treats as the final one.
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/redirect" {
+			http.Redirect(w, r, "/final", http.StatusFound)
+			return
+		}
+		t.Errorf("redirect should not have been followed to %s", r.URL.Path)
+	}))
+	defer srv.Close()
+
+	c := NewClient(srv.URL, "tok")
+	// A 302 is < 400 so doJSON returns no error; the body is empty. The point
+	// is that the redirect was NOT followed (the handler asserts that).
+	if err := c.Get(context.Background(), "/redirect", nil); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
 func TestReadBody_Good(t *testing.T) {
 	data, err := readBody(core.NewReader("hello"))
 	if err != nil {
