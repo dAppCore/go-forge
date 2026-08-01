@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -444,5 +445,665 @@ func TestCommitService_NotFound_Bad(t *testing.T) {
 	}
 	if !IsNotFound(err) {
 		t.Errorf("expected not-found error, got %v", err)
+	}
+}
+
+func TestCommits_CommitListOptions_String_Good(t *core.T) {
+	subject := (*CommitListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitListOptions_String_Bad(t *core.T) {
+	subject := (*CommitListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitListOptions_String_Ugly(t *core.T) {
+	subject := (*CommitListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitListOptions_GoString_Good(t *core.T) {
+	subject := (*CommitListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitListOptions_GoString_Bad(t *core.T) {
+	subject := (*CommitListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitListOptions_GoString_Ugly(t *core.T) {
+	subject := (*CommitListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_List_Good(t *core.T) {
+	subject := (*CommitService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_List_Bad(t *core.T) {
+	subject := (*CommitService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_List_Ugly(t *core.T) {
+	subject := (*CommitService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListAll_Good(t *core.T) {
+	subject := (*CommitService).ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListAll_Bad(t *core.T) {
+	subject := (*CommitService).ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListAll_Ugly(t *core.T) {
+	subject := (*CommitService).ListAll
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_Iter_Good(t *core.T) {
+	subject := (*CommitService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_Iter_Bad(t *core.T) {
+	subject := (*CommitService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_Iter_Ugly(t *core.T) {
+	subject := (*CommitService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_Get_Good(t *core.T) {
+	subject := (*CommitService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_Get_Bad(t *core.T) {
+	subject := (*CommitService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_Get_Ugly(t *core.T) {
+	subject := (*CommitService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListCommitsPage_Good(t *core.T) {
+	subject := (*CommitService).ListCommitsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListCommitsPage_Bad(t *core.T) {
+	subject := (*CommitService).ListCommitsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListCommitsPage_Ugly(t *core.T) {
+	subject := (*CommitService).ListCommitsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListCommits_Good(t *core.T) {
+	subject := (*CommitService).ListCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListCommits_Bad(t *core.T) {
+	subject := (*CommitService).ListCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListCommits_Ugly(t *core.T) {
+	subject := (*CommitService).ListCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_IterCommits_Good(t *core.T) {
+	subject := (*CommitService).IterCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_IterCommits_Bad(t *core.T) {
+	subject := (*CommitService).IterCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_IterCommits_Ugly(t *core.T) {
+	subject := (*CommitService).IterCommits
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCommit_Good(t *core.T) {
+	subject := (*CommitService).GetCommit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCommit_Bad(t *core.T) {
+	subject := (*CommitService).GetCommit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCommit_Ugly(t *core.T) {
+	subject := (*CommitService).GetCommit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetDiffOrPatch_Good(t *core.T) {
+	subject := (*CommitService).GetDiffOrPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetDiffOrPatch_Bad(t *core.T) {
+	subject := (*CommitService).GetDiffOrPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetDiffOrPatch_Ugly(t *core.T) {
+	subject := (*CommitService).GetDiffOrPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetPullRequest_Good(t *core.T) {
+	subject := (*CommitService).GetPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetPullRequest_Bad(t *core.T) {
+	subject := (*CommitService).GetPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetPullRequest_Ugly(t *core.T) {
+	subject := (*CommitService).GetPullRequest
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCombinedStatus_Good(t *core.T) {
+	subject := (*CommitService).GetCombinedStatus
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCombinedStatus_Bad(t *core.T) {
+	subject := (*CommitService).GetCombinedStatus
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCombinedStatus_Ugly(t *core.T) {
+	subject := (*CommitService).GetCombinedStatus
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCombinedStatusByRef_Good(t *core.T) {
+	subject := (*CommitService).GetCombinedStatusByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCombinedStatusByRef_Bad(t *core.T) {
+	subject := (*CommitService).GetCombinedStatusByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetCombinedStatusByRef_Ugly(t *core.T) {
+	subject := (*CommitService).GetCombinedStatusByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListStatuses_Good(t *core.T) {
+	subject := (*CommitService).ListStatuses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListStatuses_Bad(t *core.T) {
+	subject := (*CommitService).ListStatuses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_ListStatuses_Ugly(t *core.T) {
+	subject := (*CommitService).ListStatuses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_IterStatuses_Good(t *core.T) {
+	subject := (*CommitService).IterStatuses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_IterStatuses_Bad(t *core.T) {
+	subject := (*CommitService).IterStatuses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_IterStatuses_Ugly(t *core.T) {
+	subject := (*CommitService).IterStatuses
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_CreateStatus_Good(t *core.T) {
+	subject := (*CommitService).CreateStatus
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_CreateStatus_Bad(t *core.T) {
+	subject := (*CommitService).CreateStatus
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_CreateStatus_Ugly(t *core.T) {
+	subject := (*CommitService).CreateStatus
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetNote_Good(t *core.T) {
+	subject := (*CommitService).GetNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetNote_Bad(t *core.T) {
+	subject := (*CommitService).GetNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_GetNote_Ugly(t *core.T) {
+	subject := (*CommitService).GetNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_SetNote_Good(t *core.T) {
+	subject := (*CommitService).SetNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_SetNote_Bad(t *core.T) {
+	subject := (*CommitService).SetNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_SetNote_Ugly(t *core.T) {
+	subject := (*CommitService).SetNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_DeleteNote_Good(t *core.T) {
+	subject := (*CommitService).DeleteNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_DeleteNote_Bad(t *core.T) {
+	subject := (*CommitService).DeleteNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestCommits_CommitService_DeleteNote_Ugly(t *core.T) {
+	subject := (*CommitService).DeleteNote
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

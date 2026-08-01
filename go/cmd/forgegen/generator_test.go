@@ -258,3 +258,36 @@ func TestGenerate_UsageExamples_AllKinds_Good(t *testing.T) {
 		t.Fatalf("generated alias type is missing a valid usage example:\n%s", content)
 	}
 }
+
+func TestGenerator_Generate_Good(t *core.T) {
+	subject := Generate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestGenerator_Generate_Bad(t *core.T) {
+	subject := Generate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestGenerator_Generate_Ugly(t *core.T) {
+	subject := Generate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

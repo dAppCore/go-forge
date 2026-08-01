@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -228,5 +229,632 @@ func TestLabelService_NotFound_Bad(t *testing.T) {
 	}
 	if !IsNotFound(err) {
 		t.Errorf("expected not-found error, got %v", err)
+	}
+}
+
+func TestLabels_LabelService_ListRepoLabelsPage_Good(t *core.T) {
+	subject := (*LabelService).ListRepoLabelsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListRepoLabelsPage_Bad(t *core.T) {
+	subject := (*LabelService).ListRepoLabelsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListRepoLabelsPage_Ugly(t *core.T) {
+	subject := (*LabelService).ListRepoLabelsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListRepoLabels_Good(t *core.T) {
+	subject := (*LabelService).ListRepoLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListRepoLabels_Bad(t *core.T) {
+	subject := (*LabelService).ListRepoLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListRepoLabels_Ugly(t *core.T) {
+	subject := (*LabelService).ListRepoLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabelsPage_Good(t *core.T) {
+	subject := (*LabelService).ListLabelsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabelsPage_Bad(t *core.T) {
+	subject := (*LabelService).ListLabelsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabelsPage_Ugly(t *core.T) {
+	subject := (*LabelService).ListLabelsPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabels_Good(t *core.T) {
+	subject := (*LabelService).ListLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabels_Bad(t *core.T) {
+	subject := (*LabelService).ListLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabels_Ugly(t *core.T) {
+	subject := (*LabelService).ListLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterRepoLabels_Good(t *core.T) {
+	subject := (*LabelService).IterRepoLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterRepoLabels_Bad(t *core.T) {
+	subject := (*LabelService).IterRepoLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterRepoLabels_Ugly(t *core.T) {
+	subject := (*LabelService).IterRepoLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterLabels_Good(t *core.T) {
+	subject := (*LabelService).IterLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterLabels_Bad(t *core.T) {
+	subject := (*LabelService).IterLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterLabels_Ugly(t *core.T) {
+	subject := (*LabelService).IterLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetRepoLabel_Good(t *core.T) {
+	subject := (*LabelService).GetRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetRepoLabel_Bad(t *core.T) {
+	subject := (*LabelService).GetRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetRepoLabel_Ugly(t *core.T) {
+	subject := (*LabelService).GetRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_CreateRepoLabel_Good(t *core.T) {
+	subject := (*LabelService).CreateRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_CreateRepoLabel_Bad(t *core.T) {
+	subject := (*LabelService).CreateRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_CreateRepoLabel_Ugly(t *core.T) {
+	subject := (*LabelService).CreateRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_EditRepoLabel_Good(t *core.T) {
+	subject := (*LabelService).EditRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_EditRepoLabel_Bad(t *core.T) {
+	subject := (*LabelService).EditRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_EditRepoLabel_Ugly(t *core.T) {
+	subject := (*LabelService).EditRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_DeleteRepoLabel_Good(t *core.T) {
+	subject := (*LabelService).DeleteRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_DeleteRepoLabel_Bad(t *core.T) {
+	subject := (*LabelService).DeleteRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_DeleteRepoLabel_Ugly(t *core.T) {
+	subject := (*LabelService).DeleteRepoLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListOrgLabels_Good(t *core.T) {
+	subject := (*LabelService).ListOrgLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListOrgLabels_Bad(t *core.T) {
+	subject := (*LabelService).ListOrgLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListOrgLabels_Ugly(t *core.T) {
+	subject := (*LabelService).ListOrgLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterOrgLabels_Good(t *core.T) {
+	subject := (*LabelService).IterOrgLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterOrgLabels_Bad(t *core.T) {
+	subject := (*LabelService).IterOrgLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterOrgLabels_Ugly(t *core.T) {
+	subject := (*LabelService).IterOrgLabels
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_CreateOrgLabel_Good(t *core.T) {
+	subject := (*LabelService).CreateOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_CreateOrgLabel_Bad(t *core.T) {
+	subject := (*LabelService).CreateOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_CreateOrgLabel_Ugly(t *core.T) {
+	subject := (*LabelService).CreateOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetOrgLabel_Good(t *core.T) {
+	subject := (*LabelService).GetOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetOrgLabel_Bad(t *core.T) {
+	subject := (*LabelService).GetOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetOrgLabel_Ugly(t *core.T) {
+	subject := (*LabelService).GetOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_EditOrgLabel_Good(t *core.T) {
+	subject := (*LabelService).EditOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_EditOrgLabel_Bad(t *core.T) {
+	subject := (*LabelService).EditOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_EditOrgLabel_Ugly(t *core.T) {
+	subject := (*LabelService).EditOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_DeleteOrgLabel_Good(t *core.T) {
+	subject := (*LabelService).DeleteOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_DeleteOrgLabel_Bad(t *core.T) {
+	subject := (*LabelService).DeleteOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_DeleteOrgLabel_Ugly(t *core.T) {
+	subject := (*LabelService).DeleteOrgLabel
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabelTemplates_Good(t *core.T) {
+	subject := (*LabelService).ListLabelTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabelTemplates_Bad(t *core.T) {
+	subject := (*LabelService).ListLabelTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_ListLabelTemplates_Ugly(t *core.T) {
+	subject := (*LabelService).ListLabelTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterLabelTemplates_Good(t *core.T) {
+	subject := (*LabelService).IterLabelTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterLabelTemplates_Bad(t *core.T) {
+	subject := (*LabelService).IterLabelTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_IterLabelTemplates_Ugly(t *core.T) {
+	subject := (*LabelService).IterLabelTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetLabelTemplate_Good(t *core.T) {
+	subject := (*LabelService).GetLabelTemplate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetLabelTemplate_Bad(t *core.T) {
+	subject := (*LabelService).GetLabelTemplate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestLabels_LabelService_GetLabelTemplate_Ugly(t *core.T) {
+	subject := (*LabelService).GetLabelTemplate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

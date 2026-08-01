@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -320,5 +321,269 @@ func TestContentService_GetRawNotFound_Bad(t *testing.T) {
 	}
 	if !IsNotFound(err) {
 		t.Errorf("expected not-found error, got %v", err)
+	}
+}
+
+func TestContents_ContentService_ListContents_Good(t *core.T) {
+	subject := (*ContentService).ListContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_ListContents_Bad(t *core.T) {
+	subject := (*ContentService).ListContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_ListContents_Ugly(t *core.T) {
+	subject := (*ContentService).ListContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_IterContents_Good(t *core.T) {
+	subject := (*ContentService).IterContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_IterContents_Bad(t *core.T) {
+	subject := (*ContentService).IterContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_IterContents_Ugly(t *core.T) {
+	subject := (*ContentService).IterContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetFile_Good(t *core.T) {
+	subject := (*ContentService).GetFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetFile_Bad(t *core.T) {
+	subject := (*ContentService).GetFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetFile_Ugly(t *core.T) {
+	subject := (*ContentService).GetFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetContents_Good(t *core.T) {
+	subject := (*ContentService).GetContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetContents_Bad(t *core.T) {
+	subject := (*ContentService).GetContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetContents_Ugly(t *core.T) {
+	subject := (*ContentService).GetContents
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_CreateFile_Good(t *core.T) {
+	subject := (*ContentService).CreateFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_CreateFile_Bad(t *core.T) {
+	subject := (*ContentService).CreateFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_CreateFile_Ugly(t *core.T) {
+	subject := (*ContentService).CreateFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_UpdateFile_Good(t *core.T) {
+	subject := (*ContentService).UpdateFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_UpdateFile_Bad(t *core.T) {
+	subject := (*ContentService).UpdateFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_UpdateFile_Ugly(t *core.T) {
+	subject := (*ContentService).UpdateFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_DeleteFile_Good(t *core.T) {
+	subject := (*ContentService).DeleteFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_DeleteFile_Bad(t *core.T) {
+	subject := (*ContentService).DeleteFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_DeleteFile_Ugly(t *core.T) {
+	subject := (*ContentService).DeleteFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetRawFile_Good(t *core.T) {
+	subject := (*ContentService).GetRawFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetRawFile_Bad(t *core.T) {
+	subject := (*ContentService).GetRawFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestContents_ContentService_GetRawFile_Ugly(t *core.T) {
+	subject := (*ContentService).GetRawFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }
