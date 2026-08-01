@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"maps"
 	"net/http"
 
 	"dappco.re/go/forge/types"
@@ -309,9 +310,7 @@ func (s *UserService) DeleteAvatar(ctx context.Context) error {
 func (s *UserService) ListKeys(ctx context.Context, filters ...UserKeyListOptions) ([]types.PublicKey, error) {
 	query := make(map[string]string, len(filters))
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		query = nil
@@ -323,9 +322,7 @@ func (s *UserService) ListKeys(ctx context.Context, filters ...UserKeyListOption
 func (s *UserService) IterKeys(ctx context.Context, filters ...UserKeyListOptions) iter.Seq2[types.PublicKey, error] {
 	query := make(map[string]string, len(filters))
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		query = nil
@@ -363,9 +360,7 @@ func (s *UserService) ListUserKeys(ctx context.Context, username string, filters
 	path := ResolvePath("/api/v1/users/{username}/keys", pathParams("username", username))
 	query := make(map[string]string, len(filters))
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		query = nil
@@ -378,9 +373,7 @@ func (s *UserService) IterUserKeys(ctx context.Context, username string, filters
 	path := ResolvePath("/api/v1/users/{username}/keys", pathParams("username", username))
 	query := make(map[string]string, len(filters))
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		query = nil

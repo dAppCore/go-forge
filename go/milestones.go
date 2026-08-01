@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"maps"
 
 	"dappco.re/go/forge/types"
 )
@@ -149,9 +150,7 @@ func milestoneQuery(filters ...MilestoneListOptions) map[string]string {
 
 	query := make(map[string]string, 2)
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		return nil

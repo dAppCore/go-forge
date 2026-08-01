@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"maps"
 
 	"dappco.re/go/forge/types"
 )
@@ -264,9 +265,7 @@ func (s *CommitService) DeleteNote(ctx context.Context, owner, repo, sha string)
 func commitListQuery(filters ...CommitListOptions) map[string]string {
 	query := make(map[string]string, len(filters))
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		return nil
@@ -279,24 +278,16 @@ func commitCompatListQuery(filters ...any) map[string]string {
 	for _, filter := range filters {
 		switch v := filter.(type) {
 		case CommitListOptions:
-			for key, value := range v.queryParams() {
-				query[key] = value
-			}
+			maps.Copy(query, v.queryParams())
 		case *CommitListOptions:
 			if v != nil {
-				for key, value := range v.queryParams() {
-					query[key] = value
-				}
+				maps.Copy(query, v.queryParams())
 			}
 		case types.ListCommitsOption:
-			for key, value := range commitListQueryFromCompat(v) {
-				query[key] = value
-			}
+			maps.Copy(query, commitListQueryFromCompat(v))
 		case *types.ListCommitsOption:
 			if v != nil {
-				for key, value := range commitListQueryFromCompat(*v) {
-					query[key] = value
-				}
+				maps.Copy(query, commitListQueryFromCompat(*v))
 			}
 		}
 	}

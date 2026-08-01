@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"maps"
 	"net/http"
 	"time"
 
@@ -1088,9 +1089,7 @@ func repoTimeQuery(filters ...RepoTimeListOptions) map[string]string {
 
 	query := make(map[string]string, 3)
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		return nil

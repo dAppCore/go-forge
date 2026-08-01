@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"maps"
 
 	// Note: AX-6 intrinsic — upload APIs must expose the structural request body type; coreio Medium is used inside Client multipart handling.
 	goio "io"
@@ -230,9 +231,7 @@ func (s *ReleaseService) DeleteAsset(ctx context.Context, owner, repo string, re
 func releaseListQuery(filters ...ReleaseListOptions) map[string]string {
 	query := make(map[string]string, len(filters))
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		return nil

@@ -3,6 +3,7 @@ package forge
 import (
 	"context"
 	"iter"
+	"maps"
 	"time"
 
 	// Note: AX-6 intrinsic — upload APIs must expose the structural request body type; coreio Medium is used inside Client multipart handling.
@@ -626,24 +627,16 @@ func issueListQuery(filters ...any) map[string]string {
 	for _, filter := range filters {
 		switch v := filter.(type) {
 		case IssueListOptions:
-			for key, value := range issueListQueryFromOption(v) {
-				query[key] = value
-			}
+			maps.Copy(query, issueListQueryFromOption(v))
 		case *IssueListOptions:
 			if v != nil {
-				for key, value := range issueListQueryFromOption(*v) {
-					query[key] = value
-				}
+				maps.Copy(query, issueListQueryFromOption(*v))
 			}
 		case types.ListIssueOption:
-			for key, value := range issueListQueryFromCompat(v) {
-				query[key] = value
-			}
+			maps.Copy(query, issueListQueryFromCompat(v))
 		case *types.ListIssueOption:
 			if v != nil {
-				for key, value := range issueListQueryFromCompat(*v) {
-					query[key] = value
-				}
+				maps.Copy(query, issueListQueryFromCompat(*v))
 			}
 		}
 	}
@@ -990,9 +983,7 @@ func repoCommentQuery(filters ...RepoCommentListOptions) map[string]string {
 
 	query := make(map[string]string, 2)
 	for _, filter := range filters {
-		for key, value := range filter.queryParams() {
-			query[key] = value
-		}
+		maps.Copy(query, filter.queryParams())
 	}
 	if len(query) == 0 {
 		return nil
