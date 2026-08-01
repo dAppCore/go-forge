@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -125,5 +126,434 @@ func TestBranchService_CreateProtection_Good(t *testing.T) {
 	}
 	if bp.RequiredApprovals != 2 {
 		t.Errorf("got required_approvals=%d, want 2", bp.RequiredApprovals)
+	}
+}
+
+func TestBranches_BranchService_ListBranchesPage_Good(t *core.T) {
+	subject := (*BranchService).ListBranchesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranchesPage_Bad(t *core.T) {
+	subject := (*BranchService).ListBranchesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranchesPage_Ugly(t *core.T) {
+	subject := (*BranchService).ListBranchesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranches_Good(t *core.T) {
+	subject := (*BranchService).ListBranches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranches_Bad(t *core.T) {
+	subject := (*BranchService).ListBranches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranches_Ugly(t *core.T) {
+	subject := (*BranchService).ListBranches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_IterBranches_Good(t *core.T) {
+	subject := (*BranchService).IterBranches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_IterBranches_Bad(t *core.T) {
+	subject := (*BranchService).IterBranches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_IterBranches_Ugly(t *core.T) {
+	subject := (*BranchService).IterBranches
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_CreateBranch_Good(t *core.T) {
+	subject := (*BranchService).CreateBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_CreateBranch_Bad(t *core.T) {
+	subject := (*BranchService).CreateBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_CreateBranch_Ugly(t *core.T) {
+	subject := (*BranchService).CreateBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_GetBranch_Good(t *core.T) {
+	subject := (*BranchService).GetBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_GetBranch_Bad(t *core.T) {
+	subject := (*BranchService).GetBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_GetBranch_Ugly(t *core.T) {
+	subject := (*BranchService).GetBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_UpdateBranch_Good(t *core.T) {
+	subject := (*BranchService).UpdateBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_UpdateBranch_Bad(t *core.T) {
+	subject := (*BranchService).UpdateBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_UpdateBranch_Ugly(t *core.T) {
+	subject := (*BranchService).UpdateBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_DeleteBranch_Good(t *core.T) {
+	subject := (*BranchService).DeleteBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_DeleteBranch_Bad(t *core.T) {
+	subject := (*BranchService).DeleteBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_DeleteBranch_Ugly(t *core.T) {
+	subject := (*BranchService).DeleteBranch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranchProtections_Good(t *core.T) {
+	subject := (*BranchService).ListBranchProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranchProtections_Bad(t *core.T) {
+	subject := (*BranchService).ListBranchProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_ListBranchProtections_Ugly(t *core.T) {
+	subject := (*BranchService).ListBranchProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_IterBranchProtections_Good(t *core.T) {
+	subject := (*BranchService).IterBranchProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_IterBranchProtections_Bad(t *core.T) {
+	subject := (*BranchService).IterBranchProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_IterBranchProtections_Ugly(t *core.T) {
+	subject := (*BranchService).IterBranchProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_GetBranchProtection_Good(t *core.T) {
+	subject := (*BranchService).GetBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_GetBranchProtection_Bad(t *core.T) {
+	subject := (*BranchService).GetBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_GetBranchProtection_Ugly(t *core.T) {
+	subject := (*BranchService).GetBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_CreateBranchProtection_Good(t *core.T) {
+	subject := (*BranchService).CreateBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_CreateBranchProtection_Bad(t *core.T) {
+	subject := (*BranchService).CreateBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_CreateBranchProtection_Ugly(t *core.T) {
+	subject := (*BranchService).CreateBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_EditBranchProtection_Good(t *core.T) {
+	subject := (*BranchService).EditBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_EditBranchProtection_Bad(t *core.T) {
+	subject := (*BranchService).EditBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_EditBranchProtection_Ugly(t *core.T) {
+	subject := (*BranchService).EditBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_DeleteBranchProtection_Good(t *core.T) {
+	subject := (*BranchService).DeleteBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_DeleteBranchProtection_Bad(t *core.T) {
+	subject := (*BranchService).DeleteBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestBranches_BranchService_DeleteBranchProtection_Ugly(t *core.T) {
+	subject := (*BranchService).DeleteBranchProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

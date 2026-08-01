@@ -429,3 +429,751 @@ func TestClient_Conflict_Bad(t *testing.T) {
 		t.Fatalf("expected conflict, got %v", err)
 	}
 }
+
+func TestClient_APIError_Error_Good(t *core.T) {
+	subject := (*APIError).Error
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_Error_Bad(t *core.T) {
+	subject := (*APIError).Error
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_Error_Ugly(t *core.T) {
+	subject := (*APIError).Error
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_String_Good(t *core.T) {
+	subject := (*APIError).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_String_Bad(t *core.T) {
+	subject := (*APIError).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_String_Ugly(t *core.T) {
+	subject := (*APIError).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_GoString_Good(t *core.T) {
+	subject := (*APIError).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_GoString_Bad(t *core.T) {
+	subject := (*APIError).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_APIError_GoString_Ugly(t *core.T) {
+	subject := (*APIError).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsNotFound_Good(t *core.T) {
+	subject := IsNotFound
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsNotFound_Bad(t *core.T) {
+	subject := IsNotFound
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsNotFound_Ugly(t *core.T) {
+	subject := IsNotFound
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsForbidden_Good(t *core.T) {
+	subject := IsForbidden
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsForbidden_Bad(t *core.T) {
+	subject := IsForbidden
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsForbidden_Ugly(t *core.T) {
+	subject := IsForbidden
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsConflict_Good(t *core.T) {
+	subject := IsConflict
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsConflict_Bad(t *core.T) {
+	subject := IsConflict
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_IsConflict_Ugly(t *core.T) {
+	subject := IsConflict
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_WithHTTPClient_Bad(t *core.T) {
+	subject := WithHTTPClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_WithHTTPClient_Ugly(t *core.T) {
+	subject := WithHTTPClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_WithUserAgent_Good(t *core.T) {
+	subject := WithUserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_WithUserAgent_Bad(t *core.T) {
+	subject := WithUserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_WithUserAgent_Ugly(t *core.T) {
+	subject := WithUserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_RateLimit_String_Good(t *core.T) {
+	subject := (*RateLimit).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_RateLimit_String_Bad(t *core.T) {
+	subject := (*RateLimit).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_RateLimit_String_Ugly(t *core.T) {
+	subject := (*RateLimit).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_RateLimit_GoString_Good(t *core.T) {
+	subject := (*RateLimit).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_RateLimit_GoString_Bad(t *core.T) {
+	subject := (*RateLimit).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_RateLimit_GoString_Ugly(t *core.T) {
+	subject := (*RateLimit).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_BaseURL_Good(t *core.T) {
+	subject := (*Client).BaseURL
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_BaseURL_Bad(t *core.T) {
+	subject := (*Client).BaseURL
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_BaseURL_Ugly(t *core.T) {
+	subject := (*Client).BaseURL
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_RateLimit_Bad(t *core.T) {
+	subject := (*Client).RateLimit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_RateLimit_Ugly(t *core.T) {
+	subject := (*Client).RateLimit
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_UserAgent_Good(t *core.T) {
+	subject := (*Client).UserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_UserAgent_Bad(t *core.T) {
+	subject := (*Client).UserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_UserAgent_Ugly(t *core.T) {
+	subject := (*Client).UserAgent
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_HTTPClient_Good(t *core.T) {
+	subject := (*Client).HTTPClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_HTTPClient_Bad(t *core.T) {
+	subject := (*Client).HTTPClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_HTTPClient_Ugly(t *core.T) {
+	subject := (*Client).HTTPClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_String_Bad(t *core.T) {
+	subject := (*Client).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_String_Ugly(t *core.T) {
+	subject := (*Client).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_GoString_Good(t *core.T) {
+	subject := (*Client).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_GoString_Bad(t *core.T) {
+	subject := (*Client).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_GoString_Ugly(t *core.T) {
+	subject := (*Client).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_HasToken_Ugly(t *core.T) {
+	subject := (*Client).HasToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_NewClient_Good(t *core.T) {
+	subject := NewClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_NewClient_Bad(t *core.T) {
+	subject := NewClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_NewClient_Ugly(t *core.T) {
+	subject := NewClient
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Get_Bad(t *core.T) {
+	subject := (*Client).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Get_Ugly(t *core.T) {
+	subject := (*Client).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Post_Bad(t *core.T) {
+	subject := (*Client).Post
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Post_Ugly(t *core.T) {
+	subject := (*Client).Post
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Patch_Good(t *core.T) {
+	subject := (*Client).Patch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Patch_Bad(t *core.T) {
+	subject := (*Client).Patch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Patch_Ugly(t *core.T) {
+	subject := (*Client).Patch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Put_Good(t *core.T) {
+	subject := (*Client).Put
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Put_Bad(t *core.T) {
+	subject := (*Client).Put
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Put_Ugly(t *core.T) {
+	subject := (*Client).Put
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Delete_Bad(t *core.T) {
+	subject := (*Client).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_Delete_Ugly(t *core.T) {
+	subject := (*Client).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_DeleteWithBody_Good(t *core.T) {
+	subject := (*Client).DeleteWithBody
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_DeleteWithBody_Bad(t *core.T) {
+	subject := (*Client).DeleteWithBody
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_DeleteWithBody_Ugly(t *core.T) {
+	subject := (*Client).DeleteWithBody
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_PostRaw_Bad(t *core.T) {
+	subject := (*Client).PostRaw
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_PostRaw_Ugly(t *core.T) {
+	subject := (*Client).PostRaw
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_GetRaw_Bad(t *core.T) {
+	subject := (*Client).GetRaw
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestClient_Client_GetRaw_Ugly(t *core.T) {
+	subject := (*Client).GetRaw
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}

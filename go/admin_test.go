@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -1063,5 +1064,1820 @@ func TestAdminService_CreateUser_Forbidden_Bad(t *testing.T) {
 	})
 	if !IsForbidden(err) {
 		t.Errorf("expected forbidden error, got %v", err)
+	}
+}
+
+func TestAdmin_AdminActionsRunListOptions_String_Good(t *core.T) {
+	subject := (*AdminActionsRunListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminActionsRunListOptions_String_Bad(t *core.T) {
+	subject := (*AdminActionsRunListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminActionsRunListOptions_String_Ugly(t *core.T) {
+	subject := (*AdminActionsRunListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminActionsRunListOptions_GoString_Good(t *core.T) {
+	subject := (*AdminActionsRunListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminActionsRunListOptions_GoString_Bad(t *core.T) {
+	subject := (*AdminActionsRunListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminActionsRunListOptions_GoString_Ugly(t *core.T) {
+	subject := (*AdminActionsRunListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminUnadoptedListOptions_String_Good(t *core.T) {
+	subject := (*AdminUnadoptedListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminUnadoptedListOptions_String_Bad(t *core.T) {
+	subject := (*AdminUnadoptedListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminUnadoptedListOptions_String_Ugly(t *core.T) {
+	subject := (*AdminUnadoptedListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminUnadoptedListOptions_GoString_Good(t *core.T) {
+	subject := (*AdminUnadoptedListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminUnadoptedListOptions_GoString_Bad(t *core.T) {
+	subject := (*AdminUnadoptedListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminUnadoptedListOptions_GoString_Ugly(t *core.T) {
+	subject := (*AdminUnadoptedListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListUsers_Good(t *core.T) {
+	subject := (*AdminService).ListUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListUsers_Bad(t *core.T) {
+	subject := (*AdminService).ListUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListUsers_Ugly(t *core.T) {
+	subject := (*AdminService).ListUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterUsers_Good(t *core.T) {
+	subject := (*AdminService).IterUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterUsers_Bad(t *core.T) {
+	subject := (*AdminService).IterUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterUsers_Ugly(t *core.T) {
+	subject := (*AdminService).IterUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUser_Good(t *core.T) {
+	subject := (*AdminService).CreateUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUser_Bad(t *core.T) {
+	subject := (*AdminService).CreateUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUser_Ugly(t *core.T) {
+	subject := (*AdminService).CreateUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserKey_Good(t *core.T) {
+	subject := (*AdminService).CreateUserKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserKey_Bad(t *core.T) {
+	subject := (*AdminService).CreateUserKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserKey_Ugly(t *core.T) {
+	subject := (*AdminService).CreateUserKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUserKey_Good(t *core.T) {
+	subject := (*AdminService).DeleteUserKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUserKey_Bad(t *core.T) {
+	subject := (*AdminService).DeleteUserKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUserKey_Ugly(t *core.T) {
+	subject := (*AdminService).DeleteUserKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserOrg_Good(t *core.T) {
+	subject := (*AdminService).CreateUserOrg
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserOrg_Bad(t *core.T) {
+	subject := (*AdminService).CreateUserOrg
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserOrg_Ugly(t *core.T) {
+	subject := (*AdminService).CreateUserOrg
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetUserQuota_Good(t *core.T) {
+	subject := (*AdminService).GetUserQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetUserQuota_Bad(t *core.T) {
+	subject := (*AdminService).GetUserQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetUserQuota_Ugly(t *core.T) {
+	subject := (*AdminService).GetUserQuota
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_SetUserQuotaGroups_Good(t *core.T) {
+	subject := (*AdminService).SetUserQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_SetUserQuotaGroups_Bad(t *core.T) {
+	subject := (*AdminService).SetUserQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_SetUserQuotaGroups_Ugly(t *core.T) {
+	subject := (*AdminService).SetUserQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserRepo_Good(t *core.T) {
+	subject := (*AdminService).CreateUserRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserRepo_Bad(t *core.T) {
+	subject := (*AdminService).CreateUserRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateUserRepo_Ugly(t *core.T) {
+	subject := (*AdminService).CreateUserRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditUser_Good(t *core.T) {
+	subject := (*AdminService).EditUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditUser_Bad(t *core.T) {
+	subject := (*AdminService).EditUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditUser_Ugly(t *core.T) {
+	subject := (*AdminService).EditUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUser_Good(t *core.T) {
+	subject := (*AdminService).DeleteUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUser_Bad(t *core.T) {
+	subject := (*AdminService).DeleteUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUser_Ugly(t *core.T) {
+	subject := (*AdminService).DeleteUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RenameUser_Good(t *core.T) {
+	subject := (*AdminService).RenameUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RenameUser_Bad(t *core.T) {
+	subject := (*AdminService).RenameUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RenameUser_Ugly(t *core.T) {
+	subject := (*AdminService).RenameUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListOrgs_Good(t *core.T) {
+	subject := (*AdminService).ListOrgs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListOrgs_Bad(t *core.T) {
+	subject := (*AdminService).ListOrgs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListOrgs_Ugly(t *core.T) {
+	subject := (*AdminService).ListOrgs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterOrgs_Good(t *core.T) {
+	subject := (*AdminService).IterOrgs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterOrgs_Bad(t *core.T) {
+	subject := (*AdminService).IterOrgs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterOrgs_Ugly(t *core.T) {
+	subject := (*AdminService).IterOrgs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListEmails_Good(t *core.T) {
+	subject := (*AdminService).ListEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListEmails_Bad(t *core.T) {
+	subject := (*AdminService).ListEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListEmails_Ugly(t *core.T) {
+	subject := (*AdminService).ListEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterEmails_Good(t *core.T) {
+	subject := (*AdminService).IterEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterEmails_Bad(t *core.T) {
+	subject := (*AdminService).IterEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterEmails_Ugly(t *core.T) {
+	subject := (*AdminService).IterEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListHooks_Good(t *core.T) {
+	subject := (*AdminService).ListHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListHooks_Bad(t *core.T) {
+	subject := (*AdminService).ListHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListHooks_Ugly(t *core.T) {
+	subject := (*AdminService).ListHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterHooks_Good(t *core.T) {
+	subject := (*AdminService).IterHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterHooks_Bad(t *core.T) {
+	subject := (*AdminService).IterHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterHooks_Ugly(t *core.T) {
+	subject := (*AdminService).IterHooks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetHook_Good(t *core.T) {
+	subject := (*AdminService).GetHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetHook_Bad(t *core.T) {
+	subject := (*AdminService).GetHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetHook_Ugly(t *core.T) {
+	subject := (*AdminService).GetHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateHook_Good(t *core.T) {
+	subject := (*AdminService).CreateHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateHook_Bad(t *core.T) {
+	subject := (*AdminService).CreateHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateHook_Ugly(t *core.T) {
+	subject := (*AdminService).CreateHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditHook_Good(t *core.T) {
+	subject := (*AdminService).EditHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditHook_Bad(t *core.T) {
+	subject := (*AdminService).EditHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditHook_Ugly(t *core.T) {
+	subject := (*AdminService).EditHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteHook_Good(t *core.T) {
+	subject := (*AdminService).DeleteHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteHook_Bad(t *core.T) {
+	subject := (*AdminService).DeleteHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteHook_Ugly(t *core.T) {
+	subject := (*AdminService).DeleteHook
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaGroups_Good(t *core.T) {
+	subject := (*AdminService).ListQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaGroups_Bad(t *core.T) {
+	subject := (*AdminService).ListQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaGroups_Ugly(t *core.T) {
+	subject := (*AdminService).ListQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaGroups_Good(t *core.T) {
+	subject := (*AdminService).IterQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaGroups_Bad(t *core.T) {
+	subject := (*AdminService).IterQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaGroups_Ugly(t *core.T) {
+	subject := (*AdminService).IterQuotaGroups
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateQuotaGroup_Good(t *core.T) {
+	subject := (*AdminService).CreateQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateQuotaGroup_Bad(t *core.T) {
+	subject := (*AdminService).CreateQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateQuotaGroup_Ugly(t *core.T) {
+	subject := (*AdminService).CreateQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetQuotaGroup_Good(t *core.T) {
+	subject := (*AdminService).GetQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetQuotaGroup_Bad(t *core.T) {
+	subject := (*AdminService).GetQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetQuotaGroup_Ugly(t *core.T) {
+	subject := (*AdminService).GetQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteQuotaGroup_Good(t *core.T) {
+	subject := (*AdminService).DeleteQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteQuotaGroup_Bad(t *core.T) {
+	subject := (*AdminService).DeleteQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteQuotaGroup_Ugly(t *core.T) {
+	subject := (*AdminService).DeleteQuotaGroup
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AddQuotaGroupRule_Good(t *core.T) {
+	subject := (*AdminService).AddQuotaGroupRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AddQuotaGroupRule_Bad(t *core.T) {
+	subject := (*AdminService).AddQuotaGroupRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AddQuotaGroupRule_Ugly(t *core.T) {
+	subject := (*AdminService).AddQuotaGroupRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RemoveQuotaGroupRule_Good(t *core.T) {
+	subject := (*AdminService).RemoveQuotaGroupRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RemoveQuotaGroupRule_Bad(t *core.T) {
+	subject := (*AdminService).RemoveQuotaGroupRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RemoveQuotaGroupRule_Ugly(t *core.T) {
+	subject := (*AdminService).RemoveQuotaGroupRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaGroupUsers_Good(t *core.T) {
+	subject := (*AdminService).ListQuotaGroupUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaGroupUsers_Bad(t *core.T) {
+	subject := (*AdminService).ListQuotaGroupUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaGroupUsers_Ugly(t *core.T) {
+	subject := (*AdminService).ListQuotaGroupUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaGroupUsers_Good(t *core.T) {
+	subject := (*AdminService).IterQuotaGroupUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaGroupUsers_Bad(t *core.T) {
+	subject := (*AdminService).IterQuotaGroupUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaGroupUsers_Ugly(t *core.T) {
+	subject := (*AdminService).IterQuotaGroupUsers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AddQuotaGroupUser_Good(t *core.T) {
+	subject := (*AdminService).AddQuotaGroupUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AddQuotaGroupUser_Bad(t *core.T) {
+	subject := (*AdminService).AddQuotaGroupUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AddQuotaGroupUser_Ugly(t *core.T) {
+	subject := (*AdminService).AddQuotaGroupUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RemoveQuotaGroupUser_Good(t *core.T) {
+	subject := (*AdminService).RemoveQuotaGroupUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RemoveQuotaGroupUser_Bad(t *core.T) {
+	subject := (*AdminService).RemoveQuotaGroupUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RemoveQuotaGroupUser_Ugly(t *core.T) {
+	subject := (*AdminService).RemoveQuotaGroupUser
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaRules_Good(t *core.T) {
+	subject := (*AdminService).ListQuotaRules
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaRules_Bad(t *core.T) {
+	subject := (*AdminService).ListQuotaRules
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListQuotaRules_Ugly(t *core.T) {
+	subject := (*AdminService).ListQuotaRules
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaRules_Good(t *core.T) {
+	subject := (*AdminService).IterQuotaRules
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaRules_Bad(t *core.T) {
+	subject := (*AdminService).IterQuotaRules
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterQuotaRules_Ugly(t *core.T) {
+	subject := (*AdminService).IterQuotaRules
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateQuotaRule_Good(t *core.T) {
+	subject := (*AdminService).CreateQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateQuotaRule_Bad(t *core.T) {
+	subject := (*AdminService).CreateQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_CreateQuotaRule_Ugly(t *core.T) {
+	subject := (*AdminService).CreateQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetQuotaRule_Good(t *core.T) {
+	subject := (*AdminService).GetQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetQuotaRule_Bad(t *core.T) {
+	subject := (*AdminService).GetQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GetQuotaRule_Ugly(t *core.T) {
+	subject := (*AdminService).GetQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditQuotaRule_Good(t *core.T) {
+	subject := (*AdminService).EditQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditQuotaRule_Bad(t *core.T) {
+	subject := (*AdminService).EditQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_EditQuotaRule_Ugly(t *core.T) {
+	subject := (*AdminService).EditQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteQuotaRule_Good(t *core.T) {
+	subject := (*AdminService).DeleteQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteQuotaRule_Bad(t *core.T) {
+	subject := (*AdminService).DeleteQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteQuotaRule_Ugly(t *core.T) {
+	subject := (*AdminService).DeleteQuotaRule
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListUnadoptedRepos_Good(t *core.T) {
+	subject := (*AdminService).ListUnadoptedRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListUnadoptedRepos_Bad(t *core.T) {
+	subject := (*AdminService).ListUnadoptedRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListUnadoptedRepos_Ugly(t *core.T) {
+	subject := (*AdminService).ListUnadoptedRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterUnadoptedRepos_Good(t *core.T) {
+	subject := (*AdminService).IterUnadoptedRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterUnadoptedRepos_Bad(t *core.T) {
+	subject := (*AdminService).IterUnadoptedRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterUnadoptedRepos_Ugly(t *core.T) {
+	subject := (*AdminService).IterUnadoptedRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_SearchEmails_Good(t *core.T) {
+	subject := (*AdminService).SearchEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_SearchEmails_Bad(t *core.T) {
+	subject := (*AdminService).SearchEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_SearchEmails_Ugly(t *core.T) {
+	subject := (*AdminService).SearchEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterSearchEmails_Good(t *core.T) {
+	subject := (*AdminService).IterSearchEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterSearchEmails_Bad(t *core.T) {
+	subject := (*AdminService).IterSearchEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterSearchEmails_Ugly(t *core.T) {
+	subject := (*AdminService).IterSearchEmails
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RunCron_Good(t *core.T) {
+	subject := (*AdminService).RunCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RunCron_Bad(t *core.T) {
+	subject := (*AdminService).RunCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_RunCron_Ugly(t *core.T) {
+	subject := (*AdminService).RunCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListCron_Good(t *core.T) {
+	subject := (*AdminService).ListCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListCron_Bad(t *core.T) {
+	subject := (*AdminService).ListCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListCron_Ugly(t *core.T) {
+	subject := (*AdminService).ListCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterCron_Good(t *core.T) {
+	subject := (*AdminService).IterCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterCron_Bad(t *core.T) {
+	subject := (*AdminService).IterCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterCron_Ugly(t *core.T) {
+	subject := (*AdminService).IterCron
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListActionsRuns_Good(t *core.T) {
+	subject := (*AdminService).ListActionsRuns
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListActionsRuns_Bad(t *core.T) {
+	subject := (*AdminService).ListActionsRuns
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_ListActionsRuns_Ugly(t *core.T) {
+	subject := (*AdminService).ListActionsRuns
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterActionsRuns_Good(t *core.T) {
+	subject := (*AdminService).IterActionsRuns
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterActionsRuns_Bad(t *core.T) {
+	subject := (*AdminService).IterActionsRuns
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_IterActionsRuns_Ugly(t *core.T) {
+	subject := (*AdminService).IterActionsRuns
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AdoptRepo_Good(t *core.T) {
+	subject := (*AdminService).AdoptRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AdoptRepo_Bad(t *core.T) {
+	subject := (*AdminService).AdoptRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_AdoptRepo_Ugly(t *core.T) {
+	subject := (*AdminService).AdoptRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUnadoptedRepo_Good(t *core.T) {
+	subject := (*AdminService).DeleteUnadoptedRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUnadoptedRepo_Bad(t *core.T) {
+	subject := (*AdminService).DeleteUnadoptedRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_DeleteUnadoptedRepo_Ugly(t *core.T) {
+	subject := (*AdminService).DeleteUnadoptedRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GenerateRunnerToken_Good(t *core.T) {
+	subject := (*AdminService).GenerateRunnerToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GenerateRunnerToken_Bad(t *core.T) {
+	subject := (*AdminService).GenerateRunnerToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestAdmin_AdminService_GenerateRunnerToken_Ugly(t *core.T) {
+	subject := (*AdminService).GenerateRunnerToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

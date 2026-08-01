@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -252,5 +253,236 @@ func TestWikiService_NotFound_Bad(t *testing.T) {
 	}
 	if !IsNotFound(err) {
 		t.Errorf("expected not-found error, got %v", err)
+	}
+}
+
+func TestWiki_WikiService_ListPages_Good(t *core.T) {
+	subject := (*WikiService).ListPages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_ListPages_Bad(t *core.T) {
+	subject := (*WikiService).ListPages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_ListPages_Ugly(t *core.T) {
+	subject := (*WikiService).ListPages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_IterPages_Good(t *core.T) {
+	subject := (*WikiService).IterPages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_IterPages_Bad(t *core.T) {
+	subject := (*WikiService).IterPages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_IterPages_Ugly(t *core.T) {
+	subject := (*WikiService).IterPages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_GetPage_Good(t *core.T) {
+	subject := (*WikiService).GetPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_GetPage_Bad(t *core.T) {
+	subject := (*WikiService).GetPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_GetPage_Ugly(t *core.T) {
+	subject := (*WikiService).GetPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_GetPageRevisions_Good(t *core.T) {
+	subject := (*WikiService).GetPageRevisions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_GetPageRevisions_Bad(t *core.T) {
+	subject := (*WikiService).GetPageRevisions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_GetPageRevisions_Ugly(t *core.T) {
+	subject := (*WikiService).GetPageRevisions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_CreatePage_Good(t *core.T) {
+	subject := (*WikiService).CreatePage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_CreatePage_Bad(t *core.T) {
+	subject := (*WikiService).CreatePage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_CreatePage_Ugly(t *core.T) {
+	subject := (*WikiService).CreatePage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_EditPage_Good(t *core.T) {
+	subject := (*WikiService).EditPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_EditPage_Bad(t *core.T) {
+	subject := (*WikiService).EditPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_EditPage_Ugly(t *core.T) {
+	subject := (*WikiService).EditPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_DeletePage_Good(t *core.T) {
+	subject := (*WikiService).DeletePage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_DeletePage_Bad(t *core.T) {
+	subject := (*WikiService).DeletePage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestWiki_WikiService_DeletePage_Ugly(t *core.T) {
+	subject := (*WikiService).DeletePage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

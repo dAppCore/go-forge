@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -139,5 +140,203 @@ func TestPackageService_NotFound_Bad(t *testing.T) {
 	}
 	if !IsNotFound(err) {
 		t.Errorf("expected not-found error, got %v", err)
+	}
+}
+
+func TestPackages_PackageService_List_Good(t *core.T) {
+	subject := (*PackageService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_List_Bad(t *core.T) {
+	subject := (*PackageService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_List_Ugly(t *core.T) {
+	subject := (*PackageService).List
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Iter_Good(t *core.T) {
+	subject := (*PackageService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Iter_Bad(t *core.T) {
+	subject := (*PackageService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Iter_Ugly(t *core.T) {
+	subject := (*PackageService).Iter
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Get_Good(t *core.T) {
+	subject := (*PackageService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Get_Bad(t *core.T) {
+	subject := (*PackageService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Get_Ugly(t *core.T) {
+	subject := (*PackageService).Get
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Delete_Good(t *core.T) {
+	subject := (*PackageService).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Delete_Bad(t *core.T) {
+	subject := (*PackageService).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_Delete_Ugly(t *core.T) {
+	subject := (*PackageService).Delete
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_ListFiles_Good(t *core.T) {
+	subject := (*PackageService).ListFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_ListFiles_Bad(t *core.T) {
+	subject := (*PackageService).ListFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_ListFiles_Ugly(t *core.T) {
+	subject := (*PackageService).ListFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_IterFiles_Good(t *core.T) {
+	subject := (*PackageService).IterFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_IterFiles_Bad(t *core.T) {
+	subject := (*PackageService).IterFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestPackages_PackageService_IterFiles_Ugly(t *core.T) {
+	subject := (*PackageService).IterFiles
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

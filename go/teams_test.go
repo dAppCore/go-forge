@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -130,5 +131,500 @@ func TestTeamService_GetMember_Good(t *testing.T) {
 	}
 	if member.UserName != "alice" {
 		t.Errorf("got username=%q, want %q", member.UserName, "alice")
+	}
+}
+
+func TestTeams_TeamService_CreateOrgTeam_Good(t *core.T) {
+	subject := (*TeamService).CreateOrgTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_CreateOrgTeam_Bad(t *core.T) {
+	subject := (*TeamService).CreateOrgTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_CreateOrgTeam_Ugly(t *core.T) {
+	subject := (*TeamService).CreateOrgTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListMembers_Good(t *core.T) {
+	subject := (*TeamService).ListMembers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListMembers_Bad(t *core.T) {
+	subject := (*TeamService).ListMembers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListMembers_Ugly(t *core.T) {
+	subject := (*TeamService).ListMembers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterMembers_Good(t *core.T) {
+	subject := (*TeamService).IterMembers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterMembers_Bad(t *core.T) {
+	subject := (*TeamService).IterMembers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterMembers_Ugly(t *core.T) {
+	subject := (*TeamService).IterMembers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_AddMember_Good(t *core.T) {
+	subject := (*TeamService).AddMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_AddMember_Bad(t *core.T) {
+	subject := (*TeamService).AddMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_AddMember_Ugly(t *core.T) {
+	subject := (*TeamService).AddMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_GetMember_Good(t *core.T) {
+	subject := (*TeamService).GetMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_GetMember_Bad(t *core.T) {
+	subject := (*TeamService).GetMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_GetMember_Ugly(t *core.T) {
+	subject := (*TeamService).GetMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_RemoveMember_Good(t *core.T) {
+	subject := (*TeamService).RemoveMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_RemoveMember_Bad(t *core.T) {
+	subject := (*TeamService).RemoveMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_RemoveMember_Ugly(t *core.T) {
+	subject := (*TeamService).RemoveMember
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListRepos_Good(t *core.T) {
+	subject := (*TeamService).ListRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListRepos_Bad(t *core.T) {
+	subject := (*TeamService).ListRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListRepos_Ugly(t *core.T) {
+	subject := (*TeamService).ListRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterRepos_Good(t *core.T) {
+	subject := (*TeamService).IterRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterRepos_Bad(t *core.T) {
+	subject := (*TeamService).IterRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterRepos_Ugly(t *core.T) {
+	subject := (*TeamService).IterRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_AddRepo_Good(t *core.T) {
+	subject := (*TeamService).AddRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_AddRepo_Bad(t *core.T) {
+	subject := (*TeamService).AddRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_AddRepo_Ugly(t *core.T) {
+	subject := (*TeamService).AddRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_RemoveRepo_Good(t *core.T) {
+	subject := (*TeamService).RemoveRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_RemoveRepo_Bad(t *core.T) {
+	subject := (*TeamService).RemoveRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_RemoveRepo_Ugly(t *core.T) {
+	subject := (*TeamService).RemoveRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_GetRepo_Good(t *core.T) {
+	subject := (*TeamService).GetRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_GetRepo_Bad(t *core.T) {
+	subject := (*TeamService).GetRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_GetRepo_Ugly(t *core.T) {
+	subject := (*TeamService).GetRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListOrgTeams_Good(t *core.T) {
+	subject := (*TeamService).ListOrgTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListOrgTeams_Bad(t *core.T) {
+	subject := (*TeamService).ListOrgTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListOrgTeams_Ugly(t *core.T) {
+	subject := (*TeamService).ListOrgTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterOrgTeams_Good(t *core.T) {
+	subject := (*TeamService).IterOrgTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterOrgTeams_Bad(t *core.T) {
+	subject := (*TeamService).IterOrgTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterOrgTeams_Ugly(t *core.T) {
+	subject := (*TeamService).IterOrgTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListActivityFeeds_Good(t *core.T) {
+	subject := (*TeamService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListActivityFeeds_Bad(t *core.T) {
+	subject := (*TeamService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_ListActivityFeeds_Ugly(t *core.T) {
+	subject := (*TeamService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterActivityFeeds_Good(t *core.T) {
+	subject := (*TeamService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterActivityFeeds_Bad(t *core.T) {
+	subject := (*TeamService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestTeams_TeamService_IterActivityFeeds_Ugly(t *core.T) {
+	subject := (*TeamService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

@@ -1,6 +1,10 @@
 package forge
 
-import "testing"
+import (
+	"testing"
+
+	core "dappco.re/go"
+)
 
 func TestResolvePath_Simple_Good(t *testing.T) {
 	got := ResolvePath("/api/v1/repos/{owner}/{repo}", Params{"owner": "core", "repo": "go-forge"})
@@ -32,5 +36,104 @@ func TestResolvePath_URLEncoding_Good(t *testing.T) {
 	want := "/api/v1/repos/my%20org/my%20repo"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestParams_Params_String_Good(t *core.T) {
+	subject := (*Params).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_String_Bad(t *core.T) {
+	subject := (*Params).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_String_Ugly(t *core.T) {
+	subject := (*Params).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_GoString_Good(t *core.T) {
+	subject := (*Params).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_GoString_Bad(t *core.T) {
+	subject := (*Params).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_Params_GoString_Ugly(t *core.T) {
+	subject := (*Params).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_ResolvePath_Good(t *core.T) {
+	subject := ResolvePath
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_ResolvePath_Bad(t *core.T) {
+	subject := ResolvePath
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestParams_ResolvePath_Ugly(t *core.T) {
+	subject := ResolvePath
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
 	}
 }

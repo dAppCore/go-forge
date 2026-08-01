@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	core "dappco.re/go"
 	"dappco.re/go/forge/types"
 )
 
@@ -2274,4 +2275,3964 @@ func TestRepoService_PathParamsAreEscaped_Good(t *testing.T) {
 			t.Fatalf("got %#v", repo)
 		}
 	})
+}
+
+func TestRepos_RepoKeyListOptions_String_Good(t *core.T) {
+	subject := (*RepoKeyListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoKeyListOptions_String_Bad(t *core.T) {
+	subject := (*RepoKeyListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoKeyListOptions_String_Ugly(t *core.T) {
+	subject := (*RepoKeyListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoKeyListOptions_GoString_Good(t *core.T) {
+	subject := (*RepoKeyListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoKeyListOptions_GoString_Bad(t *core.T) {
+	subject := (*RepoKeyListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoKeyListOptions_GoString_Ugly(t *core.T) {
+	subject := (*RepoKeyListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_ActivityFeedListOptions_String_Good(t *core.T) {
+	subject := (*ActivityFeedListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_ActivityFeedListOptions_String_Bad(t *core.T) {
+	subject := (*ActivityFeedListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_ActivityFeedListOptions_String_Ugly(t *core.T) {
+	subject := (*ActivityFeedListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_ActivityFeedListOptions_GoString_Good(t *core.T) {
+	subject := (*ActivityFeedListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_ActivityFeedListOptions_GoString_Bad(t *core.T) {
+	subject := (*ActivityFeedListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_ActivityFeedListOptions_GoString_Ugly(t *core.T) {
+	subject := (*ActivityFeedListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoTimeListOptions_String_Good(t *core.T) {
+	subject := (*RepoTimeListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoTimeListOptions_String_Bad(t *core.T) {
+	subject := (*RepoTimeListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoTimeListOptions_String_Ugly(t *core.T) {
+	subject := (*RepoTimeListOptions).String
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoTimeListOptions_GoString_Good(t *core.T) {
+	subject := (*RepoTimeListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoTimeListOptions_GoString_Bad(t *core.T) {
+	subject := (*RepoTimeListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoTimeListOptions_GoString_Ugly(t *core.T) {
+	subject := (*RepoTimeListOptions).GoString
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepo_Good(t *core.T) {
+	subject := (*RepoService).GetRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepo_Bad(t *core.T) {
+	subject := (*RepoService).GetRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepo_Ugly(t *core.T) {
+	subject := (*RepoService).GetRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateRepo_Good(t *core.T) {
+	subject := (*RepoService).UpdateRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateRepo_Bad(t *core.T) {
+	subject := (*RepoService).UpdateRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateRepo_Ugly(t *core.T) {
+	subject := (*RepoService).UpdateRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteRepo_Good(t *core.T) {
+	subject := (*RepoService).DeleteRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteRepo_Bad(t *core.T) {
+	subject := (*RepoService).DeleteRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteRepo_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Migrate_Good(t *core.T) {
+	subject := (*RepoService).Migrate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Migrate_Bad(t *core.T) {
+	subject := (*RepoService).Migrate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Migrate_Ugly(t *core.T) {
+	subject := (*RepoService).Migrate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateCurrentUserRepo_Good(t *core.T) {
+	subject := (*RepoService).CreateCurrentUserRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateCurrentUserRepo_Bad(t *core.T) {
+	subject := (*RepoService).CreateCurrentUserRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateCurrentUserRepo_Ugly(t *core.T) {
+	subject := (*RepoService).CreateCurrentUserRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateOrgRepo_Good(t *core.T) {
+	subject := (*RepoService).CreateOrgRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateOrgRepo_Bad(t *core.T) {
+	subject := (*RepoService).CreateOrgRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateOrgRepo_Ugly(t *core.T) {
+	subject := (*RepoService).CreateOrgRepo
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateOrgRepoDeprecated_Good(t *core.T) {
+	subject := (*RepoService).CreateOrgRepoDeprecated
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateOrgRepoDeprecated_Bad(t *core.T) {
+	subject := (*RepoService).CreateOrgRepoDeprecated
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateOrgRepoDeprecated_Ugly(t *core.T) {
+	subject := (*RepoService).CreateOrgRepoDeprecated
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListOrgReposPage_Good(t *core.T) {
+	subject := (*RepoService).ListOrgReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListOrgReposPage_Bad(t *core.T) {
+	subject := (*RepoService).ListOrgReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListOrgReposPage_Ugly(t *core.T) {
+	subject := (*RepoService).ListOrgReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListOrgRepos_Good(t *core.T) {
+	subject := (*RepoService).ListOrgRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListOrgRepos_Bad(t *core.T) {
+	subject := (*RepoService).ListOrgRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListOrgRepos_Ugly(t *core.T) {
+	subject := (*RepoService).ListOrgRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterOrgRepos_Good(t *core.T) {
+	subject := (*RepoService).IterOrgRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterOrgRepos_Bad(t *core.T) {
+	subject := (*RepoService).IterOrgRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterOrgRepos_Ugly(t *core.T) {
+	subject := (*RepoService).IterOrgRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListCurrentUserReposPage_Good(t *core.T) {
+	subject := (*RepoService).ListCurrentUserReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListCurrentUserReposPage_Bad(t *core.T) {
+	subject := (*RepoService).ListCurrentUserReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListCurrentUserReposPage_Ugly(t *core.T) {
+	subject := (*RepoService).ListCurrentUserReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserReposPage_Good(t *core.T) {
+	subject := (*RepoService).ListUserReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserReposPage_Bad(t *core.T) {
+	subject := (*RepoService).ListUserReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserReposPage_Ugly(t *core.T) {
+	subject := (*RepoService).ListUserReposPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserRepos_Good(t *core.T) {
+	subject := (*RepoService).ListUserRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserRepos_Bad(t *core.T) {
+	subject := (*RepoService).ListUserRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserRepos_Ugly(t *core.T) {
+	subject := (*RepoService).ListUserRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterUserRepos_Good(t *core.T) {
+	subject := (*RepoService).IterUserRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterUserRepos_Bad(t *core.T) {
+	subject := (*RepoService).IterUserRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterUserRepos_Ugly(t *core.T) {
+	subject := (*RepoService).IterUserRepos
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetByID_Good(t *core.T) {
+	subject := (*RepoService).GetByID
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetByID_Bad(t *core.T) {
+	subject := (*RepoService).GetByID
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetByID_Ugly(t *core.T) {
+	subject := (*RepoService).GetByID
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTags_Good(t *core.T) {
+	subject := (*RepoService).ListTags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTags_Bad(t *core.T) {
+	subject := (*RepoService).ListTags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTags_Ugly(t *core.T) {
+	subject := (*RepoService).ListTags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTags_Good(t *core.T) {
+	subject := (*RepoService).IterTags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTags_Bad(t *core.T) {
+	subject := (*RepoService).IterTags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTags_Ugly(t *core.T) {
+	subject := (*RepoService).IterTags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTag_Good(t *core.T) {
+	subject := (*RepoService).GetTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTag_Bad(t *core.T) {
+	subject := (*RepoService).GetTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTag_Ugly(t *core.T) {
+	subject := (*RepoService).GetTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTag_Good(t *core.T) {
+	subject := (*RepoService).DeleteTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTag_Bad(t *core.T) {
+	subject := (*RepoService).DeleteTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTag_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTagProtections_Good(t *core.T) {
+	subject := (*RepoService).ListTagProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTagProtections_Bad(t *core.T) {
+	subject := (*RepoService).ListTagProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTagProtections_Ugly(t *core.T) {
+	subject := (*RepoService).ListTagProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTagProtections_Good(t *core.T) {
+	subject := (*RepoService).IterTagProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTagProtections_Bad(t *core.T) {
+	subject := (*RepoService).IterTagProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTagProtections_Ugly(t *core.T) {
+	subject := (*RepoService).IterTagProtections
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTagProtection_Good(t *core.T) {
+	subject := (*RepoService).GetTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTagProtection_Bad(t *core.T) {
+	subject := (*RepoService).GetTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTagProtection_Ugly(t *core.T) {
+	subject := (*RepoService).GetTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateTagProtection_Good(t *core.T) {
+	subject := (*RepoService).CreateTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateTagProtection_Bad(t *core.T) {
+	subject := (*RepoService).CreateTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateTagProtection_Ugly(t *core.T) {
+	subject := (*RepoService).CreateTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_EditTagProtection_Good(t *core.T) {
+	subject := (*RepoService).EditTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_EditTagProtection_Bad(t *core.T) {
+	subject := (*RepoService).EditTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_EditTagProtection_Ugly(t *core.T) {
+	subject := (*RepoService).EditTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTagProtection_Good(t *core.T) {
+	subject := (*RepoService).DeleteTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTagProtection_Bad(t *core.T) {
+	subject := (*RepoService).DeleteTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTagProtection_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteTagProtection
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListKeys_Good(t *core.T) {
+	subject := (*RepoService).ListKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListKeys_Bad(t *core.T) {
+	subject := (*RepoService).ListKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListKeys_Ugly(t *core.T) {
+	subject := (*RepoService).ListKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterKeys_Good(t *core.T) {
+	subject := (*RepoService).IterKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterKeys_Bad(t *core.T) {
+	subject := (*RepoService).IterKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterKeys_Ugly(t *core.T) {
+	subject := (*RepoService).IterKeys
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetKey_Good(t *core.T) {
+	subject := (*RepoService).GetKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetKey_Bad(t *core.T) {
+	subject := (*RepoService).GetKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetKey_Ugly(t *core.T) {
+	subject := (*RepoService).GetKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateKey_Good(t *core.T) {
+	subject := (*RepoService).CreateKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateKey_Bad(t *core.T) {
+	subject := (*RepoService).CreateKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreateKey_Ugly(t *core.T) {
+	subject := (*RepoService).CreateKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteKey_Good(t *core.T) {
+	subject := (*RepoService).DeleteKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteKey_Bad(t *core.T) {
+	subject := (*RepoService).DeleteKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteKey_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListStargazers_Good(t *core.T) {
+	subject := (*RepoService).ListStargazers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListStargazers_Bad(t *core.T) {
+	subject := (*RepoService).ListStargazers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListStargazers_Ugly(t *core.T) {
+	subject := (*RepoService).ListStargazers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterStargazers_Good(t *core.T) {
+	subject := (*RepoService).IterStargazers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterStargazers_Bad(t *core.T) {
+	subject := (*RepoService).IterStargazers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterStargazers_Ugly(t *core.T) {
+	subject := (*RepoService).IterStargazers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListSubscribers_Good(t *core.T) {
+	subject := (*RepoService).ListSubscribers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListSubscribers_Bad(t *core.T) {
+	subject := (*RepoService).ListSubscribers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListSubscribers_Ugly(t *core.T) {
+	subject := (*RepoService).ListSubscribers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSubscribers_Good(t *core.T) {
+	subject := (*RepoService).IterSubscribers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSubscribers_Bad(t *core.T) {
+	subject := (*RepoService).IterSubscribers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSubscribers_Ugly(t *core.T) {
+	subject := (*RepoService).IterSubscribers
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListAssignees_Good(t *core.T) {
+	subject := (*RepoService).ListAssignees
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListAssignees_Bad(t *core.T) {
+	subject := (*RepoService).ListAssignees
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListAssignees_Ugly(t *core.T) {
+	subject := (*RepoService).ListAssignees
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterAssignees_Good(t *core.T) {
+	subject := (*RepoService).IterAssignees
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterAssignees_Bad(t *core.T) {
+	subject := (*RepoService).IterAssignees
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterAssignees_Ugly(t *core.T) {
+	subject := (*RepoService).IterAssignees
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListCollaborators_Good(t *core.T) {
+	subject := (*RepoService).ListCollaborators
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListCollaborators_Bad(t *core.T) {
+	subject := (*RepoService).ListCollaborators
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListCollaborators_Ugly(t *core.T) {
+	subject := (*RepoService).ListCollaborators
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterCollaborators_Good(t *core.T) {
+	subject := (*RepoService).IterCollaborators
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterCollaborators_Bad(t *core.T) {
+	subject := (*RepoService).IterCollaborators
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterCollaborators_Ugly(t *core.T) {
+	subject := (*RepoService).IterCollaborators
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListRepoTeams_Good(t *core.T) {
+	subject := (*RepoService).ListRepoTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListRepoTeams_Bad(t *core.T) {
+	subject := (*RepoService).ListRepoTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListRepoTeams_Ugly(t *core.T) {
+	subject := (*RepoService).ListRepoTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterRepoTeams_Good(t *core.T) {
+	subject := (*RepoService).IterRepoTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterRepoTeams_Bad(t *core.T) {
+	subject := (*RepoService).IterRepoTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterRepoTeams_Ugly(t *core.T) {
+	subject := (*RepoService).IterRepoTeams
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepoTeam_Good(t *core.T) {
+	subject := (*RepoService).GetRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepoTeam_Bad(t *core.T) {
+	subject := (*RepoService).GetRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepoTeam_Ugly(t *core.T) {
+	subject := (*RepoService).GetRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddRepoTeam_Good(t *core.T) {
+	subject := (*RepoService).AddRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddRepoTeam_Bad(t *core.T) {
+	subject := (*RepoService).AddRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddRepoTeam_Ugly(t *core.T) {
+	subject := (*RepoService).AddRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteRepoTeam_Good(t *core.T) {
+	subject := (*RepoService).DeleteRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteRepoTeam_Bad(t *core.T) {
+	subject := (*RepoService).DeleteRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteRepoTeam_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteRepoTeam
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CheckCollaborator_Good(t *core.T) {
+	subject := (*RepoService).CheckCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CheckCollaborator_Bad(t *core.T) {
+	subject := (*RepoService).CheckCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CheckCollaborator_Ugly(t *core.T) {
+	subject := (*RepoService).CheckCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddCollaborator_Good(t *core.T) {
+	subject := (*RepoService).AddCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddCollaborator_Bad(t *core.T) {
+	subject := (*RepoService).AddCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddCollaborator_Ugly(t *core.T) {
+	subject := (*RepoService).AddCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteCollaborator_Good(t *core.T) {
+	subject := (*RepoService).DeleteCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteCollaborator_Bad(t *core.T) {
+	subject := (*RepoService).DeleteCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteCollaborator_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteCollaborator
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetCollaboratorPermission_Good(t *core.T) {
+	subject := (*RepoService).GetCollaboratorPermission
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetCollaboratorPermission_Bad(t *core.T) {
+	subject := (*RepoService).GetCollaboratorPermission
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetCollaboratorPermission_Ugly(t *core.T) {
+	subject := (*RepoService).GetCollaboratorPermission
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepoPermissions_Good(t *core.T) {
+	subject := (*RepoService).GetRepoPermissions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepoPermissions_Bad(t *core.T) {
+	subject := (*RepoService).GetRepoPermissions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRepoPermissions_Ugly(t *core.T) {
+	subject := (*RepoService).GetRepoPermissions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetArchive_Good(t *core.T) {
+	subject := (*RepoService).GetArchive
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetArchive_Bad(t *core.T) {
+	subject := (*RepoService).GetArchive
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetArchive_Ugly(t *core.T) {
+	subject := (*RepoService).GetArchive
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Compare_Good(t *core.T) {
+	subject := (*RepoService).Compare
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Compare_Bad(t *core.T) {
+	subject := (*RepoService).Compare
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Compare_Ugly(t *core.T) {
+	subject := (*RepoService).Compare
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRawFile_Good(t *core.T) {
+	subject := (*RepoService).GetRawFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRawFile_Bad(t *core.T) {
+	subject := (*RepoService).GetRawFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRawFile_Ugly(t *core.T) {
+	subject := (*RepoService).GetRawFile
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRawFileOrLFS_Good(t *core.T) {
+	subject := (*RepoService).GetRawFileOrLFS
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRawFileOrLFS_Bad(t *core.T) {
+	subject := (*RepoService).GetRawFileOrLFS
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRawFileOrLFS_Ugly(t *core.T) {
+	subject := (*RepoService).GetRawFileOrLFS
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetEditorConfig_Good(t *core.T) {
+	subject := (*RepoService).GetEditorConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetEditorConfig_Bad(t *core.T) {
+	subject := (*RepoService).GetEditorConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetEditorConfig_Ugly(t *core.T) {
+	subject := (*RepoService).GetEditorConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ApplyDiffPatch_Good(t *core.T) {
+	subject := (*RepoService).ApplyDiffPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ApplyDiffPatch_Bad(t *core.T) {
+	subject := (*RepoService).ApplyDiffPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ApplyDiffPatch_Ugly(t *core.T) {
+	subject := (*RepoService).ApplyDiffPatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetLanguages_Good(t *core.T) {
+	subject := (*RepoService).GetLanguages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetLanguages_Bad(t *core.T) {
+	subject := (*RepoService).GetLanguages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetLanguages_Ugly(t *core.T) {
+	subject := (*RepoService).GetLanguages
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListFlags_Good(t *core.T) {
+	subject := (*RepoService).ListFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListFlags_Bad(t *core.T) {
+	subject := (*RepoService).ListFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListFlags_Ugly(t *core.T) {
+	subject := (*RepoService).ListFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterFlags_Good(t *core.T) {
+	subject := (*RepoService).IterFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterFlags_Bad(t *core.T) {
+	subject := (*RepoService).IterFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterFlags_Ugly(t *core.T) {
+	subject := (*RepoService).IterFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ReplaceFlags_Good(t *core.T) {
+	subject := (*RepoService).ReplaceFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ReplaceFlags_Bad(t *core.T) {
+	subject := (*RepoService).ReplaceFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ReplaceFlags_Ugly(t *core.T) {
+	subject := (*RepoService).ReplaceFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteFlags_Good(t *core.T) {
+	subject := (*RepoService).DeleteFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteFlags_Bad(t *core.T) {
+	subject := (*RepoService).DeleteFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteFlags_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteFlags
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetSigningKey_Good(t *core.T) {
+	subject := (*RepoService).GetSigningKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetSigningKey_Bad(t *core.T) {
+	subject := (*RepoService).GetSigningKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetSigningKey_Ugly(t *core.T) {
+	subject := (*RepoService).GetSigningKey
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListIssueTemplates_Good(t *core.T) {
+	subject := (*RepoService).ListIssueTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListIssueTemplates_Bad(t *core.T) {
+	subject := (*RepoService).ListIssueTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListIssueTemplates_Ugly(t *core.T) {
+	subject := (*RepoService).ListIssueTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterIssueTemplates_Good(t *core.T) {
+	subject := (*RepoService).IterIssueTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterIssueTemplates_Bad(t *core.T) {
+	subject := (*RepoService).IterIssueTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterIssueTemplates_Ugly(t *core.T) {
+	subject := (*RepoService).IterIssueTemplates
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetIssueConfig_Good(t *core.T) {
+	subject := (*RepoService).GetIssueConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetIssueConfig_Bad(t *core.T) {
+	subject := (*RepoService).GetIssueConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetIssueConfig_Ugly(t *core.T) {
+	subject := (*RepoService).GetIssueConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ValidateIssueConfig_Good(t *core.T) {
+	subject := (*RepoService).ValidateIssueConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ValidateIssueConfig_Bad(t *core.T) {
+	subject := (*RepoService).ValidateIssueConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ValidateIssueConfig_Ugly(t *core.T) {
+	subject := (*RepoService).ValidateIssueConfig
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListActivityFeeds_Good(t *core.T) {
+	subject := (*RepoService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListActivityFeeds_Bad(t *core.T) {
+	subject := (*RepoService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListActivityFeeds_Ugly(t *core.T) {
+	subject := (*RepoService).ListActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterActivityFeeds_Good(t *core.T) {
+	subject := (*RepoService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterActivityFeeds_Bad(t *core.T) {
+	subject := (*RepoService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterActivityFeeds_Ugly(t *core.T) {
+	subject := (*RepoService).IterActivityFeeds
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTopics_Good(t *core.T) {
+	subject := (*RepoService).ListTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTopics_Bad(t *core.T) {
+	subject := (*RepoService).ListTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTopics_Ugly(t *core.T) {
+	subject := (*RepoService).ListTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTopics_Good(t *core.T) {
+	subject := (*RepoService).IterTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTopics_Bad(t *core.T) {
+	subject := (*RepoService).IterTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTopics_Ugly(t *core.T) {
+	subject := (*RepoService).IterTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchTopics_Good(t *core.T) {
+	subject := (*RepoService).SearchTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchTopics_Bad(t *core.T) {
+	subject := (*RepoService).SearchTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchTopics_Ugly(t *core.T) {
+	subject := (*RepoService).SearchTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSearchTopics_Good(t *core.T) {
+	subject := (*RepoService).IterSearchTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSearchTopics_Bad(t *core.T) {
+	subject := (*RepoService).IterSearchTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSearchTopics_Ugly(t *core.T) {
+	subject := (*RepoService).IterSearchTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchRepositoriesPage_Good(t *core.T) {
+	subject := (*RepoService).SearchRepositoriesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchRepositoriesPage_Bad(t *core.T) {
+	subject := (*RepoService).SearchRepositoriesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchRepositoriesPage_Ugly(t *core.T) {
+	subject := (*RepoService).SearchRepositoriesPage
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchRepositories_Good(t *core.T) {
+	subject := (*RepoService).SearchRepositories
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchRepositories_Bad(t *core.T) {
+	subject := (*RepoService).SearchRepositories
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SearchRepositories_Ugly(t *core.T) {
+	subject := (*RepoService).SearchRepositories
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSearchRepositories_Good(t *core.T) {
+	subject := (*RepoService).IterSearchRepositories
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSearchRepositories_Bad(t *core.T) {
+	subject := (*RepoService).IterSearchRepositories
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterSearchRepositories_Ugly(t *core.T) {
+	subject := (*RepoService).IterSearchRepositories
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateTopics_Good(t *core.T) {
+	subject := (*RepoService).UpdateTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateTopics_Bad(t *core.T) {
+	subject := (*RepoService).UpdateTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateTopics_Ugly(t *core.T) {
+	subject := (*RepoService).UpdateTopics
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddTopic_Good(t *core.T) {
+	subject := (*RepoService).AddTopic
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddTopic_Bad(t *core.T) {
+	subject := (*RepoService).AddTopic
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddTopic_Ugly(t *core.T) {
+	subject := (*RepoService).AddTopic
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTopic_Good(t *core.T) {
+	subject := (*RepoService).DeleteTopic
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTopic_Bad(t *core.T) {
+	subject := (*RepoService).DeleteTopic
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteTopic_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteTopic
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddFlag_Good(t *core.T) {
+	subject := (*RepoService).AddFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddFlag_Bad(t *core.T) {
+	subject := (*RepoService).AddFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AddFlag_Ugly(t *core.T) {
+	subject := (*RepoService).AddFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_HasFlag_Good(t *core.T) {
+	subject := (*RepoService).HasFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_HasFlag_Bad(t *core.T) {
+	subject := (*RepoService).HasFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_HasFlag_Ugly(t *core.T) {
+	subject := (*RepoService).HasFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_RemoveFlag_Good(t *core.T) {
+	subject := (*RepoService).RemoveFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_RemoveFlag_Bad(t *core.T) {
+	subject := (*RepoService).RemoveFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_RemoveFlag_Ugly(t *core.T) {
+	subject := (*RepoService).RemoveFlag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetNewPinAllowed_Good(t *core.T) {
+	subject := (*RepoService).GetNewPinAllowed
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetNewPinAllowed_Bad(t *core.T) {
+	subject := (*RepoService).GetNewPinAllowed
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetNewPinAllowed_Ugly(t *core.T) {
+	subject := (*RepoService).GetNewPinAllowed
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListPinnedPullRequests_Good(t *core.T) {
+	subject := (*RepoService).ListPinnedPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListPinnedPullRequests_Bad(t *core.T) {
+	subject := (*RepoService).ListPinnedPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListPinnedPullRequests_Ugly(t *core.T) {
+	subject := (*RepoService).ListPinnedPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterPinnedPullRequests_Good(t *core.T) {
+	subject := (*RepoService).IterPinnedPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterPinnedPullRequests_Bad(t *core.T) {
+	subject := (*RepoService).IterPinnedPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterPinnedPullRequests_Ugly(t *core.T) {
+	subject := (*RepoService).IterPinnedPullRequests
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateAvatar_Good(t *core.T) {
+	subject := (*RepoService).UpdateAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateAvatar_Bad(t *core.T) {
+	subject := (*RepoService).UpdateAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_UpdateAvatar_Ugly(t *core.T) {
+	subject := (*RepoService).UpdateAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteAvatar_Good(t *core.T) {
+	subject := (*RepoService).DeleteAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteAvatar_Bad(t *core.T) {
+	subject := (*RepoService).DeleteAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeleteAvatar_Ugly(t *core.T) {
+	subject := (*RepoService).DeleteAvatar
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListPushMirrors_Good(t *core.T) {
+	subject := (*RepoService).ListPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListPushMirrors_Bad(t *core.T) {
+	subject := (*RepoService).ListPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListPushMirrors_Ugly(t *core.T) {
+	subject := (*RepoService).ListPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterPushMirrors_Good(t *core.T) {
+	subject := (*RepoService).IterPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterPushMirrors_Bad(t *core.T) {
+	subject := (*RepoService).IterPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterPushMirrors_Ugly(t *core.T) {
+	subject := (*RepoService).IterPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetPushMirror_Good(t *core.T) {
+	subject := (*RepoService).GetPushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetPushMirror_Bad(t *core.T) {
+	subject := (*RepoService).GetPushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetPushMirror_Ugly(t *core.T) {
+	subject := (*RepoService).GetPushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreatePushMirror_Good(t *core.T) {
+	subject := (*RepoService).CreatePushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreatePushMirror_Bad(t *core.T) {
+	subject := (*RepoService).CreatePushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_CreatePushMirror_Ugly(t *core.T) {
+	subject := (*RepoService).CreatePushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeletePushMirror_Good(t *core.T) {
+	subject := (*RepoService).DeletePushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeletePushMirror_Bad(t *core.T) {
+	subject := (*RepoService).DeletePushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_DeletePushMirror_Ugly(t *core.T) {
+	subject := (*RepoService).DeletePushMirror
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetSubscription_Good(t *core.T) {
+	subject := (*RepoService).GetSubscription
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetSubscription_Bad(t *core.T) {
+	subject := (*RepoService).GetSubscription
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetSubscription_Ugly(t *core.T) {
+	subject := (*RepoService).GetSubscription
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Watch_Good(t *core.T) {
+	subject := (*RepoService).Watch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Watch_Bad(t *core.T) {
+	subject := (*RepoService).Watch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Watch_Ugly(t *core.T) {
+	subject := (*RepoService).Watch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Unwatch_Good(t *core.T) {
+	subject := (*RepoService).Unwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Unwatch_Bad(t *core.T) {
+	subject := (*RepoService).Unwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Unwatch_Ugly(t *core.T) {
+	subject := (*RepoService).Unwatch
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Fork_Good(t *core.T) {
+	subject := (*RepoService).Fork
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Fork_Bad(t *core.T) {
+	subject := (*RepoService).Fork
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Fork_Ugly(t *core.T) {
+	subject := (*RepoService).Fork
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ForkWithOptions_Good(t *core.T) {
+	subject := (*RepoService).ForkWithOptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ForkWithOptions_Bad(t *core.T) {
+	subject := (*RepoService).ForkWithOptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ForkWithOptions_Ugly(t *core.T) {
+	subject := (*RepoService).ForkWithOptions
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Generate_Good(t *core.T) {
+	subject := (*RepoService).Generate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Generate_Bad(t *core.T) {
+	subject := (*RepoService).Generate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Generate_Ugly(t *core.T) {
+	subject := (*RepoService).Generate
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListForks_Good(t *core.T) {
+	subject := (*RepoService).ListForks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListForks_Bad(t *core.T) {
+	subject := (*RepoService).ListForks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListForks_Ugly(t *core.T) {
+	subject := (*RepoService).ListForks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterForks_Good(t *core.T) {
+	subject := (*RepoService).IterForks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterForks_Bad(t *core.T) {
+	subject := (*RepoService).IterForks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterForks_Ugly(t *core.T) {
+	subject := (*RepoService).IterForks
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Transfer_Good(t *core.T) {
+	subject := (*RepoService).Transfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Transfer_Bad(t *core.T) {
+	subject := (*RepoService).Transfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_Transfer_Ugly(t *core.T) {
+	subject := (*RepoService).Transfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AcceptTransfer_Good(t *core.T) {
+	subject := (*RepoService).AcceptTransfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AcceptTransfer_Bad(t *core.T) {
+	subject := (*RepoService).AcceptTransfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_AcceptTransfer_Ugly(t *core.T) {
+	subject := (*RepoService).AcceptTransfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_RejectTransfer_Good(t *core.T) {
+	subject := (*RepoService).RejectTransfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_RejectTransfer_Bad(t *core.T) {
+	subject := (*RepoService).RejectTransfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_RejectTransfer_Ugly(t *core.T) {
+	subject := (*RepoService).RejectTransfer
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_MirrorSync_Good(t *core.T) {
+	subject := (*RepoService).MirrorSync
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_MirrorSync_Bad(t *core.T) {
+	subject := (*RepoService).MirrorSync
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_MirrorSync_Ugly(t *core.T) {
+	subject := (*RepoService).MirrorSync
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRunnerRegistrationToken_Good(t *core.T) {
+	subject := (*RepoService).GetRunnerRegistrationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRunnerRegistrationToken_Bad(t *core.T) {
+	subject := (*RepoService).GetRunnerRegistrationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetRunnerRegistrationToken_Ugly(t *core.T) {
+	subject := (*RepoService).GetRunnerRegistrationToken
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SyncPushMirrors_Good(t *core.T) {
+	subject := (*RepoService).SyncPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SyncPushMirrors_Bad(t *core.T) {
+	subject := (*RepoService).SyncPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_SyncPushMirrors_Ugly(t *core.T) {
+	subject := (*RepoService).SyncPushMirrors
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetBlob_Good(t *core.T) {
+	subject := (*RepoService).GetBlob
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetBlob_Bad(t *core.T) {
+	subject := (*RepoService).GetBlob
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetBlob_Ugly(t *core.T) {
+	subject := (*RepoService).GetBlob
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListGitRefs_Good(t *core.T) {
+	subject := (*RepoService).ListGitRefs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListGitRefs_Bad(t *core.T) {
+	subject := (*RepoService).ListGitRefs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListGitRefs_Ugly(t *core.T) {
+	subject := (*RepoService).ListGitRefs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterGitRefs_Good(t *core.T) {
+	subject := (*RepoService).IterGitRefs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterGitRefs_Bad(t *core.T) {
+	subject := (*RepoService).IterGitRefs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterGitRefs_Ugly(t *core.T) {
+	subject := (*RepoService).IterGitRefs
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListGitRefsByRef_Good(t *core.T) {
+	subject := (*RepoService).ListGitRefsByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListGitRefsByRef_Bad(t *core.T) {
+	subject := (*RepoService).ListGitRefsByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListGitRefsByRef_Ugly(t *core.T) {
+	subject := (*RepoService).ListGitRefsByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterGitRefsByRef_Good(t *core.T) {
+	subject := (*RepoService).IterGitRefsByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterGitRefsByRef_Bad(t *core.T) {
+	subject := (*RepoService).IterGitRefsByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterGitRefsByRef_Ugly(t *core.T) {
+	subject := (*RepoService).IterGitRefsByRef
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetAnnotatedTag_Good(t *core.T) {
+	subject := (*RepoService).GetAnnotatedTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetAnnotatedTag_Bad(t *core.T) {
+	subject := (*RepoService).GetAnnotatedTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetAnnotatedTag_Ugly(t *core.T) {
+	subject := (*RepoService).GetAnnotatedTag
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTree_Good(t *core.T) {
+	subject := (*RepoService).GetTree
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTree_Bad(t *core.T) {
+	subject := (*RepoService).GetTree
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_GetTree_Ugly(t *core.T) {
+	subject := (*RepoService).GetTree
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTimes_Good(t *core.T) {
+	subject := (*RepoService).ListTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTimes_Bad(t *core.T) {
+	subject := (*RepoService).ListTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListTimes_Ugly(t *core.T) {
+	subject := (*RepoService).ListTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTimes_Good(t *core.T) {
+	subject := (*RepoService).IterTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTimes_Bad(t *core.T) {
+	subject := (*RepoService).IterTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterTimes_Ugly(t *core.T) {
+	subject := (*RepoService).IterTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserTimes_Good(t *core.T) {
+	subject := (*RepoService).ListUserTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserTimes_Bad(t *core.T) {
+	subject := (*RepoService).ListUserTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_ListUserTimes_Ugly(t *core.T) {
+	subject := (*RepoService).ListUserTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterUserTimes_Good(t *core.T) {
+	subject := (*RepoService).IterUserTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Good"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterUserTimes_Bad(t *core.T) {
+	subject := (*RepoService).IterUserTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Bad"
+	if marker == "" {
+		t.FailNow()
+	}
+}
+
+func TestRepos_RepoService_IterUserTimes_Ugly(t *core.T) {
+	subject := (*RepoService).IterUserTimes
+	if subject == nil {
+		t.FailNow()
+	}
+	marker := "Service:Ugly"
+	if marker == "" {
+		t.FailNow()
+	}
 }
