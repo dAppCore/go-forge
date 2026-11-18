@@ -10,7 +10,7 @@ import (
 	"strings"
 	"text/template"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 // typeGrouping maps type name prefixes to output file names.

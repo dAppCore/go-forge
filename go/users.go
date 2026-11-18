@@ -6,7 +6,7 @@ import (
 	"maps"
 	"net/http"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // UserService handles user operations.

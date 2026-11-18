@@ -3,7 +3,7 @@ package forge
 import (
 	"testing"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 func TestResolvePath_Simple_Good(t *testing.T) {

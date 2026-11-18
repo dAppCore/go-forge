@@ -5,7 +5,7 @@ import (
 	"iter"
 	"maps"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // CommitService handles commit-related operations such as commit statuses

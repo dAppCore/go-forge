@@ -3,7 +3,7 @@ package forge
 import (
 	"context"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // ActivityPubService handles ActivityPub actor and inbox endpoints.

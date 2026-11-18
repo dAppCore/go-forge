@@ -1,7 +1,7 @@
 package forge
 
 import (
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 func TestServiceString_ActionsService_String_Good(t *core.T) {

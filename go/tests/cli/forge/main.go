@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	forge "dappco.re/go/forge"
+	forge "github.com/dappcore/go-forge/go"
 )
 
 func main() {

@@ -5,9 +5,9 @@ description: Full-coverage Go client for the Forgejo API with generics-based CRU
 
 # go-forge
 
-`dappco.re/go/core/forge` is a Go client library for the [Forgejo](https://forgejo.org) REST API. It provides typed access to 20 API domains (repositories, issues, pull requests, organisations, milestones, ActivityPub, and more) through a single top-level `Forge` client. Types are generated directly from Forgejo's `swagger.v1.json` specification, keeping the library in lockstep with the server.
+`github.com/dappcore/go-forge/go` is a Go client library for the [Forgejo](https://forgejo.org) REST API. It provides typed access to 20 API domains (repositories, issues, pull requests, organisations, milestones, ActivityPub, and more) through a single top-level `Forge` client. Types are generated directly from Forgejo's `swagger.v1.json` specification, keeping the library in lockstep with the server.
 
-**Module path:** `dappco.re/go/core/forge`
+**Module path:** `github.com/dappcore/go-forge/go`
 **Go version:** 1.26+
 **Licence:** EUPL-1.2
 
@@ -22,7 +22,7 @@ import (
     "fmt"
     "log"
 
-    "dappco.re/go/core/forge"
+    "github.com/dappcore/go-forge/go"
 )
 
 func main() {
@@ -146,10 +146,10 @@ Services that embed `Resource[T, C, U]` inherit `List`, `ListAll`, `Iter`, `Get`
 
 ## Dependencies
 
-This module has a small dependency set: `dappco.re/go/core` and `github.com/goccy/go-json`, plus the Go standard library (`net/http`, `context`, `iter`, etc.) where appropriate.
+This module has a small dependency set: `github.com/dappcore/go` and `github.com/goccy/go-json`, plus the Go standard library (`net/http`, `context`, `iter`, etc.) where appropriate.
 
 ```
-module dappco.re/go/core/forge
+module github.com/dappcore/go-forge/go
 
 go 1.26.0
 ```

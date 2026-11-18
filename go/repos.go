@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // RepoService handles repository operations.

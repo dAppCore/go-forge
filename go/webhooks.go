@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // WebhookService handles webhook (hook) operations within a repository.

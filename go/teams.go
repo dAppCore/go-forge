@@ -4,7 +4,7 @@ import (
 	"context"
 	"iter"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // TeamService handles team operations.

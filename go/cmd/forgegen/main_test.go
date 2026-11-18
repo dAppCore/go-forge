@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 func TestMain_Run_Good(t *testing.T) {
