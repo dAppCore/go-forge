@@ -9,7 +9,7 @@ import (
 	// Note: AX-6 intrinsic — upload APIs must expose the structural request body type; coreio Medium is used inside Client multipart handling.
 	goio "io"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // IssueService handles issue operations within a repository.

@@ -1,8 +1,8 @@
 package types_test
 
 import (
-	. "dappco.re/go"
-	"dappco.re/go/forge/types"
+	. "github.com/dappcore/go"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 func TestAX7_CreateFileOptions_MarshalJSON_Good(t *T) {

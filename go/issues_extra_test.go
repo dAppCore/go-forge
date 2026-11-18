@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 func TestIssueService_ListIssues_Good(t *testing.T) {

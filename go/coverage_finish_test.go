@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // GetUserByID validates the id, searches, and matches by exact id. Cover the

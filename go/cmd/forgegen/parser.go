@@ -6,7 +6,7 @@ import (
 	"os"
 	"slices"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 // Spec represents a Swagger 2.0 specification document.

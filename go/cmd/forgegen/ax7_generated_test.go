@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	. "dappco.re/go"
+	. "github.com/dappcore/go"
 )
 
 func TestAX7_Generate_Good(t *T) {

@@ -5,7 +5,7 @@ import (
 	"iter"
 	"strconv"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // WikiService handles wiki page operations for a repository.

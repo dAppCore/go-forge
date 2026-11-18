@@ -13,7 +13,7 @@ import (
 	// Note: AX-6 — stream types, multipart content piping, and bounded HTTP error reads require io; coreio Medium only replaces multipart buffering below.
 	goio "io"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 // APIError represents an error response from the Forgejo API.

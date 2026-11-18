@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"strconv"
 
-	core "dappco.re/go"
-	"dappco.re/go/forge/types"
+	core "github.com/dappcore/go"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // AdminService handles site administration operations.

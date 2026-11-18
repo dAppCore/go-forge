@@ -3,7 +3,7 @@ package main
 import (
 	"unicode"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 func splitFields(s string) []string {

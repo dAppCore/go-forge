@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"dappco.re/go/forge/types"
+	"github.com/dappcore/go-forge/go/types"
 )
 
 // IterIssues / ListIssues mirror the commits compat shape: a paged branch

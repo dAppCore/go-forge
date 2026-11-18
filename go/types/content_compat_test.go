@@ -1,7 +1,7 @@
 package types
 
 import (
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 func TestContentCompat_CreateFileOptions_MarshalJSON_Good(t *core.T) {

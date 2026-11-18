@@ -4,7 +4,7 @@ import (
 	json "github.com/goccy/go-json"
 	"testing"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 func TestMergePullRequestOption_MarshalJSON_CompatMergeStyle_Good(t *testing.T) {

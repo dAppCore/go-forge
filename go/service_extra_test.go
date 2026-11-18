@@ -5,7 +5,7 @@ package forge
 import (
 	"testing"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 // NewService and Register expose the Core-registerable factory shape. These

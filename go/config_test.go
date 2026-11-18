@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 func TestResolveConfig_EnvOverrides_Good(t *testing.T) {

@@ -23,7 +23,7 @@
 package forge
 
 import (
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 // ServiceOptions configures the forge service. URL + Token are required

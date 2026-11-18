@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	core "dappco.re/go"
+	core "github.com/dappcore/go"
 )
 
 // do is the discard-response convenience wrapper around doJSON. Cover its
